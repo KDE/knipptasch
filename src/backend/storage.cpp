@@ -23,6 +23,7 @@
 
 #include <QBuffer>
 #include <QFile>
+#include <QCoreApplication>
 
 #include <QDebug>
 

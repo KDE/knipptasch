@@ -80,20 +80,25 @@ endif( QTONLY )
 
 
 if( CMAKE_COMPILER_IS_GNUCXX )
-    set( CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" )
-    set( CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" )
+    set( CMAKE_CXX_FLAGS_DEBUGFULL "${CMAKE_CXX_FLAGS_DEBUGFULL} -g3 -fno-inline" )
+    set( CMAKE_C_FLAGS_DEBUGFULL   "${CMAKE_CXX_FLAGS_DEBUGFULL} -g3 -fno-inline" )
 endif( CMAKE_COMPILER_IS_GNUCXX )
 
 option( CMAKE_COMPILE_GCOV "Build with coverage support." FALSE )
 
 if( CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" )
-    set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=c99 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -Wnon-virtual-dtor -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common")
+    set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=c99 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -Wnon-virtual-dtor -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common" )
 
     if( CMAKE_COMPILE_GCOV )
         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage" )
     endif( CMAKE_COMPILE_GCOV )
 endif( CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" )
+
+if( CMAKE_COMPILER_IS_MINGW )
+    set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -U__STRICT_ANSI__" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -U__STRICT_ANSI__" )
+endif( CMAKE_COMPILER_IS_MINGW )
 
 
 if( HAVE_KDE )
