@@ -1,20 +1,23 @@
 /*
-* Copyright 2010 by Volker Lanz <vl@fidra.de>
-* Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License as
-* published by the Free Software Foundation; either version 2 of
-* the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright 2010 by Volker Lanz <vl@fidra.de>
+ * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ *
+ * parseDateTimeByPattern() is
+ *   Copyright 2009 by Tobias Koenig <tokoe@kde.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "utils.h"
 
 #include <QLocale>
@@ -235,6 +238,127 @@ QString decimalSymbol()
 #else
     return QLocale().decimalPoint();
 #endif
+}
+
+
+QDateTime parseDateTimeByPattern(const QString &dateStr, const QString &pattern)
+{
+    int year, month, day, hour, minute, second;
+    year = month = day = hour = minute = second = 0;
+
+    int currPos = 0;
+    for(int i = 0; i < pattern.length(); ++i) {
+        if( pattern[ i ] == 'y' ) { // 19YY
+            if( currPos + 1 < dateStr.length() ) {
+                year = 1900 + dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'Y' ) { // YYYY
+            if ( currPos + 3 < dateStr.length() ) {
+                year = dateStr.mid( currPos, 4 ).toInt();
+                currPos += 4;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'm' ) { // M or MM
+            if( currPos + 1 < dateStr.length() ) {
+                if( dateStr[ currPos ].isDigit() ) {
+                    if( dateStr[ currPos + 1 ].isDigit() ) {
+                        month = dateStr.mid( currPos, 2 ).toInt();
+                        currPos += 2;
+                        continue;
+                    }
+                }
+            }
+
+            if( currPos < dateStr.length() ) {
+                if( dateStr[ currPos ].isDigit() ) {
+                month = dateStr.mid( currPos, 1 ).toInt();
+                currPos++;
+                continue;
+                }
+            }
+
+            return QDateTime();
+        }
+        else if( pattern[ i ] == 'M' ) { // 0M or MM
+            if( currPos + 1 < dateStr.length() ) {
+                month = dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'd' ) { // D or DD
+            if( currPos + 1 < dateStr.length() ) {
+                if( dateStr[ currPos ].isDigit() ) {
+                    if( dateStr[ currPos + 1 ].isDigit() ) {
+                        day = dateStr.mid( currPos, 2 ).toInt();
+                        currPos += 2;
+                        continue;
+                    }
+                }
+            }
+
+            if( currPos < dateStr.length() ) {
+                if( dateStr[ currPos ].isDigit() ) {
+                    day = dateStr.mid( currPos, 1 ).toInt();
+                    currPos++;
+                    continue;
+                }
+            }
+
+            return QDateTime();
+        }
+        else if( pattern[ i ] == 'D' ) { // 0D or DD
+            if( currPos + 1 < dateStr.length() ) {
+                day = dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'H' ) { // 0H or HH
+            if( currPos + 1 < dateStr.length() ) {
+                hour = dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'I' ) { // 0I or II
+            if( currPos + 1 < dateStr.length() ) {
+                minute = dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else if( pattern[ i ] == 'S' ) { // 0S or SS
+            if( currPos + 1 < dateStr.length() ) {
+                second = dateStr.mid( currPos, 2 ).toInt();
+                currPos += 2;
+            }
+            else {
+                return QDateTime();
+            }
+        }
+        else {
+            currPos++;
+        }
+    }
+
+    return QDateTime( QDate( year, month, day ), QTime( hour, minute, second ) );
 }
 
 

@@ -43,7 +43,10 @@ QString formatMoney(double num, int precision = -1);
 Qt::DayOfWeek configuredWeekStartDay();
 QString decimalSymbol();
 
+QDateTime parseDateTimeByPattern(const QString &str, const QString &pattern);
+
 bool copyFile(QWidget* parent, const QString& src, const QString& dest);
+
 
 #endif
 
