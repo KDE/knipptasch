@@ -507,6 +507,7 @@ void AccountWidget::showTableMenu(QContextMenuEvent *e, const QModelIndex &index
     Q_UNUSED( index );
 
     QMenu *menu = new QMenu( this );
+    menu->setAttribute( Qt::WA_DeleteOnClose );
 
     menu->addAction( mainWindowActionCollection()->action( "posting_clone" ) );
     menu->addSeparator();
@@ -514,8 +515,6 @@ void AccountWidget::showTableMenu(QContextMenuEvent *e, const QModelIndex &index
     menu->addSeparator();
     menu->addAction( mainWindowActionCollection()->action( "posting_valuedate_to_today" ) );
     menu->addAction( mainWindowActionCollection()->action( "posting_valuedate_to_maturity" ) );
-
-    connect( menu, SIGNAL( aboutToHide() ), menu, SLOT( deleteLater() ) );
 
     menu->popup( e->globalPos() );
 }
