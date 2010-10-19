@@ -1,0 +1,3 @@
+SKIP aboutdialog.ui
+SKIP mainwindow.ui
+SKIP compat

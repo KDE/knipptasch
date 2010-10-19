@@ -1,0 +1,13 @@
+[Desktop Entry]
+Exec=knipptasch
+Icon=knipptasch
+Type=Application
+X-DocPath=knipptasch/index.html
+X-KDE-StartupNotify=true
+
+Name=Knipptasch
+Name[x-test]=xxKnipptaschxx
+GenericName=Personal Finance Manager
+GenericName[x-test]=xxPersonal Finance Managerxx
+
+Categories=Qt;KDE;Finance;Office;

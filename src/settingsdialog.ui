@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Stefan Böhmann</author>
+ <class>SettingsDialog</class>
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>681</width>
+    <height>465</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="iconLabel">
+       <property name="text">
+        <string>icon</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_9">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Configure Knipptasch</string>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="KTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Colors</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Foreground Colors</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="positiveAmountForegroundEnabled">
+              <property name="text">
+               <string>positive amount:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="KColorButton" name="positiveAmountForegroundColor"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="negativeAmountForegroundEnabled">
+              <property name="text">
+               <string>negative amount:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="KColorButton" name="negativeAmountForegroundColor"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="availableWarrantyForegroundEnabled">
+              <property name="text">
+               <string>available warranty:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="KColorButton" name="availableWarrantyForegroundColor"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="expiredWarrantyForegroundEnabled">
+              <property name="text">
+               <string>expired warranty:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="KColorButton" name="expiredWarrantyForegroundColor"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>454</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Background Colors</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="defaultPostingBackgroundEnabled">
+              <property name="text">
+               <string>normal posting:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="KColorButton" name="defaultPostingBackgroundColor"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="currentPostingBackgroundEnabled">
+              <property name="text">
+               <string>current posting:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="KColorButton" name="currentPostingBackgroundColor"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="futurePostingBackgroundEnabled">
+              <property name="text">
+               <string>future postings:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="KColorButton" name="futurePostingBackgroundColor"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="incompletePostingBackgroundEnabled">
+              <property name="text">
+               <string>incomplete postings:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="KColorButton" name="incompletePostingBackgroundColor"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>449</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>506</x>
+     <y>437</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>464</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SettingsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>639</x>
+     <y>438</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>642</x>
+     <y>464</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>positiveAmountForegroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>positiveAmountForegroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>negativeAmountForegroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>negativeAmountForegroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>97</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>availableWarrantyForegroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>availableWarrantyForegroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>158</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>expiredWarrantyForegroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>expiredWarrantyForegroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>171</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultPostingBackgroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>defaultPostingBackgroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>253</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>currentPostingBackgroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>currentPostingBackgroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>futurePostingBackgroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>futurePostingBackgroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>311</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>177</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>incompletePostingBackgroundEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>incompletePostingBackgroundColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>340</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

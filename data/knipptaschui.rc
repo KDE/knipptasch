@@ -1,0 +1,59 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<gui name="Knipptasch" version="1">
+
+    <ToolBar name="mainToolBar" noMerge="1">
+        <text>Main Toolbar</text>
+        <Action name="file_new"/>
+        <Action name="file_open"/>
+        <Separator/>
+        <Action name="file_save"/>
+        <Action name="file_save_as"/>
+        <Separator/>
+        <Action name="file_print"/>
+        <Separator/>
+        <Action name="file_close"/>
+    </ToolBar>
+
+    <MenuBar>
+        <Menu name="file">
+            <Action name="file_new"/>
+            <Action name="file_open"/>
+            <Action name="file_recent_files"/>
+            <Separator/>
+            <Action name="file_save"/>
+            <Action name="file_save_as"/>
+            <Separator/>
+            <Action name="file_print"/>
+            <!-- <Action name="file_print_preview"/> -->
+            <Separator/>
+            <Action name="file_close"/>
+            <Separator/>
+            <Action name="file_quit"/>
+        </Menu>
+
+        <Menu name="edit"/>
+
+        <Menu name="posting">
+            <text>Posting</text>
+            <Action name="posting_clone"/>
+            <Separator/>
+            <Action name="posting_delete"/>
+            <Separator/>
+            <Action name="posting_valuedate_to_today"/>
+            <Action name="posting_valuedate_to_maturity"/>
+        </Menu>
+
+        <Menu name="settings">
+            <Action name="configure_account" />
+            <Merge/>
+        </Menu>
+        <Menu name="help"/>
+    </MenuBar>
+
+    <StatusBar/>
+</gui>
+
+<!--
+kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
+vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:
+-->

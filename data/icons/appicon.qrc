@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file alias="oxygen/22x22/apps/knipptasch.png">hi22-app-knipptasch.png</file>
+    <file alias="oxygen/32x32/apps/knipptasch.png">hi32-app-knipptasch.png</file>
+    <file alias="oxygen/48x48/apps/knipptasch.png">hi48-app-knipptasch.png</file>
+    <file alias="oxygen/64x64/apps/knipptasch.png">hi64-app-knipptasch.png</file>
+  </qresource>
+</RCC>
