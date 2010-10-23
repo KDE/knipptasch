@@ -111,6 +111,12 @@ set(knipptasch_SOURCES
     src/quickreportwidget.cpp
     src/main.cpp
 
+    src/export/csv/csvexportplugin.cpp
+    src/export/csv/csvexportdialog.cpp
+
+    src/import/csv/csvimportplugin.cpp
+    src/import/csv/csvimportdialog.cpp
+
     src/delegate/datedelegate.cpp
     src/delegate/postingtextdelegate.cpp
 
@@ -142,6 +148,12 @@ set( knipptasch_HEADERS
     src/quickreportpopup.h
     src/quickreportwidget.h
 
+    src/export/csv/csvexportplugin.h
+    src/export/csv/csvexportdialog.h
+
+    src/import/csv/csvimportplugin.h
+    src/import/csv/csvimportdialog.h
+
     src/delegate/datedelegate.h
     src/delegate/postingtextdelegate.h
 
@@ -160,6 +172,9 @@ set( knipptasch_FORMS
     src/searchreplacewidget.ui
     src/searchwidget.ui
     src/quickreportwidget.ui
+
+    src/export/csv/csvexportdialog.ui
+    src/import/csv/csvimportdialog.ui
 )
 
 set( knipptasch_RESOURCES

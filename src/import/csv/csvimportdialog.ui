@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Stefan Böhmann</author>
+ <class>CsvImportDialog</class>
+ <widget class="QDialog" name="CsvImportDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>862</width>
+    <height>439</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>File to import:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="KLineEdit" name="filename"/>
+       </item>
+       <item>
+        <widget class="QToolButton" name="fileButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>GroupBox</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" rowspan="2">
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Delimiter:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="delimiter">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>3</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Comma</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tabulator</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Semicolon</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Space</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Textquote:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KComboBox" name="textquote">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>&quot;</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>'</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>`</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="checkBox_2">
+          <property name="text">
+           <string>Ignore duplicate delimiters</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="1">
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Date format:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="dateFormat">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Y-M-D</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Decimal symbol:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="decimalSymbol">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>,</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Thousands separator:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KComboBox" name="thousandsSeparator">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Currency Sign:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="KComboBox" name="currencySign">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Euro</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dollar</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>$</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>€</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="2" rowspan="2">
+       <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Encoding:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="encoding">
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>End of Line:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="endOfLine">
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="checkBox">
+          <property name="text">
+           <string>Skip first row of file</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableView" name="view">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

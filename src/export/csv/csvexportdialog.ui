@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Stefan Böhmann</author>
+ <class>CsvExportDialog</class>
+ <widget class="QDialog" name="CsvExportDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>747</width>
+    <height>408</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>GroupBox</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Date format:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="dateFormat">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Y-M-D</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Decimal symbol:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="decimalSymbol">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>,</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Thousands separator:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KComboBox" name="thousandsSeparator">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Currency Sign:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="KComboBox" name="currencySign">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Euro</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dollar</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>$</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>€</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="3" rowspan="2">
+       <layout class="QFormLayout" name="formLayout_3">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Encoding:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="encoding">
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>End of Line:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="endOfLine">
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="1">
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Delimiter:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="KComboBox" name="delimiter">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>3</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Comma</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tabulator</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Semicolon</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Space</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Textquote:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KComboBox" name="textquote">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="minimumContentsLength">
+           <number>8</number>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>&quot;</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>'</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>`</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>GroupBox</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QRadioButton" name="all">
+        <property name="text">
+         <string>All</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="selected">
+        <property name="text">
+         <string>Selected</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QRadioButton" name="allInYear">
+          <property name="text">
+           <string>All in:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateEdit" name="allInYearEdit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="displayFormat">
+           <string>yyyy</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QRadioButton" name="allBetween">
+          <property name="text">
+           <string>All between:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateEdit" name="allBetweenDateStart">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="displayFormat">
+           <string>M/d/yyyy</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>and</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateEdit" name="allBetweenDateEnd">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="displayFormat">
+           <string>M/d/yyyy</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>allInYear</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>allInYearEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>94</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allBetween</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>allBetweenDateStart</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>180</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allBetween</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>270</x>
+     <y>138</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allBetween</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>allBetweenDateEnd</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>17</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>133</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
