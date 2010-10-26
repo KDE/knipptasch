@@ -41,7 +41,11 @@ AccountSettingsDialog::AccountSettingsDialog(Account *account, QWidget* parent)
 
 #if defined( WITH_QCA2 )
     m_passwordWidget = new PasswordWidget( this );
-    ui->tabWidget->addTab( m_passwordWidget, BarIcon("dialog-password"), tr( "Password Protection" )  );
+    int index = ui->tabWidget->addTab( m_passwordWidget, BarIcon("dialog-password"), tr( "Password Protection" )  );
+
+    if( !QCA::isSupported( "aes256-cbc-pkcs7" ) ) {
+        ui->tabWidget->setTabEnabled( index, false );
+    }
 #endif
 
     setAccount( account );
