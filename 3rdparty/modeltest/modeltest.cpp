@@ -453,6 +453,7 @@ void ModelTest::data()
     QVariant checkStateVariant = model->data(model->index(0, 0), Qt::CheckStateRole);
     if (checkStateVariant.isValid()) {
         int state = checkStateVariant.toInt();
+        Q_UNUSED( state );
         Q_ASSERT(state == Qt::Unchecked ||
                  state == Qt::PartiallyChecked ||
                  state == Qt::Checked);
@@ -542,6 +543,10 @@ void ModelTest::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int e
  */
 void ModelTest::rowsRemoved(const QModelIndex & parent, int start, int end)
 {
+    Q_UNUSED( parent );
+    Q_UNUSED( start );
+    Q_UNUSED( end );
+
     Changing c = remove.pop();
     Q_ASSERT(c.parent == parent);
     Q_ASSERT(c.oldSize - (end - start + 1) == model->rowCount(parent));
