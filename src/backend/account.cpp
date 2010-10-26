@@ -20,6 +20,8 @@
 #include "money.h"
 
 #include <QDataStream>
+#include <QDebug>
+
 #include <cstdlib>
 
 
@@ -45,6 +47,8 @@ struct Account::Private
       : openingdate( QDate( QDate::currentDate().year(), 1, 1 ) ),
         minbalanceenabled( false ),
         maxbalanceenabled( false ),
+        usePassword( false ),
+        level( Average ),
         modified( false )
     {
     }
@@ -67,6 +71,10 @@ struct Account::Private
     bool maxbalanceenabled;
     Money minbalance;
     Money maxbalance;
+
+    bool usePassword;
+    QCA::SecureArray password;
+    SecurityLevel level;
 
     QList<Posting*> postings;
     mutable bool modified;
@@ -115,6 +123,55 @@ void Account::setModified(bool state)
 }
 
 
+bool Account::isPasswordEnabled() const
+{
+    return d->usePassword;
+}
+
+
+void Account::setPasswordEnabled(bool state)
+{
+    if( state != d->usePassword ) {
+        d->usePassword = state;
+        setModified();
+    }
+}
+
+
+QByteArray Account::password() const
+{
+#if defined( WITH_QCA2 )
+    return d->password.toByteArray();
+#else
+    return d->password;
+#endif
+}
+
+
+void  Account::setPassword(const QCA::SecureArray &pw)
+{
+    if( pw != d->password ) {
+        d->password = pw;
+        setModified();
+    }
+}
+
+
+Account::SecurityLevel Account::securityLevel() const
+{
+    return d->level;
+}
+
+
+void Account::setSecurityLevel(Account::SecurityLevel level)
+{
+    if( level != d->level ) {
+        d->level = level;
+        setModified();
+    }
+}
+
+
 QString Account::name() const
 {
     return d->name;
@@ -123,8 +180,10 @@ QString Account::name() const
 
 void Account::setName(const QString &name)
 {
-    d->name = name;
-    setModified();
+    if( name != d->name ) {
+        d->name = name;
+        setModified();
+    }
 }
 
 
@@ -136,8 +195,10 @@ QString Account::number() const
 
 void Account::setNumber(const QString &number)
 {
-    d->number = number;
-    setModified();
+    if( number != d->number ) {
+        d->number = number;
+        setModified();
+    }
 }
 
 
@@ -149,8 +210,10 @@ QString Account::description() const
 
 void Account::setDescription(const QString &desc)
 {
-    d->description = desc;
-    setModified();
+    if( desc != d->description ) {
+        d->description = desc;
+        setModified();
+    }
 }
 
 
@@ -162,8 +225,10 @@ QDate Account::openingDate() const
 
 void Account::setOpeningDate(const QDate &date)
 {
-    d->openingdate = date;
-    setModified();
+    if( date != d->openingdate ) {
+        d->openingdate = date;
+        setModified();
+    }
 }
 
 
@@ -175,8 +240,10 @@ Money Account::openingBalance() const
 
 void Account::setOpeningBalance(Money money)
 {
-    d->openingbalance = money;
-    setModified();
+    if( money.cents() != d->openingbalance.cents() ) {
+        d->openingbalance = money;
+        setModified();
+    }
 }
 
 
@@ -188,8 +255,10 @@ bool Account::minimumBalanceEnabled() const
 
 void Account::setMinimumBalanceEnabled(bool b)
 {
-    d->minbalanceenabled = b;
-    setModified();
+    if( b != d->minbalanceenabled ) {
+        d->minbalanceenabled = b;
+        setModified();
+    }
 }
 
 
@@ -201,8 +270,10 @@ Money Account::minimumBalance() const
 
 void Account::setMinimumBalance(Money money)
 {
-    d->minbalance = money.abs();
-    setModified();
+    if( money.cents() != d->minbalance.cents() ) {
+        d->minbalance = money;
+        setModified();
+    }
 }
 
 
@@ -214,8 +285,10 @@ bool Account::maximumBalanceEnabled() const
 
 void Account::setMaximumBalanceEnabled(bool b)
 {
-    d->maxbalanceenabled = b;
-    setModified();
+    if( b != d->maxbalanceenabled ) {
+        d->maxbalanceenabled = b;
+        setModified();
+    }
 }
 
 
@@ -227,8 +300,10 @@ Money Account::maximumBalance() const
 
 void Account::setMaximumBalance(Money money)
 {
-    d->maxbalance = money.abs();
-    setModified();
+    if( money.cents() != d->maxbalance.cents() ) {
+        d->maxbalance = money;
+        setModified();
+    }
 }
 
 
@@ -240,8 +315,10 @@ QString Account::iban() const
 
 void Account::setIban(const QString &iban)
 {
-    d->iban = iban;
-    setModified();
+    if( iban != d->iban ) {
+        d->iban = iban;
+        setModified();
+    }
 }
 
 
@@ -253,8 +330,10 @@ QString Account::owner() const
 
 void Account::setOwner(const QString &owner)
 {
-    d->owner = owner;
-    setModified();
+    if( owner != d->owner ) {
+        d->owner = owner;
+        setModified();
+    }
 }
 
 
@@ -264,9 +343,12 @@ QString Account::institution() const
 }
 
 
-void Account::setInstitution(const QString &str)
+void Account::setInstitution(const QString &institution)
 {
-    d->institution = str;
+    if( institution != d->institution ) {
+        d->institution = institution;
+        setModified();
+    }
 }
 
 
@@ -276,9 +358,12 @@ QString Account::bic() const
 }
 
 
-void Account::setBic(const QString &str)
+void Account::setBic(const QString &bic)
 {
-    d->bic = str;
+    if( bic != d->bic ) {
+        d->bic = bic;
+        setModified();
+    }
 }
 
 
@@ -351,7 +436,7 @@ Account* Account::demoAccount()
 
     Account *acc = new Account;
 
-    acc->setNumber( "105626300" );
+    acc->setNumber( "105626320" );
     acc->setOpeningBalance( 2000 );
 
     for(int i = -15; i < 3; ++i) {
@@ -361,19 +446,20 @@ Account* Account::demoAccount()
             1
         );
 
-        initDemoAccountAddPosting( acc, date.addDays( std::rand() % 6 ), "Rent", -548.50, i < 0 );
+        initDemoAccountAddPosting( acc, date.addDays( std::rand() % 6 ),
+                                   QObject::tr( "Rent" ) , -548.50, i < 0 );
 
         if( i < 0 ) {
             initDemoAccountAddPosting(
                 acc,
                 date.addDays( std::rand() % 6 ),
-                "Phone and Internet",
+                QObject::tr( "Phone and Internet" ),
                 -25 - ( ( std::rand() % 5000 + 100 ) / 100.00 )
             );
             initDemoAccountAddPosting(
                 acc,
                 date.addDays( std::rand() % 6 ),
-                "Salary",
+                QObject::tr( "Salary" ),
                 1800.00 + ( ( std::rand() % 50000 + 100 ) / 100.00 )
             );
 
@@ -381,7 +467,7 @@ Account* Account::demoAccount()
                 initDemoAccountAddPosting(
                     acc,
                     date.addDays( std::rand() % date.daysInMonth() + 1 ),
-                    "ATM",
+                    QObject::tr( "ATM" ),
                     v[ std::rand() % v.size() ]
                 );
             }
@@ -390,7 +476,7 @@ Account* Account::demoAccount()
             initDemoAccountAddPosting(
                 acc,
                 date.addDays( std::rand() % 6 ),
-                "Phone and Internet",
+                QObject::tr( "Phone and Internet" ),
                 Money(),
                 false
             );
@@ -398,7 +484,7 @@ Account* Account::demoAccount()
             initDemoAccountAddPosting(
                 acc,
                 date.addDays( std::rand() % 6 ),
-                "Salary",
+                QObject::tr( "Salary" ),
                 Money(),
                 false
             );
@@ -411,6 +497,8 @@ Account* Account::demoAccount()
 
 QDataStream& operator<<(QDataStream &stream, const Account &acc)
 {
+    qDebug() << "Serialize Account" << acc.name();
+
     stream << acc.name();
     stream << acc.number();
     stream << acc.description();
@@ -423,12 +511,16 @@ QDataStream& operator<<(QDataStream &stream, const Account &acc)
     stream << acc.iban();
     stream << acc.owner();
     stream << acc.institution();
+    stream << acc.bic();
 
-    int count = acc.countPostings();
+    quint32 count = acc.countPostings();
     stream << count;
-    for(int index = 0; index < count; ++index) {
+
+    qDebug() << "  Serialize" << count << "elements";
+
+    for(quint32 index = 0; index < count; ++index) {
         const Posting *p = acc.posting( index );
-        stream << (*p);
+        stream << *p;
     }
 
     return stream;
@@ -437,6 +529,8 @@ QDataStream& operator<<(QDataStream &stream, const Account &acc)
 
 QDataStream& operator>>(QDataStream &stream, Account &acc)
 {
+    qDebug() << "Deserialize Account";
+
     QString str;
     QDate date;
     Money money;
@@ -478,12 +572,19 @@ QDataStream& operator>>(QDataStream &stream, Account &acc)
     stream >> str;
     acc.setInstitution( str );
 
-    int count;
+    stream >> str;
+    acc.setBic( str );
+
+    quint32 count;
     stream >> count;
 
-    for(int i = 0; i < count; ++i) {
+    qDebug() << "  Deserialize" << count << "elements";
+
+    for(quint32 i = 0; i < count; ++i) {
         Posting *p = new Posting;
-        stream >> (*p);
+        stream >> *p;
+
+        acc.addPosting( p );
     }
 
     return stream;

@@ -130,6 +130,12 @@ AccountWidget::~AccountWidget()
 }
 
 
+bool AccountWidget::isModified() const
+{
+    return account()->isModified();
+}
+
+
 QString AccountWidget::fileName() const
 {
     return m_filename;
@@ -141,12 +147,6 @@ void AccountWidget::setFileName(const QString &name)
     m_filename = name;
 
     emit changed();
-}
-
-
-bool AccountWidget::isModified() const
-{
-    return account()->isModified();
 }
 
 
@@ -201,7 +201,7 @@ void AccountWidget::checkActionState()
     mainWindowActionCollection()->action( "edit_find_next" )->setEnabled( true );
     mainWindowActionCollection()->action( "edit_find_prev" )->setEnabled( true );
 
-    mainWindowActionCollection()->action("configure_account")->setEnabled( true );
+    mainWindowActionCollection()->action( "configure_account" )->setEnabled( true );
 }
 
 
@@ -217,7 +217,6 @@ bool AccountWidget::onSaveAsFile(const QString &str)
 
     QString filename = str.trimmed();
     if( filename.isEmpty() ) {
-
 #if defined(HAVE_KDE)
         filename = KFileDialog::getSaveFileName( KUrl(), "*.ka|" + tr( "All Supported Files" ), this );
 #else
@@ -423,11 +422,10 @@ bool AccountWidget::eventFilter(QObject *obj, QEvent *event)
 
 
 #if defined(HAVE_KDE)
-KActionCollection*
+KActionCollection* AccountWidget::mainWindowActionCollection()
 #else
-ActionCollection*
+ActionCollection* AccountWidget::mainWindowActionCollection()
 #endif
-                  AccountWidget::mainWindowActionCollection()
 {
     Q_ASSERT( m_mainWindow );
 

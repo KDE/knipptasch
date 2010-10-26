@@ -37,8 +37,15 @@ include(MacroEnsureOutOfSourceBuild)
 
 macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
 
-
 find_package( Qt4 4.7.0 COMPONENTS QtCore QtGui QtXml QtSql REQUIRED )
+
+find_package( QCA2 )
+macro_log_feature( QCA2_FOUND "qca2" "Support file encryption" "http://delta.affinix.com/qca" FALSE "2.0.0" "" )
+
+if( QCA2_FOUND )
+  add_definitions( -DWITH_QCA2 ${QCA2_DEFINITIONS} )
+endif( QCA2_FOUND )
+
 
 if( WIN32 OR APPLE )
     set( QTONLY TRUE )
@@ -90,6 +97,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}/3rdparty
+    ${QCA2_INCLUDE_DIR}
     ${QT_INCLUDES}
  )
 
@@ -109,6 +117,8 @@ set(knipptasch_SOURCES
     src/searchwidget.cpp
     src/quickreportpopup.cpp
     src/quickreportwidget.cpp
+    src/passworddialog.cpp
+    src/passwordwidget.cpp
     src/main.cpp
 
     src/export/csv/csvexportplugin.cpp
@@ -147,6 +157,8 @@ set( knipptasch_HEADERS
     src/searchwidget.h
     src/quickreportpopup.h
     src/quickreportwidget.h
+    src/passworddialog.h
+    src/passwordwidget.h
 
     src/export/csv/csvexportplugin.h
     src/export/csv/csvexportdialog.h
@@ -172,6 +184,8 @@ set( knipptasch_FORMS
     src/searchreplacewidget.ui
     src/searchwidget.ui
     src/quickreportwidget.ui
+    src/passworddialog.ui
+    src/passwordwidget.ui
 
     src/export/csv/csvexportdialog.ui
     src/import/csv/csvimportdialog.ui
@@ -187,7 +201,7 @@ set( knipptasch_RESOURCES
 if( HAVE_KDE )
     kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
     kde4_add_executable( knipptasch ${knipptasch_SOURCES} )
-    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} )
+    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${QCA2_LIBRARIES} )
 
     install( TARGETS knipptasch ${INSTALL_TARGETS_DEFAULT_ARGS} )
 else( HAVE_KDE )
@@ -218,7 +232,7 @@ else( HAVE_KDE )
     endif( WIN32 AND HAVE_DEPLOY )
 
     add_executable( knipptasch ${WIN32_EXE} ${knipptasch_SOURCES} )
-    target_link_libraries(knipptasch ${QT_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
+    target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
 
     install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 endif( HAVE_KDE )

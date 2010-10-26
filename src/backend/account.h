@@ -23,15 +23,46 @@ class QString;
 class QDate;
 class QDataStream;
 
+#if defined(WITH_QCA2)
+#include <QtCrypto>
+
+namespace QCA
+{
+    class SecureArray;
+}
+
+#else
+#include <QByteArray>
+
+namespace QCA {
+    typedef QByteArray SecureArray;
+}
+#endif
+
 
 class Account
 {
     public:
+        enum SecurityLevel {
+            High,
+            Average,
+            Low
+        };
+
         Account();
         ~Account();
 
         bool isModified() const;
         void setModified(bool state = true);
+
+        bool isPasswordEnabled() const;
+        void setPasswordEnabled(bool state = true);
+
+        QByteArray password() const;
+        void setPassword(const QCA::SecureArray &pw);
+
+        SecurityLevel securityLevel() const;
+        void setSecurityLevel(SecurityLevel level);
 
         QString name() const;
         void setName(const QString &name);
@@ -87,6 +118,7 @@ class Account
         Private *d;
 
 };
+
 
 extern QDataStream& operator<<(QDataStream &stream, const Account &acc);
 extern QDataStream& operator>>(QDataStream &stream, Account &acc);

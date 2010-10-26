@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,45 +14,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTSETTINGSDIALOG_H
-#define ACCOUNTSETTINGSDIALOG_H
+#include "passworddialog.h"
+#include "ui_passworddialog.h"
 
-#include <QDialog>
+#include "compat/iconloader.h"
 
-class PasswordWidget;
-class QString;
-class Account;
+#include <QDialogButtonBox>
+#include <QPushButton>
 
-namespace Ui {
-    class AccountSettingsDialog;
+
+
+PasswordDialog::PasswordDialog(QWidget *parent)
+  : QDialog( parent ),
+    ui( new Ui::PasswordDialog )
+{
+    ui->setupUi( this );
+
+    setWindowTitle( tr( "Password - %1" ).arg( QCoreApplication::applicationName() ) );
+    ui->iconLabel->setPixmap( DesktopIcon("dialog-password") );
+
+    connect( ui->password, SIGNAL( textChanged(QString) ), this, SLOT( checkState() ) );
+
+    checkState();
 }
 
 
-class AccountSettingsDialog : public QDialog
+QByteArray PasswordDialog::password() const
 {
-    Q_OBJECT
-
-    public:
-        explicit AccountSettingsDialog(Account *account, QWidget* parent = 0);
-        ~AccountSettingsDialog();
-
-        Account* account();
-        const Account* account() const;
-        void setAccount(Account *account);
-
-    private slots:
-        void onValueChanged();
-        void onApplyChanges();
-
-    private:
-        Ui::AccountSettingsDialog *ui;
-        PasswordWidget *m_passwordWidget;
-
-        Account *m_account;
-};
+    return ui->password->text().toUtf8();
+}
 
 
-#endif
+void PasswordDialog::checkState()
+{
+    ui->buttonBox->button( QDialogButtonBox::Ok )
+                                ->setEnabled( !ui->password->text().isEmpty() );
+}
+
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

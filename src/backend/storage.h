@@ -17,7 +17,8 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#include <QFile>
+#include <QString>
+
 
 class Account;
 class QWidget;
@@ -26,15 +27,26 @@ class QWidget;
 class Storage
 {
     public:
-        static QFile::FileError writeAccount(QWidget *parent, Account *acc, const QString &filename);
-        static QFile::FileError readAccount(QWidget *parent, Account *acc, const QString &filename);
+        static bool writeAccount(QWidget *parent, Account *acc, const QString &filename);
+        static bool readAccount(QWidget *parent, Account *acc, const QString &filename);
 
     private:
-        Storage();
+        Storage(QWidget *parent, const QString &filename);
         ~Storage();
 
-        QFile::FileError write(QWidget *parent, Account *acc, const QString &filename);
-        QFile::FileError read(QWidget *parent, Account *acc, const QString &filename);
+        bool write(Account *acc);
+        bool read(Account *acc);
+
+        QByteArray metaData(const Account *acc, bool &ok) const;
+
+        QByteArray encodedData(const Account *acc, bool &ok) const;
+        bool decodedData(const QByteArray &data, Account *acc) const;
+
+        void errorMessage(const QString &message) const;
+
+    private:
+        QWidget *m_parent;
+        QString m_filename;
 };
 
 

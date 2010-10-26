@@ -17,6 +17,8 @@
 #include "accountsettingsdialog.h"
 #include "ui_accountsettingsdialog.h"
 
+#include "passwordwidget.h"
+
 #include "compat/iconloader.h"
 
 #include "backend/account.h"
@@ -29,12 +31,18 @@
 AccountSettingsDialog::AccountSettingsDialog(Account *account, QWidget* parent)
   : QDialog( parent ),
     ui( new Ui::AccountSettingsDialog ),
+    m_passwordWidget( 0 ),
     m_account( 0 )
 {
     ui->setupUi( this );
 
     setWindowTitle( tr( "Configure Account - %1" ).arg( QCoreApplication::applicationName() ) );
     ui->iconLabel->setPixmap( DesktopIcon("view-bank-account") );
+
+#if defined( WITH_QCA2 )
+    m_passwordWidget = new PasswordWidget( this );
+    ui->tabWidget->addTab( m_passwordWidget, BarIcon("dialog-password"), tr( "Password Protection" )  );
+#endif
 
     setAccount( account );
 
@@ -54,6 +62,10 @@ AccountSettingsDialog::AccountSettingsDialog(Account *account, QWidget* parent)
     connect( ui->buttonBox, SIGNAL( accepted() ), this, SLOT( onApplyChanges() ) );
     connect( ui->buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked(bool) ), this, SLOT( onApplyChanges() ) );
 
+#if defined( WITH_QCA2 )
+    connect( m_passwordWidget, SIGNAL( valueChanged() ), this, SLOT( onValueChanged() ) );
+#endif
+
     onValueChanged();
 }
 
@@ -61,6 +73,7 @@ AccountSettingsDialog::AccountSettingsDialog(Account *account, QWidget* parent)
 AccountSettingsDialog::~AccountSettingsDialog()
 {
     delete ui;
+    delete m_passwordWidget;
 }
 
 
@@ -109,6 +122,10 @@ void AccountSettingsDialog::setAccount(Account *account)
         ui->outLimit->setValue( m_account->minimumBalance() );
         ui->outLimit->setEnabled( m_account->minimumBalanceEnabled() );
     }
+
+    if( m_passwordWidget ) {
+        m_passwordWidget->setAccount( m_account );
+    }
 }
 
 
@@ -116,9 +133,23 @@ void AccountSettingsDialog::onValueChanged()
 {
     Q_ASSERT( m_account );
 
+    if( m_passwordWidget && !m_passwordWidget->isValid() ) {
+        ui->tabWidget->setCurrentIndex( ui->tabWidget->indexOf( m_passwordWidget ) );
+
+        ui->buttonBox->button( QDialogButtonBox::Apply )->setEnabled( false );
+        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+
+        return;
+    }
+
+    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
     ui->buttonBox->button( QDialogButtonBox::Apply )->setEnabled( true );
 
     do {
+        if( m_passwordWidget && m_passwordWidget->isModified() ) {
+            break;
+        }
+
         if( ui->name->text().trimmed() != m_account->name().trimmed() ) {
             break;
         }
@@ -174,6 +205,10 @@ void AccountSettingsDialog::onValueChanged()
 
 void AccountSettingsDialog::onApplyChanges()
 {
+    if( m_passwordWidget ) {
+        m_passwordWidget->onApplyChanges();
+    }
+
     if( m_account ) {
         m_account->setName( ui->name->text().trimmed() );
         m_account->setInstitution( ui->institution->text().trimmed() );
@@ -188,6 +223,7 @@ void AccountSettingsDialog::onApplyChanges()
         m_account->setMinimumBalanceEnabled( ui->useOutLimit->isChecked() );
         m_account->setMinimumBalance( ui->outLimit->value() );
     }
+
     onValueChanged();
 }
 

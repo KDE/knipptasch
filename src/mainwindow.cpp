@@ -476,7 +476,7 @@ void MainWindow::onOpenFile(const QString &str)
     }
 
     Account *acc = new Account;
-    if( Storage::readAccount( this, acc, filename ) != QFile::NoError ) {
+    if( !Storage::readAccount( this, acc, filename ) ) {
         delete acc;
     }
     else {

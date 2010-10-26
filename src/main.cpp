@@ -31,7 +31,12 @@
 #include <QDir>
 #endif
 
+#if defined(WITH_QCA2)
+#include <QtCrypto>
+#endif
+
 #include <QDebug>
+
 
 int main(int argc, char* argv[])
 {
@@ -89,6 +94,14 @@ int main(int argc, char* argv[])
     }
     else {
         qDebug() << "loading app translations for locale " << locale << " from dir " << translationDir << " failed.";
+    }
+#endif
+
+#if defined(WITH_QCA2)
+    QCA::Initializer init;
+
+    if( !QCA::isSupported( "aes256-cbc-pkcs7" ) ) {
+        qDebug() << "AES256 (CBC mode with PKCS#7 padding) not supported!";
     }
 #endif
 

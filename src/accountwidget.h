@@ -20,6 +20,7 @@
 #include <QWidget>
 #include <QUrl>
 
+
 #include "compat/actioncollection.h"
 
 
@@ -44,10 +45,10 @@ class AccountWidget : public QWidget
         explicit AccountWidget(Account *account, MainWindow *mainWindow);
         ~AccountWidget();
 
+        bool isModified() const;
+
         QString fileName() const;
         void setFileName(const QString &name);
-
-        bool isModified() const;
 
         Account* account();
         const Account* account() const;

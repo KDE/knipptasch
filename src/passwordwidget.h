@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,40 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTSETTINGSDIALOG_H
-#define ACCOUNTSETTINGSDIALOG_H
+#ifndef PASSWORDWIDGET_H
+#define PASSWORDWIDGET_H
 
-#include <QDialog>
+#include <QWidget>
 
-class PasswordWidget;
-class QString;
 class Account;
 
 namespace Ui {
-    class AccountSettingsDialog;
+    class PasswordWidget;
 }
 
 
-class AccountSettingsDialog : public QDialog
+
+class PasswordWidget : public QWidget
 {
     Q_OBJECT
 
     public:
-        explicit AccountSettingsDialog(Account *account, QWidget* parent = 0);
-        ~AccountSettingsDialog();
+        explicit PasswordWidget(QWidget *parent = 0);
+        ~PasswordWidget();
 
-        Account* account();
-        const Account* account() const;
+        bool isValid() const;
+        bool isModified() const;
+
+        void onApplyChanges();
+
         void setAccount(Account *account);
+
+    signals:
+        void valueChanged();
 
     private slots:
         void onValueChanged();
-        void onApplyChanges();
 
     private:
-        Ui::AccountSettingsDialog *ui;
-        PasswordWidget *m_passwordWidget;
-
+        Ui::PasswordWidget *ui;
         Account *m_account;
 };
 
