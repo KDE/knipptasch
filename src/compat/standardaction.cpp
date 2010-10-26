@@ -24,6 +24,11 @@
 
 #include <kstandardaction.h>
 #include <ktoggleaction.h>
+#include <kdeversion.h>
+
+#if KDE_IS_VERSION(4,5,73)
+#include <kdualaction.h>
+#endif
 
 
 namespace StandardAction
@@ -76,7 +81,11 @@ namespace StandardAction
 
     KAction* showStatusbar(const QObject* recvr, const char* slot, QObject* parent)
     {
+#if KDE_IS_VERSION(4,5,73)
+        return KStandardAction::showHideStatusbar(recvr, slot, parent);
+#else
         return KStandardAction::showStatusbar(recvr, slot, parent);
+#endif
     }
 
     KAction* aboutApp(const QObject* recvr, const char* slot, QObject* parent)
@@ -131,7 +140,11 @@ namespace StandardAction
 
     KAction* showMenubar(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::showMenubar(recvr, slot, parent);
+#if KDE_IS_VERSION(4,5,73)
+        return KStandardAction::showHideMenubar(recvr, slot, parent);
+#else
+        return KStandardAction::showMenubar(recvr, slot, parent);
+#endif
     }
 }
 
