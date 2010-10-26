@@ -44,6 +44,9 @@ macro_log_feature( QCA2_FOUND "qca2" "Support file encryption" "http://delta.aff
 
 if( QCA2_FOUND )
   add_definitions( -DWITH_QCA2 ${QCA2_DEFINITIONS} )
+else( QCA2_FOUND )
+  set( QCA2_LIBRARIES "" )
+  set( QCA2_INCLUDE_DIR "" )
 endif( QCA2_FOUND )
 
 
