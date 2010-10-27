@@ -237,7 +237,11 @@ else( HAVE_KDE )
     add_executable( knipptasch ${WIN32_EXE} ${knipptasch_SOURCES} )
     target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
 
-    install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
+    if( WIN32 )
+        install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
+    else( WIN32 )
+        install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+    endif( WIN32 )
 
     if( WIN32 )
         install( FILES ${QT_BINARY_DIR}/mingwm10.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
