@@ -237,7 +237,38 @@ else( HAVE_KDE )
     add_executable( knipptasch ${WIN32_EXE} ${knipptasch_SOURCES} )
     target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
 
-    install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+    install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
+
+    if( WIN32 )
+        install( FILES ${QT_BINARY_DIR}/mingwm10.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+
+        install( FILES ${QT_LIBRARY_DIR}/QtCore4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+        install( FILES ${QT_LIBRARY_DIR}/QtGui4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+
+        #install( FILES ${QT_LIBRARY_DIR}/QtCored4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+        #install( FILES ${QT_LIBRARY_DIR}/QtGuid4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qgif4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qico4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qjpeg4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qmng4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qsvg4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+        install( FILES ${QT_PLUGINS_DIR}/imageformats/qtiff4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
+
+        file( GLOB QTQM_FILES ${QT_TRANSLATIONS_DIR}/qt_*.qm )
+        install( FILES ${QTQM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
+
+        file( GLOB QTCONFIGQM_FILES ${QT_TRANSLATIONS_DIR}/qtconfig_*.qm )
+        install( FILES ${QTCONFIGQM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
+
+        configure_file( knipptasch.nsi.cmake ${CMAKE_INSTALL_PREFIX}/knipptasch.nsi @ONLY )
+
+        # TODO
+        #if( QCA2_FOUND )
+        #    install( FILES ${QT_LIBRARY_DIR}/qca2.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
+        #endif( QCA2_FOUND )
+
+    endif( WIN32 )
 endif( HAVE_KDE )
 
 
