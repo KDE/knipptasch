@@ -17,19 +17,77 @@
 #include "csvimportdialog.h"
 #include "ui_csvimportdialog.h"
 
+#include "compat/iconloader.h"
+
+#include <QDate>
+#include <QCoreApplication>
+#include <QTextCodec>
 
 
-CsvImportDialog::CsvImportDialog(Account *account, QWidget *parent)
+
+CsvImportDialog::CsvImportDialog(QWidget *parent)
   : QDialog( parent ),
     ui( new Ui::CsvImportDialog )
 {
     ui->setupUi( this );
+    
+    setWindowTitle( tr( "CSV Import - %1" ).arg( QCoreApplication::applicationName() ) );
+    ui->iconLabel->setPixmap( DesktopIcon("text-csv") );
+
+    ui->fileButton->setIcon( BarIcon("document-open") );
+    
+    ui->delimiter->clear();
+    ui->delimiter->addItem( "" );
+    ui->delimiter->addItem( tr( "Comma" ), ',' );
+    ui->delimiter->addItem( tr( "Tabulator" ), '\t' );
+    ui->delimiter->addItem( tr( "Semicolon" ), ';' );
+    ui->delimiter->addItem( tr( "Space" ), ' ' );
+    ui->delimiter->setCurrentIndex( 3 );
+
+    ui->textquote->clear();
+    ui->textquote->addItem( "\"" );
+    ui->textquote->addItem( "'" );
+    ui->textquote->addItem( "`" );
+    ui->textquote->setCurrentIndex( 0 );
+
+    ui->dateFormat->clear();
+    ui->dateFormat->addItem( "Y-M-D" );
+    ui->dateFormat->setCurrentIndex( 0 );
+    
+    ui->decimalSymbol->clear();
+    ui->decimalSymbol->addItem( "." );
+    ui->decimalSymbol->addItem( "," );
+
+    ui->thousandsSeparator->clear();
+    ui->thousandsSeparator->addItem( "" );
+    ui->thousandsSeparator->addItem( "." );
+
+    ui->currencySign->clear(); 
+    ui->currencySign->addItem( "" );
+
+    ui->encoding->clear();
+    foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
+        ui->encoding->addItem( name, name );
+    }
+    ui->encoding->setCurrentIndex( ui->encoding->findData( QTextCodec::codecForLocale()->name() ) );
+
+    ui->endOfLine->clear();
+    ui->endOfLine->addItem( tr( "Unix" ) );
+    ui->endOfLine->addItem( tr( "Windows/DOS" ) );
+    ui->endOfLine->addItem( tr( "Macintosh" ) );
+    ui->endOfLine->setCurrentIndex( 0 );
 }
 
 
 CsvImportDialog::~CsvImportDialog()
 {
     delete ui;
+}
+
+
+Account* CsvImportDialog::account() const
+{
+    return 0;
 }
 
 

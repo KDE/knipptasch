@@ -38,16 +38,20 @@ QString CsvImportPlugin::importActionName() const
 
 QPixmap CsvImportPlugin::importActionIcon() const
 {
-    return BarIcon("document-import-table");
+    return BarIcon("text-csv");
 }
 
 
 Account* CsvImportPlugin::importAccount(QWidget *parent) const
 {
-    Account *account = new Account;
-
-    QPointer<CsvImportDialog> dialog = new CsvImportDialog( account, parent );
-    dialog->exec();
+    QPointer<CsvImportDialog> dialog = new CsvImportDialog( parent );
+    Account *account = 0;
+    
+    if( dialog->exec() == QDialog::Accepted ) {
+        if( dialog ) {
+            account = dialog->account();
+        }
+    }
 
     delete dialog;
 

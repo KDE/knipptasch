@@ -57,6 +57,9 @@
 
 #include <QDebug>
 #include <QToolButton>
+#include "export/exportplugin.h"
+#include "export/csv/csvexportplugin.h"
+#include "import/csv/csvimportplugin.h"
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -67,7 +70,9 @@ MainWindow::MainWindow(QWidget* parent) :
 #endif
     ui( new Ui::MainWindow ),
     m_ActionCollection( new ActionCollection( this ) ),
-    m_recentFileMenu( new RecentFileMenu( tr( "Open &Recent" ), this ) )
+    m_recentFileMenu( new RecentFileMenu( tr( "Open &Recent" ), this ) ),
+    m_exportPluginActionGroup( new QActionGroup( this ) ),
+    m_importPluginActionGroup( new QActionGroup( this ) )
 {
     ui->setupUi( this );
 
@@ -85,6 +90,9 @@ MainWindow::MainWindow(QWidget* parent) :
 
     ui->tabWidget->clear();
 
+    loadExportPlugins();
+    loadImportPlugins();
+
     loadConfig();
 
     connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ), this, SLOT( onNewFile() ) );
@@ -93,6 +101,9 @@ MainWindow::MainWindow(QWidget* parent) :
 
     connect( ui->tabWidget, SIGNAL( currentChanged(int) ), this, SLOT( checkActionStates() ) );
     connect( ui->tabWidget, SIGNAL( tabCloseRequested(int) ), this, SLOT( onTabCloseRequest(int) ) );
+
+    connect( m_exportPluginActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( onExportPluginClicked(QAction*) ) );
+    connect( m_importPluginActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( onImportPluginClicked(QAction*) ) );
 
     checkActionStates();
 }
@@ -129,7 +140,7 @@ void MainWindow::setupActions()
     // File Actions
     StandardAction::openNew( this, SLOT( onNewFile() ), actionCollection() );
     StandardAction::open( this, SLOT( onOpenFile() ), actionCollection() );
-    QAction *recentFileAction = actionCollection()->addAction( "file_recent_files" );
+    KAction *recentFileAction = actionCollection()->addAction( "file_recent_files" );
     recentFileAction->setText( tr( "Open &Recent" ) );
     recentFileAction->setIcon( BarIcon("document-open-recent") );
     recentFileAction->setMenu( m_recentFileMenu );
@@ -183,6 +194,9 @@ void MainWindow::setupActions()
     ui->menuFile->addAction( actionCollection()->action( "file_save_as" ) );
     ui->menuFile->addSeparator();
     ui->menuFile->addAction( actionCollection()->action( "file_print" ) );
+    ui->menuFile->addSeparator();
+    m_exportMenu = ui->menuFile->addMenu( BarIcon("document-export"), tr( "Export..." ) );
+    m_importMenu = ui->menuFile->addMenu( BarIcon("document-import"), tr( "Import..." ) );
     ui->menuFile->addSeparator();
     ui->menuFile->addAction( actionCollection()->action( "file_close" ) );
     ui->menuFile->addSeparator();
@@ -359,6 +373,13 @@ void MainWindow::checkActionStates()
         ui->tabWidget->cornerWidget( Qt::TopRightCorner )
             ->setEnabled( ui->stackedWidget->currentIndex() != 0 );
     }
+
+    m_exportPluginActionGroup->setEnabled( ui->stackedWidget->currentIndex() != 0 );
+
+#if !defined(HAVE_KDE)
+    m_exportMenu->setEnabled( ui->stackedWidget->currentIndex() != 0 && !m_exportPluginActionGroup->actions().isEmpty() );
+    m_importMenu->setEnabled( !m_importPluginActionGroup->actions().isEmpty() );
+#endif
 
     if( ui->stackedWidget->currentIndex() == 0 ) {
         actionCollection()->action("file_save")->setEnabled( false );
@@ -667,6 +688,40 @@ void MainWindow::onShowStatusbar()
 }
 
 
+void MainWindow::onExportPluginClicked(QAction *action)
+{
+    Q_ASSERT( action );
+    
+    AccountWidget *caw = currentAccountWidget();
+    int index = action->data().toInt();
+    
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_exportPlugins.size() );
+    Q_ASSERT( caw );
+    
+    const ExportPlugin *plugin = m_exportPlugins.at( index );
+    plugin->exportAccount( caw->account(), caw->selectedAccounts(), this );
+}
+
+
+void MainWindow::onImportPluginClicked(QAction *action)
+{
+    Q_ASSERT( action );
+    
+    int index = action->data().toInt();
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_importPlugins.size() );
+    
+    const ImportPlugin *plugin = m_importPlugins.at( index );
+    
+    Account *account = plugin->importAccount( this );
+    if( account ) {        
+        addAccountWidget( new AccountWidget( account, this ) );
+        statusBar()->showMessage( tr( "File successfully imported." ), 2000 );
+    }
+}
+        
+        
 #if !defined(HAVE_KDE)
 
 void MainWindow::onAbout()
@@ -694,6 +749,59 @@ void MainWindow::onHelp()
 
 #endif
 
+
+void MainWindow::loadExportPlugins()
+{
+    qDeleteAll( m_exportPlugins.begin(), m_exportPlugins.end() );
+    m_exportPlugins.clear();
+
+    m_exportPlugins.append( new CsvExportPlugin );
+
+    QList<QAction*> actions;
+    for(int i = 0; i < m_exportPlugins.size(); ++i ) {
+        const ExportPlugin *plugin = m_exportPlugins.at( i );
+        QAction *action = new QAction( KIcon( plugin->exportActionIcon() ), plugin->exportActionName(), this );
+        action->setData( i );
+        
+        actions.append( action );
+        m_exportPluginActionGroup->addAction( action );
+    }
+
+#if defined(HAVE_KDE)
+    unplugActionList( "file_export_actionlist" );
+    plugActionList( "file_export_actionlist", actions );
+#else
+    m_exportMenu->clear();
+    m_exportMenu->addActions( actions );
+#endif
+}
+
+
+void MainWindow::loadImportPlugins()
+{
+    qDeleteAll( m_importPlugins.begin(), m_importPlugins.end() );
+    m_importPlugins.clear();
+
+    m_importPlugins.append( new CsvImportPlugin );
+    
+    QList<QAction*> actions;
+    for(int i = 0; i < m_importPlugins.size(); ++i ) {
+        const ImportPlugin *plugin = m_importPlugins.at( i );
+        QAction *action = new QAction( KIcon( plugin->importActionIcon() ), plugin->importActionName(), this );
+        action->setData( i );
+        
+        actions.append( action );
+        m_importPluginActionGroup->addAction( action );
+    }
+
+#if defined(HAVE_KDE)
+    unplugActionList( "file_import_actionlist" );
+    plugActionList( "file_import_actionlist", actions );
+#else
+    m_importMenu->clear();
+    m_importMenu->addActions( actions );
+#endif
+}
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

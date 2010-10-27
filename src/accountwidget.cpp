@@ -205,6 +205,14 @@ void AccountWidget::checkActionState()
 }
 
 
+QList<const Account*> AccountWidget::selectedAccounts() const
+{
+    //TODO This is used by the export stuff for example...
+    
+    return QList<const Account*>();
+}
+
+
 bool AccountWidget::onSaveFile()
 {
     return onSaveAsFile( fileName() );

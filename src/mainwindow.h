@@ -26,9 +26,11 @@
 #include <KXmlGuiWindow>
 #endif
 
-class AccountWidget;
+#include <KAction>
 
-
+class QMenu;
+class ImportPlugin;
+class ExportPlugin;
 class AccountWidget;
 class ActionCollection;
 class RecentFileMenu;
@@ -106,15 +108,33 @@ class MainWindow :
 
         void onShowStatusbar();
 
+        void onExportPluginClicked(QAction *action);
+        void onImportPluginClicked(QAction *action);
+
 #if !defined(HAVE_KDE)
         void onAbout();
         void onHelp();
 #endif
 
     private:
+        void loadExportPlugins();
+        void loadImportPlugins();
+
+    private:
         Ui::MainWindow *ui;
         ActionCollection *m_ActionCollection;
         RecentFileMenu *m_recentFileMenu;
+
+        QList<ExportPlugin*> m_exportPlugins;
+        QActionGroup *m_exportPluginActionGroup;
+        
+        QList<ImportPlugin*> m_importPlugins;
+        QActionGroup *m_importPluginActionGroup;
+
+#if !defined(HAVE_KDE)
+        QMenu *m_exportMenu;
+        QMenu *m_importMenu;
+#endif
 };
 
 #endif

@@ -19,15 +19,22 @@
 
 #include "backend/account.h"
 
+#include "compat/iconloader.h"
+
 #include <QDate>
+#include <QCoreApplication>
+#include <QTextCodec>
 
 
 
-CsvExportDialog::CsvExportDialog(const Account *account, const QList<Account*> &selected, QWidget *parent)
+CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Account*> &selected, QWidget *parent)
   : QDialog( parent ),
     ui( new Ui::CsvExportDialog )
 {
     ui->setupUi( this );
+
+    setWindowTitle( tr( "CSV Export - %1" ).arg( QCoreApplication::applicationName() ) );
+    ui->iconLabel->setPixmap( DesktopIcon("text-csv") );
 
     ui->allInYearEdit->setDate( QDate::currentDate() );
     ui->allBetweenDateStart->setDate( account->openingDate().isValid()
@@ -44,16 +51,47 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<Account*> &
         ui->selected->setEnabled( false );
         ui->all->setChecked( true );
     }
-/*
-    ui->delimiter
-    ui->textquote
-    ui->dateFormat
-    ui->decimalSymbol
-    ui->thousandsSeparator
-    ui->currencySign
-    ui->encoding
-    ui->endOfLine
-*/
+    
+    ui->delimiter->clear();
+    ui->delimiter->addItem( "" );
+    ui->delimiter->addItem( tr( "Comma" ), ',' );
+    ui->delimiter->addItem( tr( "Tabulator" ), '\t' );
+    ui->delimiter->addItem( tr( "Semicolon" ), ';' );
+    ui->delimiter->addItem( tr( "Space" ), ' ' );
+    ui->delimiter->setCurrentIndex( 3 );
+
+    ui->textquote->clear();
+    ui->textquote->addItem( "\"" );
+    ui->textquote->addItem( "'" );
+    ui->textquote->addItem( "`" );
+    ui->textquote->setCurrentIndex( 0 );
+
+    ui->dateFormat->clear();
+    ui->dateFormat->addItem( "Y-M-D" );
+    ui->dateFormat->setCurrentIndex( 0 );
+    
+    ui->decimalSymbol->clear();
+    ui->decimalSymbol->addItem( "." );
+    ui->decimalSymbol->addItem( "," );
+
+    ui->thousandsSeparator->clear();
+    ui->thousandsSeparator->addItem( "" );
+    ui->thousandsSeparator->addItem( "." );
+
+    ui->currencySign->clear(); 
+    ui->currencySign->addItem( "" );
+
+    ui->encoding->clear();
+    foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
+        ui->encoding->addItem( name, name );
+    }
+    ui->encoding->setCurrentIndex( ui->encoding->findData( QTextCodec::codecForLocale()->name() ) );
+
+    ui->endOfLine->clear();
+    ui->endOfLine->addItem( tr( "Unix" ) );
+    ui->endOfLine->addItem( tr( "Windows/DOS" ) );
+    ui->endOfLine->addItem( tr( "Macintosh" ) );
+    ui->endOfLine->setCurrentIndex( 0 );
 }
 
 

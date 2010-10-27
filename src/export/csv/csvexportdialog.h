@@ -34,7 +34,7 @@ class CsvExportDialog : public QDialog
     Q_OBJECT
 
     public:
-        CsvExportDialog(const Account *account, const QList<Account*> &selected, QWidget *parent = 0);
+        CsvExportDialog(const Account *account, const QList<const Account*> &selected, QWidget *parent = 0);
         ~CsvExportDialog();
 
     private:

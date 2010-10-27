@@ -58,6 +58,8 @@ class AccountWidget : public QWidget
 
         void checkActionState();
 
+        QList<const Account*> selectedAccounts() const;
+
     public slots:
         bool onSaveFile();
         bool onSaveAsFile(const QString &str = QString());

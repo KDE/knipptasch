@@ -28,7 +28,7 @@ class CsvExportPlugin : public ExportPlugin
         QString exportActionName() const;
         QPixmap exportActionIcon() const;
 
-        void exportAccount(const Account *account, const QList<Account*> &selected, QWidget *parent = 0) const;
+        void exportAccount(const Account *account, const QList<const Account*> &selected, QWidget *parent = 0) const;
 };
 
 

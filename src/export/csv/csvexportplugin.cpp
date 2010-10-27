@@ -29,17 +29,17 @@ CsvExportPlugin::CsvExportPlugin()
 
 QString CsvExportPlugin::exportActionName() const
 {
-    return QObject::tr( "Import &CSV File..." );
+    return QObject::tr( "Export &CSV File..." );
 }
 
 
 QPixmap CsvExportPlugin::exportActionIcon() const
 {
-    return BarIcon("document-export-table");
+    return BarIcon("text-csv");
 }
 
 
-void CsvExportPlugin::exportAccount(const Account *account, const QList<Account*> &selected, QWidget *parent) const
+void CsvExportPlugin::exportAccount(const Account *account, const QList<const Account*> &selected, QWidget *parent) const
 {
     QPointer<CsvExportDialog> dialog = new CsvExportDialog( account, selected, parent );
 

@@ -25,12 +25,10 @@
             <Separator/>
             <Menu name="import">
                 <text>Import...</text>
-                <!-- see http://www.purinchu.net/kdelibs-apidocs/kdeui/html/classKXMLGUIClient.html#6bb023822002f53370e7c2858d3042ff -->
                 <ActionList name="file_import_actionlist" />
             </Menu>
-            <Menu name="import">
+            <Menu name="export">
                 <text>Export...</text>
-                <!-- see http://www.purinchu.net/kdelibs-apidocs/kdeui/html/classKXMLGUIClient.html#6bb023822002f53370e7c2858d3042ff -->
                 <ActionList name="file_export_actionlist" />
             </Menu>
             <Separator/>

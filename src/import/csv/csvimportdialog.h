@@ -32,8 +32,10 @@ class CsvImportDialog : public QDialog
     Q_OBJECT
 
     public:
-        CsvImportDialog(Account *account, QWidget *parent = 0);
+        CsvImportDialog(QWidget *parent = 0);
         ~CsvImportDialog();
+
+        Account* account() const;
 
     private:
         Ui::CsvImportDialog *ui;

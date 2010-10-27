@@ -33,7 +33,7 @@ class ExportPlugin
         virtual QString exportActionName() const = 0;
         virtual QPixmap exportActionIcon() const = 0;
 
-        virtual void exportAccount(const Account *account, const QList<Account*> &selected, QWidget *parent = 0) const = 0;
+        virtual void exportAccount(const Account *account, const QList<const Account*> &selected, QWidget *parent = 0) const = 0;
 };
 
 

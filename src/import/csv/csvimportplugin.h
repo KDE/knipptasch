@@ -25,10 +25,10 @@ class CsvImportPlugin : public ImportPlugin
     public:
         CsvImportPlugin();
 
-        QString importActionName() const = 0;
-        QPixmap importActionIcon() const = 0;
+        QString importActionName() const;
+        QPixmap importActionIcon() const;
 
-        Account* importAccount(QWidget *parent = 0) const = 0;
+        Account* importAccount(QWidget *parent = 0) const;
 };
 
 
