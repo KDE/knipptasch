@@ -400,6 +400,17 @@ const Posting* Account::posting(int index) const
 }
 
 
+QList<const Posting*> Account::postings() const
+{
+    QList<const Posting*> list;
+    foreach(Posting *p, d->postings) {
+        list.append( p );
+    }
+
+    return list;
+}
+
+
 Posting* Account::takePosting(int index)
 {
     Q_ASSERT( index >= 0 );
@@ -432,12 +443,12 @@ Account* Account::demoAccount()
 {
     QList<int> v;
     v << -10 << -15 << -20 << -25 << -30 << -35 << -40 << -50
-        << -60 << -70 << -80 << -100 << -120 << -150 << -200;
+        << -60 << -70 << -80 << -90 << -100 << -120 << -150 << -200 << -500;
 
     Account *acc = new Account;
 
     acc->setNumber( "105626320" );
-    acc->setOpeningBalance( 2000 );
+    acc->setOpeningBalance( 42.21 );
 
     for(int i = -15; i < 3; ++i) {
         QDate date(
@@ -460,10 +471,10 @@ Account* Account::demoAccount()
                 acc,
                 date.addDays( std::rand() % 6 ),
                 QObject::tr( "Salary" ),
-                1800.00 + ( ( std::rand() % 50000 + 100 ) / 100.00 )
+                1000.00 + ( ( std::rand() % 50000 + 100 ) / 100.00 )
             );
 
-            for(int i = ( std::rand() % 5 + 1 ) ; i >= 0; --i) {
+            for(int i = ( std::rand() % 15 + 1 ) ; i >= 0; --i) {
                 initDemoAccountAddPosting(
                     acc,
                     date.addDays( std::rand() % date.daysInMonth() + 1 ),
@@ -490,6 +501,8 @@ Account* Account::demoAccount()
             );
         }
     }
+
+    acc->setModified( false );
 
     return acc;
 }

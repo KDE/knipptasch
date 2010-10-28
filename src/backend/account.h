@@ -107,6 +107,7 @@ class Account
         void addPosting(Posting *ptr);
         Posting* posting(int index);
         const Posting* posting(int index) const;
+        QList<const Posting*> postings() const;
         Posting* takePosting(int index);
         void removePosting(int index);
         void deletePosting(int index);

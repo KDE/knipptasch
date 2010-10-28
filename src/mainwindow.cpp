@@ -27,6 +27,12 @@
 #include "backend/account.h"
 #include "backend/storage.h"
 
+#include "export/exportplugin.h"
+#include "export/csv/csvexportplugin.h"
+
+#include "import/csv/csvimportplugin.h"
+#include "import/demo/demoimportplugin.h"
+
 #include "compat/iconloader.h"
 #include "compat/standardaction.h"
 #include "compat/actioncollection.h"
@@ -57,9 +63,6 @@
 
 #include <QDebug>
 #include <QToolButton>
-#include "export/exportplugin.h"
-#include "export/csv/csvexportplugin.h"
-#include "import/csv/csvimportplugin.h"
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -700,7 +703,7 @@ void MainWindow::onExportPluginClicked(QAction *action)
     Q_ASSERT( caw );
     
     const ExportPlugin *plugin = m_exportPlugins.at( index );
-    plugin->exportAccount( caw->account(), caw->selectedAccounts(), this );
+    plugin->exportAccount( caw->account(), caw->selectedPostings(), this );
 }
 
 
@@ -782,6 +785,7 @@ void MainWindow::loadImportPlugins()
     qDeleteAll( m_importPlugins.begin(), m_importPlugins.end() );
     m_importPlugins.clear();
 
+    m_importPlugins.append( new DemoImportPlugin );
     m_importPlugins.append( new CsvImportPlugin );
     
     QList<QAction*> actions;

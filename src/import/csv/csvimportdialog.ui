@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>862</width>
-    <height>469</height>
+    <width>866</width>
+    <height>438</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -82,7 +82,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>GroupBox</string>
+      <string>Settings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0" rowspan="2">
@@ -123,11 +123,31 @@
            <bool>true</bool>
           </property>
           <property name="currentIndex">
-           <number>-1</number>
+           <number>1</number>
           </property>
           <property name="minimumContentsLength">
            <number>8</number>
           </property>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>&quot;</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>'</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>`</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item row="1" column="1">
@@ -141,6 +161,9 @@
       </item>
       <item row="0" column="1">
        <layout class="QFormLayout" name="formLayout_2">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
@@ -154,11 +177,16 @@
            <bool>true</bool>
           </property>
           <property name="currentIndex">
-           <number>-1</number>
+           <number>0</number>
           </property>
           <property name="minimumContentsLength">
            <number>8</number>
           </property>
+          <item>
+           <property name="text">
+            <string>Y-M-D</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item row="1" column="0">
@@ -176,6 +204,16 @@
           <property name="minimumContentsLength">
            <number>8</number>
           </property>
+          <item>
+           <property name="text">
+            <string>,</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item row="2" column="0">
@@ -193,23 +231,11 @@
           <property name="minimumContentsLength">
            <number>8</number>
           </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Currency Sign:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="KComboBox" name="currencySign">
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="minimumContentsLength">
-           <number>8</number>
-          </property>
+          <item>
+           <property name="text">
+            <string>.</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -238,7 +264,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="endOfLine">
+         <widget class="KComboBox" name="endOfLine">
           <property name="minimumContentsLength">
            <number>8</number>
           </property>
@@ -252,6 +278,19 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="0" column="3">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

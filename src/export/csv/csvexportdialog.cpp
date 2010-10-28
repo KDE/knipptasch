@@ -18,19 +18,40 @@
 #include "ui_csvexportdialog.h"
 
 #include "backend/account.h"
+#include "backend/posting.h"
 
 #include "compat/iconloader.h"
 
 #include <QDate>
 #include <QCoreApplication>
+#include <QDialogButtonBox>
 #include <QTextCodec>
+#include <QPushButton>
+
+#include <KLineEdit>
+
+#if defined(HAVE_KDE)
+#include <KFileDialog>
+#else
+#include <QFileDialog>
+#endif
+
+#include <QDebug>
+#include <qprogressdialog.h>
+#include <unistd.h>
+#include <QApplication>
+#include <backend/money.h>
+#include <QBuffer>
 
 
-
-CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Account*> &selected, QWidget *parent)
+CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Posting*> &selected, QWidget *parent)
   : QDialog( parent ),
-    ui( new Ui::CsvExportDialog )
+    ui( new Ui::CsvExportDialog ),
+    m_account( account ),
+    m_selectedPostings( selected )
 {
+    Q_ASSERT( m_account );
+
     ui->setupUi( this );
 
     setWindowTitle( tr( "CSV Export - %1" ).arg( QCoreApplication::applicationName() ) );
@@ -43,7 +64,7 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Accou
                                     );
     ui->allBetweenDateEnd->setDate( QDate::currentDate() );
 
-    if( !selected.isEmpty() ) {
+    if( !m_selectedPostings.isEmpty() ) {
         ui->selected->setEnabled( true );
         ui->selected->setChecked( true );
     }
@@ -51,7 +72,7 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Accou
         ui->selected->setEnabled( false );
         ui->all->setChecked( true );
     }
-    
+
     ui->delimiter->clear();
     ui->delimiter->addItem( "" );
     ui->delimiter->addItem( tr( "Comma" ), ',' );
@@ -59,27 +80,7 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Accou
     ui->delimiter->addItem( tr( "Semicolon" ), ';' );
     ui->delimiter->addItem( tr( "Space" ), ' ' );
     ui->delimiter->setCurrentIndex( 3 );
-
-    ui->textquote->clear();
-    ui->textquote->addItem( "\"" );
-    ui->textquote->addItem( "'" );
-    ui->textquote->addItem( "`" );
-    ui->textquote->setCurrentIndex( 0 );
-
-    ui->dateFormat->clear();
-    ui->dateFormat->addItem( "Y-M-D" );
-    ui->dateFormat->setCurrentIndex( 0 );
-    
-    ui->decimalSymbol->clear();
-    ui->decimalSymbol->addItem( "." );
-    ui->decimalSymbol->addItem( "," );
-
-    ui->thousandsSeparator->clear();
-    ui->thousandsSeparator->addItem( "" );
-    ui->thousandsSeparator->addItem( "." );
-
-    ui->currencySign->clear(); 
-    ui->currencySign->addItem( "" );
+    m_delimiter = ui->delimiter->itemData( 3 ).toChar();
 
     ui->encoding->clear();
     foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
@@ -88,16 +89,92 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Accou
     ui->encoding->setCurrentIndex( ui->encoding->findData( QTextCodec::codecForLocale()->name() ) );
 
     ui->endOfLine->clear();
-    ui->endOfLine->addItem( tr( "Unix" ) );
-    ui->endOfLine->addItem( tr( "Windows/DOS" ) );
-    ui->endOfLine->addItem( tr( "Macintosh" ) );
+    ui->endOfLine->addItem( tr( "Unix" ), "\n" );
+    ui->endOfLine->addItem( tr( "Windows/DOS" ), "\r\n" );
+    ui->endOfLine->addItem( tr( "Macintosh" ), "\r" );
     ui->endOfLine->setCurrentIndex( 0 );
+
+    connect( ui->delimiter, SIGNAL( activated(int) ), this, SLOT( onDelimiterComboBoxIndexChanged(int) ) );
+    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited(QString) ), this, SLOT( onDelimiterComboBoxTextChanged() ) );
+
+    connect( ui->buttonBox->button( QDialogButtonBox::Save ), SIGNAL( clicked() ), this, SLOT( onSave() ) );
 }
 
 
 CsvExportDialog::~CsvExportDialog()
 {
     delete ui;
+}
+
+
+void CsvExportDialog::onSave()
+{
+    hide();
+
+    QString filename;
+#if defined(HAVE_KDE)
+    filename = KFileDialog::getSaveFileName( KUrl(), "*.csv|" + tr( "All Supported Files" ), this );
+#else
+    filename = QFileDialog::getSaveFileName( this, // krazy:exclude=qclasses
+                     tr( "Export File - %1" ).arg( QCoreApplication::applicationName() ),
+                     QString(), tr( "All Supported Files" ) + " (*.csv)"
+                   );
+#endif
+
+    if( filename.isEmpty() ) {
+        rejected();
+        return;
+    }
+
+    QList<const Posting*> postings = m_account->postings();
+
+    QProgressDialog progress( tr( "Exporting data..." ), tr( "Cancel" ), 0, postings.size(), this );
+    progress.setWindowModality( Qt::WindowModal );
+
+    QString eof = ui->endOfLine->currentText();
+    QString tq = ui->textquote->currentText();
+
+    QByteArray output;
+    QBuffer buffer( &output );
+    buffer.open( QIODevice::WriteOnly );
+
+    QTextStream out( &buffer );
+    out.setCodec( QTextCodec::codecForName( ui->encoding->itemData( ui->encoding->currentIndex() ).toByteArray() ) );
+
+    for(int i = 0; i < postings.size(); ++i) {
+        progress.setValue( i );
+
+        if( progress.wasCanceled() ) {
+            break;
+        }
+
+        const Posting *p = postings[ i ];
+
+        out << tq << p->valueDate().toString().toUtf8() << tq << m_delimiter;
+        out << tq << p->postingText()                   << tq << m_delimiter;
+        out << tq << p->maturity().toString()           << tq << m_delimiter;
+        out << tq << p->amount().toString()             << tq << m_delimiter;
+        out << eof;
+    }
+
+    buffer.close();
+    progress.setValue( postings.size() );
+
+    qDebug() << output;
+
+    show();
+}
+
+
+void CsvExportDialog::onDelimiterComboBoxIndexChanged(int index)
+{
+    m_delimiter = ui->delimiter->itemData( index ).toChar();
+}
+
+
+void CsvExportDialog::onDelimiterComboBoxTextChanged()
+{
+    m_delimiter = ui->delimiter->currentText();
 }
 
 

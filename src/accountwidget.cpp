@@ -205,11 +205,11 @@ void AccountWidget::checkActionState()
 }
 
 
-QList<const Account*> AccountWidget::selectedAccounts() const
+QList<const Posting*> AccountWidget::selectedPostings() const
 {
     //TODO This is used by the export stuff for example...
     
-    return QList<const Account*>();
+    return QList<const Posting*>();
 }
 
 
@@ -229,7 +229,7 @@ bool AccountWidget::onSaveAsFile(const QString &str)
         filename = KFileDialog::getSaveFileName( KUrl(), "*.ka|" + tr( "All Supported Files" ), this );
 #else
         filename = QFileDialog::getSaveFileName( this, // krazy:exclude=qclasses
-                     tr( "Open File - %1" ).arg( QCoreApplication::applicationName() ),
+                     tr( "Save File - %1" ).arg( QCoreApplication::applicationName() ),
                      QString(), tr( "All Supported Files" ) + " (*.ka)"
                    );
 #endif

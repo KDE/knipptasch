@@ -420,7 +420,7 @@ bool Storage::decodedData(const QByteArray &data, Account *acc) const
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - An unknown error occurred (chipher update error).";
 
-            errorMessage( QObject::tr( "An error occured during the decryption process." ) );
+            errorMessage( QObject::tr( "An error occurred during the decryption process." ) );
 
             return false;
         }
@@ -431,7 +431,7 @@ bool Storage::decodedData(const QByteArray &data, Account *acc) const
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - An unknown error occurred (chipher final error).";
 
-            errorMessage( QObject::tr( "An error occured during the decryption process." ) );
+            errorMessage( QObject::tr( "An error occurred during the decryption process." ) );
 
             return false;
         }

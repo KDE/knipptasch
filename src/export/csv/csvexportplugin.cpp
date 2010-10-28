@@ -39,7 +39,7 @@ QPixmap CsvExportPlugin::exportActionIcon() const
 }
 
 
-void CsvExportPlugin::exportAccount(const Account *account, const QList<const Account*> &selected, QWidget *parent) const
+void CsvExportPlugin::exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent) const
 {
     QPointer<CsvExportDialog> dialog = new CsvExportDialog( account, selected, parent );
 

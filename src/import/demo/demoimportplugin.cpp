@@ -14,45 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CSVEXPORTDIALOG_H
-#define CSVEXPORTDIALOG_H
+#include "demoimportplugin.h"
 
-#include <QDialog>
-#include <QList>
+#include "backend/account.h"
 
-class Posting;
-class Account;
+#include <compat/iconloader.h>
+#include <QPixmap>
 
-namespace Ui
+
+
+DemoImportPlugin::DemoImportPlugin()
 {
-    class CsvExportDialog;
+
 }
 
 
-class CsvExportDialog : public QDialog
+QString DemoImportPlugin::importActionName() const
 {
-    Q_OBJECT
+    return QObject::tr( "Import &Example File" );
+}
 
-    public:
-        CsvExportDialog(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0);
-        ~CsvExportDialog();
 
-    private slots:
-        void onSave();
-        
-        void onDelimiterComboBoxIndexChanged(int);
-        void onDelimiterComboBoxTextChanged();
+QPixmap DemoImportPlugin::importActionIcon() const
+{
+    return BarIcon("applications-education-miscellaneous");
+}
 
-    private:
-        Ui::CsvExportDialog *ui;
-        
-        const Account *m_account;
-        QList<const Posting*> m_selectedPostings;
-        
-        QString m_delimiter;
-};
 
-#endif
+Account* DemoImportPlugin::importAccount(QWidget *parent) const
+{
+    Q_UNUSED( parent );
+    
+    return Account::demoAccount();
+}
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

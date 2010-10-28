@@ -37,7 +37,12 @@ class CsvImportDialog : public QDialog
 
         Account* account() const;
 
+    private slots: 
+        void onDelimiterComboBoxIndexChanged(int);
+        void onDelimiterComboBoxTextChanged();
+
     private:
+        QString m_delimiter;
         Ui::CsvImportDialog *ui;
 };
 

@@ -17,12 +17,17 @@
 #include "csvimportdialog.h"
 #include "ui_csvimportdialog.h"
 
+#include "backend/account.h"
+
 #include "compat/iconloader.h"
 
 #include <QDate>
 #include <QCoreApplication>
 #include <QTextCodec>
 
+#include <KLineEdit>
+
+#include <QDebug>
 
 
 CsvImportDialog::CsvImportDialog(QWidget *parent)
@@ -43,27 +48,7 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     ui->delimiter->addItem( tr( "Semicolon" ), ';' );
     ui->delimiter->addItem( tr( "Space" ), ' ' );
     ui->delimiter->setCurrentIndex( 3 );
-
-    ui->textquote->clear();
-    ui->textquote->addItem( "\"" );
-    ui->textquote->addItem( "'" );
-    ui->textquote->addItem( "`" );
-    ui->textquote->setCurrentIndex( 0 );
-
-    ui->dateFormat->clear();
-    ui->dateFormat->addItem( "Y-M-D" );
-    ui->dateFormat->setCurrentIndex( 0 );
-    
-    ui->decimalSymbol->clear();
-    ui->decimalSymbol->addItem( "." );
-    ui->decimalSymbol->addItem( "," );
-
-    ui->thousandsSeparator->clear();
-    ui->thousandsSeparator->addItem( "" );
-    ui->thousandsSeparator->addItem( "." );
-
-    ui->currencySign->clear(); 
-    ui->currencySign->addItem( "" );
+    m_delimiter = ui->delimiter->itemData( 3 ).toChar();
 
     ui->encoding->clear();
     foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
@@ -76,6 +61,9 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     ui->endOfLine->addItem( tr( "Windows/DOS" ) );
     ui->endOfLine->addItem( tr( "Macintosh" ) );
     ui->endOfLine->setCurrentIndex( 0 );
+    
+    connect( ui->delimiter, SIGNAL( activated(int) ), this, SLOT( onDelimiterComboBoxIndexChanged(int) ) );
+    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited(QString) ), this, SLOT( onDelimiterComboBoxTextChanged() ) );
 }
 
 
@@ -88,6 +76,18 @@ CsvImportDialog::~CsvImportDialog()
 Account* CsvImportDialog::account() const
 {
     return 0;
+}
+
+
+void CsvImportDialog::onDelimiterComboBoxIndexChanged(int index)
+{
+    m_delimiter = ui->delimiter->itemData( index ).toChar();
+}
+
+
+void CsvImportDialog::onDelimiterComboBoxTextChanged()
+{
+    m_delimiter = ui->delimiter->currentText();
 }
 
 

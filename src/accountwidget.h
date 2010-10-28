@@ -29,6 +29,7 @@ namespace Ui
     class AccountWidget;
 }
 
+class Posting;
 class Account;
 class AccountModel;
 class AccountSortFilterProxyModel;
@@ -58,7 +59,7 @@ class AccountWidget : public QWidget
 
         void checkActionState();
 
-        QList<const Account*> selectedAccounts() const;
+        QList<const Posting*> selectedPostings() const;
 
     public slots:
         bool onSaveFile();

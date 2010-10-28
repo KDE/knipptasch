@@ -14,43 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CSVEXPORTDIALOG_H
-#define CSVEXPORTDIALOG_H
+#ifndef DEMOIMPORTPLUGIN_H
+#define DEMOIMPORTPLUGIN_H
 
-#include <QDialog>
-#include <QList>
+#include "../importplugin.h"
 
-class Posting;
-class Account;
 
-namespace Ui
+class DemoImportPlugin : public ImportPlugin
 {
-    class CsvExportDialog;
-}
-
-
-class CsvExportDialog : public QDialog
-{
-    Q_OBJECT
-
     public:
-        CsvExportDialog(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0);
-        ~CsvExportDialog();
+        DemoImportPlugin();
 
-    private slots:
-        void onSave();
-        
-        void onDelimiterComboBoxIndexChanged(int);
-        void onDelimiterComboBoxTextChanged();
+        QString importActionName() const;
+        QPixmap importActionIcon() const;
 
-    private:
-        Ui::CsvExportDialog *ui;
-        
-        const Account *m_account;
-        QList<const Posting*> m_selectedPostings;
-        
-        QString m_delimiter;
+        Account* importAccount(QWidget *parent = 0) const;
 };
+
 
 #endif
 
