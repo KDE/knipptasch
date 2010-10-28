@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>welcome_background.png</file>
         <file alias="COPYING">../../COPYING</file>
     </qresource>
 </RCC>

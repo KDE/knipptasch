@@ -34,6 +34,7 @@
 #include <QListWidget>
 
 
+
 WelcomeWidget::WelcomeWidget(QWidget *parent)
   : QFrame( parent ),
     ui( new Ui::WelcomeWidget )
@@ -77,11 +78,17 @@ void WelcomeWidget::paintEvent(QPaintEvent *event)
 
     QPainter painter( this );
 
+    QRadialGradient rg( width() / 2.0, height() / 2.0, qMin( width(), height() ) * 0.7 );
+
 #if defined(HAVE_KDE)
-    painter.drawImage( geometry(), QImage( KStandardDirs::locate( "appdata", "welcome_background.png" ) ) );
+    rg.setColorAt( 0, Preferences::self()->value<QColor>( "welcome", "color0", QColor( 0, 115, 220 ) ) );
+    rg.setColorAt( 1, Preferences::self()->value<QColor>( "welcome", "color1", QColor( 0, 50, 150 ) ) );
 #else
-    painter.drawImage( geometry(), QImage( "://welcome_background.png" ) );
+    rg.setColorAt( 0, Preferences::self()->value<QColor>( "welcome", "color0", QColor( 15, 200, 0 ) ) );
+    rg.setColorAt( 1, Preferences::self()->value<QColor>( "welcome", "color1", QColor( 15, 140, 0 ) ) );
 #endif
+
+    painter.fillRect( rect(), rg );
 }
 
 
@@ -95,7 +102,6 @@ void WelcomeWidget::slotUpdateList()
         item->setText( QString( "%1 [%2]" ).arg( finfo.fileName() ).arg( str ) );
         item->setData( Qt::EditRole, str );
     }
-
 }
 
 

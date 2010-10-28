@@ -37,10 +37,10 @@ include(MacroEnsureOutOfSourceBuild)
 
 macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
 
-find_package( Qt4 4.7.0 COMPONENTS QtCore QtGui QtXml QtSql REQUIRED )
+find_package( Qt4 4.7.0 COMPONENTS QtCore QtGui QtXml QtSvg REQUIRED )
 
 find_package( QCA2 )
-macro_log_feature( QCA2_FOUND "qca2" "Support file encryption" "http://delta.affinix.com/qca" FALSE "2.0.0" "" )
+macro_log_feature(QCA2_FOUND "QCA2" "Qt Cryptographic Architecture" "http://delta.affinix.com/qca" FALSE "2.0.0" "Needed for the file encryption functionality.")
 
 if( QCA2_FOUND )
   add_definitions( -DWITH_QCA2 ${QCA2_DEFINITIONS} )
