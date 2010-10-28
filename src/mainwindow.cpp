@@ -694,14 +694,14 @@ void MainWindow::onShowStatusbar()
 void MainWindow::onExportPluginClicked(QAction *action)
 {
     Q_ASSERT( action );
-    
+
     AccountWidget *caw = currentAccountWidget();
     int index = action->data().toInt();
-    
+
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_exportPlugins.size() );
     Q_ASSERT( caw );
-    
+
     const ExportPlugin *plugin = m_exportPlugins.at( index );
     plugin->exportAccount( caw->account(), caw->selectedPostings(), this );
 }
@@ -710,21 +710,21 @@ void MainWindow::onExportPluginClicked(QAction *action)
 void MainWindow::onImportPluginClicked(QAction *action)
 {
     Q_ASSERT( action );
-    
+
     int index = action->data().toInt();
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_importPlugins.size() );
-    
+
     const ImportPlugin *plugin = m_importPlugins.at( index );
-    
+
     Account *account = plugin->importAccount( this );
-    if( account ) {        
+    if( account ) {
         addAccountWidget( new AccountWidget( account, this ) );
-        statusBar()->showMessage( tr( "File successfully imported." ), 2000 );
+        statusBar()->showMessage( tr( "Account with %1 postings successfully imported." ).arg( account->countPostings() ), 2000 );
     }
 }
-        
-        
+
+
 #if !defined(HAVE_KDE)
 
 void MainWindow::onAbout()
@@ -765,7 +765,7 @@ void MainWindow::loadExportPlugins()
         const ExportPlugin *plugin = m_exportPlugins.at( i );
         QAction *action = new QAction( KIcon( plugin->exportActionIcon() ), plugin->exportActionName(), this );
         action->setData( i );
-        
+
         actions.append( action );
         m_exportPluginActionGroup->addAction( action );
     }
@@ -787,13 +787,13 @@ void MainWindow::loadImportPlugins()
 
     m_importPlugins.append( new DemoImportPlugin );
     m_importPlugins.append( new CsvImportPlugin );
-    
+
     QList<QAction*> actions;
     for(int i = 0; i < m_importPlugins.size(); ++i ) {
         const ImportPlugin *plugin = m_importPlugins.at( i );
         QAction *action = new QAction( KIcon( plugin->importActionIcon() ), plugin->importActionName(), this );
         action->setData( i );
-        
+
         actions.append( action );
         m_importPluginActionGroup->addAction( action );
     }

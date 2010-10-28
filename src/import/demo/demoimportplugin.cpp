@@ -19,7 +19,9 @@
 #include "backend/account.h"
 
 #include <compat/iconloader.h>
+
 #include <QPixmap>
+#include <QInputDialog>
 
 
 
@@ -43,9 +45,16 @@ QPixmap DemoImportPlugin::importActionIcon() const
 
 Account* DemoImportPlugin::importAccount(QWidget *parent) const
 {
-    Q_UNUSED( parent );
-    
-    return Account::demoAccount();
+    bool ok;
+    int count = QInputDialog::getInt( parent,
+                                      QObject::tr( "" ),
+                                      QObject::tr("Past month:"),
+                                      15, 1, 120, 1, &ok );
+    if( ok ) {
+        return Account::demoAccount( count );
+    }
+
+    return 0;
 }
 
 

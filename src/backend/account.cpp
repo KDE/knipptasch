@@ -439,7 +439,7 @@ void Account::deletePosting(int index)
 }
 
 
-Account* Account::demoAccount()
+Account* Account::demoAccount(int count)
 {
     QList<int> v;
     v << -10 << -15 << -20 << -25 << -30 << -35 << -40 << -50
@@ -447,10 +447,12 @@ Account* Account::demoAccount()
 
     Account *acc = new Account;
 
+    acc->setName( QObject::tr( "Example Account" ) );
     acc->setNumber( "105626320" );
     acc->setOpeningBalance( 42.21 );
+    acc->setOpeningDate( QDate::currentDate().addMonths( -count + 1 ) );
 
-    for(int i = -15; i < 3; ++i) {
+    for(int i = -count; i < 3; ++i) {
         QDate date(
             QDate::currentDate().year(),
             QDate::currentDate().addMonths( i ).month(),

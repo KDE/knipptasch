@@ -112,7 +112,7 @@ class Account
         void removePosting(int index);
         void deletePosting(int index);
 
-        static Account* demoAccount();
+        static Account* demoAccount(int pastMonth = 15);
 
     private:
         class Private;
