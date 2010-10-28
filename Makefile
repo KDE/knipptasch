@@ -15,6 +15,7 @@ rk: kde
 	LC_ALL="de_DE.utf8" ./install/kde/bin/knipptasch &
 
 clean:
+	find . -iname *~ -exec rm {} \;
 	rm -rf ~/.config/Hilefoks
 	rm -f ~/.kde/share/config/knipptaschrc
 	rm -rf ~/.kde/share/apps/knipptasch
