@@ -347,16 +347,18 @@ QList<AccountWidget*> MainWindow::allAccountWidgets()
 {
     QList<AccountWidget*> list;
 
-    if( ui->stackedWidget->currentIndex() == 1 ) {
-        for(int i = 0; i < ui->tabWidget->count(); ++i) {
-            QWidget *widget = ui->tabWidget->currentWidget();
-            Q_ASSERT( widget );
+    if( ui->stackedWidget->currentIndex() == 0 ) {
+        return list;
+    }
 
-            AccountWidget *accountWidget = qobject_cast<AccountWidget*>( widget );
-            Q_ASSERT( accountWidget );
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        QWidget *widget = ui->tabWidget->widget( i );
+        Q_ASSERT( widget );
 
-            list.append( accountWidget );
-        }
+        AccountWidget *accountWidget = qobject_cast<AccountWidget*>( widget );
+        Q_ASSERT( accountWidget );
+
+        list.append( accountWidget );
     }
 
     return list;
