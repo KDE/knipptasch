@@ -241,7 +241,7 @@
             <string>BIC:</string>
            </property>
            <property name="buddy">
-            <cstring>institution</cstring>
+            <cstring>bic</cstring>
            </property>
           </widget>
          </item>
@@ -365,6 +365,7 @@
   <tabstop>tabWidget</tabstop>
   <tabstop>name</tabstop>
   <tabstop>institution</tabstop>
+  <tabstop>bic</tabstop>
   <tabstop>owner</tabstop>
   <tabstop>accountNumber</tabstop>
   <tabstop>iban</tabstop>
@@ -385,12 +386,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>325</y>
+     <x>161</x>
+     <y>379</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>326</y>
+     <x>321</x>
+     <y>382</y>
     </hint>
    </hints>
   </connection>
@@ -401,12 +402,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>351</y>
+     <x>161</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>352</y>
+     <x>321</x>
+     <y>413</y>
     </hint>
    </hints>
   </connection>
