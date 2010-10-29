@@ -19,6 +19,8 @@
 #include <QPainter>
 #include <QDateEdit>
 #include <QApplication>
+#include <QSortFilterProxyModel>
+#include <accountmodel.h>
 
 
 
@@ -37,7 +39,28 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 
     QDateEdit *input = new QDateEdit( parent );
     input->setCalendarPopup( true );
-    input->setDate( QDate::currentDate() );
+
+    QDate dt;
+    if( index.isValid() ) {
+        const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>( model );
+        QModelIndex idx = index;
+
+        if( proxy ) {
+            QModelIndex idx = proxy->mapToSource( index );
+        }
+
+        Q_ASSERT( idx.isValid() );
+
+        if( idx.column() == AccountModel::VALUEDATE ) {
+            dt = model->data( model->index( idx.row(), AccountModel::MATURITY ), Qt::EditRole ).toDate();
+        }
+        else if( idx.column() == AccountModel::WARRANTY ) {
+            dt = model->data( model->index( idx.row(), AccountModel::VALUEDATE ), Qt::EditRole ).toDate().addMonths( 24 );
+        }
+    }
+
+    input->setDate( dt.isValid() ? dt : QDate::currentDate() );
+
     input->setCorrectionMode( QDateEdit::CorrectToNearestValue );
     input->setFrame( false );
 
