@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QSortFilterProxyModel>
 #include <accountmodel.h>
+#include <preferences.h>
 
 
 
@@ -52,10 +53,20 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
         Q_ASSERT( idx.isValid() );
 
         if( idx.column() == AccountModel::VALUEDATE ) {
-            dt = model->data( model->index( idx.row(), AccountModel::MATURITY ), Qt::EditRole ).toDate();
+            dt = model->data(
+                            model->index( idx.row(), AccountModel::MATURITY ),
+                            Qt::EditRole
+                        ).toDate();
         }
         else if( idx.column() == AccountModel::WARRANTY ) {
-            dt = model->data( model->index( idx.row(), AccountModel::VALUEDATE ), Qt::EditRole ).toDate().addMonths( 24 );
+            dt = model->data(
+                            model->index( idx.row(), AccountModel::VALUEDATE ),
+                             Qt::EditRole
+                        ).toDate();
+
+            if( dt.isValid() ) {
+                dt = dt.addMonths( Preferences::self()->value<int>( "General", "DefaultWarrantyInMonth", 24 ) );
+            }
         }
     }
 
