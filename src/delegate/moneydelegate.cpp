@@ -14,75 +14,65 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "postingtextdelegate.h"
+#include "moneydelegate.h"
+#include "backend/money.h"
 
 #include <QPainter>
-#include <QApplication>
-
-#include <KLineEdit>
-#include <QCompleter>
+#include <QDoubleSpinBox>
 
 
-PostingTextDelegate::PostingTextDelegate(QObject *parent)
+
+MoneyDelegate::MoneyDelegate(QObject *parent)
   : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* MoneyDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QAbstractItemModel *model = const_cast<QAbstractItemModel*>( index.model() );
-
+    const QAbstractItemModel *model = index.model();
     if( !model ) {
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    KLineEdit *input = new KLineEdit( parent );
+    QDoubleSpinBox *input = new QDoubleSpinBox( parent );
+    input->setMaximum( 999999.99 );
+    input->setMinimum( -999999.99 );
+    input->setDecimals( 2 );
     input->setFrame( false );
-
-    QCompleter *completer = new QCompleter( input );
-    completer->setCaseSensitivity( Qt::CaseInsensitive );
-    completer->setModel( model );
-    completer->setCompletionColumn( index.column() );
-    completer->setCompletionRole( Qt::EditRole );
-
-    input->setCompleter( completer );
-
-#if defined(HAVE_KDE)
-    input->setClearButtonShown( true );
-#endif
 
     return input;
 }
 
 
-void PostingTextDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void MoneyDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
+    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox*>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
     }
     else {
-        input->setText( model->data(index, Qt::EditRole).toString() );
+        double value = model->data(index, Qt::EditRole).value<Money>();
+        input->setValue( value );
     }
 }
 
 
-void PostingTextDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void MoneyDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
+    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox*>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
     }
     else {
-        model->setData( index, input->text(), Qt::EditRole );
+        model->setData( index, input->value(), Qt::EditRole );
     }
 }
 

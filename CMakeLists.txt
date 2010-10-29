@@ -132,6 +132,7 @@ set(knipptasch_SOURCES
     src/import/demo/demoimportplugin.cpp
 
     src/delegate/datedelegate.cpp
+    src/delegate/moneydelegate.cpp
     src/delegate/postingtextdelegate.cpp
 
     src/backend/account.cpp
@@ -172,6 +173,7 @@ set( knipptasch_HEADERS
     src/import/demo/demoimportplugin.h
 
     src/delegate/datedelegate.h
+    src/delegate/moneydelegate.h
     src/delegate/postingtextdelegate.h
 
     src/compat/actioncollection.h

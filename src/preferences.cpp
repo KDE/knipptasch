@@ -24,6 +24,8 @@
 #include <QSettings>
 #endif
 
+#include <QDebug>
+
 
 Preferences* Preferences::self()
 {
@@ -47,7 +49,8 @@ Preferences::~Preferences()
 void Preferences::sync()
 {
 #if defined(HAVE_KDE)
-    KGlobal::config()->sync();
+    KConfig config;
+    config.sync();
 #else
     QSettings settings;
     settings.sync();
@@ -55,13 +58,13 @@ void Preferences::sync()
 }
 
 
-QVariant Preferences::value(const QString &group, const QString &key, const QVariant &defaultValue ) const
+QVariant Preferences::value(const QString &group, const QString &key, const QVariant &defaultValue) const
 {
     QVariant value;
 
 #if defined(HAVE_KDE)
-    KSharedConfigPtr config = KGlobal::config();
-    KConfigGroup configgroup = config->group( group.isEmpty() ? "General" : group );
+    KConfig config;
+    KConfigGroup configgroup( &config, group.isEmpty() ? "General" : group );
     value = configgroup.readEntry( key, defaultValue );
 #else
     QSettings settings;
@@ -73,17 +76,18 @@ QVariant Preferences::value(const QString &group, const QString &key, const QVar
 }
 
 
-
-void Preferences::setValue(const QString &group, const QString &key, const QVariant &value)
+void Preferences::setValue(const QString &group, const QString &key, const QVariant &val)
 {
 #if defined(HAVE_KDE)
-    KSharedConfigPtr config = KGlobal::config();
-    KConfigGroup configgroup = config->group( group.isEmpty() ? "General" : group );
-    configgroup.writeEntry( key, value );
+    KConfig config;
+    KConfigGroup configgroup( &config, group.isEmpty() ? "General" : group );
+    configgroup.writeEntry( key, val );
+
+    configgroup.config()->sync();
 #else
     QSettings settings;
     QString k = group.isEmpty() ? key : QString( "%1/%2" ).arg( group ).arg( key );
-    settings.setValue( k, value );
+    settings.setValue( k, val );
 #endif
 }
 

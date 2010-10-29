@@ -68,12 +68,12 @@ class Preferences
 
         QStringList recentFilesList() const
         {
-            return value<QStringList>( "RecentFiles", "RecentFiles" );
+            return value<QStringList>( "RecentFiles", "List" );
         }
 
         void setRecentFilesList(const QStringList &list)
         {
-            setValue( "RecentFiles", "RecentFiles", list );
+            setValue( "RecentFiles", "List", list );
         }
 
         int recentFilesListMaximumCount()
@@ -83,7 +83,7 @@ class Preferences
 
         void setRecentFilesListMaximumCount(int v)
         {
-            setValue( "RecentFiles", "MaximumCount", v > 0 ? v : 0);
+            setValue( "RecentFiles", "MaximumCount", v > 0 ? v : 0 );
         }
 
         bool positiveAmountForegroundEnabled()

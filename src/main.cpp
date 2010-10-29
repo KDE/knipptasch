@@ -76,7 +76,11 @@ int main(int argc, char* argv[])
         qApp->installTranslator( &t1 );
     }
     else {
-        qDebug() << "loading Qt translations for locale " << qtLocaleName << " from dir " << QLibraryInfo::location( QLibraryInfo::TranslationsPath ) << " failed.";
+        qDebug() << "loading Qt translations for locale "
+                 << qtLocaleName
+                 << " from dir "
+                 << QLibraryInfo::location( QLibraryInfo::TranslationsPath )
+                 << " failed.";
     }
 
     QTranslator t2;
@@ -93,7 +97,11 @@ int main(int argc, char* argv[])
         qApp->installTranslator( &t2 );
     }
     else {
-        qDebug() << "loading app translations for locale " << locale << " from dir " << translationDir << " failed.";
+        qDebug() << "loading app translations for locale "
+                 << locale
+                 << " from dir "
+                 << translationDir
+                 << " failed.";
     }
 #endif
 

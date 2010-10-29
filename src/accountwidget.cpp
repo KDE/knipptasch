@@ -48,6 +48,7 @@
 #include <QMenu>
 #include <QPointer>
 #include <QContextMenuEvent>
+#include "delegate/moneydelegate.h"
 
 
 AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
@@ -73,9 +74,10 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     ui->view->setModel( m_proxy );
 
     ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
     //ui->view->setItemDelegateForColumn();
 
     ui->view->resizeColumnsToContents();
@@ -208,7 +210,7 @@ void AccountWidget::checkActionState()
 QList<const Posting*> AccountWidget::selectedPostings() const
 {
     //TODO This is used by the export stuff for example...
-    
+
     return QList<const Posting*>();
 }
 
