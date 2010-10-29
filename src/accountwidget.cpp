@@ -450,17 +450,35 @@ void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &inde
 
     QAction *hide = 0;
     if( index.isValid() ) {
-        hide = menu.addAction( tr( "Hide %1" ).arg(
-                ui->view->model()->headerData(
-                    index.column(), Qt::Horizontal, Qt::DisplayRole ).toString()
-                )
-            );
+        QModelIndex idx = m_proxy->mapToSource( index );
+        Q_ASSERT( idx.isValid() );
 
-        // Only one column is visible, so this can't be hidden any more
-        if( ui->view->horizontalHeader()->count() - 1
-                == ui->view->horizontalHeader()->hiddenSectionCount() ) {
-            hide->setEnabled( false );
-        }
+        do {
+            if( idx.column() == AccountModel::MATURITY ) {
+                break;
+            }
+            if( idx.column() == AccountModel::POSTINGTEXT ) {
+                break;
+            }
+            if( idx.column() == AccountModel::VALUEDATE ) {
+                break;
+            }
+            if( idx.column() == AccountModel::AMOUNT ) {
+                break;
+            }
+
+            hide = menu.addAction( tr( "Hide %1" ).arg(
+                    ui->view->model()->headerData(
+                        index.column(), Qt::Horizontal, Qt::DisplayRole ).toString()
+                    )
+                );
+
+            // Only one column is visible, so this can't be hidden any more
+            if( ui->view->horizontalHeader()->count() - 1
+                    == ui->view->horizontalHeader()->hiddenSectionCount() ) {
+                hide->setEnabled( false );
+            }
+        } while( false );
     }
 
     QActionGroup *showcolumns = new QActionGroup( this );
