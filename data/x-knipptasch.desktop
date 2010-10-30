@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Comment=Knipptasch Account File
+DefaultApp=knipptasch
+Icon=application-x-knipptasch
+MimeType=application/x-knipptasch;
+Patterns=*.ka;
+Type=MimeType;
+X-KDE-AutoEmbed=false

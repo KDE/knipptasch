@@ -10,4 +10,5 @@ Name[x-test]=xxKnipptaschxx
 GenericName=Personal Finance Manager
 GenericName[x-test]=xxPersonal Finance Managerxx
 
+MimeType=application/x-knipptasch;
 Categories=Qt;KDE;Finance;Office;
