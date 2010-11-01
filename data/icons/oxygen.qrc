@@ -4,6 +4,7 @@
     <file alias="oxygen/48x48/status/dialog-warning.png">oxygen/48x48/status/dialog-warning.png</file>
     <file alias="oxygen/48x48/status/dialog-password.png">oxygen/48x48/status/dialog-password.png</file>
     <file alias="oxygen/48x48/actions/view-bank-account.png">oxygen/48x48/actions/view-bank-account.png</file>
+    <file alias="oxygen/48x48/mimetypes/text-csv.png">oxygen/48x48/mimetypes/text-csv.png</file>
     <file alias="oxygen/22x22/status/dialog-error.png">oxygen/22x22/status/dialog-error.png</file>
     <file alias="oxygen/22x22/status/dialog-password.png">oxygen/22x22/status/dialog-password.png</file>
     <file alias="oxygen/22x22/actions/view-calendar.png">oxygen/22x22/actions/view-calendar.png</file>
@@ -17,9 +18,11 @@
     <file alias="oxygen/22x22/actions/edit-paste.png">oxygen/22x22/actions/edit-paste.png</file>
     <file alias="oxygen/22x22/actions/window-close.png">oxygen/22x22/actions/window-close.png</file>
     <file alias="oxygen/22x22/actions/help-contents.png">oxygen/22x22/actions/help-contents.png</file>
+    <file alias="oxygen/22x22/actions/document-export.png">oxygen/22x22/actions/document-export.png</file>
     <file alias="oxygen/22x22/actions/document-print.png">oxygen/22x22/actions/document-print.png</file>
     <file alias="oxygen/22x22/actions/edit-find.png">oxygen/22x22/actions/edit-find.png</file>
     <file alias="oxygen/22x22/actions/edit-copy.png">oxygen/22x22/actions/edit-copy.png</file>
+    <file alias="oxygen/22x22/actions/document-import.png">oxygen/22x22/actions/document-import.png</file>
     <file alias="oxygen/22x22/actions/view-bank-account.png">oxygen/22x22/actions/view-bank-account.png</file>
     <file alias="oxygen/22x22/actions/edit-delete.png">oxygen/22x22/actions/edit-delete.png</file>
     <file alias="oxygen/22x22/actions/go-up-search.png">oxygen/22x22/actions/go-up-search.png</file>
@@ -36,6 +39,7 @@
     <file alias="oxygen/22x22/actions/edit-undo.png">oxygen/22x22/actions/edit-undo.png</file>
     <file alias="oxygen/22x22/actions/dialog-close.png">oxygen/22x22/actions/dialog-close.png</file>
     <file alias="oxygen/22x22/actions/dialog-ok.png">oxygen/22x22/actions/dialog-ok.png</file>
-    <file alias="oxygen/22x22/actions/document-export-table.png">oxygen/22x22/actions/document-export-table.png</file>
+    <file alias="oxygen/22x22/mimetypes/text-csv.png">oxygen/22x22/mimetypes/text-csv.png</file>
+    <file alias="oxygen/22x22/categories/applications-education-miscellaneous.png">oxygen/22x22/categories/applications-education-miscellaneous.png</file>
   </qresource>
 </RCC>

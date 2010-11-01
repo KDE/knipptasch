@@ -34,12 +34,19 @@ include(TranslateMacros)
 include(MacroLogFeature)
 include(MacroOptionalAddSubdirectory)
 include(MacroEnsureOutOfSourceBuild)
+include(MacroOptionalFindPackage)
 
 macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
 
 find_package( Qt4 4.7.0 COMPONENTS QtCore QtGui QtXml QtSvg REQUIRED )
 
-find_package( QCA2 )
+if( NOT WIN32 )
+  set( SHARED_MIME_INFO_MINIMUM_VERSION "0.71" )
+  find_package( SharedMimeInfo ${SHARED_MIME_INFO_MINIMUM_VERSION} )
+  macro_log_feature( SHAREDMIMEINFO_FOUND "shared-mime-info" "The core MIME database used to represent types of files" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE ${SHARED_MIME_INFO_MINIMUM_VERSION} "" )
+endif( NOT WIN32 )
+
+macro_optional_find_package( QCA2 )
 macro_log_feature(QCA2_FOUND "QCA2" "Qt Cryptographic Architecture" "http://delta.affinix.com/qca" FALSE "2.0.0" "Needed for the file encryption functionality.")
 
 if( QCA2_FOUND )
@@ -57,7 +64,6 @@ endif( WIN32 OR APPLE )
 if( NOT DEFINED QTONLY )
     set( QTONLY FALSE )
 endif( NOT DEFINED QTONLY )
-
 
 if( QTONLY )
     message(STATUS "Knipptasch will be built WITHOUT KDE support.")
@@ -207,6 +213,8 @@ set( knipptasch_RESOURCES
 
 if( HAVE_KDE )
     kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
+    kde4_add_app_icon( knipptasch_SOURCES data/icons/hi*-app-knipptasch.png )
+
     kde4_add_executable( knipptasch ${knipptasch_SOURCES} )
     target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${QCA2_LIBRARIES} )
 
