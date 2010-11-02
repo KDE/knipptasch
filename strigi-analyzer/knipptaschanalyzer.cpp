@@ -23,6 +23,8 @@
 #include <cstring>
 #include <iostream>
 
+#include <json/json.h>
+
 
 using namespace Strigi;
 using namespace std;
@@ -73,25 +75,51 @@ class STRIGI_PLUGIN_API KnipptaschAnalyzerFactory : public StreamEndAnalyzerFact
         void registerFields(FieldRegister &r);
 
     private:
-        const RegisteredField* m_fileVersionField;
-        const RegisteredField* m_commentField;
-        const RegisteredField* m_countField;
+        const RegisteredField* m_fileVersion;
+
+        const RegisteredField* m_passwordProtected;
+        const RegisteredField* m_description;
+        const RegisteredField* m_name;
+        const RegisteredField* m_number;
+        const RegisteredField* m_openingDate;
+        const RegisteredField* m_openingBalance;
+        const RegisteredField* m_iban;
+        const RegisteredField* m_owner;
+        const RegisteredField* m_institution;
+        const RegisteredField* m_bic;
+
+        const RegisteredField* m_count;
 };
 
 
 
 void KnipptaschAnalyzerFactory::registerFields(FieldRegister &r)
 {
-    //nfo:isPasswordProtected
-    //nfo:count
+    m_fileVersion = r.registerField( "Account File Version", Strigi::FieldRegister::stringType, 1, 0 );
+    m_passwordProtected = r.registerField( "Password Protected", Strigi::FieldRegister::binaryType, 1, 0 );
+    m_description = r.registerField( "Description", Strigi::FieldRegister::stringType, 1, 0 );
+    m_name = r.registerField( "Account Name", Strigi::FieldRegister::stringType, 1, 0 );
+    m_number = r.registerField( "Account Number", Strigi::FieldRegister::stringType, 1, 0 );
+    m_openingDate = r.registerField( "Opening Date", Strigi::FieldRegister::datetimeType, 1, 0 );
+    m_openingBalance = r.registerField( "Opening Date", Strigi::FieldRegister::stringType, 1, 0 );
+    m_iban = r.registerField( "IBAN", Strigi::FieldRegister::stringType, 1, 0 );
+    m_owner = r.registerField( "Account Owner", Strigi::FieldRegister::stringType, 1, 0 );
+    m_institution = r.registerField( "Institution", Strigi::FieldRegister::stringType, 1, 0 );
+    m_bic = r.registerField( "BIC", Strigi::FieldRegister::stringType, 1, 0 );
+    m_count = r.registerField( "Posting Count", Strigi::FieldRegister::integerType, 1, 0 );
 
-    m_fileVersionField = r.registerField( "file_version" );
-    m_commentField = r.registerField( "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment" );
-    m_countField = r.registerField( "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#count" );
-
-    addField( m_fileVersionField );
-    addField( m_commentField );
-    addField( m_countField );
+    addField( m_fileVersion );
+    addField( m_passwordProtected );
+    addField( m_description );
+    addField( m_name );
+    addField( m_number );
+    addField( m_openingDate );
+    addField( m_openingBalance );
+    addField( m_iban );
+    addField( m_owner );
+    addField( m_institution );
+    addField( m_bic );
+    addField( m_count );
 }
 
 
@@ -153,23 +181,28 @@ signed char KnipptaschAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
             return Error;
         }
 
-        idx.addValue( m_factory->m_fileVersionField, version );
+        idx.addValue( m_factory->m_fileVersion, version );
     }
 
-    const char *sc;
-    in->skip( 8 );
+
+    int32_t size = 0;
     {
-        int32_t n = in->read( sc, 4, 4 );
-        in->reset( 0 );
+        const char *sc;
+        in->skip( 8 );
+        {
+            int32_t n = in->read( sc, 4, 4 );
+            in->reset( 0 );
 
-        if( n < 4 ) {
-            return Error;
+            if( n < 4 ) {
+                return Error;
+            }
         }
+
+        size = ( static_cast<unsigned char>( sc[ 3 ] ) ) +
+               ( static_cast<unsigned char>( sc[ 2 ] ) <<  8 ) +
+               ( static_cast<unsigned char>( sc[ 1 ] ) << 16 ) +
+               ( static_cast<unsigned char>( sc[ 0 ] ) << 24 );
     }
-    const int32_t size = ( static_cast<unsigned char>( sc[ 3 ] ) ) +
-                         ( static_cast<unsigned char>( sc[ 2 ] ) <<  8 ) +
-                         ( static_cast<unsigned char>( sc[ 1 ] ) << 16 ) +
-                         ( static_cast<unsigned char>( sc[ 0 ] ) << 24 );
 
     std::string str;
     {
@@ -181,14 +214,105 @@ signed char KnipptaschAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
         if( n < size ) {
             return Error;
         }
-
-        str.append( data, size );
+        str = std::string( data, n );
     }
-    idx.addValue( m_factory->m_commentField, str );
+
+    struct json_object *json_obj;
+    json_obj = json_tokener_parse( str.data() );
+
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "passwordProtected" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_boolean ) {
+                idx.addValue( m_factory->m_passwordProtected, json_object_get_boolean( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "description" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_description, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "name" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_name, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "number" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_number, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "openingDate" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_openingDate, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "openingBalance" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_double ) {
+                idx.addValue( m_factory->m_openingBalance, json_object_get_double( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "iban" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_iban, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "owner" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_owner, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "institution" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_institution, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "bic" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_string ) {
+                idx.addValue( m_factory->m_bic, json_object_get_string( obj ) );
+            }
+        }
+    }
+    {
+        struct json_object *obj = json_object_object_get( json_obj, "count" );
+        if( obj ) {
+            if( json_object_get_type( obj ) == json_type_int ) {
+                idx.addValue( m_factory->m_count, json_object_get_int( obj ) );
+            }
+        }
+    }
+
+    json_object_put( json_obj );
 
     return Ok;
 }
-
 
 
 class Factory : public AnalyzerFactoryFactory

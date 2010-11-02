@@ -229,33 +229,33 @@ QByteArray Storage::metaData(const Account *acc, bool &ok) const
 
     QString headerData( "{\n" );
 
-    headerData.append( "  \"passwordProtected\": \"" );
-    headerData.append( passwordProtected );
-    headerData.append( "\"\n");
+    headerData.append( "  \"passwordProtected\": " );
+    headerData.append( passwordProtected ? "true" : "false" );
+    headerData.append( ",\n");
 
     switch( level ) {
         case Account::Low:
             headerData.append( "  \"description\": \"");
             headerData.append( acc->description() );
-            headerData.append( "\"\n");
+            headerData.append( "\",\n");
         case Account::Average:
             headerData.append( "  \"name\": \"");
             headerData.append( acc->name() );
-            headerData.append( "\"\n  \"number\": \"");
+            headerData.append( "\",\n  \"number\": \"");
             headerData.append( acc->number() );
-            headerData.append( "\"\n  \"openingDate\": \"");
+            headerData.append( "\",\n  \"openingDate\": \"");
             headerData.append( acc->openingDate().toString( Qt::ISODate ) );
-            headerData.append( "\"\n  \"openingBalance\": ");
-            headerData.append( QString::number( acc->openingBalance().cents() ) );
-            headerData.append( "\n  \"iban\": \"");
+            headerData.append( "\",\n  \"openingBalance\": ");
+            headerData.append( QString::number( acc->openingBalance() ) );
+            headerData.append( ",\n  \"iban\": \"");
             headerData.append( acc->iban() );
-            headerData.append( "\"\n  \"owner\": \"");
+            headerData.append( "\",\n  \"owner\": \"");
             headerData.append( acc->owner() );
-            headerData.append( "\"\n  \"institution\": \"");
+            headerData.append( "\",\n  \"institution\": \"");
             headerData.append( acc->institution() );
-            headerData.append( "\"\n  \"bic\": \"");
+            headerData.append( "\",\n  \"bic\": \"");
             headerData.append( acc->bic() );
-            headerData.append( "\"\n");
+            headerData.append( "\",\n");
         case Account::High:
             headerData.append( "  \"count\": ");
             headerData.append( QString::number( acc->countPostings() ) );
