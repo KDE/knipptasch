@@ -36,6 +36,9 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
+    public slots:
+        void setColumn(int);
+
     protected:
         bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 

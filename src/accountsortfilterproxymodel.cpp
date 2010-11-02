@@ -131,6 +131,12 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
 }
 
 
+void AccountSortFilterProxyModel::setColumn(int index)
+{
+    setFilterKeyColumn( index );
+}
+
+
 bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     int result = lessThanByType( left, right );

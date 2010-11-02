@@ -107,12 +107,13 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
 
     ui->searchWidget->setItemView( ui->view );
 
+    m_proxy->setFilterKeyColumn( -1 );
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
     connect( ui->searchWidget, SIGNAL( transitionButtonClicked() ), this, SLOT( onSearchReplaceTransition() ) );
     //connect( ui->searchWidget, SIGNAL( clear() ), m_proxy, SLOT( invalidate() ) );
     connect( ui->searchWidget, SIGNAL( filterStringChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
-    connect( ui->searchWidget, SIGNAL( filterColumnChanged(int) ), m_proxy, SLOT( setFilterColumn(int) ) );
+    //connect( ui->searchWidget, SIGNAL( filterColumnChanged(int) ), m_proxy, SLOT( setColumn(int) ) );
 
     connect( ui->replaceWidget, SIGNAL( transitionButtonClicked() ), this, SLOT( onSearchReplaceTransition() ) );
 
