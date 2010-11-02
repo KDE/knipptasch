@@ -80,11 +80,14 @@ bool Storage::write(Account *acc)
         out.setVersion( QDataStream::Qt_4_6 );
 
         out << static_cast<quint32>( 0x141886C );
-        out << static_cast<quint32>( 0x100 );
+        out << static_cast<quint32>( 0x002 );
 
         bool ok = false;
+        QByteArray metaArray = metaData( acc, ok );
+        int32_t metaArraySize = metaArray.size();
+        out << metaArraySize;
+        out.writeRawData( metaArray.data(), metaArraySize );
 
-        out << metaData( acc, ok );
         if( !ok ) {
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - An unknown error occurred.";
@@ -126,7 +129,7 @@ bool Storage::write(Account *acc)
         return QFile::WriteError;
     }
 
-    //TODO write to a temporary file first or make a backup or... 
+    //TODO write to a temporary file first or make a backup or...
     qint64 size = file.write( byteArray );
     if( size < 0 || size != byteArray.size() ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
@@ -179,9 +182,9 @@ bool Storage::read(Account *acc)
         return false;
     }
 
-    qint32 version;
+    quint32 version;
     in >> version;
-    if( version != 0x100 ) {
+    if( version != 0x002 && version != 0x100 ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
                  << " - Unknown file version:" << version;
 
@@ -190,10 +193,19 @@ bool Storage::read(Account *acc)
     }
 
     { // skip metadata...
-        QByteArray metaData;
-        in >> metaData;
-
-        qDebug() << "skipped metadata:" << QByteArray::fromHex( metaData );
+        if( version == 0x002 ) {
+            int32_t size;
+            in >> size;
+            if( in.skipRawData( size ) < 0 ) {
+                errorMessage( QObject::tr( "Metadata error." ) );
+                return false;
+            }
+        }
+        else {
+            Q_ASSERT( version == 0x100 );
+            QByteArray metaData;
+            in >> metaData;
+        }
     }
 
 
@@ -210,10 +222,17 @@ bool Storage::read(Account *acc)
 QByteArray Storage::metaData(const Account *acc, bool &ok) const
 {
     ok = false;
-    Account::SecurityLevel level = acc->isPasswordEnabled()
+
+    bool passwordProtected = acc->isPasswordEnabled();
+    Account::SecurityLevel level = passwordProtected
                                     ? acc->securityLevel() : Account::Low;
 
     QString headerData( "{\n" );
+
+    headerData.append( "  \"passwordProtected\": \"" );
+    headerData.append( passwordProtected );
+    headerData.append( "\"\n");
+
     switch( level ) {
         case Account::Low:
             headerData.append( "  \"description\": \"");
@@ -244,7 +263,7 @@ QByteArray Storage::metaData(const Account *acc, bool &ok) const
     headerData.append( "\n}\n" );
 
     ok = true;
-    return headerData.toUtf8().toHex();
+    return headerData.toLatin1();
 }
 
 
