@@ -60,8 +60,6 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
 {
     ui->setupUi( this );
 
-    ui->balance->setMenu( new QuickReportPopup( this ) );
-
     m_model = new AccountModel( account, this );
     new ModelTest( m_model, this );
 
@@ -70,6 +68,8 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     m_proxy->sort( AccountModel::MATURITY, Qt::AscendingOrder );
     m_proxy->setDynamicSortFilter( true );
     new ModelTest( m_proxy, this );
+
+    ui->balance->setMenu( new QuickReportPopup( m_proxy, this ) );
 
     ui->view->setModel( m_proxy );
 

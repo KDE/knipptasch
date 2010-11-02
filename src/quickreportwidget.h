@@ -20,6 +20,7 @@
 #include <QWidget>
 #include <QDate>
 
+class AccountSortFilterProxyModel;
 
 namespace Ui
 {
@@ -33,13 +34,22 @@ class QuickReportWidget : public QWidget
     Q_OBJECT
 
     public:
-        explicit QuickReportWidget(QWidget *parent = 0);
+        explicit QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget *parent = 0);
         ~QuickReportWidget();
 
         QSize sizeHint() const;
 
+        bool closeButtonEnabled() const;
+
+        QDate currentDate() const;
+        void setCurrentDate(const QDate &date);
+
     public slots:
         void updateView();
+        void setCloseButtonEnabled(bool state = true);
+
+    signals:
+        void closeRequested();
 
     protected:
         void showEvent(QShowEvent *event);
@@ -55,6 +65,7 @@ class QuickReportWidget : public QWidget
 
     private:
         Ui::QuickReportWidget *ui;
+        AccountSortFilterProxyModel *m_proxy;
         QDate m_date;
 };
 

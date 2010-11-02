@@ -18,8 +18,11 @@
 #define ACCOUNTSORTFILTERPROXYMODEL_H
 
 #include "accountmodel.h"
+#include "backend/money.h"
 
 #include <QSortFilterProxyModel>
+#include <QPair>
+
 
 
 class AccountSortFilterProxyModel : public QSortFilterProxyModel
@@ -29,6 +32,8 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
     public:
         explicit AccountSortFilterProxyModel(QObject *parent = 0);
 
+        QPair<Money, Money> amountInMonth(int year, int month);
+
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     protected:
@@ -37,6 +42,8 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
     private:
         int lessThanByType(const QModelIndex &left, const QModelIndex &right) const;
         int lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const;
+
+        int findRowByMonth(int year, int month, int startRow, int endRow) const;
 };
 
 

@@ -17,7 +17,10 @@
 #include "quickreportwidget.h"
 #include "ui_quickreportwidget.h"
 
+#include "accountsortfilterproxymodel.h"
+
 #include "compat/utils.h"
+#include "compat/iconloader.h"
 
 #if defined(HAVE_KDE)
 #include <KGlobal>
@@ -27,20 +30,33 @@
 
 #include <QLocale>
 #include <QShowEvent>
+#include "backend/money.h"
 
 
 
-QuickReportWidget::QuickReportWidget(QWidget *parent)
+
+
+QuickReportWidget::QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget *parent)
   : QWidget( parent ),
     ui( new Ui::QuickReportWidget ),
-    m_date( QDate::currentDate() )
+    m_proxy( proxy ),
+    m_date( QDate::currentDate().year(), QDate::currentDate().month(), 1 )
 {
+    Q_ASSERT( m_proxy );
+
     ui->setupUi( this );
+
+    ui->closeButton->setVisible( false );
+
+    ui->closeButton->setIcon( BarIcon("dialog-close") );
+    ui->nextButton->setIcon( BarIcon("arrow-right") );
+    ui->previousButton->setIcon( BarIcon("arrow-left") );
 
     installEventFilter( this );
 
     connect( ui->nextButton,      SIGNAL( clicked(bool) ), this, SLOT( slotNextMonth()     ) );
     connect( ui->previousButton,  SIGNAL( clicked(bool) ), this, SLOT( slotPreviousMonth() ) );
+    connect( ui->closeButton,     SIGNAL( clicked(bool) ), this, SIGNAL( closeRequested() ) );
 }
 
 
@@ -121,21 +137,46 @@ void QuickReportWidget::slotPreviousMonth()
 
 void QuickReportWidget::updateView()
 {
+    Q_ASSERT( m_proxy );
+    AccountModel *model = qobject_cast<AccountModel*>( m_proxy->sourceModel() );
+    Q_ASSERT( model );
+
     ui->titleLabel->setText( formatMonth( m_date ) );
 
-    if( false /*m_account*/ ) {
-        setEnabled( true );
+    const QPair<Money, Money> m = m_proxy->amountInMonth( m_date.year(), m_date.month() );
 
-    }
-    else {
-        setEnabled( false );
+    ui->incomeValue->setText( formatMoney( m.first ) );
+    ui->expenseValue->setText( formatMoney( m.second ) );
+    ui->diffValue->setText( formatMoney( m.first.abs() - m.second.abs() ) );
 
-        ui->incomeValue->setText( tr( "Unknown" ) );
-        ui->expenseValue->setText( tr( "Unknown" ) );
-        ui->diffValue->setText( tr( "Unknown" ) );
-    }
+    ui->nextButton->setEnabled( m_date < QDate::currentDate().addMonths( 3 ) );
+    ui->previousButton->setEnabled( m_date > model->account()->openingDate() );
 }
 
+
+QDate QuickReportWidget::currentDate() const
+{
+    return m_date;
+}
+
+
+void QuickReportWidget::setCurrentDate(const QDate &date)
+{
+    m_date = QDate( date.year(), date.month(), 1 );
+    updateView();
+}
+
+
+bool QuickReportWidget::closeButtonEnabled() const
+{
+    return ui->closeButton->isVisible();
+}
+
+
+void QuickReportWidget::setCloseButtonEnabled(bool state)
+{
+    ui->closeButton->setVisible( state );
+}
 
 
 QString QuickReportWidget::formatMonth(const QDate &date)
@@ -160,15 +201,7 @@ QString QuickReportWidget::formatMonth(const QDate &date)
         return tr( "next month" );
     }
 
-    if( date == current.addYears( 1 ) ) {
-        return tr( "next year" );
-    }
-
-    if( date == current.addYears( -1 ) ) {
-        return tr( "last year" );
-    }
-
-    return tr( "monthname year", "%1 %2" )
+    return tr( "%1 %2" )
 #if defined(HAVE_KDE)
                 .arg( KGlobal::locale()->calendar()->monthName( date ) )
                 .arg( KGlobal::locale()->calendar()->yearString( date ) );

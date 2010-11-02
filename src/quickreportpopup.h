@@ -21,19 +21,15 @@
 
 
 class QuickReportWidget;
+class AccountSortFilterProxyModel;
+
 
 class QuickReportPopup : public QMenu
 {
     Q_OBJECT
 
     public:
-        explicit QuickReportPopup(QWidget *parent = 0);
-
-    public slots:
-        void updateView();
-
-    private:
-        QuickReportWidget *m_report;
+        explicit QuickReportPopup(AccountSortFilterProxyModel *proxy, QWidget *parent = 0);
 };
 
 

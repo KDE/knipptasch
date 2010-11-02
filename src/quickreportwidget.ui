@@ -7,14 +7,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
-    <height>104</height>
+    <width>240</width>
+    <height>97</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>2</number>
+   </property>
+   <property name="spacing">
+    <number>2</number>
+   </property>
    <item row="0" column="0" rowspan="2">
     <widget class="QToolButton" name="previousButton">
      <property name="sizePolicy">
@@ -77,6 +83,23 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="closeButton">
+       <property name="icon">
+        <iconset>
+         <normaloff>../../../../opt/kde4/share/icons/oxygen/22x22/actions/dialog-close.png</normaloff>../../../../opt/kde4/share/icons/oxygen/22x22/actions/dialog-close.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>14</width>
+         <height>14</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

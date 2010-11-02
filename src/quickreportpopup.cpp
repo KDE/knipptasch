@@ -17,6 +17,8 @@
 #include "quickreportpopup.h"
 #include "quickreportwidget.h"
 
+#include "compat/iconloader.h"
+
 #include <QWidgetAction>
 
 
@@ -54,19 +56,23 @@ class QuickReportAction : public QWidgetAction
 
 
 
-QuickReportPopup::QuickReportPopup(QWidget *parent)
+QuickReportPopup::QuickReportPopup(AccountSortFilterProxyModel *proxy, QWidget *parent)
   : QMenu( parent )
 {
-    m_report = new QuickReportWidget( this );
+    QuickReportWidget *widget1 = new QuickReportWidget( proxy, this );
+    widget1->setCurrentDate( QDate::currentDate().addMonths( -1 ) );
+    addAction( new QuickReportAction( widget1, this ) );
+    addSeparator();
 
-    addAction( new QuickReportAction( m_report, this ) );
+    QuickReportWidget *widget2 = new QuickReportWidget( proxy, this );
+    addAction( new QuickReportAction( widget2, this ) );
+    addSeparator();
+
+    QuickReportWidget *widget3 = new QuickReportWidget( proxy, this );
+    widget3->setCurrentDate( QDate::currentDate().addMonths( 1 ) );
+    addAction( new QuickReportAction( widget3, this ) );
 }
 
-
-void QuickReportPopup::updateView()
-{
-    m_report->updateView();
-}
 
 
 
