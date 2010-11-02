@@ -101,6 +101,7 @@ MainWindow::MainWindow(QWidget* parent) :
     connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ), this, SLOT( onNewFile() ) );
     connect( ui->welcomeWidget, SIGNAL( openFileClicked() ), this, SLOT( onOpenFile() ) );
     connect( ui->welcomeWidget, SIGNAL( openFileClicked(QString) ), this, SLOT( onOpenFile(QString) ) );
+    connect( m_recentFileMenu, SIGNAL( openFile(QString) ), this, SLOT( onOpenFile(QString) ) );
 
     connect( ui->tabWidget, SIGNAL( currentChanged(int) ), this, SLOT( checkActionStates() ) );
     connect( ui->tabWidget, SIGNAL( tabCloseRequested(int) ), this, SLOT( onTabCloseRequest(int) ) );
