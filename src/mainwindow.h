@@ -28,6 +28,7 @@
 
 #include <KAction>
 
+class QUrl;
 class QMenu;
 class ImportPlugin;
 class ExportPlugin;
@@ -61,6 +62,8 @@ class MainWindow :
         ActionCollection* mainWindowActionCollection() { return actionCollection(); }
 #endif
 
+        void openFiles(const QList<QUrl> &urlList);
+
     protected:
         void closeEvent(QCloseEvent* event);
 
@@ -83,6 +86,7 @@ class MainWindow :
 
         void onNewFile();
         void onOpenFile(const QString &str = QString());
+        void onOpenFile(const QUrl &url);
         void onSaveFile();
         void onSaveAsFile();
         void onPrintFile();

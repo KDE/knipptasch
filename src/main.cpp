@@ -17,29 +17,34 @@
 
 #include "mainwindow.h"
 
-
 #if defined(HAVE_KDE)
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KAboutData>
+#include <KUrl>
 #else
-#include "compat/utils.h"
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
+#include "compat/utils.h"
 #endif
 
 #if defined(WITH_QCA2)
 #include <QtCrypto>
 #endif
 
+#include <QList>
 #include <QDebug>
+
 
 
 int main(int argc, char* argv[])
 {
+    QList<QUrl> files;
+
 #if defined(HAVE_KDE)
     KAboutData* aboutData = new KAboutData(
         "knipptasch",
@@ -55,11 +60,20 @@ int main(int argc, char* argv[])
     aboutData->setHomepage( "http://www.hilefoks.org" );
 
     KCmdLineArgs::init( argc, argv, aboutData );
+
     KCmdLineOptions options;
+    options.add( "+[url]", ki18n( "File to open" ) );
     KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
     KGlobal::locale()->insertCatalog( "knipptasch_qt" );
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    for(int i = 0; i < args->count(); i++) {
+        files.append( args->url( i ) );
+    }
+    args->clear();
+
 #else
     QApplication app(argc, argv);
 
@@ -115,6 +129,9 @@ int main(int argc, char* argv[])
 
     MainWindow* mainWindow = new MainWindow;
     mainWindow->show();
+
+    QApplication::processEvents();
+    mainWindow->openFiles( files );
 
     return app.exec();
 }

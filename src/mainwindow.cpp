@@ -45,6 +45,7 @@
 #include <kcomponentdata.h>
 #include <KAboutData>
 #include <KFileDialog>
+#include <KIO/NetAccess>
 #else
 #include "aboutdialog.h"
 #include <QMessageBox>
@@ -116,6 +117,14 @@ MainWindow::MainWindow(QWidget* parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+void MainWindow::openFiles(const QList<QUrl> &urlList)
+{
+    foreach(const QUrl &url, urlList) {
+        onOpenFile( url );
+    }
 }
 
 
@@ -519,6 +528,45 @@ void MainWindow::onOpenFile(const QString &str)
     }
 
     checkActionStates();
+}
+
+
+void MainWindow::onOpenFile(const QUrl &url)
+{
+    QString tmpFile;
+
+#if defined(HAVE_KDE)
+    if( KIO::NetAccess::download( url, tmpFile, this ) )
+#else
+    tmpFile = url.toString();
+#endif
+    {
+        Account *acc = new Account;
+        if( !Storage::readAccount( this, acc, tmpFile ) ) {
+            delete acc;
+        }
+        else {
+            AccountWidget *widget = new AccountWidget( acc, this );
+            widget->setFileName( url.toString() );
+            acc->setModified( false );
+
+            m_recentFileMenu->addFile( url.toString() );
+
+            statusBar()->showMessage( tr( "File '%1' loaded" ).arg( url.toString() ) , 2000 );
+
+            addAccountWidget( widget );
+        }
+#if defined(HAVE_KDE)
+        KIO::NetAccess::removeTempFile( tmpFile );
+#endif
+        checkActionStates();
+    }
+
+#if defined(HAVE_KDE)
+    else {
+        KMessageBox::error( this, KIO::NetAccess::lastErrorString() );
+    }
+#endif
 }
 
 
