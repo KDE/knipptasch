@@ -57,13 +57,14 @@
 #include <QCloseEvent>
 #include <QFile>
 #include <QPointer>
+#include <QToolButton>
+#include <QToolBar>
 
 #include <KIcon>
 #include <KAction>
 #include <KUrl>
 
 #include <QDebug>
-#include <QToolButton>
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -87,8 +88,12 @@ MainWindow::MainWindow(QWidget* parent) :
 #if defined(HAVE_KDE)
     setupGUI();
 #else
-    restoreGeometry( Preferences::self()->value( "MainWindow", "geometry" ).toByteArray() );
-    restoreState( Preferences::self()->value( "MainWindow", "state" ).toByteArray() );
+    restoreGeometry(
+        Preferences::self()->value( "MainWindow", "geometry" ).toByteArray()
+    );
+    restoreState(
+        Preferences::self()->value( "MainWindow", "state" ).toByteArray()
+    );
     setWindowIcon( QIcon(":/oxygen/32x32/apps/knipptasch.png") );
 #endif
 
@@ -99,16 +104,24 @@ MainWindow::MainWindow(QWidget* parent) :
 
     loadConfig();
 
-    connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ), this, SLOT( onNewFile() ) );
-    connect( ui->welcomeWidget, SIGNAL( openFileClicked() ), this, SLOT( onOpenFile() ) );
-    connect( ui->welcomeWidget, SIGNAL( openFileClicked(QString) ), this, SLOT( onOpenFile(QString) ) );
-    connect( m_recentFileMenu, SIGNAL( openFile(QString) ), this, SLOT( onOpenFile(QString) ) );
+    connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ),
+             this, SLOT( onNewFile() ) );
+    connect( ui->welcomeWidget, SIGNAL( openFileClicked() ),
+             this, SLOT( onOpenFile() ) );
+    connect( ui->welcomeWidget, SIGNAL( openFileClicked(QString) ),
+             this, SLOT( onOpenFile(QString) ) );
+    connect( m_recentFileMenu, SIGNAL( openFile(QString) ),
+             this, SLOT( onOpenFile(QString) ) );
 
-    connect( ui->tabWidget, SIGNAL( currentChanged(int) ), this, SLOT( checkActionStates() ) );
-    connect( ui->tabWidget, SIGNAL( tabCloseRequested(int) ), this, SLOT( onTabCloseRequest(int) ) );
+    connect( ui->tabWidget, SIGNAL( currentChanged(int) ),
+             this, SLOT( checkActionStates() ) );
+    connect( ui->tabWidget, SIGNAL( tabCloseRequested(int) ),
+             this, SLOT( onTabCloseRequest(int) ) );
 
-    connect( m_exportPluginActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( onExportPluginClicked(QAction*) ) );
-    connect( m_importPluginActionGroup, SIGNAL( triggered(QAction*) ), this, SLOT( onImportPluginClicked(QAction*) ) );
+    connect( m_exportPluginActionGroup, SIGNAL( triggered(QAction*) ),
+             this, SLOT( onExportPluginClicked(QAction*) ) );
+    connect( m_importPluginActionGroup, SIGNAL( triggered(QAction*) ),
+             this, SLOT( onImportPluginClicked(QAction*) ) );
 
     checkActionStates();
 }
@@ -238,11 +251,7 @@ void MainWindow::setupActions()
 
     ui->menuSettings->addAction( actionCollection()->action( "configure_account" ) );
     ui->menuSettings->addSeparator();
-
-//    QMenu* toolbarMenu = ui->menuSettings->addMenu( tr( "Show &Toolbar" ) );
-//    toolbarMenu->addAction( ui->mainToolBar->toggleViewAction() );
-    ui->menuSettings->addAction( ui->mainToolBar->toggleViewAction() );
-    ui->menuSettings->addAction( actionCollection()->action( "options_show_statusbar" ) );
+    ui->menuSettings->addAction( showStatusbarAction ); //actionCollection()->action( "options_show_statusbar" ) );
     ui->menuSettings->addSeparator();
     ui->menuSettings->addAction( actionCollection()->action( "options_configure" ) );
 
@@ -252,15 +261,20 @@ void MainWindow::setupActions()
     KAction* aboutAppAction = StandardAction::aboutApp( this, SLOT( onAbout() ), actionCollection() );
     ui->menuHelp->addAction( aboutAppAction );
 
-    ui->mainToolBar->addAction( actionCollection()->action( "file_new" ) );
-    ui->mainToolBar->addAction( actionCollection()->action( "file_open" ) );
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( actionCollection()->action( "file_save" ) );
-    ui->mainToolBar->addAction( actionCollection()->action( "file_save_as" ) );
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( actionCollection()->action( "file_print" ) );
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( actionCollection()->action( "file_close" ) );
+    QToolBar *mainToolBar = new QToolBar( tr( "Main Toolbar" ), this );
+    ui->menuSettings->insertAction( showStatusbarAction, mainToolBar->toggleViewAction() );
+
+    mainToolBar->addAction( actionCollection()->action( "file_new" ) );
+    mainToolBar->addAction( actionCollection()->action( "file_open" ) );
+    mainToolBar->addSeparator();
+    mainToolBar->addAction( actionCollection()->action( "file_save" ) );
+    mainToolBar->addAction( actionCollection()->action( "file_save_as" ) );
+    mainToolBar->addSeparator();
+    mainToolBar->addAction( actionCollection()->action( "file_print" ) );
+    mainToolBar->addSeparator();
+    mainToolBar->addAction( actionCollection()->action( "file_close" ) );
+
+    addToolBar( mainToolBar );
 #endif
 }
 
