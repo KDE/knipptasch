@@ -88,9 +88,6 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     ui->view->horizontalHeader()->installEventFilter( this );
     ui->view->installEventFilter( this );
 
-    ui->searchWidget->setVisible( false );
-    ui->replaceWidget->setVisible( false );
-
     QByteArray arr = Preferences::self()->value<QByteArray>( "TableView", "HorizontalHeaderState" );
     if( arr.isEmpty() ) {
         ui->view->setColumnHidden( AccountModel::TYPE, true );
@@ -105,21 +102,12 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
-    ui->searchWidget->setItemView( ui->view );
-
     m_proxy->setFilterKeyColumn( -1 );
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
-    connect( ui->searchWidget, SIGNAL( transitionButtonClicked() ), this, SLOT( onSearchReplaceTransition() ) );
-    //connect( ui->searchWidget, SIGNAL( clear() ), m_proxy, SLOT( invalidate() ) );
-    connect( ui->searchWidget, SIGNAL( filterStringChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
-    //connect( ui->searchWidget, SIGNAL( filterColumnChanged(int) ), m_proxy, SLOT( setColumn(int) ) );
-
-    connect( ui->replaceWidget, SIGNAL( transitionButtonClicked() ), this, SLOT( onSearchReplaceTransition() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SIGNAL( changed() ) );
-
 
     loadConfig();
 
@@ -294,8 +282,6 @@ void AccountWidget::onPaste()
 void AccountWidget::onFind()
 {
     //TODO
-    ui->replaceWidget ->setVisible( false );
-    ui->searchWidget->setVisible( true );
 }
 
 
@@ -314,8 +300,6 @@ void AccountWidget::onFindPrev()
 void AccountWidget::onReplace()
 {
     //TODO
-    ui->replaceWidget ->setVisible( true );
-    ui->searchWidget->setVisible( false );
 }
 
 
@@ -360,19 +344,6 @@ void AccountWidget::onResizeColumnToContents(int index)
 {
     if( Preferences::self()->value<bool>( "TableView", "DoubleClickResizeColumnToCountent", false ) ) {
         ui->view->resizeColumnToContents( index );
-    }
-}
-
-
-void AccountWidget::onSearchReplaceTransition()
-{
-    if( ui->searchWidget->isVisible() ) {
-        ui->searchWidget->setVisible( false );
-        ui->replaceWidget->setVisible( true );
-    }
-    else {
-        ui->searchWidget->setVisible( true );
-        ui->replaceWidget->setVisible( false );
     }
 }
 

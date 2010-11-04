@@ -122,8 +122,6 @@ set(knipptasch_SOURCES
     src/accountsettingsdialog.cpp
     src/settingsdialog.cpp
     src/recentfilemenu.cpp
-    src/searchreplacewidget.cpp
-    src/searchwidget.cpp
     src/quickreportpopup.cpp
     src/quickreportwidget.cpp
     src/passworddialog.cpp
@@ -164,8 +162,6 @@ set( knipptasch_HEADERS
     src/accountsettingsdialog.h
     src/settingsdialog.h
     src/recentfilemenu.h
-    src/searchreplacewidget.h
-    src/searchwidget.h
     src/quickreportpopup.h
     src/quickreportwidget.h
     src/passworddialog.h
@@ -194,8 +190,6 @@ set( knipptasch_FORMS
     src/savemodifieddialog.ui
     src/accountsettingsdialog.ui
     src/settingsdialog.ui
-    src/searchreplacewidget.ui
-    src/searchwidget.ui
     src/quickreportwidget.ui
     src/passworddialog.ui
     src/passwordwidget.ui

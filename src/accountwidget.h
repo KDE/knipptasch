@@ -84,7 +84,6 @@ class AccountWidget : public QWidget
         void onConfigureAccount();
 
         void onResizeColumnToContents(int);
-        void onSearchReplaceTransition();
 
     signals:
         void changed();
