@@ -22,6 +22,8 @@
 
 class PostingTextDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
     public:
         PostingTextDelegate(QObject *parent = 0);
 

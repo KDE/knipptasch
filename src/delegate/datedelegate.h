@@ -22,6 +22,8 @@
 
 class DateDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
     public:
         DateDelegate(QObject *parent = 0);
 

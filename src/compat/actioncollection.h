@@ -27,6 +27,8 @@
 
 class ActionCollection : public KActionCollection
 {
+    Q_OBJECT
+
     public:
         ActionCollection(QObject* parent)
             : KActionCollection(parent)

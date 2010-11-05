@@ -167,12 +167,12 @@ set( knipptasch_HEADERS
     src/passworddialog.h
     src/passwordwidget.h
 
-    src/export/csv/csvexportplugin.h
+    #src/export/csv/csvexportplugin.h
     src/export/csv/csvexportdialog.h
 
-    src/import/csv/csvimportplugin.h
+    #src/import/csv/csvimportplugin.h
     src/import/csv/csvimportdialog.h
-    src/import/demo/demoimportplugin.h
+    #src/import/demo/demoimportplugin.h
 
     src/delegate/datedelegate.h
     src/delegate/moneydelegate.h

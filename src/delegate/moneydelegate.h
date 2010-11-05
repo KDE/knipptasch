@@ -22,6 +22,8 @@
 
 class MoneyDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
     public:
         MoneyDelegate(QObject *parent = 0);
 
