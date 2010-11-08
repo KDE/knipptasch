@@ -72,9 +72,6 @@ class AccountWidget : public QWidget
         void onCopy();
         void onPaste();
         void onFind();
-        void onFindNext();
-        void onFindPrev();
-        void onReplace();
 
         void onPostingClone();
         void onPostingDelete();
@@ -94,6 +91,7 @@ class AccountWidget : public QWidget
     private slots:
         void slotSetIndexToCurrentInput();
         void slotUpdateAccountInfo();
+        void closeSearchWidget();
 
     private:
 #if defined(HAVE_KDE)

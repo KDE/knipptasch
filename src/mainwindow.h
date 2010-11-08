@@ -98,9 +98,6 @@ class MainWindow :
         void onCopy();
         void onPaste();
         void onFind();
-        void onFindNext();
-        void onFindPrev();
-        void onReplace();
 
         void onPostingClone();
         void onPostingDelete();
@@ -131,7 +128,7 @@ class MainWindow :
 
         QList<ExportPlugin*> m_exportPlugins;
         QActionGroup *m_exportPluginActionGroup;
-        
+
         QList<ImportPlugin*> m_importPlugins;
         QActionGroup *m_importPluginActionGroup;
 

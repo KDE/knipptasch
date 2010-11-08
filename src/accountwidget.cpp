@@ -49,6 +49,7 @@
 #include <QPointer>
 #include <QContextMenuEvent>
 #include "delegate/moneydelegate.h"
+#include <QCompleter>
 
 
 AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
@@ -60,6 +61,14 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
 {
     ui->setupUi( this );
 
+    ui->searchWidget->setVisible( false );
+    ui->searchCloseButton->setIcon( BarIcon("window-close") );
+    ui->searchCloseButton->setAutoRaise( true );
+
+#if defined(HAVE_KDE)
+    ui->searchLineEdit->setClearButtonShown( true );
+#endif
+
     m_model = new AccountModel( account, this );
     new ModelTest( m_model, this );
 
@@ -69,6 +78,12 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     m_proxy->setDynamicSortFilter( true );
     new ModelTest( m_proxy, this );
 
+    QCompleter *completer = new QCompleter( this );
+    completer->setModel( m_proxy );
+    completer->setCompletionColumn( m_proxy->mapFromSource( m_model->index( 0, AccountModel::POSTINGTEXT ) ).column() );
+    completer->setCaseSensitivity( Qt::CaseInsensitive );
+    ui->searchLineEdit->setCompleter( completer );
+ 
     ui->balance->setMenu( new QuickReportPopup( m_proxy, this ) );
 
     ui->view->setModel( m_proxy );
@@ -108,6 +123,9 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SIGNAL( changed() ) );
+
+    connect( ui->searchLineEdit, SIGNAL( textChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
+    connect( ui->searchCloseButton, SIGNAL( clicked() ), this, SLOT( closeSearchWidget() ) );
 
     loadConfig();
 
@@ -189,8 +207,6 @@ void AccountWidget::checkActionState()
     mainWindowActionCollection()->action( "edit_copy" )->setEnabled( true );
     mainWindowActionCollection()->action( "edit_paste" )->setEnabled( true );
     mainWindowActionCollection()->action( "edit_find" )->setEnabled( true );
-    mainWindowActionCollection()->action( "edit_find_next" )->setEnabled( true );
-    mainWindowActionCollection()->action( "edit_find_prev" )->setEnabled( true );
 
     mainWindowActionCollection()->action( "configure_account" )->setEnabled( true );
 }
@@ -281,25 +297,9 @@ void AccountWidget::onPaste()
 
 void AccountWidget::onFind()
 {
-    //TODO
-}
-
-
-void AccountWidget::onFindNext()
-{
-    //TODO
-}
-
-
-void AccountWidget::onFindPrev()
-{
-    //TODO
-}
-
-
-void AccountWidget::onReplace()
-{
-    //TODO
+    ui->searchWidget->setVisible( true );
+    ui->searchLineEdit->setFocus( Qt::OtherFocusReason );
+    ui->searchLineEdit->selectAll();
 }
 
 
@@ -378,6 +378,13 @@ void AccountWidget::slotUpdateAccountInfo()
 
     ui->balance->setStyleSheet( stylesheet );
     ui->balance->setText( formatMoney( value ) );
+}
+
+
+void AccountWidget::closeSearchWidget()
+{
+    ui->searchLineEdit->clear();
+    ui->searchWidget->setVisible( false );
 }
 
 

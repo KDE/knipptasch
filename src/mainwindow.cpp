@@ -184,8 +184,6 @@ void MainWindow::setupActions()
     StandardAction::copy( this, SLOT( onCopy() ), actionCollection() );
     StandardAction::paste( this, SLOT( onPaste() ), actionCollection() );
     StandardAction::find( this, SLOT( onFind() ), actionCollection() );
-    StandardAction::findNext( this, SLOT( onFindNext() ), actionCollection() );
-    StandardAction::findPrev( this, SLOT( onFindPrev() ), actionCollection() );
 
     // Posting Actions
     QAction *postingDeleteAction = actionCollection()->addAction( "posting_delete", this, SLOT( onPostingDelete() ) );
@@ -236,8 +234,6 @@ void MainWindow::setupActions()
     ui->menuEdit->addAction( actionCollection()->action( "edit_paste" ) );
     ui->menuEdit->addSeparator();
     ui->menuEdit->addAction( actionCollection()->action( "edit_find" ) );
-    ui->menuEdit->addAction( actionCollection()->action( "edit_find_next" ) );
-    ui->menuEdit->addAction( actionCollection()->action( "edit_find_prev" ) );
 
     ui->menuPosting->addAction( actionCollection()->action( "posting_clone" ) );
     ui->menuPosting->addSeparator();
@@ -422,8 +418,6 @@ void MainWindow::checkActionStates()
         actionCollection()->action( "edit_copy" )->setEnabled( false );
         actionCollection()->action( "edit_paste" )->setEnabled( false );
         actionCollection()->action( "edit_find" )->setEnabled( false );
-        actionCollection()->action( "edit_find_next" )->setEnabled( false );
-        actionCollection()->action( "edit_find_prev" )->setEnabled( false );
 
         actionCollection()->action( "posting_delete" )->setEnabled( false );
         actionCollection()->action( "posting_clone" )->setEnabled( false );
@@ -668,30 +662,6 @@ void MainWindow::onFind()
     Q_ASSERT( currentAccountWidget() );
 
     currentAccountWidget()->onFind();
-}
-
-
-void MainWindow::onFindNext()
-{
-    Q_ASSERT( currentAccountWidget() );
-
-    currentAccountWidget()->onFindNext();
-}
-
-
-void MainWindow::onFindPrev()
-{
-    Q_ASSERT( currentAccountWidget() );
-
-    currentAccountWidget()->onFindPrev();
-}
-
-
-void MainWindow::onReplace()
-{
-    Q_ASSERT( currentAccountWidget() );
-
-    currentAccountWidget()->onReplace();
 }
 
 

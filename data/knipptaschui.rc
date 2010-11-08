@@ -1,7 +1,7 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <gui name="Knipptasch" version="1">
 
-    <ToolBar name="mainToolBar" noMerge="1">
+    <ToolBar name="mainToolBar" fullWidth="true"  noMerge="1">
         <text>Main Toolbar</text>
         <Action name="file_new"/>
         <Action name="file_open"/>

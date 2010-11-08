@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>453</height>
+    <width>843</width>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="margin">
      <number>0</number>
     </property>
@@ -40,7 +43,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="KTabWidget" name="tabWidget"/>
+         <widget class="KTabWidget" name="tabWidget">
+          <property name="documentMode">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -53,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>664</width>
+     <width>843</width>
      <height>20</height>
     </rect>
    </property>
