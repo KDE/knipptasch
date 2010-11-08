@@ -3,7 +3,7 @@
   <mime-type type="application/x-knipptasch">
     <comment>Knipptasch Account File</comment>
     <comment xml:lang="x-test">xxKnipptasch Account Filexx</comment>
-    <icon name="x-knipptasch"/>
+    <icon name="application-x-knipptasch"/>
     <glob pattern="*.ka"/>
   </mime-type>
 </mime-info>
