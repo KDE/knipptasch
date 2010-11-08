@@ -207,7 +207,7 @@ static KAction* makeAction(StandardActionId id, const QObject* recv, const char*
         { idOpenNew, QKeySequence::New, "file_new", QObject::tr("&New"), QObject::tr("New file"), BarIcon("document-new"), false },
         { idSave, QKeySequence::Save, "file_save", QObject::tr("&Save"), QObject::tr("Save file"), BarIcon("document-save"), false },
         { idSaveAs, QKeySequence::SaveAs, "file_save_as", QObject::tr("Save &As..."), QObject::tr("Save file"), BarIcon("document-save-as"), false },
-        { idPrint, QKeySequence::Print, "file_print", QObject::tr("&Print"), QObject::tr("&Print..."), BarIcon("document-print"), false },
+        { idPrint, QKeySequence::Print, "file_print", QObject::tr("&Print"), QObject::tr("Print..."), BarIcon("document-print"), false },
         { idClose, QKeySequence::Close, "file_close", QObject::tr("&Close"), QObject::tr("Close file"), BarIcon("window-close"), false },
         { idQuit, QKeySequence::Quit, "file_quit", QObject::tr("&Quit"), QObject::tr("Quit the application"), BarIcon("application-exit"), false },
         { idSelectAll, QKeySequence::SelectAll, "edit_select_all", QObject::tr("Select &All"), QObject::tr("Select all entries"), BarIcon("edit-select-all"), false },
