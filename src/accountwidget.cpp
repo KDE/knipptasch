@@ -26,6 +26,7 @@
 
 #include "delegate/datedelegate.h"
 #include "delegate/postingtextdelegate.h"
+#include "delegate/moneydelegate.h"
 
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
@@ -48,8 +49,8 @@
 #include <QMenu>
 #include <QPointer>
 #include <QContextMenuEvent>
-#include "delegate/moneydelegate.h"
 #include <QCompleter>
+
 
 
 AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
@@ -62,6 +63,8 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     ui->setupUi( this );
 
     ui->searchWidget->setVisible( false );
+    ui->searchWidget->installEventFilter( this );
+
     ui->searchCloseButton->setIcon( BarIcon("window-close") );
     ui->searchCloseButton->setAutoRaise( true );
 
@@ -403,6 +406,14 @@ bool AccountWidget::eventFilter(QObject *obj, QEvent *event)
                 showTableMenu( e, ui->view->indexAt( ui->view->mapFromParent( e->pos() ) ) );
                 return true;
             }
+        }
+    }
+
+    if( obj == ui->searchWidget && event->type() == QEvent::KeyPress ) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>( event );
+        if( keyEvent->key() == Qt::Key_Escape ) {
+            closeSearchWidget();
+            return true;
         }
     }
 
