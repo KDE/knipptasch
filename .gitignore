@@ -3,3 +3,4 @@ install/
 *.*~
 .kdev4/
 *.ka
+CMakeLists.txt.user
