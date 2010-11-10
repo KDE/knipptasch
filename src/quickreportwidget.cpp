@@ -19,9 +19,10 @@
 
 #include "accountsortfilterproxymodel.h"
 
+#include "preferences.h"
+
 #include "compat/utils.h"
 #include "compat/iconloader.h"
-
 #if defined(HAVE_KDE)
 #include <KGlobal>
 #include <KLocale>
@@ -31,8 +32,20 @@
 #include <QLocale>
 #include <QShowEvent>
 #include "backend/money.h"
+#include "backend/posting.h"
 
 
+bool doSortPostings(const Posting *p1, const Posting *p2)
+{
+    if( !p1->maturity().isValid() ) {
+        return true;
+    }
+    if( !p2->maturity().isValid() ) {
+        return false;
+    }
+
+    return p1->maturity() < p2->maturity();
+}
 
 
 
@@ -54,9 +67,9 @@ QuickReportWidget::QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget
 
     installEventFilter( this );
 
-    connect( ui->nextButton,      SIGNAL( clicked(bool) ), this, SLOT( slotNextMonth()     ) );
-    connect( ui->previousButton,  SIGNAL( clicked(bool) ), this, SLOT( slotPreviousMonth() ) );
-    connect( ui->closeButton,     SIGNAL( clicked(bool) ), this, SIGNAL( closeRequested() ) );
+    connect( ui->nextButton, SIGNAL( clicked(bool) ), this, SLOT( slotNextMonth() ) );
+    connect( ui->previousButton, SIGNAL( clicked(bool) ), this, SLOT( slotPreviousMonth() ) );
+    connect( ui->closeButton, SIGNAL( clicked(bool) ), this, SIGNAL( closeRequested() ) );
 }
 
 
@@ -102,12 +115,6 @@ bool QuickReportWidget::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
     }
-    else if( event->type() == QEvent::MouseButtonDblClick ) {
-        m_date = QDate::currentDate();
-        updateView();
-
-        return true;
-    }
 
     return QWidget::eventFilter( obj, event );
 }
@@ -143,11 +150,56 @@ void QuickReportWidget::updateView()
 
     ui->titleLabel->setText( formatMonth( m_date ) );
 
-    const QPair<Money, Money> m = m_proxy->amountInMonth( m_date.year(), m_date.month() );
+    Money income;
+    Money expense;
 
-    ui->incomeValue->setText( formatMoney( m.first ) );
-    ui->expenseValue->setText( formatMoney( m.second ) );
-    ui->diffValue->setText( formatMoney( m.first.abs() - m.second.abs() ) );
+    QList<const Posting*> list = model->account()->postings();
+    qSort( list.begin(), list.end(), doSortPostings );
+
+    foreach(const Posting *p, list) {
+        if( p->maturity().year() == m_date.year() ) {
+            if( p->maturity().month() == m_date.month() ) {
+                if( p->amount() < 0.0 ) {
+                    expense -= p->amount().abs();
+                }
+                else {
+                    income += p->amount();
+                }
+            }
+            else if( p->maturity().month() > m_date.month() ) {
+                break;
+            }
+        }
+        else if(  p->maturity().year() > m_date.year() ) {
+            break;
+        }
+    }
+
+    ui->incomeValue->setText( formatMoney( income ) );
+    ui->expenseValue->setText( formatMoney( expense ) );
+    ui->diffValue->setText( formatMoney( income - expense.abs() ) );
+
+    if( Preferences::self()->positiveAmountForegroundEnabled() ) {
+        QString style = QString::fromLatin1("color: %1;").arg(
+                Preferences::self()->positiveAmountForegroundColor().name() );
+
+        ui->incomeValue->setStyleSheet( style );
+
+        if( ( income - expense.abs() ) >= 0.0 ) {
+            ui->diffValue->setStyleSheet( style );
+        }
+    }
+
+    if( Preferences::self()->negativeAmountForegroundEnabled() ) {
+        QString style = QString::fromLatin1("color: %1;").arg(
+                Preferences::self()->negativeAmountForegroundColor().name() );
+
+        ui->expenseValue->setStyleSheet( style );
+
+        if( ( income - expense.abs() ) < 0.0 ) {
+            ui->diffValue->setStyleSheet( style );
+        }
+    }
 
     ui->nextButton->setEnabled( m_date < QDate::currentDate().addMonths( 3 ) );
     ui->previousButton->setEnabled( m_date > model->account()->openingDate() );

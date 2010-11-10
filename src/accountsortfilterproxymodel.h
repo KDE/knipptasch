@@ -32,12 +32,7 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
     public:
         explicit AccountSortFilterProxyModel(QObject *parent = 0);
 
-        QPair<Money, Money> amountInMonth(int year, int month);
-
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-    public slots:
-        void setColumn(int);
 
     protected:
         bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
@@ -45,8 +40,6 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
     private:
         int lessThanByType(const QModelIndex &left, const QModelIndex &right) const;
         int lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const;
-
-        int findRowByMonth(int year, int month, int startRow, int endRow) const;
 };
 
 

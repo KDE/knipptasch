@@ -35,45 +35,6 @@ AccountSortFilterProxyModel::AccountSortFilterProxyModel(QObject *parent)
 }
 
 
-QPair<Money, Money> AccountSortFilterProxyModel::amountInMonth(int year, int month)
-{
-    AccountModel *model = qobject_cast<AccountModel*>( sourceModel() );
-    Q_ASSERT( model );
-
-    if( QDate( year, month, 1 ) < model->account()->openingDate() ) {
-        return QPair<Money, Money>( 0, 0 );
-    }
-
-    int start = findRowByMonth( year, month, 1, rowCount() - 1 );
-    if( start < 0 ) {
-        return QPair<Money, Money>( 0, 0 );
-    }
-
-    int end = findRowByMonth( year, month, rowCount() - 1, start );
-    Q_ASSERT( end >= start );
-
-    Q_ASSERT( model->index( 0, AccountModel::AMOUNT ).isValid() );
-    Q_ASSERT( mapFromSource( model->index( 0, AccountModel::AMOUNT ) ).isValid() );
-    const int column = mapFromSource( model->index( 0, AccountModel::AMOUNT ) ).column();
-
-    Money incoming, outgoing;
-    for(int i = start; i <= end; ++i) {
-        const QModelIndex idx = createIndex( i, column );
-        Q_ASSERT( idx.isValid() );
-
-        Money money = data( idx, Qt::EditRole ).value<Money>();
-        if( money > 0.0 ) {
-            incoming += money;
-        }
-        else {
-            outgoing += money.abs();
-        }
-    }
-
-    return QPair<Money, Money>(incoming, outgoing);
-}
-
-
 QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) const
 {
     if( !idx.isValid() ) {
@@ -128,12 +89,6 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
     }
 
     return QSortFilterProxyModel::data( idx, role );
-}
-
-
-void AccountSortFilterProxyModel::setColumn(int index)
-{
-    setFilterKeyColumn( index );
 }
 
 
@@ -274,13 +229,6 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
                 || ( !l_secondary.isValid() && !r_secondary.isValid() ) );
 
     return TEST_LESS_THAN_RESULT_UNKNOWN;
-}
-
-
-int AccountSortFilterProxyModel::findRowByMonth(int year, int month, int startRow, int endRow) const
-{
-    //FIXME
-    return -1;
 }
 
 
