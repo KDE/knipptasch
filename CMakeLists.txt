@@ -138,6 +138,7 @@ set(knipptasch_SOURCES
     src/delegate/datedelegate.cpp
     src/delegate/moneydelegate.cpp
     src/delegate/postingtextdelegate.cpp
+    src/delegate/categorydelegate.cpp
 
     src/backend/account.cpp
     src/backend/posting.cpp
@@ -177,6 +178,7 @@ set( knipptasch_HEADERS
     src/delegate/datedelegate.h
     src/delegate/moneydelegate.h
     src/delegate/postingtextdelegate.h
+    src/delegate/categorydelegate.h
 
     src/compat/actioncollection.h
 

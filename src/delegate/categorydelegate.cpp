@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "postingtextdelegate.h"
+#include "categorydelegate.h"
 
 #include "accountsortfilterproxymodel.h"
 #include "backend/posting.h"
@@ -27,13 +27,13 @@
 #include <QSet>
 
 
-PostingTextDelegate::PostingTextDelegate(QObject *parent)
+CategoryDelegate::CategoryDelegate(QObject *parent)
   : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     const AccountSortFilterProxyModel *model =
             qobject_cast<const AccountSortFilterProxyModel*>( index.model() );
@@ -48,7 +48,7 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     QSet<QString> set;
     const QList<const Posting*> list = model->account()->postings();
     foreach(const Posting *p, list) {
-        set.insert( p->postingText() );
+        set.insert( p->category() );
     }
 
     QCompleter *completer = new QCompleter( set.toList(), input );
@@ -63,7 +63,7 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
 }
 
 
-void PostingTextDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void CategoryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     KLineEdit *input = qobject_cast<KLineEdit*>( editor );
     const QAbstractItemModel *model = index.model();
@@ -72,12 +72,12 @@ void PostingTextDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
         QStyledItemDelegate::setEditorData( editor, index );
     }
     else {
-        input->setText( model->data(index, Qt::EditRole).toString() );
+        input->setText( model->data( index, Qt::EditRole ).toString() );
     }
 }
 
 
-void PostingTextDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void CategoryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     if( !index.isValid() ) {
         return;

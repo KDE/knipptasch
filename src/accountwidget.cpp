@@ -27,6 +27,8 @@
 #include "delegate/datedelegate.h"
 #include "delegate/postingtextdelegate.h"
 #include "delegate/moneydelegate.h"
+#include "delegate/categorydelegate.h"
+
 
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
@@ -50,7 +52,6 @@
 #include <QPointer>
 #include <QContextMenuEvent>
 #include <QCompleter>
-
 
 
 AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
@@ -86,7 +87,7 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     completer->setCompletionColumn( m_proxy->mapFromSource( m_model->index( 0, AccountModel::POSTINGTEXT ) ).column() );
     completer->setCaseSensitivity( Qt::CaseInsensitive );
     ui->searchLineEdit->setCompleter( completer );
- 
+
     ui->balance->setMenu( new QuickReportPopup( m_proxy, this ) );
 
     ui->view->setModel( m_proxy );
@@ -96,7 +97,7 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
-    //ui->view->setItemDelegateForColumn();
+    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
 
     ui->view->resizeColumnsToContents();
     ui->view->verticalHeader()->hide();

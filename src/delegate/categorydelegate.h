@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,37 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTSORTFILTERPROXYMODEL_H
-#define ACCOUNTSORTFILTERPROXYMODEL_H
+#ifndef CATEGORYDELEGATE_H
+#define CATEGORYDELEGATE_H
 
-#include "accountmodel.h"
-#include "backend/money.h"
-
-#include <QSortFilterProxyModel>
-#include <QPair>
+#include <QStyledItemDelegate>
 
 
-
-class AccountSortFilterProxyModel : public QSortFilterProxyModel
+class CategoryDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        explicit AccountSortFilterProxyModel(QObject *parent = 0);
+        CategoryDelegate(QObject *parent = 0);
 
-        Account* account();
-        const Account* account() const;
+        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-    protected:
-        bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
-
-    private:
-        int lessThanByType(const QModelIndex &left, const QModelIndex &right) const;
-        int lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const;
+        void setEditorData(QWidget *editor, const QModelIndex &index) const;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 };
-
 
 #endif
 

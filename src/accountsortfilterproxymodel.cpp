@@ -35,6 +35,24 @@ AccountSortFilterProxyModel::AccountSortFilterProxyModel(QObject *parent)
 }
 
 
+Account* AccountSortFilterProxyModel::account()
+{
+    AccountModel *model = qobject_cast<AccountModel*>( sourceModel() );
+    Q_ASSERT( model );
+
+    return model->account();
+}
+
+
+const Account* AccountSortFilterProxyModel::account() const
+{
+    const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+    Q_ASSERT( model );
+
+    return model->account();
+}
+
+
 QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) const
 {
     if( !idx.isValid() ) {
