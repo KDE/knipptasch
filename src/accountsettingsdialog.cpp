@@ -35,6 +35,7 @@ AccountSettingsDialog::AccountSettingsDialog(Account *account, QWidget* parent)
     m_account( 0 )
 {
     ui->setupUi( this );
+    ui->accountLimitGroupBox->setVisible( false );
 
     setWindowTitle( tr( "Configure Account - %1" ).arg( QCoreApplication::applicationName() ) );
     ui->iconLabel->setPixmap( DesktopIcon("view-bank-account") );
