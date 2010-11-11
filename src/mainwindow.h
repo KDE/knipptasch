@@ -112,6 +112,8 @@ class MainWindow :
         void onExportPluginClicked(QAction *action);
         void onImportPluginClicked(QAction *action);
 
+        void onTabContextMenuRequest(QWidget*,const QPoint&);
+
 #if !defined(HAVE_KDE)
         void onAbout();
         void onHelp();

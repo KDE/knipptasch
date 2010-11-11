@@ -63,6 +63,7 @@
 #include <KIcon>
 #include <KAction>
 #include <KUrl>
+#include <KMenu>
 
 #include <QDebug>
 
@@ -122,6 +123,11 @@ MainWindow::MainWindow(QWidget* parent) :
              this, SLOT( onExportPluginClicked(QAction*) ) );
     connect( m_importPluginActionGroup, SIGNAL( triggered(QAction*) ),
              this, SLOT( onImportPluginClicked(QAction*) ) );
+
+#if defined(HAVE_KDE)
+    connect( ui->tabWidget, SIGNAL( contextMenu(QWidget*,const QPoint&) ),
+             this, SLOT( onTabContextMenuRequest(QWidget*,const QPoint&) ) );
+#endif
 
     checkActionStates();
 }
@@ -756,6 +762,21 @@ void MainWindow::onImportPluginClicked(QAction *action)
     if( account ) {
         addAccountWidget( new AccountWidget( account, this ) );
         statusBar()->showMessage( tr( "Account with %1 postings successfully imported." ).arg( account->countPostings() ), 2000 );
+    }
+}
+
+
+void MainWindow::onTabContextMenuRequest(QWidget *widget, const QPoint &point)
+{
+    int index = ui->tabWidget->indexOf( widget );
+
+    if( index >= 0 ) {
+        QPointer<KMenu> menu = new KMenu( this );
+
+        menu->addAction( actionCollection()->action( "file_close" ) );
+        menu->exec( point );
+
+        menu->deleteLater();
     }
 }
 
