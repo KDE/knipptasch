@@ -56,7 +56,16 @@ int main(int argc, char* argv[])
         ki18n( "(c) 2010 Stefan Böhmann" )
     );
 
-    aboutData->addAuthor( ki18n( "Stefan Böhmann" ), KLocalizedString(), "kde@hilefoks.org" );
+    aboutData->addAuthor(
+            ki18n( "Stefan Böhmann" ),
+            ki18n( "Maintainer" ),
+            "kde@hilefoks.org",
+            "http://www.hilefoks.org"
+#if KDE_IS_VERSION(4,5,76)
+          , "hilefoks"
+#endif
+    );
+
     aboutData->setHomepage( "http://www.hilefoks.org" );
 
     KCmdLineArgs::init( argc, argv, aboutData );
