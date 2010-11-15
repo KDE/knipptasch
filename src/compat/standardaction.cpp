@@ -26,10 +26,6 @@
 #include <ktoggleaction.h>
 #include <kdeversion.h>
 
-#if KDE_IS_VERSION(4,5,73)
-#include <kdualaction.h>
-#endif
-
 
 namespace StandardAction
 {
@@ -81,11 +77,7 @@ namespace StandardAction
 
     KAction* showStatusbar(const QObject* recvr, const char* slot, QObject* parent)
     {
-#if KDE_IS_VERSION(4,5,73)
-        return KStandardAction::showHideStatusbar(recvr, slot, parent);
-#else
         return KStandardAction::showStatusbar(recvr, slot, parent);
-#endif
     }
 
     KAction* aboutApp(const QObject* recvr, const char* slot, QObject* parent)
@@ -100,51 +92,47 @@ namespace StandardAction
 
     KAction* undo(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::undo(recvr, slot, parent);
+        return KStandardAction::undo(recvr, slot, parent);
     }
 
     KAction* redo(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::redo(recvr, slot, parent);
+        return KStandardAction::redo(recvr, slot, parent);
     }
 
     KAction* cut(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::cut(recvr, slot, parent);
+        return KStandardAction::cut(recvr, slot, parent);
     }
 
     KAction* copy(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::copy(recvr, slot, parent);
+        return KStandardAction::copy(recvr, slot, parent);
     }
 
     KAction* paste(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::paste(recvr, slot, parent);
+        return KStandardAction::paste(recvr, slot, parent);
     }
 
     KAction* find(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::find(recvr, slot, parent);
+        return KStandardAction::find(recvr, slot, parent);
     }
 
     KAction* findNext(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::findNext(recvr, slot, parent);
+        return KStandardAction::findNext(recvr, slot, parent);
     }
 
     KAction* findPrev(const QObject* recvr, const char* slot, QObject* parent)
     {
-    return KStandardAction::findPrev(recvr, slot, parent);
+        return KStandardAction::findPrev(recvr, slot, parent);
     }
 
     KAction* showMenubar(const QObject* recvr, const char* slot, QObject* parent)
     {
-#if KDE_IS_VERSION(4,5,73)
-        return KStandardAction::showHideMenubar(recvr, slot, parent);
-#else
         return KStandardAction::showMenubar(recvr, slot, parent);
-#endif
     }
 }
 
@@ -317,7 +305,7 @@ namespace StandardAction
     KAction* aboutApp(const QObject* recvr, const char* slot, QObject* parent)
     {
         KAction* rval = makeAction(idAboutApp, recvr, slot, parent);
-        rval->setIcon(QApplication::windowIcon());
+        rval->setIcon( QApplication::windowIcon() );
         return rval;
     }
 
