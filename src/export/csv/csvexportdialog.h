@@ -20,6 +20,7 @@
 #include <QDialog>
 #include <QList>
 
+class QTimer;
 class Posting;
 class Account;
 
@@ -38,18 +39,27 @@ class CsvExportDialog : public QDialog
         ~CsvExportDialog();
 
     private slots:
+        void onStartUpdateTimer();
+        void onUpdatePreview();
+
         void onSave();
-        
+
         void onDelimiterComboBoxIndexChanged(int);
         void onDelimiterComboBoxTextChanged();
 
+        void onDateFormatComboBoxIndexChanged(int index);
+        void onDateFormatComboBoxTextChanged();
+
     private:
         Ui::CsvExportDialog *ui;
-        
+
         const Account *m_account;
         QList<const Posting*> m_selectedPostings;
-        
+
         QString m_delimiter;
+        QString m_dateFormat;
+        QByteArray m_result;
+        QTimer *m_updateTimer;
 };
 
 #endif

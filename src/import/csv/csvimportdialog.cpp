@@ -35,12 +35,12 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     ui( new Ui::CsvImportDialog )
 {
     ui->setupUi( this );
-    
+
     setWindowTitle( tr( "CSV Import - %1" ).arg( QCoreApplication::applicationName() ) );
     ui->iconLabel->setPixmap( DesktopIcon("text-csv") );
 
     ui->fileButton->setIcon( BarIcon("document-open") );
-    
+
     ui->delimiter->clear();
     ui->delimiter->addItem( "" );
     ui->delimiter->addItem( tr( "Comma" ), ',' );
@@ -60,8 +60,15 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     ui->endOfLine->addItem( tr( "Unix" ) );
     ui->endOfLine->addItem( tr( "Windows/DOS" ) );
     ui->endOfLine->addItem( tr( "Macintosh" ) );
+
+#if defined( Q_WS_WIN )
+    ui->endOfLine->setCurrentIndex( 1 );
+#elif defined( Q_WS_MAC )
+    ui->endOfLine->setCurrentIndex( 2 );
+#else
     ui->endOfLine->setCurrentIndex( 0 );
-    
+#endif
+
     connect( ui->delimiter, SIGNAL( activated(int) ), this, SLOT( onDelimiterComboBoxIndexChanged(int) ) );
     connect( ui->delimiter->lineEdit(), SIGNAL( textEdited(QString) ), this, SLOT( onDelimiterComboBoxTextChanged() ) );
 }
