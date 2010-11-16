@@ -17,11 +17,30 @@
 #include "demoimportplugin.h"
 
 #include "backend/account.h"
+#include "backend/posting.h"
+#include "backend/money.h"
 
 #include <compat/iconloader.h>
 
 #include <QPixmap>
 #include <QInputDialog>
+
+#include <cstdlib>
+#include <QDate>
+
+
+void initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true)
+{
+    Q_ASSERT( acc );
+
+    Posting *p = new Posting;
+    p->setMaturity( date );
+    p->setPostingText( postingText );
+    p->setAmount( amount );
+    p->setValueDate( valueDate ? date.addDays( std::rand() % 8 ) : QDate() );
+
+    acc->addPosting( p );
+}
 
 
 
@@ -51,7 +70,72 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
                                       QObject::tr("Past month:"),
                                       15, 1, 120, 1, &ok );
     if( ok ) {
-        return Account::demoAccount( count );
+        QList<int> v;
+            v << -10 << -15 << -20 << -25 << -30 << -35 << -40 << -50
+                << -60 << -70 << -80 << -90 << -100 << -120 << -150 << -200 << -500;
+
+        Account *acc = new Account;
+
+        acc->setName( QObject::tr( "Example Account" ) );
+        acc->setNumber( "105626320" );
+        acc->setOpeningBalance( 42.21 );
+        acc->setOpeningDate( QDate::currentDate().addMonths( -count + 1 ) );
+
+        for(int i = -count; i < 3; ++i) {
+            QDate date(
+                QDate::currentDate().year(),
+                QDate::currentDate().addMonths( i ).month(),
+                1
+            );
+
+            initDemoAccountAddPosting( acc, date.addDays( std::rand() % 6 ),
+                                    QObject::tr( "Rent" ) , -548.50, i < 0 );
+
+            if( i < 0 ) {
+                initDemoAccountAddPosting(
+                    acc,
+                    date.addDays( std::rand() % 6 ),
+                    QObject::tr( "Phone and Internet" ),
+                    -25 - ( ( std::rand() % 5000 + 100 ) / 100.00 )
+                );
+                initDemoAccountAddPosting(
+                    acc,
+                    date.addDays( std::rand() % 6 ),
+                    QObject::tr( "Salary" ),
+                    1000.00 + ( ( std::rand() % 50000 + 100 ) / 100.00 )
+                );
+
+                for(int i = ( std::rand() % 15 + 1 ) ; i >= 0; --i) {
+                    initDemoAccountAddPosting(
+                        acc,
+                        date.addDays( std::rand() % date.daysInMonth() + 1 ),
+                        QObject::tr( "ATM" ),
+                        v[ std::rand() % v.size() ]
+                    );
+                }
+            }
+            else {
+                initDemoAccountAddPosting(
+                    acc,
+                    date.addDays( std::rand() % 6 ),
+                    QObject::tr( "Phone and Internet" ),
+                    Money(),
+                    false
+                );
+
+                initDemoAccountAddPosting(
+                    acc,
+                    date.addDays( std::rand() % 6 ),
+                    QObject::tr( "Salary" ),
+                    Money(),
+                    false
+                );
+            }
+        }
+
+        acc->setModified( false );
+
+        return acc;
     }
 
     return 0;
