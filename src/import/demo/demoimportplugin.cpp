@@ -66,7 +66,7 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
 {
     bool ok;
     int count = QInputDialog::getInt( parent,  // krazy:exclude=qclasses
-                                      QObject::tr( "" ),
+                                      QString(),
                                       QObject::tr("Past month:"),
                                       15, 1, 120, 1, &ok );
     if( ok ) {
