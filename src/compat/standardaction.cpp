@@ -199,7 +199,7 @@ static KAction* makeAction(StandardActionId id, const QObject* recv, const char*
         { idClose, QKeySequence::Close, "file_close", QObject::tr("&Close"), QObject::tr("Close file"), BarIcon("window-close"), false },
         { idQuit, QKeySequence::Quit, "file_quit", QObject::tr("&Quit"), QObject::tr("Quit the application"), BarIcon("application-exit"), false },
         { idSelectAll, QKeySequence::SelectAll, "edit_select_all", QObject::tr("Select &All"), QObject::tr("Select all entries"), BarIcon("edit-select-all"), false },
-        { idPreferences, QKeySequence::Preferences, "options_configure", QObject::tr("&Configure Knipptasch ..."), QObject::tr("Modify the application's settings"), BarIcon("configure"), false },
+        { idPreferences, QKeySequence::Preferences, "options_configure", QObject::tr("&Configure Knipptasch..."), QObject::tr("Modify the application's settings"), BarIcon("configure"), false },
         { idShowStatusbar, QKeySequence(), "options_show_statusbar", QObject::tr("Show St&atusbar"), QObject::tr("Show the status bar"), KIcon(), true },
         { idAboutApp, QKeySequence(), "help_about_app", QObject::tr("&About %1").arg( QCoreApplication::applicationName() ), QString(), BarIcon("help-about"), false },
         { idHelp, QKeySequence::HelpContents, "help", QObject::tr("%1 &Handbook").arg( QCoreApplication::applicationName() ), QString(), BarIcon("help-contents"), false },
