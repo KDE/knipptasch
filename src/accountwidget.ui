@@ -71,7 +71,7 @@
       <item>
        <widget class="QToolButton" name="balance">
         <property name="text">
-         <string>text</string>
+         <string comment="KDE::DoNotExtract">text</string>
         </property>
         <property name="popupMode">
          <enum>QToolButton::InstantPopup</enum>
@@ -128,7 +128,7 @@
       <item>
        <widget class="KLineEdit" name="searchLineEdit">
         <property name="placeholderText">
-         <string>search</string>
+         <string comment="KDE::DoNotExtract">search</string>
         </property>
        </widget>
       </item>
