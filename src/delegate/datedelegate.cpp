@@ -16,12 +16,14 @@
  */
 #include "datedelegate.h"
 
+#include "accountmodel.h"
+#include "preferences.h"
+
+#include "compat/dateedit.h"
+
 #include <QPainter>
-#include <QDateEdit>
 #include <QApplication>
 #include <QSortFilterProxyModel>
-#include <accountmodel.h>
-#include <preferences.h>
 
 
 
@@ -38,8 +40,8 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    QDateEdit *input = new QDateEdit( parent );
-    input->setCalendarPopup( true );
+    DateEdit *input = new DateEdit( parent );
+//    input->setCalendarPopup( true );
 
     QDate dt;
     if( index.isValid() ) {
@@ -72,7 +74,7 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 
     input->setDate( dt.isValid() ? dt : QDate::currentDate() );
 
-    input->setCorrectionMode( QDateEdit::CorrectToNearestValue );
+//    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );
 
     return input;
@@ -81,7 +83,7 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 
 void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    QDateEdit *input = qobject_cast<QDateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit*>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
@@ -99,7 +101,7 @@ void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
         return;
     }
 
-    QDateEdit *input = qobject_cast<QDateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit*>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
@@ -112,7 +114,7 @@ void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 
 QSize DateDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QDateEdit edit;
+    DateEdit edit;
 
     return QSize(
         qMax(
