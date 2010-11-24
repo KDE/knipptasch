@@ -52,6 +52,8 @@
 #include <QPointer>
 #include <QContextMenuEvent>
 #include <QCompleter>
+#include <QTimer>
+#include <QDebug>
 
 
 AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
@@ -134,6 +136,8 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     loadConfig();
 
     slotUpdateAccountInfo();
+
+    QTimer::singleShot( 500, this, SLOT( selectCurrentPosting() ) );
 }
 
 
@@ -215,12 +219,87 @@ void AccountWidget::checkActionState()
     mainWindowActionCollection()->action( "configure_account" )->setEnabled( true );
 }
 
+bool AccountWidget::selectionContainsCurrentRow() const
+{
+    const QModelIndex index = m_proxy->mapFromSource(
+                m_model->index( m_model->rowCount()-1, AccountModel::MATURITY )
+    );
+
+    Q_ASSERT( index.isValid() );
+
+    QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
+
+    foreach(const QModelIndex &i, idxlist) {
+        if( i.row() == index.row() ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool AccountWidget::hasSelectedRows() const
+{
+    return countSelectedRows() > 0;
+}
+
+
+bool AccountWidget::hasOneSelectedRow() const
+{
+    return countSelectedRows() == 1;
+}
+
+
+bool AccountWidget::hasSeveralSelectedRows() const
+{
+    return countSelectedRows() > 1;
+}
+
+
+int AccountWidget::countSelectedRows() const
+{
+    QSet<int> rowset;
+    QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
+
+    foreach(const QModelIndex &ix, idxlist) {
+        rowset.insert( ix.row() );
+    }
+
+    return rowset.size();
+}
+
 
 QList<const Posting*> AccountWidget::selectedPostings() const
 {
-    //TODO This is used by the export stuff for example...
+    QSet<const Posting*> set;
 
-    return QList<const Posting*>();
+    QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
+
+    foreach(const QModelIndex &ix, idxlist) {
+        const Posting *p = m_model->posting( m_proxy->mapToSource( ix ) );
+        if( p ) {
+            set.insert( p );
+        }
+        else {
+            qDebug() << "no posting for index" << ix;
+        }
+    }
+
+    return set.toList();
+}
+
+
+void AccountWidget::selectCurrentPosting()
+{
+    const QModelIndex index = m_proxy->mapFromSource(
+                m_model->index( m_model->rowCount()-1, AccountModel::MATURITY )
+    );
+
+    Q_ASSERT( index.isValid() );
+
+    ui->view->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect );
+    ui->view->scrollTo( index, QAbstractItemView::PositionAtCenter );
 }
 
 

@@ -66,6 +66,50 @@ void AccountModel::setAccount(Account *account)
 }
 
 
+const Posting* AccountModel::posting(const QModelIndex &index) const
+{
+    if( index.isValid() ) {
+        return posting( index.row() );
+    }
+
+    return 0;
+}
+
+
+const Posting* AccountModel::posting(int row) const
+{
+    Q_ASSERT( row >= 0 );
+
+    if( row < account()->countPostings() ) {
+        return account()->posting( row );
+    }
+
+    return 0;
+}
+
+
+Posting* AccountModel::posting(const QModelIndex &index)
+{
+    if( index.isValid() ) {
+        return posting( index.row() );
+    }
+
+    return 0;
+}
+
+
+Posting* AccountModel::posting(int row)
+{
+    Q_ASSERT( row >= 0 );
+
+    if( row < account()->countPostings() ) {
+        return account()->posting( row );
+    }
+
+    return 0;
+}
+
+
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
     if( parent.isValid() ) {

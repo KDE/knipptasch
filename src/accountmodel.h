@@ -66,6 +66,11 @@ class AccountModel : public QAbstractTableModel
         const Account* account() const { return m_account; }
         void setAccount(Account *account);
 
+        const Posting* posting(const QModelIndex &index) const;
+        const Posting* posting(int row) const;
+        Posting* posting(const QModelIndex &index);
+        Posting* posting(int row);
+
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
 

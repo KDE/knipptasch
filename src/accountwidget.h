@@ -59,7 +59,16 @@ class AccountWidget : public QWidget
 
         void checkActionState();
 
+        bool selectionContainsCurrentRow() const;
+        bool hasSelectedRows() const;
+        bool hasOneSelectedRow() const;
+        bool hasSeveralSelectedRows() const;
+        int countSelectedRows() const;
+
         QList<const Posting*> selectedPostings() const;
+
+    public slots:
+        void selectCurrentPosting();
 
     public slots:
         bool onSaveFile();
