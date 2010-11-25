@@ -22,7 +22,14 @@
 #include "preferences.h"
 
 #include <QPushButton>
+
+#if defined(HAVE_KDE)
 #include <kdeversion.h>
+#endif
+
+#ifndef KDE_IS_VERSION
+#define KDE_IS_VERSION(a,b,c) 1
+#endif
 
 
 SettingsDialog::SettingsDialog(QWidget* parent)
