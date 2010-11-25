@@ -1,6 +1,6 @@
 project( strigi-analyzer )
 
-set( STRIGI_MIN_VERSION 0.7.1 )
+set( STRIGI_MIN_VERSION 0.7.0 )
 macro_optional_find_package( Strigi )
 macro_log_feature(STRIGI_FOUND "Strigi" "A fast and small desktop searching program" "http://strigi.sourceforge.net" FALSE "${STRIGI_MIN_VERSION}" "Needed to build the strigi analyzer plugin" )
 

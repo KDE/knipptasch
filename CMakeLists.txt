@@ -38,10 +38,10 @@ include(MacroOptionalFindPackage)
 
 macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
 
-find_package( Qt4 4.7.0 COMPONENTS QtCore QtGui QtXml QtSvg REQUIRED )
+find_package( Qt4 4.6.3 COMPONENTS QtCore QtGui QtXml QtSvg REQUIRED )
 
 if( NOT WIN32 )
-  set( SHARED_MIME_INFO_MINIMUM_VERSION "0.71" )
+  set( SHARED_MIME_INFO_MINIMUM_VERSION "0.70" )
   find_package( SharedMimeInfo ${SHARED_MIME_INFO_MINIMUM_VERSION} )
   macro_log_feature( SHAREDMIMEINFO_FOUND "shared-mime-info" "The core MIME database used to represent types of files" "http://freedesktop.org/wiki/Software/shared-mime-info" TRUE ${SHARED_MIME_INFO_MINIMUM_VERSION} "" )
 endif( NOT WIN32 )
