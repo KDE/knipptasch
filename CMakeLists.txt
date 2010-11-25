@@ -36,7 +36,10 @@ include(MacroOptionalAddSubdirectory)
 include(MacroEnsureOutOfSourceBuild)
 include(MacroOptionalFindPackage)
 
-macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
+if( NOT DISABLE_FORCE_OUT_OF_SOURCE_BUILD )
+  macro_ensure_out_of_source_build( "Knipptasch requires an out of source build. Please create a separate build directory and run 'cmake path_to_sources [options]' there." )
+endif( NOT NO_FORCE_OUT_OF_SOURCE_BUILD )
+
 
 find_package( Qt4 4.6.3 COMPONENTS QtCore QtGui QtXml QtSvg REQUIRED )
 
