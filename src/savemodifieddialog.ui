@@ -42,7 +42,7 @@
      <item row="0" column="0" rowspan="2">
       <widget class="QLabel" name="iconLabel">
        <property name="text">
-        <string>icon</string>
+        <string comment="KDE::DoNotExtract">icon</string>
        </property>
       </widget>
      </item>
@@ -60,6 +60,11 @@
      <property name="rootIsDecorated">
       <bool>false</bool>
      </property>
+     <column>
+      <property name="text">
+       <string notr="true">1</string>
+      </property>
+     </column>
     </widget>
    </item>
    <item>
