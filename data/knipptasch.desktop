@@ -6,6 +6,7 @@ X-DocPath=knipptasch/index.html
 X-KDE-StartupNotify=true
 
 Name=Knipptasch
+Name[cs]=Knipptasch
 Name[de]=Knipptasch
 Name[nds]=Knipptasch
 Name[pt]=Knipptasch
@@ -13,6 +14,7 @@ Name[sv]=Knipptasch
 Name[uk]=Knipptasch
 Name[x-test]=xxKnipptaschxx
 GenericName=Personal Finance Manager
+GenericName[cs]=Osobní správce financí
 GenericName[de]=Persönliche Finanzenverwaltung
 GenericName[nds]=Geldsaken plegen
 GenericName[pt]=Gestor de Finanças Pessoais
