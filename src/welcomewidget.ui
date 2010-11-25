@@ -135,7 +135,7 @@ QFrame#frame1 {
               <string>Open file</string>
              </property>
              <property name="text">
-              <string>Open</string>
+              <string>&amp;Open</string>
              </property>
             </widget>
            </item>
@@ -145,7 +145,7 @@ QFrame#frame1 {
               <string>New file</string>
              </property>
              <property name="text">
-              <string>New</string>
+              <string>&amp;New</string>
              </property>
             </widget>
            </item>
