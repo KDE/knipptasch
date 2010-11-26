@@ -126,11 +126,7 @@
        </widget>
       </item>
       <item>
-       <widget class="KLineEdit" name="searchLineEdit">
-        <property name="placeholderText">
-         <string comment="KDE::DoNotExtract">search</string>
-        </property>
-       </widget>
+       <widget class="KLineEdit" name="searchLineEdit"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_2">

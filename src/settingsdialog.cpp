@@ -19,9 +19,17 @@
 
 #include "compat/iconloader.h"
 
-#include <QPushButton>
 #include "preferences.h"
 
+#include <QPushButton>
+
+#if defined(HAVE_KDE)
+#include <kdeversion.h>
+#endif
+
+#ifndef KDE_IS_VERSION
+#define KDE_IS_VERSION(a,b,c) 1
+#endif
 
 
 SettingsDialog::SettingsDialog(QWidget* parent)
@@ -38,6 +46,7 @@ SettingsDialog::SettingsDialog(QWidget* parent)
     }
     ui->iconLabel->setPixmap( icon.pixmap( 64, 64 ) );
 
+#if KDE_IS_VERSION(4,5,0)
     ui->positiveAmountForegroundColor->setAlphaChannelEnabled( true );
     ui->negativeAmountForegroundColor->setAlphaChannelEnabled( true );
     ui->availableWarrantyForegroundColor->setAlphaChannelEnabled( true );
@@ -46,6 +55,7 @@ SettingsDialog::SettingsDialog(QWidget* parent)
     ui->futurePostingBackgroundColor->setAlphaChannelEnabled( true );
     ui->defaultPostingBackgroundColor->setAlphaChannelEnabled( true );
     ui->incompletePostingBackgroundColor->setAlphaChannelEnabled( true );
+#endif
 
     connect( ui->positiveAmountForegroundEnabled, SIGNAL( stateChanged(int) ), this, SLOT( onValueChanged() ) );
     connect( ui->negativeAmountForegroundEnabled, SIGNAL( stateChanged(int) ), this, SLOT( onValueChanged() ) );

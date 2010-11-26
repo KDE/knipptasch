@@ -64,7 +64,7 @@
         </font>
        </property>
        <property name="text">
-        <string>last month</string>
+        <string notr="true" comment="KDE::DoNotExtract">title</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -172,7 +172,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Unknown</string>
+        <string notr="true" comment="KDE::DoNotExtract">value</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -195,7 +195,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Unknown</string>
+        <string notr="true" comment="KDE::DoNotExtract">value</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -218,7 +218,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Unknown</string>
+        <string notr="true" comment="KDE::DoNotExtract">value</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

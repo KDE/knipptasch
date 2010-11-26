@@ -20,7 +20,7 @@
      <item>
       <widget class="QLabel" name="iconLabel">
        <property name="text">
-        <string>icon</string>
+        <string comment="KDE::DoNotExtract">icon</string>
        </property>
       </widget>
      </item>
