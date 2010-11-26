@@ -264,6 +264,8 @@ void MainWindow::setupActions()
     ui->menuHelp->addAction( aboutAppAction );
 
     QToolBar *mainToolBar = new QToolBar( tr( "Main Toolbar" ), this );
+    mainToolBar->setObjectName( "MainToolbar" );
+
     ui->menuSettings->insertAction( showStatusbarAction, mainToolBar->toggleViewAction() );
 
     mainToolBar->addAction( actionCollection()->action( "file_new" ) );
