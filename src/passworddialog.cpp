@@ -23,12 +23,17 @@
 #include <QPushButton>
 
 
-
-PasswordDialog::PasswordDialog(QWidget *parent)
+PasswordDialog::PasswordDialog(const QString &filename, QWidget *parent)
   : QDialog( parent ),
     ui( new Ui::PasswordDialog )
 {
     ui->setupUi( this );
+
+    if( !filename.isEmpty() ) {
+        ui->label->setText(
+            tr( "Enter password to open the file \"%1\"." ).arg( filename )
+        );
+    }
 
     setWindowTitle( tr( "Password - %1" ).arg( QCoreApplication::applicationName() ) );
     ui->iconLabel->setPixmap( DesktopIcon("dialog-password") );
@@ -37,7 +42,6 @@ PasswordDialog::PasswordDialog(QWidget *parent)
 
     checkState();
 }
-
 
 QByteArray PasswordDialog::password() const
 {

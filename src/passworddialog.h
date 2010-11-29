@@ -31,7 +31,7 @@ class PasswordDialog : public QDialog
     Q_OBJECT
 
     public:
-        explicit PasswordDialog(QWidget *parent = 0);
+        explicit PasswordDialog(const QString &filename, QWidget *parent = 0);
 
         QByteArray password() const;
 

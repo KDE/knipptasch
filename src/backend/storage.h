@@ -22,7 +22,7 @@
 
 class Account;
 class QWidget;
-
+class QFile;
 
 class Storage
 {
@@ -39,8 +39,8 @@ class Storage
 
         QByteArray metaData(const Account *acc, bool &ok) const;
 
-        QByteArray encodedData(const Account *acc, bool &ok) const;
-        bool decodedData(const QByteArray &data, Account *acc) const;
+        QByteArray encodeData(const Account *acc, bool &ok) const;
+        bool decodeData(const QFile &file, const QByteArray &data, Account *acc) const;
 
         void errorMessage(const QString &message) const;
 

@@ -27,6 +27,7 @@
 #include <QBuffer>
 #include <QFileInfo>
 #include <QFile>
+#include <QPointer>
 #include <QCoreApplication>
 
 #if defined(HAVE_KDE)
@@ -36,7 +37,6 @@
 #endif
 
 #include <QDebug>
-#include <QPointer>
 
 
 
@@ -97,7 +97,7 @@ bool Storage::write(Account *acc)
         }
 
         ok = false;
-        out << encodedData( acc, ok );
+        out << encodeData( acc, ok );
         if( !ok ) {
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - An unknown error occurred.";
@@ -211,7 +211,7 @@ bool Storage::read(Account *acc)
 
     QByteArray data;
     in >> data;
-    if( !decodedData( data, acc ) ) {
+    if( !decodeData( file, data, acc ) ) {
         return false;
     }
 
@@ -267,7 +267,7 @@ QByteArray Storage::metaData(const Account *acc, bool &ok) const
 }
 
 
-QByteArray Storage::encodedData(const Account *acc, bool &ok) const
+QByteArray Storage::encodeData(const Account *acc, bool &ok) const
 {
     ok = false;
     QByteArray byteArray;
@@ -371,7 +371,7 @@ QByteArray Storage::encodedData(const Account *acc, bool &ok) const
 }
 
 
-bool Storage::decodedData(const QByteArray &data, Account *acc) const
+bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc) const
 {
     QByteArray dataArray( data );
     QBuffer dataBuffer( &dataArray );
@@ -402,7 +402,8 @@ bool Storage::decodedData(const QByteArray &data, Account *acc) const
         }
 
         /// ask user for the password
-        QPointer<PasswordDialog> dialog = new PasswordDialog( m_parent );
+        const QString filename = QFileInfo( file ).fileName();
+        QPointer<PasswordDialog> dialog = new PasswordDialog( filename, m_parent );
 
         if( dialog->exec() != QDialog::Accepted ) {
             qDebug() << Q_FUNC_INFO << ':' << __LINE__;
