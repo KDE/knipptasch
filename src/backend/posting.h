@@ -1,5 +1,5 @@
 /*
- * Copyright 2008  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2008-2010  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +17,8 @@
 #ifndef POSTING_H
 #define POSTING_H
 
+#include "object.h"
+
 #include <QDate>
 
 typedef QDate Maturity;
@@ -26,7 +28,7 @@ class Money;
 class QDataStream;
 
 
-class Posting
+class Posting : public Object
 {
     public:
         Posting();
@@ -67,6 +69,13 @@ class Posting
 
         QString payee() const;
         void setPayee(const QString &str);
+
+    protected:
+        friend QDataStream& operator<<(QDataStream &stream, const Posting &acc);
+        friend QDataStream& operator>>(QDataStream &stream, Posting &acc);
+
+        virtual QDataStream& serialize(QDataStream &stream) const;
+        virtual QDataStream& deserialize(QDataStream &stream);
 
     private:
         class Private;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2008-2010  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -62,15 +62,24 @@ Posting::~Posting()
 
 bool Posting::isModified() const
 {
-    return d->modified;
+    if( d->modified || Object::isModified() ) {
+        return true;
+    }
+
+    return false;
 }
 
 
-void Posting::setModified(bool b)
+void Posting::setModified(bool state)
 {
-    d->modified = b;
+    if( state ) {
+        d->modified = true;
+    }
+    else {
+        Object::setModified( false );
+        d->modified = false;
+    }
 }
-
 
 
 QString Posting::postingText() const
@@ -216,67 +225,56 @@ void Posting::setPayee(const QString &str)
 }
 
 
-QDataStream& operator<<(QDataStream &stream, const Posting &posting)
+QDataStream& Posting::serialize(QDataStream &stream) const
 {
-    stream << posting.amount();
-    stream << posting.postingText();
-    stream << posting.description();
-    stream << posting.voucher();
-    stream << posting.methodOfPayment();
-    stream << posting.maturity();
-    stream << posting.valueDate();
-    stream << posting.warranty();
-    stream << posting.page();
-    stream << posting.category();
-    stream << posting.payee();
+    Object::serialize( stream );
+
+    stream << d->amount;
+    stream << d->postingtext;
+    stream << d->description;
+    stream << d->voucher;
+    stream << d->methodOfPayment;
+    stream << d->maturity;
+    stream << d->valuedate;
+    stream << d->warranty;
+    stream << d->page;
+    stream << d->category;
+    stream << d->payee;
 
     return stream;
 }
 
 
-QDataStream& operator>>(QDataStream &stream, Posting &posting)
+QDataStream& Posting::deserialize(QDataStream &stream)
 {
-    int integer;
-    QDate date;
-    QString str;
-    Money money;
+    Object::deserialize( stream );
 
-    stream >> money;
-    posting.setAmount( money );
-
-    stream >> str;
-    posting.setPostingText( str );
-
-    stream >> str;
-    posting.setDescription( str );
-
-    stream >> str;
-    posting.setVoucher( str );
-
-    stream >> str;
-    posting.setMethodOfPayment( str );
-
-    stream >> date;
-    posting.setMaturity( date );
-
-    stream >> date;
-    posting.setValueDate( date );
-
-    stream >> date;
-    posting.setWarranty( date );
-
-    stream >> integer;
-    posting.setPage( integer );
-
-    stream >> str;
-    posting.setCategory( str );
-
-    stream >> str;
-    posting.setPayee( str );
+    stream >> d->amount;
+    stream >> d->postingtext;
+    stream >> d->description;
+    stream >> d->voucher;
+    stream >> d->methodOfPayment;
+    stream >> d->maturity;
+    stream >> d->valuedate;
+    stream >> d->warranty;
+    stream >> d->page;
+    stream >> d->category;
+    stream >> d->payee;
 
     return stream;
 }
 
+
+QDataStream& operator<<(QDataStream &stream, const Posting &p)
+{
+    return p.serialize( stream );
+}
+
+
+QDataStream& operator>>(QDataStream &stream, Posting &p)
+{
+    return p.deserialize( stream );
+}
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

@@ -78,7 +78,7 @@ Account::~Account()
 
 bool Account::isModified() const
 {
-    if( d->modified ) {
+    if( d->modified || Object::isModified() ) {
         return true;
     }
 
@@ -95,13 +95,17 @@ bool Account::isModified() const
 
 void Account::setModified(bool state)
 {
-    if( state == false ) {
+    if( state ) {
+        d->modified = true;
+    }
+    else {
         foreach(Posting *p, d->postings) {
             p->setModified( false );
         }
-    }
 
-    d->modified = state;
+        Object::setModified( false );
+        d->modified = false;
+    }
 }
 
 
@@ -421,31 +425,26 @@ void Account::deletePosting(int index)
 }
 
 
-QDataStream& operator<<(QDataStream &stream, const Account &acc)
+QDataStream& Account::serialize(QDataStream &stream) const
 {
-    qDebug() << "Serialize Account" << acc.name();
+    Object::serialize( stream );
 
-    stream << acc.name();
-    stream << acc.number();
-    stream << acc.description();
-    stream << acc.openingDate();
-    stream << acc.openingBalance();
-    stream << acc.minimumBalanceEnabled();
-    stream << acc.minimumBalance();
-    stream << acc.maximumBalanceEnabled();
-    stream << acc.maximumBalance();
-    stream << acc.iban();
-    stream << acc.owner();
-    stream << acc.institution();
-    stream << acc.bic();
+    stream << d->name;
+    stream << d->number;
+    stream << d->description;
+    stream << d->openingdate;
+    stream << d->openingbalance;
+    stream << d->minbalanceenabled;
+    stream << d->minbalance;
+    stream << d->maxbalanceenabled;
+    stream << d->maxbalance;
+    stream << d->iban;
+    stream << d->owner;
+    stream << d->institution;
+    stream << d->bic;
 
-    quint32 count = acc.countPostings();
-    stream << count;
-
-    qDebug() << "  Serialize" << count << "elements";
-
-    for(quint32 index = 0; index < count; ++index) {
-        const Posting *p = acc.posting( index );
+    stream << static_cast<quint32>( d->postings.size() );
+    foreach(Posting *p, d->postings) {
         stream << *p;
     }
 
@@ -453,67 +452,46 @@ QDataStream& operator<<(QDataStream &stream, const Account &acc)
 }
 
 
-QDataStream& operator>>(QDataStream &stream, Account &acc)
+QDataStream& Account::deserialize(QDataStream &stream)
 {
-    qDebug() << "Deserialize Account";
+    Object::deserialize( stream );
 
-    QString str;
-    QDate date;
-    Money money;
-    bool b;
-
-    stream >> str;
-    acc.setName( str );
-
-    stream >> str;
-    acc.setNumber( str );
-
-    stream >> str;
-    acc.setDescription( str );
-
-    stream >> date;
-    acc.setOpeningDate( date );
-
-    stream >> money;
-    acc.setOpeningBalance( money );
-
-    stream >> b;
-    acc.setMinimumBalanceEnabled( b );
-
-    stream >> money;
-    acc.setMinimumBalance( money );
-
-    stream >> b;
-    acc.setMaximumBalanceEnabled( b );
-
-    stream >> money;
-    acc.setMaximumBalance( money );
-
-    stream >> str;
-    acc.setIban( str );
-
-    stream >> str;
-    acc.setOwner( str );
-
-    stream >> str;
-    acc.setInstitution( str );
-
-    stream >> str;
-    acc.setBic( str );
+    stream >> d->name;
+    stream >> d->number;
+    stream >> d->description;
+    stream >> d->openingdate;
+    stream >> d->openingbalance;
+    stream >> d->minbalanceenabled;
+    stream >> d->minbalance;
+    stream >> d->maxbalanceenabled;
+    stream >> d->maxbalance;
+    stream >> d->iban;
+    stream >> d->owner;
+    stream >> d->institution;
+    stream >> d->bic;
 
     quint32 count;
     stream >> count;
-
-    qDebug() << "  Deserialize" << count << "elements";
-
     for(quint32 i = 0; i < count; ++i) {
         Posting *p = new Posting;
         stream >> *p;
 
-        acc.addPosting( p );
+        addPosting( p );
     }
 
     return stream;
+}
+
+
+QDataStream& operator<<(QDataStream &stream, const Account &acc)
+{
+    return acc.serialize( stream );
+}
+
+
+QDataStream& operator>>(QDataStream &stream, Account &acc)
+{
+    return acc.deserialize( stream );
 }
 
 

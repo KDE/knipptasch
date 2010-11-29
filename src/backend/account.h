@@ -17,11 +17,14 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+#include "object.h"
+
 class Money;
 class Posting;
 class QString;
 class QDate;
 class QDataStream;
+
 
 #if defined(WITH_QCA2)
 #include <QtCrypto>
@@ -40,7 +43,7 @@ namespace QCA {
 #endif
 
 
-class Account
+class Account : public Object
 {
     public:
         enum SecurityLevel {
@@ -112,10 +115,16 @@ class Account
         void removePosting(int index);
         void deletePosting(int index);
 
+    protected:
+        friend QDataStream& operator<<(QDataStream &stream, const Account &acc);
+        friend QDataStream& operator>>(QDataStream &stream, Account &acc);
+
+        virtual QDataStream& serialize(QDataStream &stream) const;
+        virtual QDataStream& deserialize(QDataStream &stream);
+
     private:
         class Private;
         Private *d;
-
 };
 
 

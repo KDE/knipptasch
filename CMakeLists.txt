@@ -143,6 +143,7 @@ set(knipptasch_SOURCES
     src/delegate/postingtextdelegate.cpp
     src/delegate/categorydelegate.cpp
 
+    src/backend/object.cpp
     src/backend/account.cpp
     src/backend/posting.cpp
     src/backend/storage.cpp
