@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "posting.h"
+#include "subposting.h"
 #include "money.h"
 
 #include <QDataStream>
@@ -23,25 +24,18 @@
 struct Posting::Private
 {
     Private()
-      : page(0),
-        modified( false )
+      : modified( false )
     {
     }
 
-    Money amount;
-    QString postingtext;
-    QString description;
-    QString voucher;
-    QString methodOfPayment;
+    ~Private()
+    {
+        while( !postings.isEmpty() ) {
+            delete postings.takeFirst();
+        }
+    }
 
-    Maturity maturity;
-    ValueDate valuedate;
-    QDate warranty;
-    int page;
-
-    QString category;
-    QString payee;
-
+    QList<SubPosting*> postings;
     mutable bool modified;
 };
 
@@ -62,8 +56,15 @@ Posting::~Posting()
 
 bool Posting::isModified() const
 {
-    if( d->modified || Object::isModified() ) {
+    if( d->modified || BasePosting::isModified() ) {
         return true;
+    }
+
+    foreach(const SubPosting *p, d->postings) {
+        if( p && p->isModified() ) {
+            d->modified = true;
+            return true;
+        }
     }
 
     return false;
@@ -76,170 +77,94 @@ void Posting::setModified(bool state)
         d->modified = true;
     }
     else {
-        Object::setModified( false );
+        foreach(SubPosting *p, d->postings) {
+            p->setModified( false );
+        }
+
+        BasePosting::setModified( false );
         d->modified = false;
     }
 }
 
 
-QString Posting::postingText() const
+bool Posting::hasSubPostings() const
 {
-    return d->postingtext;
+    return countSubPostings() > 0;
 }
 
 
-void Posting::setPostingText(const QString &str)
+int Posting::countSubPostings() const
 {
-    d->postingtext = str;
+    return d->postings.size();
+}
+
+
+SubPosting* Posting::subPosting(int index)
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < d->postings.size() );
+
+    return d->postings.at( index );
+}
+
+
+const SubPosting* Posting::subPosting(int index) const
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < d->postings.size() );
+
+    return d->postings.at( index );
+}
+
+
+SubPosting* Posting::takeSubPosting(int index)
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < d->postings.size() );
+
+    SubPosting *p = d->postings.takeAt( index );
+    setModified();
+
+    return p;
+}
+
+
+void Posting::addSubPosting(SubPosting *p)
+{
+    Q_ASSERT( p );
+
+    d->postings.append( p );
     setModified();
 }
 
 
-Maturity Posting::maturity() const
+void Posting::removeSubPosting(int index)
 {
-    return d->maturity;
-}
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < d->postings.size() );
 
-
-void Posting::setMaturity(const Maturity &date)
-{
-    d->maturity = date;
+    d->postings.removeAt( index );
     setModified();
 }
 
 
-ValueDate Posting::valueDate() const
+void Posting::clearSubPostings()
 {
-    return d->valuedate;
-}
-
-
-void Posting::setValueDate(const ValueDate &date)
-{
-    d->valuedate = date;
-    setModified();
-}
-
-
-Money Posting::amount() const
-{
-    return d->amount;
-}
-
-
-void Posting::setAmount(const Money &m)
-{
-    d->amount = m;
-    setModified();
-}
-
-
-int Posting::page() const
-{
-    return d->page;
-}
-
-
-void Posting::setPage(int p)
-{
-    d->page = p;
-    setModified();
-}
-
-
-QString Posting::description() const
-{
-    return d->description;
-}
-
-
-void Posting::setDescription(const QString &str)
-{
-    d->description = str;
-    setModified();
-}
-
-
-QString Posting::voucher() const
-{
-    return d->voucher;
-}
-
-
-void Posting::setVoucher(const QString &str)
-{
-    d->voucher = str;
-    setModified();
-}
-
-
-QDate Posting::warranty() const
-{
-    return d->warranty;
-}
-
-
-void Posting::setWarranty(const QDate &date)
-{
-    d->warranty = date;
-    setModified();
-}
-
-
-QString Posting::methodOfPayment() const
-{
-    return d->methodOfPayment;
-}
-
-
-void Posting::setMethodOfPayment(const QString &str)
-{
-    d->methodOfPayment = str;
-    setModified();
-}
-
-
-QString Posting::category() const
-{
-    return d->category;
-}
-
-
-void Posting::setCategory(const QString &str)
-{
-    d->category = str;
-    setModified();
-}
-
-
-QString Posting::payee() const
-{
-    return d->payee;
-}
-
-
-void Posting::setPayee(const QString &str)
-{
-    d->payee = str;
-    setModified();
+    if( !d->postings.isEmpty() ) {
+        d->postings.clear();
+        setModified();
+    }
 }
 
 
 QDataStream& Posting::serialize(QDataStream &stream) const
 {
-    Object::serialize( stream );
+    BasePosting::serialize( stream );
 
-    stream << d->amount;
-    stream << d->postingtext;
-    stream << d->description;
-    stream << d->voucher;
-    stream << d->methodOfPayment;
-    stream << d->maturity;
-    stream << d->valuedate;
-    stream << d->warranty;
-    stream << d->page;
-    stream << d->category;
-    stream << d->payee;
+    stream << static_cast<quint32>( d->postings.size() );
+    foreach(SubPosting *p, d->postings) {
+        stream << *p;
+    }
 
     return stream;
 }
@@ -247,19 +172,16 @@ QDataStream& Posting::serialize(QDataStream &stream) const
 
 QDataStream& Posting::deserialize(QDataStream &stream)
 {
-    Object::deserialize( stream );
+    BasePosting::deserialize( stream );
 
-    stream >> d->amount;
-    stream >> d->postingtext;
-    stream >> d->description;
-    stream >> d->voucher;
-    stream >> d->methodOfPayment;
-    stream >> d->maturity;
-    stream >> d->valuedate;
-    stream >> d->warranty;
-    stream >> d->page;
-    stream >> d->category;
-    stream >> d->payee;
+    quint32 count;
+    stream >> count;
+    for(quint32 i = 0; i < count; ++i) {
+        SubPosting *p = new SubPosting;
+        stream >> *p;
+
+        addSubPosting( p );
+    }
 
     return stream;
 }

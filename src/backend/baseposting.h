@@ -14,36 +14,63 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef POSTING_H
-#define POSTING_H
+#ifndef BASEPOSTING_H
+#define BASEPOSTING_H
 
-#include "baseposting.h"
+#include "object.h"
 
-class SubPosting;
+#include <QDate>
+
+typedef QDate Maturity;
+typedef QDate ValueDate;
+class Money;
+
+class QDataStream;
 
 
-class Posting : public BasePosting
+class BasePosting : public Object
 {
     public:
-        Posting();
-        ~Posting();
+        BasePosting();
+        virtual ~BasePosting();
 
         bool isModified() const;
         void setModified(bool state = true);
 
-        bool hasSubPostings() const;
-        int countSubPostings() const;
-        SubPosting* subPosting(int index);
-        const SubPosting* subPosting(int index) const;
-        SubPosting* takeSubPosting(int index);
-        void addSubPosting(SubPosting *posting);
-        void removeSubPosting(int index);
-        void clearSubPostings();
+        QString postingText() const;
+        void setPostingText(const QString &str);
+
+        Maturity maturity() const;
+        void setMaturity(const Maturity &date);
+
+        ValueDate valueDate() const;
+        void setValueDate(const ValueDate &date);
+
+        Money amount() const;
+        void setAmount(const Money &m);
+
+        int page() const;
+        void setPage(int p);
+
+        QString description() const;
+        void setDescription(const QString &str);
+
+        QString voucher() const;
+        void setVoucher(const QString &str);
+
+        QDate warranty() const;
+        void setWarranty(const QDate &date);
+
+        QString methodOfPayment() const;
+        void setMethodOfPayment(const QString &str);
+
+        QString category() const;
+        void setCategory(const QString &str);
+
+        QString payee() const;
+        void setPayee(const QString &str);
 
     protected:
-        friend QDataStream& operator<<(QDataStream &stream, const Posting &acc);
-        friend QDataStream& operator>>(QDataStream &stream, Posting &acc);
-
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(QDataStream &stream);
 
@@ -51,9 +78,6 @@ class Posting : public BasePosting
         class Private;
         Private *d;
 };
-
-extern QDataStream& operator<<(QDataStream &stream, const Posting &posting);
-extern QDataStream& operator>>(QDataStream &stream, Posting &posting);
 
 
 #endif

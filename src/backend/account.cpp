@@ -59,7 +59,7 @@ struct Account::Private
     SecurityLevel level;
 
     QList<Posting*> postings;
-    mutable bool modified;
+    bool modified;
 };
 
 
@@ -444,7 +444,7 @@ QDataStream& Account::serialize(QDataStream &stream) const
     stream << d->bic;
 
     stream << static_cast<quint32>( d->postings.size() );
-    foreach(Posting *p, d->postings) {
+    foreach(const Posting *p, d->postings) {
         stream << *p;
     }
 

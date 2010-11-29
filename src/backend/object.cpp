@@ -219,8 +219,8 @@ Attachment* Object::attachment(int index)
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
-    
-    return m_attachments.at( index );    
+
+    return m_attachments.at( index );
 }
 
 
@@ -228,8 +228,8 @@ const Attachment* Object::attachment(int index) const
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
-    
-    return m_attachments.at( index );    
+
+    return m_attachments.at( index );
 }
 
 
@@ -237,10 +237,10 @@ Attachment* Object::takeAttachment(int index)
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
-    
+
     Attachment *attachment = m_attachments.takeAt( index );
     setModified();
-    
+
     return attachment;
 }
 
@@ -258,9 +258,9 @@ void Object::removeAttachment(int index)
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
-    
+
     m_attachments.removeAt( index );
-    setModified();    
+    setModified();
 }
 
 

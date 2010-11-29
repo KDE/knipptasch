@@ -147,6 +147,8 @@ set(knipptasch_SOURCES
     src/backend/account.cpp
     src/backend/attachment.cpp
     src/backend/posting.cpp
+    src/backend/baseposting.cpp
+    src/backend/subposting.cpp
     src/backend/storage.cpp
 
     src/compat/actioncollection.cpp

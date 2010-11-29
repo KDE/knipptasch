@@ -14,35 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef POSTING_H
-#define POSTING_H
+#ifndef SUBPOSTING_H
+#define SUBPOSTING_H
 
 #include "baseposting.h"
 
-class SubPosting;
 
-
-class Posting : public BasePosting
+class SubPosting : public BasePosting
 {
     public:
-        Posting();
-        ~Posting();
+        SubPosting();
+        ~SubPosting();
 
         bool isModified() const;
         void setModified(bool state = true);
 
-        bool hasSubPostings() const;
-        int countSubPostings() const;
-        SubPosting* subPosting(int index);
-        const SubPosting* subPosting(int index) const;
-        SubPosting* takeSubPosting(int index);
-        void addSubPosting(SubPosting *posting);
-        void removeSubPosting(int index);
-        void clearSubPostings();
-
     protected:
-        friend QDataStream& operator<<(QDataStream &stream, const Posting &acc);
-        friend QDataStream& operator>>(QDataStream &stream, Posting &acc);
+        friend QDataStream& operator<<(QDataStream &stream, const SubPosting &acc);
+        friend QDataStream& operator>>(QDataStream &stream, SubPosting &acc);
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(QDataStream &stream);
@@ -52,8 +41,8 @@ class Posting : public BasePosting
         Private *d;
 };
 
-extern QDataStream& operator<<(QDataStream &stream, const Posting &posting);
-extern QDataStream& operator>>(QDataStream &stream, Posting &posting);
+extern QDataStream& operator<<(QDataStream &stream, const SubPosting &posting);
+extern QDataStream& operator>>(QDataStream &stream, SubPosting &posting);
 
 
 #endif
