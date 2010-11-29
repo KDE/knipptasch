@@ -82,7 +82,7 @@ bool Account::isModified() const
         return true;
     }
 
-    foreach(Posting *p, d->postings) {
+    foreach(const Posting *p, d->postings) {
         if( p && p->isModified() ) {
             d->modified = true;
             return true;

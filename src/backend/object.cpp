@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "object.h"
+#include "attachment.h"
 
 #include <QSet>
 #include <QHash>
@@ -197,6 +198,76 @@ void Object::clearAttributes()
 {
     if( !m_attributes.isEmpty() ) {
         m_attributes.clear();
+        setModified();
+    }
+}
+
+
+bool Object::hasAttachments() const
+{
+    return countAttachments() > 0;
+}
+
+
+int Object::countAttachments() const
+{
+    return m_attachments.size();
+}
+
+
+Attachment* Object::attachment(int index)
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_attachments.size() );
+    
+    return m_attachments.at( index );    
+}
+
+
+const Attachment* Object::attachment(int index) const
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_attachments.size() );
+    
+    return m_attachments.at( index );    
+}
+
+
+Attachment* Object::takeAttachment(int index)
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_attachments.size() );
+    
+    Attachment *attachment = m_attachments.takeAt( index );
+    setModified();
+    
+    return attachment;
+}
+
+
+void Object::insertAttachment(Attachment *attachment)
+{
+    Q_ASSERT( attachment );
+
+    m_attachments.append( attachment );
+    setModified();
+}
+
+
+void Object::removeAttachment(int index)
+{
+    Q_ASSERT( index >= 0 );
+    Q_ASSERT( index < m_attachments.size() );
+    
+    m_attachments.removeAt( index );
+    setModified();    
+}
+
+
+void Object::clearAttachments()
+{
+    if( !m_attachments.isEmpty() ) {
+        m_attachments.clear();
         setModified();
     }
 }

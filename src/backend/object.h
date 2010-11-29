@@ -23,6 +23,9 @@
 #include <QVariant>
 
 
+class Attachment;
+
+
 class Object
 {
     public:
@@ -51,6 +54,15 @@ class Object
         void removeAttribute(const QByteArray &name);
         void clearAttributes();
 
+        bool hasAttachments() const;
+        int countAttachments() const;
+        Attachment* attachment(int index);
+        const Attachment* attachment(int index) const;
+        Attachment* takeAttachment(int index);
+        void insertAttachment(Attachment *attachment);
+        void removeAttachment(int index);
+        void clearAttachments();
+        
     protected:
         Object();
         virtual ~Object();
@@ -62,6 +74,7 @@ class Object
         bool m_modified;
         QSet<QByteArray> m_flags;
         QHash<QByteArray, QVariant> m_attributes;
+        QList<Attachment*> m_attachments;
 };
 
 

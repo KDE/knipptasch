@@ -145,6 +145,7 @@ set(knipptasch_SOURCES
 
     src/backend/object.cpp
     src/backend/account.cpp
+    src/backend/attachment.cpp
     src/backend/posting.cpp
     src/backend/storage.cpp
 
