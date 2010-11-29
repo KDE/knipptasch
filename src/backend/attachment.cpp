@@ -51,6 +51,7 @@ Attachment::Attachment()
 
 Attachment::~Attachment()
 {
+    delete d;
 }
 
 
