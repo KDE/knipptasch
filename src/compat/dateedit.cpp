@@ -88,7 +88,6 @@ class DateEdit::Private
     public:
         Private(DateEdit *qq)
           : q( qq ),
-            mDate( QDate::currentDate() ),
             mReadOnly( false ),
             mDiscardNextMousePress( false )
         {
@@ -312,14 +311,15 @@ DateEdit::DateEdit(QWidget *parent)
              this, SLOT( slotTextChanged( const QString& ) ) );
 
     d->mPopup = new DatePickerPopup(
-                        DatePickerPopup::DatePicker | DatePickerPopup::Words,
+                            DatePickerPopup::NoDate
+                          | DatePickerPopup::DatePicker
+                          | DatePickerPopup::Words,
                         QDate::currentDate(), this );
 
     d->mPopup->hide();
     d->mPopup->installEventFilter( this );
 
-    connect( d->mPopup, SIGNAL( dateChanged( const QDate& ) ),
-             this, SLOT( dateSelected( const QDate& ) ) );
+    connect( d->mPopup, SIGNAL( dateChanged(const QDate&) ), this, SLOT( dateSelected(const QDate&) ) );
 
     // handle keyword entry
     d->setupKeywords();

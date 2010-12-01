@@ -181,14 +181,19 @@ DatePickerPopup::DatePickerPopup(Modes modes, const QDate &date, QWidget *parent
 #if defined(HAVE_KDE)
     d->mDatePicker = new KDatePicker( this );
     d->mDatePicker->setCloseButton( false );
-#else
-    d->mDatePicker = new QCalendarWidget( this );
-#endif
 
     connect( d->mDatePicker, SIGNAL( dateEntered( const QDate& ) ),
             this, SLOT( slotDateChanged( const QDate& ) ) );
     connect( d->mDatePicker, SIGNAL( dateSelected( const QDate& ) ),
             this, SLOT( slotDateChanged( const QDate& ) ) );
+#else
+    d->mDatePicker = new QCalendarWidget( this );
+
+    connect( d->mDatePicker, SIGNAL( activated( const QDate& ) ),
+            this, SLOT( slotDateChanged( const QDate& ) ) );
+    connect( d->mDatePicker, SIGNAL( clicked( const QDate& ) ),
+            this, SLOT( slotDateChanged( const QDate& ) ) );
+#endif
 
     setDate( date );
     d->buildMenu();
