@@ -22,6 +22,7 @@
 #include "compat/dateedit.h"
 
 #include <QPainter>
+#include <QDate>
 #include <QApplication>
 #include <QSortFilterProxyModel>
 
