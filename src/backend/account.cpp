@@ -83,7 +83,8 @@ bool Account::isModified() const
     }
 
     foreach(const Posting *p, d->postings) {
-        if( p && p->isModified() ) {
+        Q_ASSERT( p );
+        if( p->isModified() ) {
             d->modified = true;
             return true;
         }
