@@ -27,7 +27,9 @@
 #include "backend/account.h"
 #include "backend/storage.h"
 
-#include "export/exportplugin.h"
+#include "interface/exportplugin.h"
+#include "interface/importplugin.h"
+
 #include "export/csv/csvexportplugin.h"
 
 #include "import/csv/csvimportplugin.h"

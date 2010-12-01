@@ -17,7 +17,7 @@
 #ifndef CSVEXPORTPLUGIN_H
 #define CSVEXPORTPLUGIN_H
 
-#include "../exportplugin.h"
+#include "interface/exportplugin.h"
 
 
 class CsvExportPlugin : public ExportPlugin

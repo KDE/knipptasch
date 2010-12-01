@@ -17,7 +17,7 @@
 #ifndef CSVIMPORTPLUGIN_H
 #define CSVIMPORTPLUGIN_H
 
-#include "../importplugin.h"
+#include "interface/importplugin.h"
 
 
 class CsvImportPlugin : public ImportPlugin

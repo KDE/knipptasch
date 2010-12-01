@@ -17,7 +17,7 @@
 #ifndef DEMOIMPORTPLUGIN_H
 #define DEMOIMPORTPLUGIN_H
 
-#include "../importplugin.h"
+#include "interface/importplugin.h"
 
 
 class DemoImportPlugin : public ImportPlugin
