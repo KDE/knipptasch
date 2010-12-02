@@ -122,7 +122,7 @@ void PasswordWidget::onValueChanged()
             ui->messageWidget->setVisible( true );
         }
         else if( ui->pw2->text().isEmpty() || ui->pw1->text() != ui->pw2->text() ) {
-            ui->messageLabel->setText( tr( "The passwords you've entered do not match." ) );
+            ui->messageLabel->setText( tr( "The passwords you entered do not match." ) );
             ui->messageWidget->setVisible( true );
         }
     }
