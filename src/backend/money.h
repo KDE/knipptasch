@@ -190,7 +190,7 @@ class Money
             return m;
         }
 
-        QString toString()
+        QString toString() const
         {
             return QString( "%L1" ).arg( m_cents / 100.0 , 0, 'f', 2 );
         }
