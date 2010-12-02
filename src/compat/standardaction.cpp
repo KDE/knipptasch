@@ -208,6 +208,7 @@ static KAction* makeAction(StandardActionId id, const QObject* recv, const char*
         { idCut, QKeySequence::Cut, "edit_cut", QObject::tr("Cu&t"), QObject::tr("Cut selection"), BarIcon("edit-cut"), false },
         { idCopy, QKeySequence::Copy, "edit_copy", QObject::tr("&Copy"), QObject::tr("Copy selection to clipboard"), BarIcon("edit-copy"), false },
         { idPaste, QKeySequence::Paste, "edit_paste", QObject::tr("&Paste"), QObject::tr("Paste clipboard contents"), BarIcon("edit-paste"), false },
+        //: Translation Hint: to search for entries
         { idFind, QKeySequence::Find, "edit_find", QObject::tr("&Find..."), QObject::tr("Search entries"), BarIcon("edit-find"), false },
         { idFindNext, QKeySequence::FindNext, "edit_find_next", QObject::tr("Find &Next"), QObject::tr("Find next match"), BarIcon("go-down-search"), false },
         { idFindPrev, QKeySequence::FindPrevious, "edit_find_prev", QObject::tr("Find Pre&vious"), QObject::tr("Find previous match"), BarIcon("go-up-search"), false },
