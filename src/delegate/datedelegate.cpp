@@ -115,15 +115,7 @@ void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 
 QSize DateDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    DateEdit edit;
-
-    return QSize(
-        qMax(
-            QStyledItemDelegate::sizeHint( option, index ).width(),
-            edit.sizeHint().width() - 10
-        ),
-        QStyledItemDelegate::sizeHint( option, index ).height()
-    );
+    return QStyledItemDelegate::sizeHint( option, index ) + QSize( 25, 0 );
 }
 
 
