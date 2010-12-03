@@ -144,6 +144,7 @@ bool Storage::write(Account *acc)
         return QFile::WriteError;
     }
 
+    acc->setModified( false );
     return QFile::NoError;
 }
 
@@ -215,6 +216,7 @@ bool Storage::read(Account *acc)
         return false;
     }
 
+    acc->setModified( false );
     return true;
 }
 
