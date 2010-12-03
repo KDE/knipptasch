@@ -29,6 +29,7 @@
 #include "delegate/moneydelegate.h"
 #include "delegate/categorydelegate.h"
 
+#include "interface/abstractaccounttabwidget.h"
 
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
