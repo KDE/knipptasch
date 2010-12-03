@@ -443,7 +443,6 @@ QDataStream& Account::serialize(QDataStream &stream) const
     stream << d->owner;
     stream << d->institution;
     stream << d->bic;
-    d->category->serialize( stream );
 
     stream << static_cast<quint32>( d->postings.size() );
     foreach(const Posting *p, d->postings) {
