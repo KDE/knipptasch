@@ -148,6 +148,10 @@ void QuickReportWidget::updateView()
     AccountModel *model = qobject_cast<AccountModel*>( m_proxy->sourceModel() );
     Q_ASSERT( model );
 
+    if( !model->account() ) {
+        return;
+    }
+
     ui->titleLabel->setText( formatMonth( m_date ) );
 
     Money income;
