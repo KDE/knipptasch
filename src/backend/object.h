@@ -24,6 +24,7 @@
 
 
 class Attachment;
+class Account;
 
 
 class Object
@@ -62,13 +63,13 @@ class Object
         void insertAttachment(Attachment *attachment);
         void removeAttachment(int index);
         void clearAttachments();
-        
+
+        virtual QDataStream& serialize(QDataStream &stream) const;
+        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+
     protected:
         Object();
         virtual ~Object();
-
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
 
     private:
         bool m_modified;

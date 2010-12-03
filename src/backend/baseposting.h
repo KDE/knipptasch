@@ -70,13 +70,12 @@ class BasePosting : public Object
         QString payee() const;
         void setPayee(const QString &str);
 
-    protected:
         virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
+        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
 
     private:
         class Private;
-        Private *d;
+        Private * const d;
 };
 
 

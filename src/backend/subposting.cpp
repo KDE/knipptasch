@@ -66,29 +66,13 @@ void SubPosting::setModified(bool state)
 
 QDataStream& SubPosting::serialize(QDataStream &stream) const
 {
-    BasePosting::serialize( stream );
-
-    return stream;
+    return BasePosting::serialize( stream );
 }
 
 
-QDataStream& SubPosting::deserialize(QDataStream &stream)
+QDataStream& SubPosting::deserialize(const Account *account, QDataStream &stream)
 {
-    BasePosting::deserialize( stream );
-
-    return stream;
-}
-
-
-QDataStream& operator<<(QDataStream &stream, const SubPosting &p)
-{
-    return p.serialize( stream );
-}
-
-
-QDataStream& operator>>(QDataStream &stream, SubPosting &p)
-{
-    return p.deserialize( stream );
+    return BasePosting::deserialize( account, stream );
 }
 
 

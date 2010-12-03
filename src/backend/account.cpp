@@ -443,19 +443,20 @@ QDataStream& Account::serialize(QDataStream &stream) const
     stream << d->owner;
     stream << d->institution;
     stream << d->bic;
+    d->category->serialize( stream );
 
     stream << static_cast<quint32>( d->postings.size() );
     foreach(const Posting *p, d->postings) {
-        stream << *p;
+        p->serialize( stream );
     }
 
     return stream;
 }
 
 
-QDataStream& Account::deserialize(QDataStream &stream)
+QDataStream& Account::deserialize(const Account *account, QDataStream &stream)
 {
-    Object::deserialize( stream );
+    Object::deserialize( account, stream );
 
     stream >> d->name;
     stream >> d->number;
@@ -475,8 +476,7 @@ QDataStream& Account::deserialize(QDataStream &stream)
     stream >> count;
     for(quint32 i = 0; i < count; ++i) {
         Posting *p = new Posting;
-        stream >> *p;
-
+        p->deserialize( account, stream );
         addPosting( p );
     }
 
@@ -492,7 +492,7 @@ QDataStream& operator<<(QDataStream &stream, const Account &acc)
 
 QDataStream& operator>>(QDataStream &stream, Account &acc)
 {
-    return acc.deserialize( stream );
+    return acc.deserialize( &acc, stream );
 }
 
 

@@ -61,21 +61,13 @@ class Attachment : public Object
         void setData(const QByteArray &data);
         void clearData();
 
-    protected:
-        friend QDataStream& operator<<(QDataStream &stream, const Attachment &att);
-        friend QDataStream& operator>>(QDataStream &stream, Attachment &att);
-
         virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
+        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
 
     private:
         class Private;
-        Private *d;
+        Private * const d;
 };
-
-
-extern QDataStream& operator<<(QDataStream &stream, const Attachment &att);
-extern QDataStream& operator>>(QDataStream &stream, Attachment &att);
 
 
 #endif

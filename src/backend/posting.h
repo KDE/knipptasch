@@ -40,20 +40,13 @@ class Posting : public BasePosting
         void removeSubPosting(int index);
         void clearSubPostings();
 
-    protected:
-        friend QDataStream& operator<<(QDataStream &stream, const Posting &acc);
-        friend QDataStream& operator>>(QDataStream &stream, Posting &acc);
-
         virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
+        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
 
     private:
         class Private;
-        Private *d;
+        Private * const d;
 };
-
-extern QDataStream& operator<<(QDataStream &stream, const Posting &posting);
-extern QDataStream& operator>>(QDataStream &stream, Posting &posting);
 
 
 #endif

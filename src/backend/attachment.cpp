@@ -241,9 +241,9 @@ QDataStream& Attachment::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Attachment::deserialize(QDataStream &stream)
+QDataStream& Attachment::deserialize(const Account *account, QDataStream &stream)
 {
-    Object::deserialize( stream );
+    Object::deserialize( account, stream );
 
     stream >> d->inline_data;
     stream >> d->title;
@@ -256,20 +256,6 @@ QDataStream& Attachment::deserialize(QDataStream &stream)
 
     return stream;
 }
-
-
-QDataStream& operator<<(QDataStream &stream, const Attachment &att)
-{
-    return att.serialize( stream );
-}
-
-
-QDataStream& operator>>(QDataStream &stream, Attachment &att)
-{
-    return att.deserialize( stream );
-}
-
-
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

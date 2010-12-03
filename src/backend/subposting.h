@@ -29,21 +29,13 @@ class SubPosting : public BasePosting
         bool isModified() const;
         void setModified(bool state = true);
 
-    protected:
-        friend QDataStream& operator<<(QDataStream &stream, const SubPosting &acc);
-        friend QDataStream& operator>>(QDataStream &stream, SubPosting &acc);
-
         virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
+        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
 
     private:
         class Private;
-        Private *d;
+        Private * const d;
 };
-
-extern QDataStream& operator<<(QDataStream &stream, const SubPosting &posting);
-extern QDataStream& operator>>(QDataStream &stream, SubPosting &posting);
-
 
 #endif
 

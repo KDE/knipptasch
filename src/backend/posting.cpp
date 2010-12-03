@@ -163,40 +163,28 @@ QDataStream& Posting::serialize(QDataStream &stream) const
 
     stream << static_cast<quint32>( d->postings.size() );
     foreach(SubPosting *p, d->postings) {
-        stream << *p;
+        p->serialize( stream );
     }
 
     return stream;
 }
 
 
-QDataStream& Posting::deserialize(QDataStream &stream)
+QDataStream& Posting::deserialize(const Account *account, QDataStream &stream)
 {
-    BasePosting::deserialize( stream );
+    BasePosting::deserialize( account, stream );
 
     quint32 count;
     stream >> count;
     for(quint32 i = 0; i < count; ++i) {
         SubPosting *p = new SubPosting;
-        stream >> *p;
-
+        p->deserialize( account, stream );
         addSubPosting( p );
     }
 
     return stream;
 }
 
-
-QDataStream& operator<<(QDataStream &stream, const Posting &p)
-{
-    return p.serialize( stream );
-}
-
-
-QDataStream& operator>>(QDataStream &stream, Posting &p)
-{
-    return p.deserialize( stream );
-}
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

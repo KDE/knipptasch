@@ -282,14 +282,16 @@ QDataStream& Object::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Object::deserialize(QDataStream &stream)
+QDataStream& Object::deserialize(const Account *account, QDataStream &stream)
 {
+    Q_UNUSED( account );
+    Q_ASSERT( account );
+
     stream >> m_flags;
     stream >> m_attributes;
 
     return stream;
 }
-
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

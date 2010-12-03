@@ -115,16 +115,15 @@ class Account : public Object
         void removePosting(int index);
         void deletePosting(int index);
 
-    protected:
         friend QDataStream& operator<<(QDataStream &stream, const Account &acc);
         friend QDataStream& operator>>(QDataStream &stream, Account &acc);
 
         virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(QDataStream &stream);
+        virtual QDataStream& deserialize(const Account *accout, QDataStream &stream);
 
     private:
         class Private;
-        Private *d;
+        Private * const d;
 };
 
 

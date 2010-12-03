@@ -16,8 +16,10 @@
  */
 #include "baseposting.h"
 #include "money.h"
+#include "account.h"
 
 #include <QDataStream>
+#include <QDebug>
 
 
 struct BasePosting::Private
@@ -245,9 +247,9 @@ QDataStream& BasePosting::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& BasePosting::deserialize(QDataStream &stream)
+QDataStream& BasePosting::deserialize(const Account *account, QDataStream &stream)
 {
-    Object::deserialize( stream );
+    Object::deserialize( account, stream );
 
     stream >> d->amount;
     stream >> d->postingtext;
