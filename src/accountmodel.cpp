@@ -362,7 +362,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
 
         case CATEGORY:
             entry->setCategory(
-              account()->rootCategory()->findCategoryByHash( value.toString() )
+              account()->rootCategory()->findCategoryByHash( value.toByteArray() )
             );
             break;
 
