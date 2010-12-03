@@ -134,6 +134,7 @@ set(knipptasch_SOURCES
     src/interface/abstractaccounttabwidget.cpp
 
     src/accounttabwidgets/postingtabwidget.cpp
+    src/accounttabwidgets/descriptiontabwidget.cpp
 
     src/export/csv/csvexportplugin.cpp
     src/export/csv/csvexportdialog.cpp
@@ -185,6 +186,7 @@ set( knipptasch_HEADERS
     src/interface/abstractaccounttabwidget.h
 
     src/accounttabwidgets/postingtabwidget.h
+    src/accounttabwidgets/descriptiontabwidget.h
 
     #src/export/csv/csvexportplugin.h
     src/export/csv/csvexportdialog.h
