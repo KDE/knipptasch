@@ -20,6 +20,8 @@
 #include <QSet>
 #include <QHash>
 #include <QSharedData>
+#include <QBuffer>
+#include <qcryptographichash.h>
 
 
 
@@ -46,6 +48,24 @@ bool Object::isModified() const
 void Object::setModified(bool state)
 {
     m_modified = state;
+}
+
+
+QByteArray Object::hash() const
+{
+    QByteArray array;
+    {
+        QBuffer buffer( &array );
+        {
+            buffer.open( QIODevice::WriteOnly );
+
+            QDataStream out( &buffer );
+            serialize( out );
+        }
+        buffer.close();
+    }
+
+    return QCryptographicHash::hash( array, QCryptographicHash::Sha1 );
 }
 
 

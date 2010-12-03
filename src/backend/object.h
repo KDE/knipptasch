@@ -33,6 +33,8 @@ class Object
         virtual bool isModified() const;
         virtual void setModified(bool b = true);
 
+        QByteArray hash() const;
+
         bool hasFlags() const;
         int countFlags() const;
         bool containsFlag(const QByteArray &flag) const;
