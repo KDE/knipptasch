@@ -23,6 +23,7 @@
 
 #include "compat/actioncollection.h"
 
+class AbstractAccountTabWidget;
 
 namespace Ui
 {
@@ -101,6 +102,9 @@ class AccountWidget : public QWidget
     private slots:
         void slotSetIndexToCurrentInput();
         void slotUpdateAccountInfo();
+        void slotCurrentSelectionChanged();
+        void slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget);
+
         void closeSearchWidget();
 
     private:
@@ -120,6 +124,8 @@ class AccountWidget : public QWidget
         MainWindow *m_mainWindow;
 
         QString m_filename;
+
+        QList<AbstractAccountTabWidget*> m_tabwidgets;
 };
 
 

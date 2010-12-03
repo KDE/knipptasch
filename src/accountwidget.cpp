@@ -126,6 +126,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     m_proxy->setFilterKeyColumn( -1 );
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
+    connect( ui->view->selectionModel(), SIGNAL( currentChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentSelectionChanged() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SIGNAL( changed() ) );
@@ -475,6 +476,29 @@ void AccountWidget::slotUpdateAccountInfo()
 
     ui->balance->setStyleSheet( stylesheet );
     ui->balance->setText( formatMoney( value ) );
+}
+
+
+void AccountWidget::slotCurrentSelectionChanged()
+{
+    foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
+        w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
+    }
+}
+
+
+void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
+{
+    Q_ASSERT( widget );
+
+    int index = ui->tabwidget->indexOf( widget );
+    if( index >= 0 ) {
+        ui->tabwidget->setTabText( index, widget->label() );
+        ui->tabwidget->setTabIcon( index, widget->icon() );
+        ui->tabwidget->setTabToolTip( index, widget->tabToolTip() );
+        ui->tabwidget->setTabWhatsThis( index, widget->tabWhatsThis() );
+        ui->tabwidget->setTabEnabled( index, widget->isEnabled() );
+    }
 }
 
 
