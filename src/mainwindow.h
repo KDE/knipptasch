@@ -35,6 +35,7 @@ class ExportPlugin;
 class AccountWidget;
 class ActionCollection;
 class RecentFileMenu;
+class Account;
 
 namespace Ui
 {
@@ -70,7 +71,7 @@ class MainWindow :
         void setupActions();
         void loadConfig();
 
-        void addAccountWidget(AccountWidget *widget);
+        void addAccountWidget(Account *acc, const QString &filename = QString() );
 
         AccountWidget* currentAccountWidget();
         AccountWidget* accountWidget(int index);

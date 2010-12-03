@@ -43,7 +43,7 @@ class AccountWidget : public QWidget
     Q_OBJECT
 
     public:
-        explicit AccountWidget(Account *account, MainWindow *mainWindow);
+        explicit AccountWidget(MainWindow *mainWindow);
         ~AccountWidget();
 
         bool isModified() const;
@@ -53,6 +53,7 @@ class AccountWidget : public QWidget
 
         Account* account();
         const Account* account() const;
+        void setAccount(Account *acc);
 
         void loadConfig();
         void saveConfig();

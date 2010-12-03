@@ -323,10 +323,14 @@ void MainWindow::loadConfig()
 }
 
 
-void MainWindow::addAccountWidget(AccountWidget *widget)
+void MainWindow::addAccountWidget(Account *acc, const QString &filename)
 {
     static quint32 counter = 0;
-    Q_ASSERT( widget );
+
+    Q_ASSERT( acc );
+
+    AccountWidget *widget = new AccountWidget( this );
+    widget->setFileName( filename );
 
     QString tabname = widget->fileName().isEmpty()
                             ? tr( "Untitled %1" ).arg( ++counter )
@@ -335,6 +339,9 @@ void MainWindow::addAccountWidget(AccountWidget *widget)
     int index = ui->tabWidget->addTab( widget, tabname );
     ui->tabWidget->setCurrentIndex( index );
 
+    QCoreApplication::processEvents();
+
+    widget->setAccount( acc );
     connect( widget, SIGNAL( changed() ), this, SLOT( checkActionStates() ) );
 
     checkActionStates();
@@ -505,7 +512,7 @@ void MainWindow::onTabCloseRequest(int index)
 
 void MainWindow::onNewFile()
 {
-    addAccountWidget( new AccountWidget( new Account(), this ) );
+    addAccountWidget( new Account() );
 
     checkActionStates();
 }
@@ -534,15 +541,9 @@ void MainWindow::onOpenFile(const QString &str)
         delete acc;
     }
     else {
-        AccountWidget *widget = new AccountWidget( acc, this );
-        widget->setFileName( filename );
-        acc->setModified( false );
-
         m_recentFileMenu->addFile( filename );
-
+        addAccountWidget( acc, filename );
         statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
-
-        addAccountWidget( widget );
     }
 
     checkActionStates();
@@ -564,15 +565,9 @@ void MainWindow::onOpenFile(const QUrl &url)
             delete acc;
         }
         else {
-            AccountWidget *widget = new AccountWidget( acc, this );
-            widget->setFileName( url.toString() );
-            acc->setModified( false );
-
             m_recentFileMenu->addFile( url.toString() );
-
+            addAccountWidget( acc, url.toString() );
             statusBar()->showMessage( tr( "File '%1' loaded" ).arg( url.toString() ) , 2000 );
-
-            addAccountWidget( widget );
         }
 #if defined(HAVE_KDE)
         KIO::NetAccess::removeTempFile( tmpFile );
@@ -764,8 +759,11 @@ void MainWindow::onImportPluginClicked(QAction *action)
 
     Account *account = plugin->importAccount( this );
     if( account ) {
-        addAccountWidget( new AccountWidget( account, this ) );
-        statusBar()->showMessage( tr( "Account with %1 postings successfully imported." ).arg( account->countPostings() ), 2000 );
+        addAccountWidget( account );
+        statusBar()->showMessage(
+                    tr( "Account with %1 postings successfully imported." )
+                                        .arg( account->countPostings() ), 2000
+        );
     }
 }
 

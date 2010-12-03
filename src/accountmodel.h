@@ -59,7 +59,6 @@ class AccountModel : public QAbstractTableModel
         Q_DECLARE_FLAGS(PostingTypeFlags, PostingTypeFlag)
 
         explicit AccountModel(QObject *parent = 0);
-        explicit AccountModel(Account *account, QObject *parent = 0);
         ~AccountModel();
 
         Account* account() { return m_account; }
@@ -81,8 +80,6 @@ class AccountModel : public QAbstractTableModel
         Qt::ItemFlags flags(const QModelIndex &index) const;
 
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-
-        void initDemoAccount();
 
     private:
         QVariant backgroundRoleData(const QModelIndex &index) const;

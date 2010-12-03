@@ -28,26 +28,12 @@
 #include <QDate>
 #include <QFontMetrics>
 #include <QFlags>
-
 #include <QDebug>
-#include <QApplication>
-
-#include <cstdlib>
-#include <time.h>
-
 
 
 AccountModel::AccountModel(QObject *parent)
   : QAbstractTableModel( parent ),
     m_account( 0 ),
-    m_posting( new Posting )
-{
-}
-
-
-AccountModel::AccountModel(Account *acc, QObject *parent)
-  : QAbstractTableModel( parent ),
-    m_account( acc ),
     m_posting( new Posting )
 {
 }
@@ -62,7 +48,19 @@ AccountModel::~AccountModel()
 
 void AccountModel::setAccount(Account *account)
 {
+#if QT_VERSION >= 0x040600
+    beginResetModel();
+#endif
+
     m_account = account;
+    delete m_posting;
+    m_posting = new Posting;
+
+#if QT_VERSION >= 0x040600
+    endResetModel();
+#else
+    reset();
+#endif
 }
 
 
@@ -164,7 +162,6 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         default: // Can't handle this role...
             return QVariant();
     }
-
 
     Posting *entry = 0;
     if( index.row() < m_account->countPostings() ) {

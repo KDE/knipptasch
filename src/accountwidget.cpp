@@ -56,7 +56,7 @@
 #include <QDebug>
 
 
-AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
+AccountWidget::AccountWidget(MainWindow *mainWindow)
   : QWidget( mainWindow ),
     ui( new Ui::AccountWidget ),
     m_model( 0 ),
@@ -75,7 +75,7 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     ui->searchLineEdit->setClearButtonShown( true );
 #endif
 
-    m_model = new AccountModel( account, this );
+    m_model = new AccountModel( this );
     new ModelTest( m_model, this );
 
     m_proxy = new AccountSortFilterProxyModel( this );
@@ -134,10 +134,6 @@ AccountWidget::AccountWidget(Account *account, MainWindow *mainWindow)
     connect( ui->searchCloseButton, SIGNAL( clicked() ), this, SLOT( closeSearchWidget() ) );
 
     loadConfig();
-
-    slotUpdateAccountInfo();
-
-    QTimer::singleShot( 500, this, SLOT( selectCurrentPosting() ) );
 }
 
 
@@ -149,7 +145,11 @@ AccountWidget::~AccountWidget()
 
 bool AccountWidget::isModified() const
 {
-    return account()->isModified();
+    if( account() ) {
+        return account()->isModified();
+    }
+
+    return false;
 }
 
 
@@ -163,6 +163,7 @@ void AccountWidget::setFileName(const QString &name)
 {
     m_filename = name;
 
+    slotUpdateAccountInfo();
     emit changed();
 }
 
@@ -176,6 +177,15 @@ Account* AccountWidget::account()
 const Account* AccountWidget::account() const
 {
     return m_model->account();
+}
+
+
+void AccountWidget::setAccount(Account *acc)
+{
+    m_model->setAccount( acc );
+    slotUpdateAccountInfo();
+
+    QTimer::singleShot( 500, this, SLOT( selectCurrentPosting() ) );
 }
 
 
@@ -444,19 +454,23 @@ void AccountWidget::slotSetIndexToCurrentInput()
 
 void AccountWidget::slotUpdateAccountInfo()
 {
-    const QString &acname = account()->name().isEmpty() ? tr( "Unnamed Account" ) : account()->name();
+    const QString &acname = (!account() || account()->name().isEmpty() )
+                                ? tr( "Unnamed Account" ) : account()->name();
     ui->accountName->setText( acname );
 
-    const QModelIndex index = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::BALANCE ) );
-    Q_ASSERT( index.isValid() );
+    const QModelIndex index = m_proxy->mapFromSource(
+               m_model->index( m_model->rowCount() - 1, AccountModel::BALANCE )
+    );
     const Money value = m_proxy->data( index, Qt::EditRole ).value<Money>();
 
     QString stylesheet;
     if( Preferences::self()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
-        stylesheet = QString::fromLatin1("color: %1;").arg( Preferences::self()->positiveAmountForegroundColor().name() );
+        stylesheet = QString::fromLatin1("color: %1;").arg(
+                 Preferences::self()->positiveAmountForegroundColor().name() );
     }
     else if( Preferences::self()->negativeAmountForegroundEnabled() && value < 0.0 ) {
-        stylesheet = QString::fromLatin1("color: %1;").arg( Preferences::self()->negativeAmountForegroundColor().name() );
+        stylesheet = QString::fromLatin1("color: %1;").arg(
+                 Preferences::self()->negativeAmountForegroundColor().name() );
     }
 
     ui->balance->setStyleSheet( stylesheet );
