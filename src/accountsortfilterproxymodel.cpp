@@ -22,6 +22,7 @@
 
 #include <QDate>
 #include <QDebug>
+#include <QTimer>
 
 #define TEST_LESS_THAN_RESULT_TRUE 1
 #define TEST_LESS_THAN_RESULT_FALSE 0
@@ -32,6 +33,16 @@
 AccountSortFilterProxyModel::AccountSortFilterProxyModel(QObject *parent)
   : QSortFilterProxyModel( parent )
 {
+    connect( this, SIGNAL( modelReset() ), this, SLOT( updateCache() ) );
+
+    connect( this, SIGNAL( rowsInserted(const QModelIndex &, int, int) ),
+             this, SLOT( updateCache() ) );
+    connect( this, SIGNAL( rowsMoved(const QModelIndex &, int, int) ),
+             this, SLOT( updateCache() ) );
+    connect( this, SIGNAL( rowsRemoved(const QModelIndex &, int, int) ),
+             this, SLOT( updateCache() ) );
+
+    QTimer::singleShot( 0, this, SLOT( updateCache() ) );
 }
 
 
@@ -60,7 +71,14 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
     }
 
     if( mapToSource( idx ).column() == AccountModel::BALANCE ) {
-        if( role == Qt::ForegroundRole ) {
+        if( role == Qt::TextAlignmentRole ) {
+            return static_cast<int>( Qt::AlignRight | Qt::AlignVCenter );
+        }
+        else if( role == Qt::ForegroundRole ) {
+            if( !m_cache.contains( idx.row() ) ) { // Value not cached
+                return QVariant();
+            }
+
             Money m = data( idx, Qt::EditRole ).value<Money>();
             if( m >= 0.0 && Preferences::self()->positiveAmountForegroundEnabled() ) {
                 return Preferences::self()->positiveAmountForegroundColor();
@@ -69,44 +87,56 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
                 return Preferences::self()->negativeAmountForegroundColor();
             }
         }
-        else if( role == Qt::TextAlignmentRole ) {
-            return static_cast<int>( Qt::AlignRight | Qt::AlignVCenter );
+        else if( role == Qt::EditRole ) {
+            // Although this column is not editable, this value is still needed (!
+            return QVariant::fromValue( m_cache.value( idx.row() ) );
         }
-        else if( role == Qt::EditRole || role == Qt::DisplayRole ) {
-            Money money = data(
-                                index( idx.row(),
-                                    mapFromSource(
-                                        sourceModel()->index(
-                                            mapToSource( idx ).row(),
-                                            AccountModel::AMOUNT
-                                        )
-                                    ).column()
-                                ),
-                                Qt::EditRole
-                            ).value<Money>();
-
-            if( idx.row() <= 0 ) {
-                AccountModel *model = qobject_cast<AccountModel*>( sourceModel() );
-                Q_ASSERT( model );
-
-                money += model->account()->openingBalance();
-            }
-            else {
-                //TODO Optimize this recursive function calls
-                money += data(
-                            index( idx.row() - 1, idx.column() ), Qt::EditRole
-                        ).value<Money>();
-            }
-
-            if( role == Qt::EditRole ) {
-                return QVariant::fromValue( money );
-            }
-
-            return money.toString();
+        else if( role == Qt::DisplayRole ) {
+            return m_cache.contains( idx.row() )
+                    ? m_cache.value( idx.row() ).toString()
+                    : "-";
         }
     }
 
     return QSortFilterProxyModel::data( idx, role );
+}
+
+
+bool AccountSortFilterProxyModel::setData(const QModelIndex &idx, const QVariant &value, int role)
+{
+    if( !QSortFilterProxyModel::setData( idx, value, role ) ) {
+        return false;
+    }
+
+    if( mapToSource( idx ).column() == AccountModel::AMOUNT ) {
+        updateCache( idx.row() );
+    }
+
+    return true;
+}
+
+
+void AccountSortFilterProxyModel::updateCache(int firstRow)
+{
+    const int amountColumnView = mapFromSource( sourceModel()->index( 0, AccountModel::AMOUNT ) ).column();
+    const int balanceColumnView = mapFromSource( sourceModel()->index( 0, AccountModel::BALANCE ) ).column();
+
+    if( firstRow <= 0 ) {
+        m_cache.clear();
+    }
+
+    for(int viewIndex = qMax( firstRow, 0 ); viewIndex < rowCount(); ++viewIndex) {
+        Money money = data( index( viewIndex, amountColumnView ), Qt::EditRole ).value<Money>();
+
+        if( viewIndex <= 0 ) {
+            money += account()->openingBalance();
+        }
+        else {
+            money += data( index( viewIndex - 1, balanceColumnView ), Qt::EditRole ).value<Money>();
+        }
+
+        m_cache.insert( viewIndex, money );
+    }
 }
 
 
@@ -152,7 +182,6 @@ bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModel
 
     return left.row() < right.row();
 }
-
 
 
 int AccountSortFilterProxyModel::lessThanByType(const QModelIndex &left, const QModelIndex &right) const

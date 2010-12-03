@@ -21,7 +21,7 @@
 #include "backend/money.h"
 
 #include <QSortFilterProxyModel>
-#include <QPair>
+#include <QMap>
 
 
 
@@ -36,6 +36,10 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
         const Account* account() const;
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+    public slots:
+        void updateCache(int firstRow = 0);
 
     protected:
         bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
@@ -43,6 +47,9 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
     private:
         int lessThanByType(const QModelIndex &left, const QModelIndex &right) const;
         int lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const;
+
+    private:
+        mutable QMap<int, Money> m_cache;
 };
 
 
