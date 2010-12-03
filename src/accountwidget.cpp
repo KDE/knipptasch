@@ -491,7 +491,7 @@ void AccountWidget::slotCurrentSelectionChanged()
 void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
 {
     Q_ASSERT( widget );
-
+/*
     int index = ui->tabwidget->indexOf( widget );
     if( index >= 0 ) {
         ui->tabwidget->setTabText( index, widget->label() );
@@ -500,6 +500,7 @@ void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
         ui->tabwidget->setTabWhatsThis( index, widget->tabWhatsThis() );
         ui->tabwidget->setTabEnabled( index, widget->isEnabled() );
     }
+*/
 }
 
 
