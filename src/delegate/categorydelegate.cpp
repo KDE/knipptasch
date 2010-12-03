@@ -44,7 +44,7 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
     KLineEdit *input = new KLineEdit( parent );
     input->setFrame( false );
-
+/*
     QSet<QString> set;
     const QList<const Posting*> list = model->account()->postings();
     foreach(const Posting *p, list) {
@@ -54,7 +54,7 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     QCompleter *completer = new QCompleter( set.toList(), input );
     completer->setCaseSensitivity( Qt::CaseInsensitive );
     input->setCompleter( completer );
-
+*/
 #if defined(HAVE_KDE)
     input->setClearButtonShown( true );
 #endif

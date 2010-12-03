@@ -21,6 +21,7 @@
 
 #include <QDate>
 
+class Category;
 typedef QDate Maturity;
 typedef QDate ValueDate;
 class Money;
@@ -64,8 +65,10 @@ class BasePosting : public Object
         QString methodOfPayment() const;
         void setMethodOfPayment(const QString &str);
 
-        QString category() const;
-        void setCategory(const QString &str);
+        Category* category();
+        const Category* category() const;
+        void setCategory(Category *category);
+        void clearCategory();
 
         QString payee() const;
         void setPayee(const QString &str);

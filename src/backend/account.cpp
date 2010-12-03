@@ -18,6 +18,7 @@
 
 #include "posting.h"
 #include "money.h"
+#include "category.h"
 
 #include <QDataStream>
 #include <QDebug>
@@ -31,6 +32,7 @@ struct Account::Private
         maxbalanceenabled( false ),
         usePassword( false ),
         level( Average ),
+        category( new Category ),
         modified( false )
     {
     }
@@ -38,6 +40,7 @@ struct Account::Private
     ~Private()
     {
         qDeleteAll( postings );
+        delete category;
     }
 
     QString name;
@@ -59,6 +62,8 @@ struct Account::Private
     SecurityLevel level;
 
     QList<Posting*> postings;
+    Category *category;
+
     bool modified;
 };
 
@@ -426,6 +431,24 @@ void Account::deletePosting(int index)
 }
 
 
+Category* Account::rootCategory()
+{
+    Q_ASSERT( d );
+    Q_ASSERT( d->category );
+
+    return d->category;
+}
+
+
+const Category* Account::rootCategory() const
+{
+    Q_ASSERT( d );
+    Q_ASSERT( d->category );
+
+    return d->category;
+}
+
+
 QDataStream& Account::serialize(QDataStream &stream) const
 {
     Object::serialize( stream );
@@ -443,6 +466,7 @@ QDataStream& Account::serialize(QDataStream &stream) const
     stream << d->owner;
     stream << d->institution;
     stream << d->bic;
+    d->category->serialize( stream );
 
     stream << static_cast<quint32>( d->postings.size() );
     foreach(const Posting *p, d->postings) {
@@ -470,6 +494,7 @@ QDataStream& Account::deserialize(const Account *account, QDataStream &stream)
     stream >> d->owner;
     stream >> d->institution;
     stream >> d->bic;
+    d->category->deserialize( account, stream );
 
     quint32 count;
     stream >> count;

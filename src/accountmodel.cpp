@@ -20,6 +20,7 @@
 
 #include "backend/account.h"
 #include "backend/posting.h"
+#include "backend/category.h"
 #include "backend/money.h"
 
 #include <QVariant>
@@ -207,7 +208,18 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             return entry->valueDate();
 
         case CATEGORY:
-            return entry->category();
+            if( role == Qt::EditRole ) {
+                if( entry->category() ) {
+                    return entry->category()->hash();
+                }
+            }
+            else {
+                if( entry->category() ) {
+                    return entry->category()->name();
+                }
+            }
+
+            return QByteArray();
 
         case PAYEE:
             return entry->payee();
@@ -349,7 +361,9 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             break;
 
         case CATEGORY:
-            entry->setCategory( value.toString() );
+            entry->setCategory(
+              account()->rootCategory()->findCategoryByHash( value.toString() )
+            );
             break;
 
         case PAYEE:

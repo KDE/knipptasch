@@ -16,6 +16,7 @@
  */
 #include "baseposting.h"
 #include "money.h"
+#include "category.h"
 #include "account.h"
 
 #include <QDataStream>
@@ -26,6 +27,7 @@ struct BasePosting::Private
 {
     Private()
       : page( 0 ),
+        category( 0 ),
         modified( false )
     {
     }
@@ -41,7 +43,7 @@ struct BasePosting::Private
     QDate warranty;
     int page;
 
-    QString category;
+    Category *category;
     QString payee;
 
     bool modified;
@@ -64,7 +66,7 @@ BasePosting::~BasePosting()
 
 bool BasePosting::isModified() const
 {
-    if( d->modified || Object::isModified() ) {
+    if( d->modified || ( d->category && d->category->isModified() ) || Object::isModified() ) {
         return true;
     }
 
@@ -79,6 +81,11 @@ void BasePosting::setModified(bool state)
     }
     else {
         Object::setModified( false );
+
+        if( d->category ) {
+            d->category->setModified( false );
+        }
+
         d->modified = false;
     }
 }
@@ -201,16 +208,33 @@ void BasePosting::setMethodOfPayment(const QString &str)
 }
 
 
-QString BasePosting::category() const
+Category* BasePosting::category()
 {
     return d->category;
 }
 
 
-void BasePosting::setCategory(const QString &str)
+const Category* BasePosting::category() const
 {
-    d->category = str;
-    setModified();
+    return d->category;
+}
+
+
+void BasePosting::setCategory(Category *category)
+{
+    if( d->category != category ) {
+        d->category = category;
+        setModified();
+    }
+}
+
+
+void BasePosting::clearCategory()
+{
+    if( d->category ) {
+        d->category = 0;
+        setModified();
+    }
 }
 
 
@@ -240,8 +264,8 @@ QDataStream& BasePosting::serialize(QDataStream &stream) const
     stream << d->valuedate;
     stream << d->warranty;
     stream << d->page;
-    stream << d->category;
     stream << d->payee;
+    stream << ( d->category ? d->category->hash() : QByteArray() );
 
     return stream;
 }
@@ -260,8 +284,21 @@ QDataStream& BasePosting::deserialize(const Account *account, QDataStream &strea
     stream >> d->valuedate;
     stream >> d->warranty;
     stream >> d->page;
-    stream >> d->category;
     stream >> d->payee;
+
+    QByteArray hash;
+    stream >> hash;
+
+    if( !hash.isEmpty() ) {
+        const Category *c = account->rootCategory()->findCategoryByHash( hash );
+
+        if( c ) {
+            d->category = const_cast<Category*>( c );
+        }
+        else {
+            qDebug() << "No category for hash" << hash << "found!";
+        }
+    }
 
     return stream;
 }

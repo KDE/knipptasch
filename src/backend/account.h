@@ -19,6 +19,7 @@
 
 #include "object.h"
 
+class Category;
 class Money;
 class Posting;
 class QString;
@@ -114,6 +115,9 @@ class Account : public Object
         Posting* takePosting(int index);
         void removePosting(int index);
         void deletePosting(int index);
+
+        Category* rootCategory();
+        const Category* rootCategory() const;
 
         friend QDataStream& operator<<(QDataStream &stream, const Account &acc);
         friend QDataStream& operator>>(QDataStream &stream, Account &acc);
