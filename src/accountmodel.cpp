@@ -380,7 +380,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
         }
     }
     else {
-        emit dataChanged( createIndex( index.row(), 0 ), createIndex( index.row(), columnCount() ) );
+        emit dataChanged( createIndex( index.row(), index.column() ), createIndex( index.row(), index.column() ) );
     }
 
     return true;
