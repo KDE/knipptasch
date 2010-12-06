@@ -26,6 +26,7 @@
 
 
 Object::Object()
+  : m_modified( false )
 {
 }
 
