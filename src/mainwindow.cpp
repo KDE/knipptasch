@@ -58,6 +58,7 @@
 
 #include <QCloseEvent>
 #include <QFile>
+#include <QCursor>
 #include <QPointer>
 #include <QToolButton>
 #include <QToolBar>
@@ -68,6 +69,14 @@
 #include <KMenu>
 
 #include <QDebug>
+
+
+#define APPLICATION_WAIT_CURSOR                                                                    \
+    struct _application_wait_cursor {                                                              \
+      _application_wait_cursor() { QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) ); } \
+      ~_application_wait_cursor() { QApplication::restoreOverrideCursor(); }                       \
+    };                                                                                             \
+    _application_wait_cursor _my_application_wait_cursor
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -325,6 +334,8 @@ void MainWindow::loadConfig()
 
 void MainWindow::addAccountWidget(Account *acc, const QString &filename)
 {
+    APPLICATION_WAIT_CURSOR;
+    
     static quint32 counter = 0;
 
     Q_ASSERT( acc );
