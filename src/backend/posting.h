@@ -24,8 +24,10 @@ class SubPosting;
 
 class Posting : public BasePosting
 {
+    Q_OBJECT
+
     public:
-        Posting();
+        Posting(QObject *parent = 0);
         ~Posting();
 
         bool isModified() const;
@@ -42,6 +44,9 @@ class Posting : public BasePosting
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+
+    signals:
+        void subPostingChanged();
 
     private:
         class Private;

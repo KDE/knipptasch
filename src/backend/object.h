@@ -27,8 +27,10 @@ class Attachment;
 class Account;
 
 
-class Object
+class Object : public QObject
 {
+    Q_OBJECT
+
     public:
         virtual bool isModified() const;
         virtual void setModified(bool b = true);
@@ -69,8 +71,14 @@ class Object
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
 
+    signals:
+        void stateChanged();
+        void flagsChanged();
+        void attributesChanged();
+        void attachmentsChanged();
+
     protected:
-        Object();
+        Object(QObject *parent = 0);
         virtual ~Object();
 
     private:

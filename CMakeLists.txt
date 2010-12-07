@@ -200,6 +200,15 @@ set( knipptasch_HEADERS
     src/delegate/postingtextdelegate.h
     src/delegate/categorydelegate.h
 
+    src/backend/object.h
+    src/backend/category.h
+    src/backend/account.h
+    src/backend/attachment.h
+    src/backend/posting.h
+    src/backend/baseposting.h
+    src/backend/subposting.h
+    src/backend/storage.h
+
     src/compat/actioncollection.h
     src/compat/datepickerpopup.h
     src/compat/dateedit.h

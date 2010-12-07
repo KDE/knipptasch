@@ -26,8 +26,10 @@ class QUrl;
 
 class Attachment : public Object
 {
+    Q_OBJECT
+
     public:
-        Attachment();
+        Attachment(QObject *parent = 0);
         ~Attachment();
 
         bool isModified() const;
@@ -63,6 +65,9 @@ class Attachment : public Object
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+
+    signals:
+        void valueChanged();
 
     private:
         class Private;

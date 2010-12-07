@@ -43,8 +43,9 @@ struct Attachment::Private
 
 
 
-Attachment::Attachment()
-  : d( new Attachment::Private )
+Attachment::Attachment(QObject *parent)
+  : Object( parent ),
+    d( new Attachment::Private )
 {
 }
 
@@ -67,13 +68,10 @@ bool Attachment::isModified() const
 
 void Attachment::setModified(bool state)
 {
-    if( state ) {
-        d->modified = true;
-    }
-    else {
-        Object::setModified( false );
-        d->modified = false;
-    }
+    d->modified = state;
+    Object::setModified( state );
+
+    emit valueChanged();
 }
 
 

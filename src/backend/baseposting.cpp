@@ -20,6 +20,8 @@
 #include "account.h"
 
 #include <QDataStream>
+#include <QPointer>
+
 #include <QDebug>
 
 
@@ -43,7 +45,7 @@ struct BasePosting::Private
     QDate warranty;
     int page;
 
-    Category *category;
+    QPointer<Category> category;
     QString payee;
 
     bool modified;
@@ -52,8 +54,9 @@ struct BasePosting::Private
 
 
 
-BasePosting::BasePosting()
-  : d( new BasePosting::Private )
+BasePosting::BasePosting(QObject *parent)
+  : Object( parent ),
+    d( new BasePosting::Private )
 {
 }
 
@@ -76,18 +79,13 @@ bool BasePosting::isModified() const
 
 void BasePosting::setModified(bool state)
 {
-    if( state ) {
-        d->modified = true;
-    }
-    else {
-        Object::setModified( false );
+    d->modified = state;
 
-        if( d->category ) {
-            d->category->setModified( false );
-        }
-
-        d->modified = false;
+    if( d->category ) {
+        d->category->setModified( state );
     }
+
+    Object::setModified( state );
 }
 
 
@@ -99,8 +97,12 @@ QString BasePosting::postingText() const
 
 void BasePosting::setPostingText(const QString &str)
 {
-    d->postingtext = str;
-    setModified();
+    if( d->postingtext != str.trimmed() ) {
+        d->postingtext = str.trimmed();
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -112,8 +114,12 @@ Maturity BasePosting::maturity() const
 
 void BasePosting::setMaturity(const Maturity &date)
 {
-    d->maturity = date;
-    setModified();
+    if( d->maturity != date ) {
+        d->maturity = date;
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -125,8 +131,12 @@ ValueDate BasePosting::valueDate() const
 
 void BasePosting::setValueDate(const ValueDate &date)
 {
-    d->valuedate = date;
-    setModified();
+    if( d->valuedate != date ) {
+        d->valuedate = date;
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -138,8 +148,12 @@ Money BasePosting::amount() const
 
 void BasePosting::setAmount(const Money &m)
 {
-    d->amount = m;
-    setModified();
+    if( d->amount != m ) {
+        d->amount = m;
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -151,8 +165,12 @@ int BasePosting::page() const
 
 void BasePosting::setPage(int p)
 {
-    d->page = p;
-    setModified();
+    if( d->page != p ) {
+        d->page = p;
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -164,8 +182,12 @@ QString BasePosting::description() const
 
 void BasePosting::setDescription(const QString &str)
 {
-    d->description = str;
-    setModified();
+    if( d->description != str.trimmed() ) {
+        d->description = str.trimmed();
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -177,8 +199,12 @@ QString BasePosting::voucher() const
 
 void BasePosting::setVoucher(const QString &str)
 {
-    d->voucher = str;
-    setModified();
+    if( d->voucher != str.trimmed() ) {
+        d->voucher = str.trimmed();
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -190,8 +216,12 @@ QDate BasePosting::warranty() const
 
 void BasePosting::setWarranty(const QDate &date)
 {
-    d->warranty = date;
-    setModified();
+    if( d->warranty != date ) {
+        d->warranty = date;
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -203,8 +233,12 @@ QString BasePosting::methodOfPayment() const
 
 void BasePosting::setMethodOfPayment(const QString &str)
 {
-    d->methodOfPayment = str;
-    setModified();
+    if( d->methodOfPayment != str.trimmed() ) {
+        d->methodOfPayment = str.trimmed();
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 
@@ -223,8 +257,16 @@ const Category* BasePosting::category() const
 void BasePosting::setCategory(Category *category)
 {
     if( d->category != category ) {
+        if( d->category ) {
+            disconnect( d->category, 0, this, 0 );
+        }
+
         d->category = category;
+        connect( d->category, SIGNAL( valueChanged() ), this, SIGNAL( categoryChanged() ) );
+        connect( d->category, SIGNAL( categoryChanged() ), this, SIGNAL( categoryChanged() ) );
+
         setModified();
+        emit categoryChanged();
     }
 }
 
@@ -232,8 +274,11 @@ void BasePosting::setCategory(Category *category)
 void BasePosting::clearCategory()
 {
     if( d->category ) {
+        disconnect( d->category, 0, this, 0 );
         d->category = 0;
+
         setModified();
+        emit categoryChanged();
     }
 }
 
@@ -246,8 +291,12 @@ QString BasePosting::payee() const
 
 void BasePosting::setPayee(const QString &str)
 {
-    d->payee = str;
-    setModified();
+    if( d->payee != str.trimmed() ) {
+        d->payee = str.trimmed();
+
+        setModified();
+        emit valueChanged();
+    }
 }
 
 

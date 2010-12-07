@@ -31,8 +31,10 @@ class QDataStream;
 
 class BasePosting : public Object
 {
+    Q_OBJECT
+
     public:
-        BasePosting();
+        BasePosting(QObject *parent = 0);
         virtual ~BasePosting();
 
         bool isModified() const;
@@ -75,6 +77,10 @@ class BasePosting : public Object
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+
+    signals:
+        void valueChanged();
+        void categoryChanged();
 
     private:
         class Private;

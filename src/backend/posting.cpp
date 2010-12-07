@@ -42,8 +42,9 @@ struct Posting::Private
 
 
 
-Posting::Posting()
-  : d( new Posting::Private )
+Posting::Posting(QObject *parent)
+  : BasePosting( parent ),
+    d( new Posting::Private )
 {
 }
 
@@ -81,9 +82,10 @@ void Posting::setModified(bool state)
             p->setModified( false );
         }
 
-        BasePosting::setModified( false );
         d->modified = false;
     }
+
+    BasePosting::setModified( state );
 }
 
 
@@ -123,7 +125,10 @@ SubPosting* Posting::takeSubPosting(int index)
     Q_ASSERT( index < d->postings.size() );
 
     SubPosting *p = d->postings.takeAt( index );
+    disconnect( p, 0, this, 0 );
+
     setModified();
+    emit subPostingChanged();
 
     return p;
 }
@@ -134,7 +139,11 @@ void Posting::addSubPosting(SubPosting *p)
     Q_ASSERT( p );
 
     d->postings.append( p );
+    connect( p, SIGNAL( valueChanged() ), this, SIGNAL( subPostingChanged() ) );
+    connect( p, SIGNAL( categoryChanged()), this, SIGNAL( subPostingChanged() ) );
+
     setModified();
+    emit subPostingChanged();
 }
 
 
@@ -143,17 +152,27 @@ void Posting::removeSubPosting(int index)
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
 
-    d->postings.removeAt( index );
+    SubPosting *p = d->postings.takeAt( index );
+    disconnect( p, 0, this, 0 );
+
     setModified();
+    emit subPostingChanged();
 }
 
 
 void Posting::clearSubPostings()
 {
-    if( !d->postings.isEmpty() ) {
-        d->postings.clear();
-        setModified();
+    if( d->postings.isEmpty() ) {
+        return;
     }
+
+    while( !d->postings.isEmpty() ) {
+        SubPosting *p = d->postings.takeFirst();
+        disconnect( p, 0, this, 0 );
+    }
+
+    setModified();
+    emit subPostingChanged();
 }
 
 

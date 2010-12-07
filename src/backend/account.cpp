@@ -69,9 +69,12 @@ struct Account::Private
 
 
 
-Account::Account()
-  : d( new Account::Private )
+Account::Account(QObject *parent)
+  : Object( parent ),
+    d( new Account::Private )
 {
+    connect( d->category, SIGNAL( valueChanged() ), this, SIGNAL( categoryChanged() ) );
+    connect( d->category, SIGNAL( categoryChanged() ), this, SIGNAL( categoryChanged() ) );
 }
 
 
@@ -101,17 +104,14 @@ bool Account::isModified() const
 
 void Account::setModified(bool state)
 {
-    if( state ) {
-        d->modified = true;
-    }
-    else {
+    if( !state ) {
         foreach(Posting *p, d->postings) {
             p->setModified( false );
         }
-
-        Object::setModified( false );
-        d->modified = false;
     }
+
+    d->modified = state;
+    Object::setModified( state );
 }
 
 
@@ -126,6 +126,8 @@ void Account::setPasswordEnabled(bool state)
     if( state != d->usePassword ) {
         d->usePassword = state;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -145,6 +147,8 @@ void  Account::setPassword(const QCA::SecureArray &pw)
     if( pw != d->password ) {
         d->password = pw;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -160,6 +164,8 @@ void Account::setSecurityLevel(Account::SecurityLevel level)
     if( level != d->level ) {
         d->level = level;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -175,6 +181,8 @@ void Account::setName(const QString &name)
     if( name != d->name ) {
         d->name = name;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -190,6 +198,8 @@ void Account::setNumber(const QString &number)
     if( number != d->number ) {
         d->number = number;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -205,6 +215,8 @@ void Account::setDescription(const QString &desc)
     if( desc != d->description ) {
         d->description = desc;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -220,6 +232,8 @@ void Account::setOpeningDate(const QDate &date)
     if( date != d->openingdate ) {
         d->openingdate = date;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -235,6 +249,9 @@ void Account::setOpeningBalance(Money money)
     if( money.cents() != d->openingbalance.cents() ) {
         d->openingbalance = money;
         setModified();
+
+        emit valueChanged();
+        emit openingBalanceChanged();
     }
 }
 
@@ -250,6 +267,8 @@ void Account::setMinimumBalanceEnabled(bool b)
     if( b != d->minbalanceenabled ) {
         d->minbalanceenabled = b;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -265,6 +284,8 @@ void Account::setMinimumBalance(Money money)
     if( money.cents() != d->minbalance.cents() ) {
         d->minbalance = money;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -280,6 +301,8 @@ void Account::setMaximumBalanceEnabled(bool b)
     if( b != d->maxbalanceenabled ) {
         d->maxbalanceenabled = b;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -295,6 +318,8 @@ void Account::setMaximumBalance(Money money)
     if( money.cents() != d->maxbalance.cents() ) {
         d->maxbalance = money;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -310,6 +335,8 @@ void Account::setIban(const QString &iban)
     if( iban != d->iban ) {
         d->iban = iban;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -325,6 +352,8 @@ void Account::setOwner(const QString &owner)
     if( owner != d->owner ) {
         d->owner = owner;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -340,6 +369,8 @@ void Account::setInstitution(const QString &institution)
     if( institution != d->institution ) {
         d->institution = institution;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -355,6 +386,8 @@ void Account::setBic(const QString &bic)
     if( bic != d->bic ) {
         d->bic = bic;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -369,8 +402,11 @@ void Account::addPosting(Posting *ptr)
 {
     Q_ASSERT( ptr );
 
+    connect( ptr, SIGNAL( valueChanged() ), this, SIGNAL( postingChanged() ) );
     d->postings.append( ptr );
     setModified();
+
+    emit postingChanged();
 }
 
 
@@ -396,6 +432,7 @@ QList<const Posting*> Account::postings() const
 {
     QList<const Posting*> list;
     foreach(Posting *p, d->postings) {
+        Q_ASSERT( p );
         list.append( p );
     }
 
@@ -409,7 +446,10 @@ Posting* Account::takePosting(int index)
     Q_ASSERT( index < d->postings.size() );
 
     Posting *posting = d->postings.takeAt( index );
+    disconnect( posting, 0, this, 0 );
+
     setModified();
+    emit postingChanged();
 
     return posting;
 }
@@ -420,8 +460,11 @@ void Account::removePosting(int index)
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
 
-    d->postings.removeAt( index );
+    Posting *posting = d->postings.takeAt( index );
+    disconnect( posting, 0, this, 0 );
+
     setModified();
+    emit postingChanged();
 }
 
 

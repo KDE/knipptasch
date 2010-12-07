@@ -51,8 +51,9 @@ struct Category::Private
 
 
 
-Category::Category()
-  : d( new Category::Private )
+Category::Category(QObject *parent)
+  : Object( parent ),
+    d( new Category::Private )
 {
 }
 
@@ -91,9 +92,10 @@ void Category::setModified(bool state)
             c->setModified( false );
         }
 
-        Object::setModified( false );
         d->modified = false;
     }
+
+    Object::setModified( state );
 }
 
 
@@ -112,6 +114,8 @@ void Category::setName(const QString &name)
     if( d->name != name ) {
         d->name = name;
         setModified();
+
+        emit valueChanged();
     }
 }
 
@@ -131,6 +135,7 @@ void Category::setColor(const QColor &color)
     if( d->color != color ) {
         d->color = color;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -150,6 +155,7 @@ void Category::setMaximumLimitEnabled(bool b)
     if( d->enablemaxlimit != b ) {
         d->enablemaxlimit = b;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -169,6 +175,7 @@ void Category::setMaximumLimit(const Money &m)
     if( d->maxlimit != m ) {
         d->maxlimit = m;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -188,6 +195,7 @@ void Category::setMaximumUnit(Category::ForwardRule rule)
     if( d->maxrule != rule ) {
         d->maxrule = rule;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -207,6 +215,7 @@ void Category::setMinimumLimitEnabled(bool b)
     if( d->enableminlimit != b ) {
         d->enableminlimit = b;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -226,6 +235,7 @@ void Category::setMinimumLimit(const Money &m)
     if( d->minlimit != m ) {
         d->minlimit = m;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -245,6 +255,7 @@ void Category::setMinimumUnit(Category::ForwardRule rule)
     if( d->minrule != rule ) {
         d->minrule = rule;
         setModified();
+        emit valueChanged();
     }
 }
 
@@ -292,7 +303,10 @@ Category* Category::takeCategory(int index)
     Q_ASSERT( index < d->categories.size() );
 
     Category *c = d->categories.takeAt( index );
+    disconnect( c, 0, this, 0 );
+
     setModified();
+    emit categoryChanged();
 
     return c;
 }
@@ -303,8 +317,11 @@ void Category::addCategory(Category* c)
     Q_ASSERT( d );
     Q_ASSERT( c );
 
+    connect( c, SIGNAL( valueChanged() ), this, SIGNAL( categoryChanged() ) );
     d->categories.append( c );
+
     setModified();
+    emit categoryChanged();
 }
 
 
@@ -313,17 +330,27 @@ void Category::removeCategory(int index)
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->categories.size() );
 
-    d->categories.removeAt( index );
+    Category *c = d->categories.takeAt( index );
+    disconnect( c, 0, this, 0 );
+
     setModified();
+    emit categoryChanged();
 }
 
 
 void Category::clearCategories()
 {
-    if( !d->categories.isEmpty() ) {
-        d->categories.clear();
-        setModified();
+    if( d->categories.isEmpty() ) {
+        return;
     }
+
+    while( !d->categories.isEmpty() ) {
+        Category *c = d->categories.takeFirst();
+        disconnect( c, 0, this, 0 );
+    }
+
+    setModified();
+    emit categoryChanged();
 }
 
 

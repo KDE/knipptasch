@@ -46,6 +46,8 @@ namespace QCA {
 
 class Account : public Object
 {
+    Q_OBJECT
+
     public:
         enum SecurityLevel {
             High,
@@ -53,7 +55,7 @@ class Account : public Object
             Low
         };
 
-        Account();
+        Account(QObject *parent = 0);
         ~Account();
 
         bool isModified() const;
@@ -124,6 +126,13 @@ class Account : public Object
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *accout, QDataStream &stream);
+
+    signals:
+        void openingBalanceChanged();
+
+        void valueChanged();
+        void postingChanged();
+        void categoryChanged();
 
     private:
         class Private;

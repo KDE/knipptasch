@@ -17,50 +17,26 @@
 #include "subposting.h"
 
 
-struct SubPosting::Private
-{
-    Private()
-      : modified( false )
-    {
-    }
-
-    bool modified;
-};
-
-
-
-
-SubPosting::SubPosting()
-  : d( new SubPosting::Private )
+SubPosting::SubPosting(QObject *parent)
+  : BasePosting( parent )
 {
 }
 
 
 SubPosting::~SubPosting()
 {
-    delete d;
 }
 
 
 bool SubPosting::isModified() const
 {
-    if( d->modified || BasePosting::isModified() ) {
-        return true;
-    }
-
-    return false;
+    return BasePosting::isModified();
 }
 
 
 void SubPosting::setModified(bool state)
 {
-    if( state ) {
-        d->modified = true;
-    }
-    else {
-        BasePosting::setModified( false );
-        d->modified = false;
-    }
+    BasePosting::setModified( state );
 }
 
 

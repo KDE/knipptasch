@@ -25,6 +25,8 @@ class Money;
 
 class Category : public Object
 {
+    Q_OBJECT
+
     public:
         enum ForwardRule
         {
@@ -35,7 +37,7 @@ class Category : public Object
             Yearly = 4      /**< */
         };
 
-        Category();
+        Category(QObject *parent = 0);
         ~Category();
 
         bool isModified() const;
@@ -75,6 +77,10 @@ class Category : public Object
 
         virtual QDataStream& serialize(QDataStream &stream) const;
         virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+
+    signals:
+        void valueChanged();
+        void categoryChanged();
 
     private:
         class Private;

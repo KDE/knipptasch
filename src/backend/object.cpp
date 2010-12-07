@@ -25,8 +25,9 @@
 
 
 
-Object::Object()
-  : m_modified( false )
+Object::Object(QObject *parent)
+  : QObject( parent ),
+    m_modified( false )
 {
 }
 
@@ -48,7 +49,11 @@ bool Object::isModified() const
 
 void Object::setModified(bool state)
 {
-    m_modified = state;
+    if( m_modified != state ) {
+        m_modified = state;
+
+        emit stateChanged();
+    }
 }
 
 
@@ -99,6 +104,8 @@ void Object::insertFlag(const QByteArray &flag)
     if( !m_flags.contains( flag ) ) {
         m_flags.insert( flag );
         setModified();
+
+        emit flagsChanged();
     }
 }
 
@@ -108,6 +115,8 @@ void Object::insertFlags(const QSet<QByteArray> &flags)
     if( !m_flags.contains( flags ) ) {
         m_flags.unite( flags );
         setModified();
+
+        emit flagsChanged();
     }
 }
 
@@ -117,6 +126,8 @@ void Object::setFlags(const QSet<QByteArray> &flags)
     if( m_flags != flags ) {
         m_flags = flags;
         setModified();
+
+        emit flagsChanged();
     }
 
     Q_ASSERT( m_flags == flags );
@@ -127,6 +138,7 @@ void Object::removeFlag(const QByteArray &flag)
 {
     if( m_flags.remove( flag ) ) {
         setModified();
+        emit flagsChanged();
     }
 }
 
@@ -138,6 +150,7 @@ void Object::removeFlags(const QSet<QByteArray> &flags)
     m_flags.subtract( flags );
     if( s != m_flags.size() ) {
         setModified();
+        emit flagsChanged();
     }
 }
 
@@ -147,6 +160,7 @@ void Object::clearFlags()
     if( !m_flags.isEmpty() ) {
         m_flags.clear();
         setModified();
+        emit flagsChanged();
     }
 }
 
@@ -192,6 +206,7 @@ void Object::insertAttribute(const QByteArray &name, const QVariant &value)
     if( !m_attributes.contains( name ) || m_attributes.value( name ) != value ) {
         m_attributes.insert( name, value );
         setModified();
+        emit attributesChanged();
     }
 }
 
@@ -201,6 +216,7 @@ void Object::setAttributes(const QHash<QByteArray, QVariant> &attributes)
     if( m_attributes != attributes ) {
         m_attributes = attributes;
         setModified();
+        emit attributesChanged();
     }
 
     Q_ASSERT( m_attributes == attributes );
@@ -211,6 +227,7 @@ void Object::removeAttribute(const QByteArray &name)
 {
     if( m_attributes.remove( name ) >= 1 ) {
         setModified();
+        emit attributesChanged();
     }
 }
 
@@ -220,6 +237,7 @@ void Object::clearAttributes()
     if( !m_attributes.isEmpty() ) {
         m_attributes.clear();
         setModified();
+        emit attributesChanged();
     }
 }
 
@@ -262,6 +280,9 @@ Attachment* Object::takeAttachment(int index)
     Attachment *attachment = m_attachments.takeAt( index );
     setModified();
 
+    disconnect( attachment, 0, this, 0 );
+    emit attachmentsChanged();
+
     return attachment;
 }
 
@@ -271,6 +292,8 @@ void Object::insertAttachment(Attachment *attachment)
     Q_ASSERT( attachment );
 
     m_attachments.append( attachment );
+    connect( attachment, SIGNAL( valueChanged() ), this, SIGNAL( attachmentsChanged() ) );
+    emit attachmentsChanged();
     setModified();
 }
 
@@ -280,17 +303,24 @@ void Object::removeAttachment(int index)
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
 
-    m_attachments.removeAt( index );
+    Attachment *attachment = m_attachments.takeAt( index );
+    disconnect( attachment, 0, this, 0 );
     setModified();
 }
 
 
 void Object::clearAttachments()
 {
-    if( !m_attachments.isEmpty() ) {
-        m_attachments.clear();
-        setModified();
+    if( m_attachments.isEmpty() ) {
+        return;
     }
+
+    while( !m_attachments.isEmpty() ) {
+        Attachment *attachment = m_attachments.takeFirst();
+        disconnect( attachment, 0, this, 0 );
+    }
+
+    setModified();
 }
 
 
