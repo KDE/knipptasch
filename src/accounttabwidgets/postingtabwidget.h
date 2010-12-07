@@ -29,6 +29,8 @@ namespace Ui
 
 class PostingTabWidget : public AbstractAccountTabWidget
 {
+    Q_OBJECT
+
     public:
         explicit PostingTabWidget(QWidget *parent = 0);
 
