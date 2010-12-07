@@ -19,17 +19,19 @@
 #include "backend/account.h"
 #include "backend/posting.h"
 #include "backend/money.h"
+#include "backend/category.h"
 
-#include <compat/iconloader.h>
+#include "compat/iconloader.h"
 
 #include <QPixmap>
 #include <QInputDialog>
-
-#include <cstdlib>
 #include <QDate>
 
+#include <QDebug>
 
-void initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true)
+
+
+Money initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true)
 {
     Q_ASSERT( acc );
 
@@ -37,16 +39,25 @@ void initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &p
     p->setMaturity( date );
     p->setPostingText( postingText );
     p->setAmount( amount );
-    p->setValueDate( valueDate ? date.addDays( std::rand() % 8 ) : QDate() );
+    p->setValueDate( valueDate ? date.addDays( qrand() % 8 ) : QDate() );
 
     acc->addPosting( p );
+
+    return p->amount();
+}
+
+Money initRent(Account *acc, const QDate &date)
+{
+    return initDemoAccountAddPosting( acc, date.addDays( qrand() % 6 ),
+                                      QObject::tr( "Rent" ) , -348.50,
+                                      date < QDate::currentDate() );
 }
 
 
 
 DemoImportPlugin::DemoImportPlugin()
 {
-
+    qsrand( QTime::currentTime().msec() );
 }
 
 
@@ -71,66 +82,125 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
                                       15, 1, 120, 1, &ok );
     if( ok ) {
         QList<int> v;
-            v << -10 << -15 << -20 << -25 << -30 << -35 << -40 << -50
-                << -60 << -70 << -80 << -90 << -100 << -120 << -150 << -200 << -500;
+        v << -5 << -10 << -15 << -20 << -25 << -30 << -35 << -40 << -50
+          << -60 << -70 << -80 << -90 << -100 << -120 << -130 << -150
+          << -200 << -250 << -300;
+
+        QStringList cost;
+        cost << QObject::tr( "ATM" );
+        cost << QObject::tr( "Food" );
+        cost << QObject::tr( "Clothes" );
+        cost << QObject::tr( "Reading material" );
+        cost << QObject::tr( "Repairs" );
+        cost << QObject::tr( "Fuel" );
+        cost << QObject::tr( "Books" );
+        cost << QObject::tr( "Dinning Out" );
+        cost << QObject::tr( "Gifts" );
+        cost << QObject::tr( "Tax" );
+        cost << QObject::tr( "Insurance" );
+        cost << QObject::tr( "Office Supplies" );
 
         Account *acc = new Account;
 
         acc->setName( QObject::tr( "Example Account" ) );
         acc->setNumber( "105626320" );
-        acc->setOpeningBalance( 42.21 );
-        acc->setOpeningDate( QDate::currentDate().addMonths( -count + 1 ) );
+        acc->setOpeningBalance( 542.20 );
+        acc->setOpeningDate( QDate::currentDate().addMonths( -count ) );
 
-        for(int i = -count; i < 3; ++i) {
-            QDate date(
-                QDate::currentDate().year(),
-                QDate::currentDate().addMonths( i ).month(),
-                1
-            );
+        {
+            Category *p = acc->rootCategory()->addCategory( QObject::tr( "Auto" ) );
+            p->addCategory( QObject::tr( "Fuel" ) );
+            p->addCategory( QObject::tr( "Insurance" ) );
+            p->addCategory( QObject::tr( "Tax" ) );
+            p->addCategory( QObject::tr( "Service" ) );
+        }
+        {
+            Category *p = acc->rootCategory()->addCategory( QObject::tr( "Food" ) );
+            p->addCategory( QObject::tr( "Dining Out" ) );
+        }
+        {
+            Category *p = acc->rootCategory()->addCategory( QObject::tr( "Recreation" ) );
+            p->addCategory( QObject::tr( "Books" ) );
+            p->addCategory( QObject::tr( "Photo" ) );
+            p->addCategory( QObject::tr( "Sport" ) );
+            Category *p1 = p->addCategory( QObject::tr( "Culture" ) );
+            p1->addCategory( QObject::tr( "Theater" ) );
+            p1->addCategory( QObject::tr( "Stage" ) );
+            p1->addCategory( QObject::tr( "Exposition" ) );
+            p1->addCategory( QObject::tr( "Classicial Music" ) );
+            p1->addCategory( QObject::tr( "Museum" ) );
+            p1->addCategory( QObject::tr( "Art" ) );
+            p->addCategory( QObject::tr( "Entertainment" ) );
+        }
 
-            initDemoAccountAddPosting( acc, date.addDays( std::rand() % 6 ),
-                                    QObject::tr( "Rent" ) , -548.50, i < 0 );
+        Money total = acc->openingBalance();
+        for( QDate d = acc->openingDate(); d < QDate::currentDate().addMonths( 4 ); d = d.addMonths( 1 ) ) {
+            Money month;
+            QDate date( d.year(), d.month(), 1 );
 
-            if( i < 0 ) {
-                initDemoAccountAddPosting(
+            month += initRent( acc, date );
+
+            if( date < QDate::currentDate() ) {
+                month += initDemoAccountAddPosting(
                     acc,
-                    date.addDays( std::rand() % 6 ),
+                    date.addDays( qrand() % 6 ),
                     QObject::tr( "Phone and Internet" ),
-                    -25 - ( ( std::rand() % 5000 + 100 ) / 100.00 )
-                );
-                initDemoAccountAddPosting(
-                    acc,
-                    date.addDays( std::rand() % 6 ),
-                    QObject::tr( "Salary" ),
-                    1000.00 + ( ( std::rand() % 50000 + 100 ) / 100.00 )
+                    -20 - ( ( qrand() % 5000 + 100 ) / 100.00 )
                 );
 
-                for(int i = ( std::rand() % 15 + 1 ) ; i >= 0; --i) {
-                    initDemoAccountAddPosting(
+                month += initDemoAccountAddPosting(
+                    acc,
+                    date.addDays( qrand() % 6 ),
+                    QObject::tr( "Salary" ),
+                    1000.00 + ( ( qrand() % 50000 + 100 ) / 100.00 )
+                );
+
+                if( total > 800.00 ) {
+                    month += initDemoAccountAddPosting(
                         acc,
-                        date.addDays( std::rand() % date.daysInMonth() + 1 ),
-                        QObject::tr( "ATM" ),
-                        v[ std::rand() % v.size() ]
+                        date.addDays( qrand() % date.daysInMonth() + 1 ),
+                        QObject::tr( "Travel" ),
+                        -1700.00 + ( ( qrand() % 50000 + 100 ) / 100.00 )
+                    );
+                }
+
+                while( month > 200.0 ) {
+                    month += initDemoAccountAddPosting(
+                        acc,
+                        date.addDays( qrand() % date.daysInMonth() + 1 ),
+                        cost.at( qrand() % cost.size() ),
+                        v[ qrand() % v.size() ]
+                    );
+                }
+
+                if( month < -50.0 ) {
+                    month += initDemoAccountAddPosting(
+                        acc,
+                        date.addDays( qrand() % date.daysInMonth() + 1 ),
+                        QObject::tr( "Dividend" ),
+                        Money( v[ qrand() % v.size() ] ).abs()
                     );
                 }
             }
             else {
-                initDemoAccountAddPosting(
+                month += initDemoAccountAddPosting(
                     acc,
-                    date.addDays( std::rand() % 6 ),
+                    date.addDays( qrand() % 6 ),
                     QObject::tr( "Phone and Internet" ),
                     Money(),
                     false
                 );
 
-                initDemoAccountAddPosting(
+                month += initDemoAccountAddPosting(
                     acc,
-                    date.addDays( std::rand() % 6 ),
+                    date.addDays( qrand() % 6 ),
                     QObject::tr( "Salary" ),
                     Money(),
                     false
                 );
             }
+
+            total += month;
         }
 
         acc->setModified( false );

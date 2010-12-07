@@ -38,6 +38,7 @@ class Category : public Object
         };
 
         Category(QObject *parent = 0);
+        Category(const QString &name, QObject *parent = 0);
         ~Category();
 
         bool isModified() const;
@@ -68,6 +69,7 @@ class Category : public Object
         const Category* category(int index) const;
         Category* category(int index);
         void addCategory(Category *p);
+        Category* addCategory(const QString &str);
         Category* takeCategory(int index);
         void removeCategory(int index);
         void clearCategories();

@@ -58,6 +58,14 @@ Category::Category(QObject *parent)
 }
 
 
+Category::Category(const QString &name, QObject *parent)
+  : Object( parent ),
+    d( new Category::Private )
+{
+    d->name = name;
+}
+
+
 Category::~Category()
 {
     delete d;
@@ -322,6 +330,14 @@ void Category::addCategory(Category* c)
 
     setModified();
     emit categoryChanged();
+}
+
+
+Category* Category::addCategory(const QString &str)
+{
+    Category *c = new Category( str );
+    addCategory( c );
+    return c;
 }
 
 
