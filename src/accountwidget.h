@@ -118,6 +118,9 @@ class AccountWidget : public QWidget
         void showTableMenu(QContextMenuEvent *e, const QModelIndex &index);
 
     private:
+        void loadAccountTabWidgetPlugins();
+
+    private:
         Ui::AccountWidget *ui;
         AccountModel *m_model;
         AccountSortFilterProxyModel *m_proxy;

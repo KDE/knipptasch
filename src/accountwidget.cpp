@@ -31,6 +31,10 @@
 
 #include "interface/abstractaccounttabwidget.h"
 
+#include "accounttabwidgets/postingtabwidget.h"
+#include "accounttabwidgets/splitpostingtabwidget.h"
+#include "accounttabwidgets/descriptiontabwidget.h"
+
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
 #include "compat/standardaction.h"
@@ -76,6 +80,9 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->searchLineEdit->setClearButtonShown( true );
 #endif
 
+    ui->tabwidget->setDocumentMode( true );
+    ui->tabwidget->setTabPosition( QTabWidget::South );
+
     m_model = new AccountModel( this );
     new ModelTest( m_model, this );
 
@@ -92,6 +99,9 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->searchLineEdit->setCompleter( completer );
 
     ui->balance->setMenu( new QuickReportPopup( m_proxy, this ) );
+
+    // TODO: Make configurable
+    //ui->view->setEditTriggers( QAbstractItemView::AllEditTriggers );
 
     ui->view->setModel( m_proxy );
 
@@ -135,6 +145,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     connect( ui->searchLineEdit, SIGNAL( textChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
     connect( ui->searchCloseButton, SIGNAL( clicked() ), this, SLOT( closeSearchWidget() ) );
 
+    loadAccountTabWidgetPlugins();
     loadConfig();
 }
 
@@ -230,6 +241,7 @@ void AccountWidget::checkActionState()
 
     mainWindowActionCollection()->action( "configure_account" )->setEnabled( true );
 }
+
 
 bool AccountWidget::selectionContainsCurrentRow() const
 {
@@ -491,7 +503,7 @@ void AccountWidget::slotCurrentSelectionChanged()
 void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
 {
     Q_ASSERT( widget );
-/*
+
     int index = ui->tabwidget->indexOf( widget );
     if( index >= 0 ) {
         ui->tabwidget->setTabText( index, widget->label() );
@@ -500,7 +512,6 @@ void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
         ui->tabwidget->setTabWhatsThis( index, widget->tabWhatsThis() );
         ui->tabwidget->setTabEnabled( index, widget->isEnabled() );
     }
-*/
 }
 
 
@@ -654,6 +665,24 @@ void AccountWidget::showTableMenu(QContextMenuEvent *e, const QModelIndex &index
 
     menu->popup( e->globalPos() );
 }
+
+
+void AccountWidget::loadAccountTabWidgetPlugins()
+{
+    //Hack until real plugins are possible
+    m_tabwidgets.append( new PostingTabWidget( this ) );
+    m_tabwidgets.append( new SplitPostingTabWidget( this ) );
+    m_tabwidgets.append( new DescriptionTabWidget( this ) );
+
+    foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
+        w->setAccountModel( m_model );
+        ui->tabwidget->addTab( w, w->icon(), w->label() );
+
+        connect( w, SIGNAL( updateTabView(AbstractAccountTabWidget*) ),
+                 this, SLOT( slotUpdateAccountTabWidget(AbstractAccountTabWidget*) ) );
+    }
+}
+
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
