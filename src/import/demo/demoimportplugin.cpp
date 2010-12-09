@@ -94,7 +94,7 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
         cost << QObject::tr( "Repairs" );
         cost << QObject::tr( "Fuel" );
         cost << QObject::tr( "Books" );
-        cost << QObject::tr( "Dinning Out" );
+        cost << QObject::tr( "Dining Out" );
         cost << QObject::tr( "Gifts" );
         cost << QObject::tr( "Tax" );
         cost << QObject::tr( "Insurance" );
@@ -127,7 +127,7 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
             p1->addCategory( QObject::tr( "Theater" ) );
             p1->addCategory( QObject::tr( "Stage" ) );
             p1->addCategory( QObject::tr( "Exposition" ) );
-            p1->addCategory( QObject::tr( "Classicial Music" ) );
+            p1->addCategory( QObject::tr( "Classical Music" ) );
             p1->addCategory( QObject::tr( "Museum" ) );
             p1->addCategory( QObject::tr( "Art" ) );
             p->addCategory( QObject::tr( "Entertainment" ) );
