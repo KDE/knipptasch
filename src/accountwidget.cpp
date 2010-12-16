@@ -82,6 +82,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->tabwidget->setDocumentMode( true );
     ui->tabwidget->setTabPosition( QTabWidget::South );
+    ui->tabwidget->setVisible( false );
 
     m_model = new AccountModel( this );
     new ModelTest( m_model, this );
@@ -670,9 +671,9 @@ void AccountWidget::showTableMenu(QContextMenuEvent *e, const QModelIndex &index
 void AccountWidget::loadAccountTabWidgetPlugins()
 {
     //Hack until real plugins are possible
-    m_tabwidgets.append( new PostingTabWidget( this ) );
-    m_tabwidgets.append( new SplitPostingTabWidget( this ) );
-    m_tabwidgets.append( new DescriptionTabWidget( this ) );
+    //m_tabwidgets.append( new PostingTabWidget( this ) );
+    //m_tabwidgets.append( new SplitPostingTabWidget( this ) );
+    //m_tabwidgets.append( new DescriptionTabWidget( this ) );
 
     foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
         w->setAccountModel( m_model );
