@@ -37,8 +37,6 @@ AccountSortFilterProxyModel::AccountSortFilterProxyModel(QObject *parent)
 
     connect( this, SIGNAL( rowsInserted(const QModelIndex &, int, int) ),
              this, SLOT( updateCache() ) );
-    connect( this, SIGNAL( rowsMoved(const QModelIndex &, int, int) ),
-             this, SLOT( updateCache() ) );
     connect( this, SIGNAL( rowsRemoved(const QModelIndex &, int, int) ),
              this, SLOT( updateCache() ) );
 
