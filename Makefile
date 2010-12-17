@@ -2,11 +2,11 @@ all: qt kde
 
 qt:
 	mkdir -p build/qt; mkdir -p install/qt
-	cd build/qt; cmake ../.. -DCMAKE_INSTALL_PREFIX=../../install/qt -DQTONLY=1 && make && make install
+	cd build/qt; cmake ../.. -DCMAKE_BUILD_TYPE=DebugFull -DCMAKE_INSTALL_PREFIX=../../install/qt -DQTONLY=1 && make && make install
 	
 kde:
 	mkdir -p build/kde; mkdir -p install/kde
-	cd build/kde; cmake ../.. -DCMAKE_INSTALL_PREFIX=../../install/kde -DQTONLY=0 && make && make install
+	cd build/kde; cmake ../.. -DCMAKE_BUILD_TYPE=DebugFull -DCMAKE_INSTALL_PREFIX=../../install/kde -DQTONLY=0 && make && make install
 
 rq: qt
 	LC_ALL="de_DE.utf8" ./install/qt/bin/knipptasch &
