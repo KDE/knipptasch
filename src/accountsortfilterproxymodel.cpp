@@ -186,16 +186,11 @@ bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModel
 
 int AccountSortFilterProxyModel::lessThanByType(const QModelIndex &left, const QModelIndex &right) const
 {
-    //explicit: Qt::DisplayRole, because this role returns an int
-    int l_type = sourceModel()->data(
-                        createIndex( left.row(), AccountModel::TYPE ),
-                        Qt::DisplayRole
-                ).toInt();
+    const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+    Q_ASSERT( model );
 
-    int r_type = sourceModel()->data(
-                        createIndex( right.row(), AccountModel::TYPE ),
-                        Qt::DisplayRole
-                ).toInt();
+    int l_type = model->postingType( left.row() );
+    int r_type = model->postingType( right.row() );
 
     if( l_type < r_type ) {
         return TEST_LESS_THAN_RESULT_TRUE;

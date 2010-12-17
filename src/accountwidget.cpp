@@ -123,7 +123,6 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     QByteArray arr = Preferences::self()->value<QByteArray>( "TableView", "HorizontalHeaderState" );
     if( arr.isEmpty() ) {
-        ui->view->setColumnHidden( AccountModel::TYPE, true );
         ui->view->setColumnHidden( AccountModel::PAYEE, true );
         ui->view->setColumnHidden( AccountModel::STATEMENT, true );
         ui->view->setColumnHidden( AccountModel::VOUCHER, true );

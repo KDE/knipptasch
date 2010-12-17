@@ -29,8 +29,7 @@ class AccountModel : public QAbstractTableModel
     public:
         enum Column
         {
-            TYPE = 0,
-            MATURITY,
+            MATURITY = 0,
             POSTINGTEXT,
             AMOUNT,
             VALUEDATE,
@@ -70,6 +69,8 @@ class AccountModel : public QAbstractTableModel
         Posting* posting(const QModelIndex &index);
         Posting* posting(int row);
 
+        PostingTypeFlags postingType(int row) const;
+        
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
 

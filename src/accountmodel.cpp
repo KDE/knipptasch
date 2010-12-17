@@ -109,6 +109,16 @@ Posting* AccountModel::posting(int row)
 }
 
 
+AccountModel::PostingTypeFlags AccountModel::postingType(int row) const 
+{
+    if( row < m_account->countPostings() ) {
+        return postingType( m_account->posting( row ) );
+    }
+    
+    return postingType( m_posting );
+}   
+
+
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
     if( parent.isValid() ) {
@@ -176,16 +186,6 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
 
     switch( index.column() )
     {
-        case TYPE:
-        {
-            PostingTypeFlags flags = postingType( entry );
-            if( role == Qt::EditRole ) {
-                return QVariant::fromValue<PostingTypeFlags>( flags );
-            }
-
-            return static_cast<int>( flags );
-        }
-
         case MATURITY:
             return entry->maturity();
 
@@ -251,9 +251,6 @@ QVariant AccountModel::headerData(int section, Qt::Orientation orientation, int 
 {
     if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section < AccountModel::ENTRYCOUNT ) {
         switch( section ) {
-            case TYPE:
-                return tr( "Type" );
-
             case MATURITY:
                 return tr( "Maturity" );
 
@@ -313,7 +310,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
         return false;
     }
 
-    if( index.column() == TYPE || index.column() == BALANCE ) {
+    if( index.column() == BALANCE ) {
         return false;
     }
 
@@ -329,9 +326,6 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
     Q_ASSERT( entry );
 
     switch( index.column() ) {
-        case TYPE:
-            return false;
-
         case MATURITY:
             entry->setMaturity( value.toDate() );
             break;
@@ -411,7 +405,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
         return 0;
     }
 
-    if( index.column() == TYPE || index.column() == BALANCE ) {
+    if( index.column() == BALANCE ) {
         return QAbstractItemModel::flags( index );
     }
 
@@ -497,9 +491,7 @@ bool AccountModel::postingIsValid(const Posting *ptr)
 
 QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
 {
-    AccountModel::PostingTypeFlags type =
-       data( createIndex( index.row(), AccountModel::TYPE ), Qt::EditRole )
-        .value<AccountModel::PostingTypeFlags>();
+    AccountModel::PostingTypeFlags type = postingType( index.row() );
 
     if( type & AccountModel::Current && Preferences::self()->currentPostingBackgroundEnabled() ) {
         return Preferences::self()->currentPostingBackgroundColor();
