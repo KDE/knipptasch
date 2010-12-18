@@ -121,7 +121,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->view->horizontalHeader()->installEventFilter( this );
     ui->view->installEventFilter( this );
 
-    QByteArray arr = Preferences::self()->value<QByteArray>( "TableView", "HorizontalHeaderState" );
+    QByteArray arr = QByteArray::fromBase64( Preferences::self()->horizontalHeaderState().toAscii() );
     if( arr.isEmpty() ) {
         ui->view->setColumnHidden( AccountModel::PAYEE, true );
         ui->view->setColumnHidden( AccountModel::STATEMENT, true );
@@ -204,20 +204,17 @@ void AccountWidget::setAccount(Account *acc)
 
 void AccountWidget::loadConfig()
 {
-    ui->view->horizontalHeader()->setMovable(
-        Preferences::self()->value<bool>( "TableView", "MovableColumns", true )
-    );
+    ui->view->horizontalHeader()->setMovable( Preferences::self()->movableColumns() );
 
-    ui->view->horizontalHeader()->setCascadingSectionResizes(
-        Preferences::self()->value<bool>( "TableView", "CascadingSectionResize", false )
+    ui->view->horizontalHeader()->setCascadingSectionResizes( 
+                                    Preferences::self()->cascadingSectionResize()
     );
 }
 
 
 void AccountWidget::saveConfig()
 {
-    Preferences::self()->setValue( "TableView", "HorizontalHeaderState",
-                                    ui->view->horizontalHeader()->saveState() );
+    Preferences::self()->setHorizontalHeaderState( ui->view->horizontalHeader()->saveState().toBase64() );
 }
 
 
@@ -449,7 +446,7 @@ void AccountWidget::onConfigureAccount()
 
 void AccountWidget::onResizeColumnToContents(int index)
 {
-    if( Preferences::self()->value<bool>( "TableView", "DoubleClickResizeColumnToCountent", false ) ) {
+    if( Preferences::self()->doubleClickResizeColumnToCountent() ) {
         ui->view->resizeColumnToContents( index );
     }
 }

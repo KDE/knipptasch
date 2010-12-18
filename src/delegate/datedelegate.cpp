@@ -68,7 +68,7 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
                         ).toDate();
 
             if( dt.isValid() ) {
-                dt = dt.addMonths( Preferences::self()->value<int>( "General", "DefaultWarrantyInMonth", 24 ) );
+                dt = dt.addMonths( Preferences::self()->defaultLengthOfWarrantyInMonth() );
             }
         }
     }

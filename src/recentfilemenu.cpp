@@ -22,9 +22,9 @@
 
 
 RecentFileMenu::RecentFileMenu(QWidget *parent)
-  : QMenu( parent ),
-    m_fileList( Preferences::self()->recentFilesList() )
+  : QMenu( parent )
 {
+    m_fileList = Preferences::self()->recentFilesList();
     connect(this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuActions( QAction* ) ) );
 
     updateActions();
@@ -32,9 +32,9 @@ RecentFileMenu::RecentFileMenu(QWidget *parent)
 
 
 RecentFileMenu::RecentFileMenu(const QString &title, QWidget *parent)
-  : QMenu( title, parent ),
-    m_fileList( Preferences::self()->recentFilesList() )
+  : QMenu( title, parent )
 {
+    m_fileList = Preferences::self()->recentFilesList();
     connect( this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuAction( QAction* ) ) );
 
     updateActions();
@@ -44,6 +44,10 @@ RecentFileMenu::RecentFileMenu(const QString &title, QWidget *parent)
 QStringList RecentFileMenu::files() const
 {
     const int max = Preferences::self()->recentFilesListMaximumCount();
+    if( m_fileList.size() <= max ) {
+        return m_fileList;
+    }
+
     return m_fileList.mid( 0, max );
 }
 

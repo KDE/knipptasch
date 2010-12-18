@@ -97,18 +97,14 @@ MainWindow::MainWindow(QWidget* parent) :
 
     setupActions();
 
-#if defined(HAVE_KDE)
+#if defined(HAVE_KDE)    
     setupGUI();
 #else
-    restoreGeometry(
-        Preferences::self()->value( "MainWindow", "geometry" ).toByteArray()
-    );
-    restoreState(
-        Preferences::self()->value( "MainWindow", "state" ).toByteArray()
-    );
+    restoreGeometry( QByteArray::fromBase64( Preferences::self()->windowGeometry().toAscii() ) );
+    restoreState( QByteArray::fromBase64( Preferences::self()->windowState().toAscii() ) );
     setWindowIcon( QIcon(":/oxygen/32x32/apps/knipptasch.png") );
 #endif
-
+    
     ui->tabWidget->clear();
 
     loadExportPlugins();
@@ -164,14 +160,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
         event->ignore();
         return;
     }
-
-    Preferences::self()->sync();
-
+    
 #if defined(HAVE_KDE)
     KXmlGuiWindow::closeEvent( event );
-#else
-    Preferences::self()->setValue( "MainWindow", "geometry", saveGeometry() );
-    Preferences::self()->setValue( "MainWindow", "state", saveState() );
+#else    
+    Preferences::self()->setWindowGeometry( saveGeometry().toBase64() );
+    Preferences::self()->setWindowState( saveState().toBase64() );
 
     QMainWindow::closeEvent( event );
 #endif
@@ -301,10 +295,10 @@ void MainWindow::loadConfig()
         widget->loadConfig();
     }
 
-    ui->tabWidget->setMovable( Preferences::self()->value<bool>( "General", "MovableTabs", true ) );
-    ui->tabWidget->setTabsClosable( Preferences::self()->value<bool>( "General", "CloseButtonOnTabs", false ) );
+    ui->tabWidget->setMovable( Preferences::self()->movableTabs() );
+    ui->tabWidget->setTabsClosable( Preferences::self()->closeButtonOnTabs() );
 
-    if( Preferences::self()->value<bool>( "General", "TabCornerCloseButton", true ) ) {
+    if( Preferences::self()->tabCornerCloseButton() ) {
 
         if( !ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
             QToolButton *button = new QToolButton( ui->tabWidget );
@@ -326,7 +320,7 @@ void MainWindow::loadConfig()
     }
 
 #if !defined(HAVE_KDE)
-    actionCollection()->action( "options_show_statusbar" )->setChecked( Preferences::self()->showStatusbar() );
+    actionCollection()->action( "options_show_statusbar" )->setChecked( Preferences::self()->showStatusBar() );
     onShowStatusbar();
 #endif
 }
@@ -738,7 +732,7 @@ void MainWindow::onShowStatusbar()
     bool statusbarState = actionCollection()->action( "options_show_statusbar" )->isChecked();
     statusBar()->setVisible( statusbarState );
 
-    Preferences::self()->setShowStatusbar( statusbarState );
+    Preferences::self()->setShowStatusBar( statusbarState );
 }
 
 

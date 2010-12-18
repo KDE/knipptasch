@@ -81,11 +81,11 @@ void WelcomeWidget::paintEvent(QPaintEvent *event)
     QRadialGradient rg( width() / 2.0, height() / 2.0, qMin( width(), height() ) * 0.7 );
 
 #if defined(HAVE_KDE)
-    rg.setColorAt( 0, Preferences::self()->value<QColor>( "welcome", "color0", QColor( 0, 115, 220 ) ) );
-    rg.setColorAt( 1, Preferences::self()->value<QColor>( "welcome", "color1", QColor( 0, 50, 150 ) ) );
+    rg.setColorAt( 0, QColor( 0, 115, 220 ) );
+    rg.setColorAt( 1, QColor( 0, 50, 150 ) );
 #else
-    rg.setColorAt( 0, Preferences::self()->value<QColor>( "welcome", "color0", QColor( 15, 200, 0 ) ) );
-    rg.setColorAt( 1, Preferences::self()->value<QColor>( "welcome", "color1", QColor( 15, 140, 0 ) ) );
+    rg.setColorAt( 0, QColor( 15, 200, 0 ) );
+    rg.setColorAt( 1, QColor( 15, 140, 0 ) );
 #endif
 
     painter.fillRect( rect(), rg );

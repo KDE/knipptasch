@@ -227,6 +227,18 @@ void SettingsDialog::onRestoreDefaults()
     ui->defaultPostingBackgroundEnabled->setChecked( true );
     ui->incompletePostingBackgroundEnabled->setChecked( true );
 
+#if defined(HAVE_KDE)
+    Preferences::self()->positiveAmountForegroundColorItem()->setDefault();
+    Preferences::self()->negativeAmountForegroundColorItem()->setDefault();
+    Preferences::self()->availableWarrantyForegroundColorItem()->setDefault();
+    Preferences::self()->expiredWarrantyForegroundColorItem()->setDefault();
+    Preferences::self()->currentPostingBackgroundColorItem()->setDefault();
+    Preferences::self()->futurePostingBackgroundColorItem()->setDefault();
+    Preferences::self()->defaultPostingBackgroundColorItem()->setDefault();
+    Preferences::self()->incompletePostingBackgroundColorItem()->setDefault();
+    
+    loadPreferences();
+#else
     ui->positiveAmountForegroundColor->setColor( POSITIVE_AMOUNT_FOREGROUND_COLOR );
     ui->negativeAmountForegroundColor->setColor( NEGATIVE_AMOUNT_FOREGROUND_COLOR );
     ui->availableWarrantyForegroundColor->setColor( AVAILABLE_WARRANTY_FOREGROUND_COLOR );
@@ -235,8 +247,9 @@ void SettingsDialog::onRestoreDefaults()
     ui->futurePostingBackgroundColor->setColor( FUTURE_POSTING_BACKGROUND_COLOR );
     ui->defaultPostingBackgroundColor->setColor( DEFAULT_POSTING_BACKGROUND_COLOR );
     ui->incompletePostingBackgroundColor->setColor( INCOMPLETE_POSTING_BACKGROUND_COLOR );
-
+    
     onValueChanged();
+#endif
 }
 
 

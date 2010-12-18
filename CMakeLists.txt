@@ -115,7 +115,6 @@ include_directories(
 
 
 set(knipptasch_SOURCES
-    src/preferences.cpp
     src/accountmodel.cpp
     src/accountsortfilterproxymodel.cpp
     src/accountwidget.cpp
@@ -247,11 +246,15 @@ if( HAVE_KDE )
     kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
     kde4_add_app_icon( knipptasch_SOURCES data/icons/hi*-app-knipptasch.png )
 
+    kde4_add_kcfg_files(knipptasch_SOURCES src/preferences.kcfgc)
+
     kde4_add_executable( knipptasch ${knipptasch_SOURCES} )
-    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${QCA2_LIBRARIES} )
+    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QCA2_LIBRARIES} )
 
     install( TARGETS knipptasch ${INSTALL_TARGETS_DEFAULT_ARGS} )
 else( HAVE_KDE )
+    CONFIGURE_FILE( src/preferences_qt.h ${CMAKE_CURRENT_BINARY_DIR}/src/preferences.h COPYONLY)
+
     set( knipptasch_SOURCES
         src/aboutdialog.cpp
         src/compat/qtingkde/kcolorbutton.cpp

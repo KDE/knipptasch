@@ -221,7 +221,7 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
 
     QDate l_primary, r_primary, l_secondary, r_secondary;
 
-    if( Preferences::self()->value<bool>( "TableView", "SortPostingsByMaturity", true ) ) {
+    if( Preferences::self()->sortPostingsByMaturity() ) {
         l_primary = l_maturity;
         r_primary = r_maturity;
         l_secondary = l_valuedate;
