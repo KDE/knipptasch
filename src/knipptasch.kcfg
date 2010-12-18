@@ -139,6 +139,11 @@
       <label context="@label"></label>
       <default>false</default>
     </entry>
+    
+    <entry name="ResetCurrentIndexWhenCurrentRowChanged" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
+    </entry>
   </group>
 
         

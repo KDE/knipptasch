@@ -139,6 +139,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
     connect( ui->view->selectionModel(), SIGNAL( currentChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentSelectionChanged() ) );
+    connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SIGNAL( changed() ) );
@@ -497,6 +498,13 @@ void AccountWidget::slotCurrentSelectionChanged()
     }
 }
 
+
+void AccountWidget::slotCurrentRowChanged()
+{
+    if( Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
+        ui->view->setCurrentIndex( ui->view->model()->index( ui->view->currentIndex().row(), 0 ) );
+    }
+}
 
 void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
 {

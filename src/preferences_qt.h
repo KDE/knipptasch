@@ -326,6 +326,17 @@ class Preferences
             m_settings.setValue( "TableView/DoubleClickResizeColumnToCountent", b );
             sync();
         }
+                
+        bool resetCurrentIndexWhenCurrentRowChanged()
+        {
+            return m_settings.value( "TableView/ResetCurrentIndexWhenCurrentRowChanged", true ).toBool();            
+        }
+        
+        void setResetCurrentIndexWhenCurrentRowChanged(bool b)
+        {
+            m_settings.setValue( "TableView/ResetCurrentIndexWhenCurrentRowChanged", b );
+            sync();            
+        }
         
         QString windowGeometry() const
         {
