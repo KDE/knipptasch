@@ -91,6 +91,8 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     m_proxy->setSourceModel( m_model );
     m_proxy->sort( AccountModel::MATURITY, Qt::AscendingOrder );
     m_proxy->setDynamicSortFilter( true );
+    m_proxy->setFilterKeyColumn( -1 );
+    m_proxy->setFilterCaseSensitivity( Qt::CaseInsensitive );
     new ModelTest( m_proxy, this );
 
     QCompleter *completer = new QCompleter( this );
@@ -134,7 +136,6 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
-    m_proxy->setFilterKeyColumn( -1 );
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
     connect( ui->view->selectionModel(), SIGNAL( currentChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentSelectionChanged() ) );
