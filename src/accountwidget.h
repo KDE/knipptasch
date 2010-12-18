@@ -102,7 +102,6 @@ class AccountWidget : public QWidget
     private slots:
         void slotSetIndexToCurrentInput();
         void slotUpdateAccountInfo();
-        void slotCurrentSelectionChanged();
         void slotCurrentRowChanged();
         
         void slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget);

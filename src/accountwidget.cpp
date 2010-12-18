@@ -138,7 +138,6 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
 
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
-    connect( ui->view->selectionModel(), SIGNAL( currentChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentSelectionChanged() ) );
     connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
@@ -225,7 +224,6 @@ void AccountWidget::checkActionState()
     if( !isVisible() ) {
         return;
     }
-
     mainWindowActionCollection()->action( "file_save" )->setEnabled( isModified() );
     mainWindowActionCollection()->action( "file_save_as" )->setEnabled( true );
     mainWindowActionCollection()->action( "file_print" )->setEnabled( true );
@@ -417,7 +415,13 @@ void AccountWidget::onPostingClone()
 
 void AccountWidget::onPostingDelete()
 {
-    //TODO
+    Q_ASSERT( ui->view->currentIndex().isValid() );
+    Q_ASSERT( m_proxy->mapToSource( ui->view->currentIndex() ).isValid() );
+
+    bool b = m_model->removeRow( m_proxy->mapToSource( ui->view->currentIndex() ).row() );
+    Q_ASSERT( b );
+
+    slotUpdateAccountInfo();
 }
 
 
@@ -467,6 +471,7 @@ void AccountWidget::slotSetIndexToCurrentInput()
 
 void AccountWidget::slotUpdateAccountInfo()
 {
+    qDebug() << "AccountWidget::slotUpdateAccountInfo()";
     const QString &acname = (!account() || account()->name().isEmpty() )
                                 ? tr( "Unnamed Account" ) : account()->name();
     ui->accountName->setText( acname );
@@ -491,16 +496,15 @@ void AccountWidget::slotUpdateAccountInfo()
 }
 
 
-void AccountWidget::slotCurrentSelectionChanged()
+void AccountWidget::slotCurrentRowChanged()
 {
+    int row = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::MATURITY ) ).row();    
+    mainWindowActionCollection()->action( "posting_delete" )->setEnabled( ui->view->currentIndex().isValid() && ui->view->currentIndex().row() != row );
+    
     foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
         w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
     }
-}
-
-
-void AccountWidget::slotCurrentRowChanged()
-{
+    
     if( Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
         ui->view->setCurrentIndex( ui->view->model()->index( ui->view->currentIndex().row(), 0 ) );
     }
