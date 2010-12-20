@@ -106,10 +106,11 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->view->setModel( m_proxy );
 
     ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );   
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
 
     ui->view->resizeColumnsToContents();
@@ -186,9 +187,7 @@ void AccountWidget::setAccount(Account *acc)
     m_model->setAccount( acc );
     slotUpdateAccountInfo();
 
-    loadConfig();
-
-    QTimer::singleShot( 500, this, SLOT( selectCurrentPosting() ) );
+    QTimer::singleShot( 250, this, SLOT( selectCurrentPosting() ) );
 }
 
 
@@ -295,6 +294,8 @@ void AccountWidget::loadConfig()
         ui->view->setColumnHidden( AccountModel::WARRANTY, true );
         ui->view->setColumnHidden( AccountModel::PAYMENT, true );
         ui->view->setColumnHidden( AccountModel::DESCRIPTION, true );
+
+        ui->view->resizeColumnsToContents();        
         saveConfig();
     }
     else {
