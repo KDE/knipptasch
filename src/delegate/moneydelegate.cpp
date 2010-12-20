@@ -19,6 +19,7 @@
 
 #include <QPainter>
 #include <QDoubleSpinBox>
+#include <QApplication>
 
 
 
@@ -74,6 +75,16 @@ void MoneyDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, con
     else {
         model->setData( index, input->value(), Qt::EditRole );
     }
+}
+
+
+QSize MoneyDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    static int minsize = qApp->fontMetrics().width( "-2000,00" );
+    const QSize size = QStyledItemDelegate::sizeHint( option, index );
+    int width = size.width() + 25;
+    
+    return QSize( qMax( minsize, width ), size.height() );
 }
 
 
