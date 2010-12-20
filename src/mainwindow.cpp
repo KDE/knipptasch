@@ -507,6 +507,8 @@ void MainWindow::onTabCloseRequest(int index)
 {
     int i = index >= 0 ? index : ui->tabWidget->currentIndex();
 
+    accountWidget( i )->saveConfig();
+    
     if( SaveModifiedDialog::queryClose( this, accountWidget( i ) ) ) {
         ui->tabWidget->removeTab( i );
     }

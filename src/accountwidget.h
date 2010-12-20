@@ -56,9 +56,6 @@ class AccountWidget : public QWidget
         const Account* account() const;
         void setAccount(Account *acc);
 
-        void loadConfig();
-        void saveConfig();
-
         void checkActionState();
 
         bool selectionContainsCurrentRow() const;
@@ -70,6 +67,9 @@ class AccountWidget : public QWidget
         QList<const Posting*> selectedPostings() const;
 
     public slots:
+        void loadConfig();
+        void saveConfig();
+
         void selectCurrentPosting();
 
     public slots:

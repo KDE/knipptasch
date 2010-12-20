@@ -103,9 +103,6 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->balance->setMenu( new QuickReportPopup( m_proxy, this ) );
 
-    // TODO: Make configurable
-    //ui->view->setEditTriggers( QAbstractItemView::AllEditTriggers );
-
     ui->view->setModel( m_proxy );
 
     ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
@@ -123,21 +120,10 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->view->horizontalHeader()->installEventFilter( this );
     ui->view->installEventFilter( this );
 
-    QByteArray arr = QByteArray::fromBase64( Preferences::self()->horizontalHeaderState().toAscii() );
-    if( arr.isEmpty() ) {
-        ui->view->setColumnHidden( AccountModel::PAYEE, true );
-        ui->view->setColumnHidden( AccountModel::STATEMENT, true );
-        ui->view->setColumnHidden( AccountModel::VOUCHER, true );
-        ui->view->setColumnHidden( AccountModel::WARRANTY, true );
-        ui->view->setColumnHidden( AccountModel::PAYMENT, true );
-        ui->view->setColumnHidden( AccountModel::DESCRIPTION, true );
-    }
-    else {
-        ui->view->horizontalHeader()->restoreState( arr );
-    }
-
-
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
+    connect( ui->view->horizontalHeader(), SIGNAL( sectionMoved(int,int,int) ), this, SLOT( saveConfig() ) );
+    connect( ui->view->horizontalHeader(), SIGNAL( sectionResized(int,int,int) ), this, SLOT( saveConfig() ) );
+    
     connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
@@ -146,8 +132,9 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     connect( ui->searchLineEdit, SIGNAL( textChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
     connect( ui->searchCloseButton, SIGNAL( clicked() ), this, SLOT( closeSearchWidget() ) );
 
-    loadAccountTabWidgetPlugins();
     loadConfig();
+
+    loadAccountTabWidgetPlugins();
 }
 
 
@@ -199,23 +186,9 @@ void AccountWidget::setAccount(Account *acc)
     m_model->setAccount( acc );
     slotUpdateAccountInfo();
 
+    loadConfig();
+
     QTimer::singleShot( 500, this, SLOT( selectCurrentPosting() ) );
-}
-
-
-void AccountWidget::loadConfig()
-{
-    ui->view->horizontalHeader()->setMovable( Preferences::self()->movableColumns() );
-
-    ui->view->horizontalHeader()->setCascadingSectionResizes( 
-                                    Preferences::self()->cascadingSectionResize()
-    );
-}
-
-
-void AccountWidget::saveConfig()
-{
-    Preferences::self()->setHorizontalHeaderState( ui->view->horizontalHeader()->saveState().toBase64() );
 }
 
 
@@ -311,6 +284,40 @@ QList<const Posting*> AccountWidget::selectedPostings() const
 }
 
 
+void AccountWidget::loadConfig()
+{    
+    QByteArray arr = QByteArray::fromBase64( 
+                                Preferences::self()->horizontalHeaderState().toAscii() );
+    if( arr.isEmpty() ) {
+        ui->view->setColumnHidden( AccountModel::PAYEE, true );
+        ui->view->setColumnHidden( AccountModel::STATEMENT, true );
+        ui->view->setColumnHidden( AccountModel::VOUCHER, true );
+        ui->view->setColumnHidden( AccountModel::WARRANTY, true );
+        ui->view->setColumnHidden( AccountModel::PAYMENT, true );
+        ui->view->setColumnHidden( AccountModel::DESCRIPTION, true );
+        saveConfig();
+    }
+    else {
+        ui->view->horizontalHeader()->restoreState( arr );
+    }
+
+    // TODO: Make configurable
+    //ui->view->setEditTriggers( QAbstractItemView::AllEditTriggers );
+
+    ui->view->horizontalHeader()->setMovable( Preferences::self()->movableColumns() );
+
+    ui->view->horizontalHeader()->setCascadingSectionResizes( 
+                                    Preferences::self()->cascadingSectionResize() );
+}
+
+
+void AccountWidget::saveConfig()
+{
+    qDebug() << "AccountWidget::saveConfig()";
+    Preferences::self()->setHorizontalHeaderState( ui->view->horizontalHeader()->saveState().toBase64() );
+}
+
+
 void AccountWidget::selectCurrentPosting()
 {
     const QModelIndex index = m_proxy->mapFromSource(
@@ -326,6 +333,7 @@ void AccountWidget::selectCurrentPosting()
 
 bool AccountWidget::onSaveFile()
 {
+    saveConfig();
     return onSaveAsFile( fileName() );
 }
 
@@ -454,6 +462,7 @@ void AccountWidget::onResizeColumnToContents(int index)
 {
     if( Preferences::self()->doubleClickResizeColumnToCountent() ) {
         ui->view->resizeColumnToContents( index );
+        saveConfig();
     }
 }
 
