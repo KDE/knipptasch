@@ -26,6 +26,32 @@
 class Attachment;
 class Account;
 
+#define ASSERT_LIMITED_VARIANT( x )                                          \
+    {                                                                        \
+        QSet<QVariant::Type> allowedQVariantTypes;                           \
+        allowedQVariantTypes << QVariant::Invalid                            \
+                             << QVariant::Bool                               \
+                             << QVariant::ByteArray                          \
+                             << QVariant::Color                              \
+                             << QVariant::Date                               \
+                             << QVariant::DateTime                           \
+                             << QVariant::Double                             \
+                             << QVariant::Hash                               \
+                             << QVariant::Image                              \
+                             << QVariant::Int                                \
+                             << QVariant::List                               \
+                             << QVariant::LongLong                           \
+                             << QVariant::Map                                \
+                             << QVariant::Pixmap                             \
+                             << QVariant::RegExp                             \
+                             << QVariant::String                             \
+                             << QVariant::StringList                         \
+                             << QVariant::Time                               \
+                             << QVariant::UInt                               \
+                             << QVariant::ULongLong                          \
+                             << QVariant::Url;                               \
+        Q_ASSERT( x.isNull() || allowedQVariantTypes.contains( x.type() ) ); \
+    } (void) 0
 
 class Object : public QObject
 {

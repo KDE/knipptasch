@@ -197,12 +197,16 @@ QHash<QByteArray, QVariant> Object::attributes() const
 
 QVariant Object::attribute(const QByteArray &name, const QVariant &defaultKey) const
 {
+    ASSERT_LIMITED_VARIANT( defaultKey );
+
     return m_attributes.value( name, defaultKey );
 }
 
 
 void Object::insertAttribute(const QByteArray &name, const QVariant &value)
 {
+    ASSERT_LIMITED_VARIANT( value );
+
     if( !m_attributes.contains( name ) || m_attributes.value( name ) != value ) {
         m_attributes.insert( name, value );
         setModified();
@@ -213,6 +217,10 @@ void Object::insertAttribute(const QByteArray &name, const QVariant &value)
 
 void Object::setAttributes(const QHash<QByteArray, QVariant> &attributes)
 {
+    for(QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it) {
+        ASSERT_LIMITED_VARIANT( it.value() );
+    }
+
     if( m_attributes != attributes ) {
         m_attributes = attributes;
         setModified();
