@@ -59,6 +59,7 @@
 #include <QCompleter>
 #include <QTimer>
 #include <QDebug>
+#include "backend/storageexception.h"
 
 
 AccountWidget::AccountWidget(MainWindow *mainWindow)
@@ -108,7 +109,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );   
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
     ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
@@ -124,7 +125,7 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
     connect( ui->view->horizontalHeader(), SIGNAL( sectionMoved(int,int,int) ), this, SLOT( saveConfig() ) );
     connect( ui->view->horizontalHeader(), SIGNAL( sectionResized(int,int,int) ), this, SLOT( saveConfig() ) );
-    
+
     connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
 
     connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
@@ -284,8 +285,8 @@ QList<const Posting*> AccountWidget::selectedPostings() const
 
 
 void AccountWidget::loadConfig()
-{    
-    QByteArray arr = QByteArray::fromBase64( 
+{
+    QByteArray arr = QByteArray::fromBase64(
                                 Preferences::self()->horizontalHeaderState().toAscii() );
     if( arr.isEmpty() ) {
         ui->view->setColumnHidden( AccountModel::PAYEE, true );
@@ -295,7 +296,7 @@ void AccountWidget::loadConfig()
         ui->view->setColumnHidden( AccountModel::PAYMENT, true );
         ui->view->setColumnHidden( AccountModel::DESCRIPTION, true );
 
-        ui->view->resizeColumnsToContents();        
+        ui->view->resizeColumnsToContents();
         saveConfig();
     }
     else {
@@ -307,7 +308,7 @@ void AccountWidget::loadConfig()
 
     ui->view->horizontalHeader()->setMovable( Preferences::self()->movableColumns() );
 
-    ui->view->horizontalHeader()->setCascadingSectionResizes( 
+    ui->view->horizontalHeader()->setCascadingSectionResizes(
                                     Preferences::self()->cascadingSectionResize() );
 }
 
@@ -359,7 +360,20 @@ bool AccountWidget::onSaveAsFile(const QString &str)
         }
     }
 
-    if( Storage::writeAccount( this, account(), filename ) != QFile::NoError ) {
+    try {
+        Storage::writeAccount( account(), filename );
+    }
+    catch(StorageException ex) {
+#if defined(HAVE_KDE)
+        KMessageBox::error( this, ex.errorMessage() );
+#else
+        QMessageBox::warning( this, // krazy:exclude=qclasses
+                              QObject::tr( "Error - %1" )
+                                .arg( QCoreApplication::applicationName() ),
+                              ex.errorMessage()
+        );
+#endif
+
         return false;
     }
 
@@ -508,13 +522,13 @@ void AccountWidget::slotUpdateAccountInfo()
 
 void AccountWidget::slotCurrentRowChanged()
 {
-    int row = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::MATURITY ) ).row();    
+    int row = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::MATURITY ) ).row();
     mainWindowActionCollection()->action( "posting_delete" )->setEnabled( ui->view->currentIndex().isValid() && ui->view->currentIndex().row() != row );
-    
+
     foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
         w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
     }
-    
+
     if( Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
         ui->view->setCurrentIndex( ui->view->model()->index( ui->view->currentIndex().row(), 0 ) );
     }

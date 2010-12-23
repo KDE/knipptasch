@@ -26,6 +26,7 @@
 
 #include "backend/account.h"
 #include "backend/storage.h"
+#include "backend/storageexception.h"
 
 #include "interface/exportplugin.h"
 #include "interface/importplugin.h"
@@ -69,6 +70,7 @@
 #include <KMenu>
 
 #include <QDebug>
+#include "passworddialog.h"
 
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
@@ -97,14 +99,14 @@ MainWindow::MainWindow(QWidget* parent) :
 
     setupActions();
 
-#if defined(HAVE_KDE)    
+#if defined(HAVE_KDE)
     setupGUI();
 #else
     restoreGeometry( QByteArray::fromBase64( Preferences::self()->windowGeometry().toAscii() ) );
     restoreState( QByteArray::fromBase64( Preferences::self()->windowState().toAscii() ) );
     setWindowIcon( QIcon(":/oxygen/32x32/apps/knipptasch.png") );
 #endif
-    
+
     ui->tabWidget->clear();
 
     loadExportPlugins();
@@ -160,10 +162,10 @@ void MainWindow::closeEvent(QCloseEvent* event)
         event->ignore();
         return;
     }
-    
+
 #if defined(HAVE_KDE)
     KXmlGuiWindow::closeEvent( event );
-#else    
+#else
     Preferences::self()->setWindowGeometry( saveGeometry().toBase64() );
     Preferences::self()->setWindowState( saveState().toBase64() );
 
@@ -329,7 +331,7 @@ void MainWindow::loadConfig()
 void MainWindow::addAccountWidget(Account *acc, const QString &filename)
 {
     APPLICATION_WAIT_CURSOR;
-    
+
     static quint32 counter = 0;
 
     Q_ASSERT( acc );
@@ -508,7 +510,7 @@ void MainWindow::onTabCloseRequest(int index)
     int i = index >= 0 ? index : ui->tabWidget->currentIndex();
 
     accountWidget( i )->saveConfig();
-    
+
     if( SaveModifiedDialog::queryClose( this, accountWidget( i ) ) ) {
         ui->tabWidget->removeTab( i );
     }
@@ -544,13 +546,42 @@ void MainWindow::onOpenFile(const QString &str)
     }
 
     Account *acc = new Account;
-    if( !Storage::readAccount( this, acc, filename ) ) {
-        delete acc;
+    try {
+        try {
+            Storage::readAccount( acc, filename );
+
+            m_recentFileMenu->addFile( filename );
+            addAccountWidget( acc, filename );
+            statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
+        }
+        catch(StoragePasswordException ex) {
+            /// ask user for the password
+            QScopedPointer<PasswordDialog> dialog( new PasswordDialog( filename, this ) );
+
+            if( dialog->exec() != QDialog::Accepted || !dialog ) {
+                delete acc;
+                checkActionStates();
+                return;
+            }
+
+            Storage::readAccount( acc, filename, dialog->password() );
+            m_recentFileMenu->addFile( filename );
+            addAccountWidget( acc, filename );
+            statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
+        }
     }
-    else {
-        m_recentFileMenu->addFile( filename );
-        addAccountWidget( acc, filename );
-        statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
+    catch(StorageException ex) {
+        delete acc;
+
+#if defined(HAVE_KDE)
+        KMessageBox::error( this, ex.errorMessage() );
+#else
+        QMessageBox::warning( this, // krazy:exclude=qclasses
+                              QObject::tr( "Error - %1" )
+                                .arg( QCoreApplication::applicationName() ),
+                              ex.errorMessage()
+        );
+#endif
     }
 
     checkActionStates();
@@ -559,34 +590,68 @@ void MainWindow::onOpenFile(const QString &str)
 
 void MainWindow::onOpenFile(const QUrl &url)
 {
-    QString tmpFile;
+    QString filename;
 
 #if defined(HAVE_KDE)
-    if( KIO::NetAccess::download( url, tmpFile, this ) )
+    if( KIO::NetAccess::download( url, filename, this ) )
 #else
-    tmpFile = url.toString();
+    filename = url.toString();
 #endif
     {
         Account *acc = new Account;
-        if( !Storage::readAccount( this, acc, tmpFile ) ) {
-            delete acc;
-        }
-        else {
-            m_recentFileMenu->addFile( url.toString() );
-            addAccountWidget( acc, url.toString() );
-            statusBar()->showMessage( tr( "File '%1' loaded" ).arg( url.toString() ) , 2000 );
-        }
-#if defined(HAVE_KDE)
-        KIO::NetAccess::removeTempFile( tmpFile );
-#endif
-        checkActionStates();
-    }
+        try {
+            try {
+                Storage::readAccount( acc, filename );
 
+                m_recentFileMenu->addFile( url.toString() );
+                addAccountWidget( acc, url.toString() );
+                statusBar()->showMessage( tr( "File '%1' loaded" ).arg( url.toString() ) , 2000 );
+#if defined(HAVE_KDE)
+                KIO::NetAccess::removeTempFile( filename );
+#endif
+            }
+            catch(StoragePasswordException ex) {
+                /// ask user for the password
+                QScopedPointer<PasswordDialog> dialog( new PasswordDialog( filename, this ) );
+
+                if( dialog->exec() != QDialog::Accepted || !dialog ) {
+                    delete acc;
+                    checkActionStates();
+                    return;
+                }
+
+                Storage::readAccount( acc, filename, dialog->password() );
+
+                m_recentFileMenu->addFile( url.toString() );
+                addAccountWidget( acc, url.toString() );
+                statusBar()->showMessage( tr( "File '%1' loaded" ).arg( url.toString() ) , 2000 );
+
+#if defined(HAVE_KDE)
+                KIO::NetAccess::removeTempFile( filename );
+#endif
+            }
+        }
+        catch(StorageException ex) {
+            delete acc;
+
+#if defined(HAVE_KDE)
+            KMessageBox::error( this, ex.errorMessage() );
+#else
+            QMessageBox::warning( this, // krazy:exclude=qclasses
+                                QObject::tr( "Error - %1" )
+                                    .arg( QCoreApplication::applicationName() ),
+                                ex.errorMessage()
+            );
+#endif
+        }
+    }
 #if defined(HAVE_KDE)
     else {
         KMessageBox::error( this, KIO::NetAccess::lastErrorString() );
     }
 #endif
+
+    checkActionStates();
 }
 
 

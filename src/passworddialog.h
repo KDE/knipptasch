@@ -29,6 +29,7 @@ namespace Ui {
 class PasswordDialog : public QDialog
 {
     Q_OBJECT
+    Q_DISABLE_COPY( PasswordDialog )
 
     public:
         explicit PasswordDialog(const QString &filename, QWidget *parent = 0);

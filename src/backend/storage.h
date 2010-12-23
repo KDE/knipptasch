@@ -19,34 +19,45 @@
 
 #include <QString>
 
-
 class Account;
-class QWidget;
-class QFile;
+
 
 class Storage
 {
     public:
-        static bool writeAccount(QWidget *parent, Account *acc, const QString &filename);
-        static bool readAccount(QWidget *parent, Account *acc, const QString &filename);
+        static void writeAccount(Account *acc, const QString &filename);
+        static void readAccount(Account *acc, const QString &filename, const QByteArray &password = QByteArray());
 
     private:
-        Storage(QWidget *parent, const QString &filename);
+        Storage();
         ~Storage();
 
-        bool write(Account *acc);
-        bool read(Account *acc);
+        /**
+         * @exception StorageFileException
+         */
+        void write(Account *acc, const QString &filename);
 
-        QByteArray metaData(const Account *acc, bool &ok) const;
+        /**
+         * @exception StorageFileException
+         * @exception StoragePasswordException
+         */
+        void read(Account *acc, const QString &filename, const QByteArray &password);
 
-        QByteArray encodeData(const Account *acc, bool &ok) const;
-        bool decodeData(const QFile &file, const QByteArray &data, Account *acc) const;
+        /**
+         *
+         */
+        QByteArray metaData(const Account *acc) const;
 
-        void errorMessage(const QString &message) const;
+        /**
+         * @exception StorageFileException
+         * @exception StoragePasswordException
+         */
+        QByteArray encodeData(const Account *acc) const;
 
-    private:
-        QWidget *m_parent;
-        QString m_filename;
+        /**
+         * @exception StorageFileException
+         */
+        void decodeData(const QByteArray &data, Account *acc, const QByteArray &password) const;
 };
 
 

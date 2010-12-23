@@ -15,46 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "storage.h"
+#include "storageexception.h"
 
 #include "account.h"
 #include "posting.h"
 #include "money.h"
 
-#if defined( WITH_QCA2 )
-#include "passworddialog.h"
-#endif
-
 #include <QBuffer>
-#include <QFileInfo>
 #include <QFile>
-#include <QPointer>
-#include <QCoreApplication>
-
-#if defined(HAVE_KDE)
-#include <KMessageBox>
-#else
-#include <QMessageBox>
-#endif
 
 #include <QDebug>
 
 
-
-bool Storage::writeAccount(QWidget *parent, Account *acc, const QString &filename)
+void Storage::writeAccount(Account *acc, const QString &filename)
 {
-    return Storage( parent, filename ).write( acc );
+    Storage().write( acc, filename );
 }
 
 
-bool Storage::readAccount(QWidget *parent, Account *acc, const QString &filename)
+void Storage::readAccount(Account *acc, const QString &filename, const QByteArray &password)
 {
-    return Storage( parent, filename ).read( acc );
+    Storage().read( acc, filename, password );
 }
 
 
-Storage::Storage(QWidget *parent, const QString &filename)
-  : m_parent( parent ),
-    m_filename( filename )
+Storage::Storage()
 {
 }
 
@@ -64,12 +49,28 @@ Storage::~Storage()
 }
 
 
-bool Storage::write(Account *acc)
+void Storage::write(Account *acc, const QString &filename)
 {
     Q_ASSERT( acc );
 
-    if( m_filename.isEmpty() ) {
-        return QFile::ResourceError;
+    if( filename.isEmpty() ) {
+        qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
+
+        throw StorageFileException(
+                QObject::tr( "The file given could not be written; check "
+                              "whether it exists or is writeable for the "
+                              "current user." ) );
+    }
+
+    QFile file( filename );
+    if( !file.open( QFile::WriteOnly ) ) {
+        qDebug() << Q_FUNC_INFO << ':' << __LINE__
+                 << " - File" << filename << "could not be opened.";
+
+        throw StorageFileException(
+                QObject::tr( "The file given could not be written; check "
+                              "whether it exists or is writeable for the "
+                              "current user." ) );
     }
 
     QByteArray byteArray;
@@ -82,92 +83,61 @@ bool Storage::write(Account *acc)
         out << static_cast<quint32>( 0x141886C );
         out << static_cast<quint32>( 0x002 );
 
-        bool ok = false;
-        QByteArray metaArray = metaData( acc, ok );
+        QByteArray metaArray = metaData( acc );
         int32_t metaArraySize = metaArray.size();
         out << metaArraySize;
         out.writeRawData( metaArray.data(), metaArraySize );
-
-        if( !ok ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                     << " - An unknown error occurred.";
-
-            errorMessage( QObject::tr( "An unknown error occurred." ) );
-            return QFile::FatalError;
-        }
-
-        ok = false;
-        out << encodeData( acc, ok );
-        if( !ok ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                     << " - An unknown error occurred.";
-
-            errorMessage( QObject::tr( "An unknown error occurred." ) );
-            return QFile::FatalError;
-        }
+        out << encodeData( acc );
 
         if( out.status() != QDataStream::Ok ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                     << " - An unknown error occurred.";
+            qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - An unknown error occurred.";
 
-            errorMessage( QObject::tr( "An unknown error occurred." ) );
-            return QFile::FatalError;
+            throw StorageFileException( QObject::tr( "An unknown error occurred." ) );
         }
     }
     buffer.close();
 
-    QFile file( m_filename );
-    if( !file.open( QFile::WriteOnly ) ) {
-        qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                 << " - File" << m_filename << "could not be opened.";
-
-        errorMessage( QObject::tr( "The file given could not be written; "
-                                   "check whether it exists or is writeable "
-                                   "for the current user." )
-        );
-
-        return QFile::WriteError;
-    }
-
     //TODO write to a temporary file first or make a backup or...
     qint64 size = file.write( byteArray );
     if( size < 0 || size != byteArray.size() ) {
-        qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                 << " - File" << m_filename << "could not be written ("
+        qDebug() << Q_FUNC_INFO << ':' << __LINE__  << " - File"
+                 << filename << "could not be written ("
                  << size << "out of" << byteArray.size() << ").";
 
-        errorMessage( QObject::tr( "The file given could not be written; "
-                                   "check whether it exists or is writeable "
-                                   "for the current user." )
+        throw StorageFileException( QObject::tr( "The file given could not be "
+                                      "written; check whether it exists or is "
+                                      "writeable for the current user." )
         );
-
-        return QFile::WriteError;
     }
 
+    file.close();
+
     acc->setModified( false );
-    return QFile::NoError;
 }
 
 
-bool Storage::read(Account *acc)
+void Storage::read(Account *acc, const QString &filename, const QByteArray &password)
 {
     Q_ASSERT( acc );
 
-    if( m_filename.isEmpty() ) {
-        return false;
+    if( filename.isEmpty() ) {
+        qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
+
+        throw StorageFileException(
+                QObject::tr( "The file given could not be read; check "
+                              "whether it exists or is readable for the "
+                              "current user." ) );
     }
 
-    QFile file( m_filename );
+    QFile file( filename );
     if( !file.open( QFile::ReadOnly ) ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                 << " - The file given could not be read.";
+                 << " - File" << filename << "could not be opened.";
 
-        errorMessage( QObject::tr( "The file given could not be read; check "
-                                   "whether it exists or is readable for the "
-                                   "current user." )
-        );
-
-        return false;
+        throw StorageFileException(
+                QObject::tr( "The file given could not be read; check "
+                              "whether it exists or is readable for the "
+                              "current user." ) );
     }
 
     QDataStream in( &file );
@@ -179,8 +149,7 @@ bool Storage::read(Account *acc)
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
                  << " - Unknown file format:" << magic;
 
-        errorMessage( QObject::tr( "Unknown file format." ) );
-        return false;
+        throw StorageFileException( QObject::tr( "Unknown file format." ) );
     }
 
     quint32 version;
@@ -189,8 +158,7 @@ bool Storage::read(Account *acc)
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
                  << " - Unknown file version:" << version;
 
-        errorMessage( QObject::tr( "Unknown file version." ) );
-        return false;
+        throw StorageFileException( QObject::tr( "Unknown file version." ) );
     }
 
     { // skip metadata...
@@ -198,8 +166,7 @@ bool Storage::read(Account *acc)
             int32_t size;
             in >> size;
             if( in.skipRawData( size ) < 0 ) {
-                errorMessage( QObject::tr( "Metadata error." ) );
-                return false;
+                throw StorageFileException( QObject::tr( "etadata error." ) );
             }
         }
         else {
@@ -209,22 +176,16 @@ bool Storage::read(Account *acc)
         }
     }
 
-
     QByteArray data;
     in >> data;
-    if( !decodeData( file, data, acc ) ) {
-        return false;
-    }
 
+    decodeData( data, acc, password );
     acc->setModified( false );
-    return true;
 }
 
 
-QByteArray Storage::metaData(const Account *acc, bool &ok) const
+QByteArray Storage::metaData(const Account *acc) const
 {
-    ok = false;
-
     bool passwordProtected = acc->isPasswordEnabled();
     Account::SecurityLevel level = passwordProtected
                                     ? acc->securityLevel() : Account::Low;
@@ -264,14 +225,12 @@ QByteArray Storage::metaData(const Account *acc, bool &ok) const
     }
     headerData.append( "\n}\n" );
 
-    ok = true;
     return headerData.toLatin1();
 }
 
 
-QByteArray Storage::encodeData(const Account *acc, bool &ok) const
+QByteArray Storage::encodeData(const Account *acc) const
 {
-    ok = false;
     QByteArray byteArray;
     QBuffer buffer( &byteArray );
     buffer.open( QIODevice::WriteOnly );
@@ -281,8 +240,6 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
 
 #if defined( WITH_QCA2 )
     if( acc->isPasswordEnabled() ) {
-        qDebug() << "Trying to write password protected file.";
-
         //This should have been already tested in the appropriate settings dialog.
         Q_ASSERT( QCA::isSupported( "aes256-cbc-pkcs7" ) );
 
@@ -313,12 +270,8 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
             qcaBuffer.close();
 
             if( qcaOut.status() != QDataStream::Ok ) {
-                qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                         << " - An unknown error occurred.";
-
-                errorMessage( QObject::tr( "An unknown error occurred." ) );
-
-                return QByteArray();
+                qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - An unknown error occurred.";
+                throw StorageFileException( QObject::tr( "An unknown error occurred." ) );
             }
         }
         Q_ASSERT( !qcaByteArray.isEmpty() );
@@ -327,7 +280,7 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
         if( !cipher.ok() ) {
             qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - cipher update error.";
 
-            return QByteArray();
+            throw StorageFileException( QObject::tr( "An unknown error occurred." ) );
         }
 
         // Because we are using PKCS7 padding, we need to output the final block.
@@ -337,7 +290,7 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
         if( !cipher.ok() ) {
             qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - cipher final error.";
 
-            return QByteArray();
+            throw StorageFileException( QObject::tr( "An unknown error occurred." ) );
         }
 
         // write initialisation vector and the encoded data to out
@@ -345,14 +298,10 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
         out << ( data.toByteArray() );
     }
     else {
-        qDebug() << "Writing content without password protection.";
-
         out << static_cast<quint8>( 0 );
         out << *acc;
     }
 #else
-    qDebug() << "Writing content without password protection (no QCA support).";
-
     Q_ASSERT( !acc->isPasswordEnabled() );
 
     out << static_cast<quint8>( 0 );
@@ -363,17 +312,17 @@ QByteArray Storage::encodeData(const Account *acc, bool &ok) const
 
     if( out.status() != QDataStream::Ok ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - stream status error.";
-        return QByteArray();
+
+        throw StorageFileException( QObject::tr( "An unknown error occurred." ) );
     }
 
     Q_ASSERT( !byteArray.isEmpty() );
 
-    ok = true;
     return byteArray;
 }
 
 
-bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc) const
+void Storage::decodeData(const QByteArray &data, Account *acc, const QByteArray &password) const
 {
     QByteArray dataArray( data );
     QBuffer dataBuffer( &dataArray );
@@ -386,8 +335,6 @@ bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc
     dataIn >> sec;
     acc->setSecurityLevel( static_cast<Account::SecurityLevel>( sec ) );
 
-    qDebug() << "trying to read file with security level" << sec;
-
     if( sec == 0 ) {
         dataIn >> *acc;
     }
@@ -399,28 +346,12 @@ bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - AES data decryption error.";
 
-            errorMessage( QObject::tr( "AES data decryption error." ) );
-            return false;
+            throw StorageFileException( QObject::tr( "AES data decryption error." ) );
         }
 
-        /// ask user for the password
-        const QString filename = QFileInfo( file ).fileName();
-        QPointer<PasswordDialog> dialog = new PasswordDialog( filename, m_parent );
-
-        if( dialog->exec() != QDialog::Accepted ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__;
-
-            return false;
+        if( password.isEmpty() ) {
+            throw StoragePasswordException( QObject::tr( "Please enter your current password." ) );
         }
-
-        if( !dialog ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__ ;
-
-            return false;
-        }
-
-        QCA::SecureArray password = dialog->password();
-        delete dialog;
 
         /// Read data
         QByteArray iv_array;
@@ -439,23 +370,17 @@ bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc
 
         QCA::SecureArray plainData = cipher.update( data_array );
         if( !cipher.ok() ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                     << " - An unknown error occurred (chipher update error).";
+            qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Incorrect password";
 
-            errorMessage( QObject::tr( "An error occurred during the decryption process." ) );
-
-            return false;
+            throw StoragePasswordException( QObject::tr( "Incorrect password. Please try again." ) );
         }
 
         plainData.append( cipher.final() );
 
         if( !cipher.ok() ) {
-            qDebug() << Q_FUNC_INFO << ':' << __LINE__
-                     << " - An unknown error occurred (chipher final error).";
+            qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Incorrect password";
 
-            errorMessage( QObject::tr( "An error occurred during the decryption process." ) );
-
-            return false;
+            throw StoragePasswordException( "Incorrect password. Please try again." );
         }
 
         QByteArray plainDataArray = plainData.toByteArray();
@@ -473,18 +398,15 @@ bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc
             qDebug() << Q_FUNC_INFO << ':' << __LINE__
                      << " - An unknown error occurred (stream status error).";
 
-            errorMessage( QObject::tr( "An unknown error occurred." ) );
-
-            return false;
+            throw StorageFileException( QObject::tr( "Incorrect password. Please try again." ) );
         }
 
         acc->setPasswordEnabled( true );
         acc->setPassword( password );
 #else
-        errorMessage( QObject::tr( "This %1 version was build without support "
-                                   "to read encrypted files." ).arg(
-                                       QCoreApplication::applicationName() ) );
-        return false;
+        throw StorageException(
+                QObject::tr( "This %1 version was build without support to read encrypted files." )
+                    .arg( QCoreApplication::applicationName() ) );
 #endif
     }
 
@@ -493,25 +415,8 @@ bool Storage::decodeData(const QFile &file, const QByteArray &data, Account *acc
             << " - An unknown error occurred (stream status error"
             << dataIn.status() << ").";
 
-        errorMessage( QObject::tr( "An unknown error occurred." ) );
-        return false;
+        throw StorageException( QObject::tr( "An unknown error occurred." ) );
     }
-
-    return true;
-}
-
-
-void Storage::errorMessage(const QString &message) const
-{
-#if defined(HAVE_KDE)
-        KMessageBox::error( m_parent, message );
-#else
-        QMessageBox::warning( m_parent, // krazy:exclude=qclasses
-                              QObject::tr( "Error - %1" )
-                                .arg( QCoreApplication::applicationName() ),
-                              message
-        );
-#endif
 }
 
 
