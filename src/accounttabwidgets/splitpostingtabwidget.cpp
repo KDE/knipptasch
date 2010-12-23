@@ -38,6 +38,7 @@ void SplitPostingTabWidget::accountModelAboutToBeChanged()
 
 void SplitPostingTabWidget::accountModelChanged(AccountModel *model)
 {
+    Q_UNUSED( model )
 }
 
 
@@ -49,6 +50,7 @@ void SplitPostingTabWidget::currentSelectedIndexAboutToBeChanged()
 
 void SplitPostingTabWidget::currentSelectedIndexChanged(const QModelIndex &index)
 {
+    Q_UNUSED( index );
 }
 
 
