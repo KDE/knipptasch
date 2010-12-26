@@ -22,14 +22,17 @@
 #include <QString>
 #include <QtGlobal>
 
-class BasePosting;
-class SubPosting;
-class Posting;
-class QVariant;
-
 class Object;
 class Account;
 class Category;
+class Attachment;
+class Money;
+class BasePosting;
+class SubPosting;
+class Posting;
+
+class QVariant;
+class QColor;
 class QByteArray;
 class QXmlStreamWriter;
 class QXmlStreamReader;
@@ -41,6 +44,7 @@ class Storage2
         Storage2();
         ~Storage2();
 
+        void write(const Account *acc, const QString &filename);
         void write(Account *acc, const QString &filename);
         void read(Account *acc, const QString &filename);
 
@@ -49,8 +53,6 @@ class Storage2
         void setPassword(const QByteArray &password);
 
     private:
-        void initWriter(Account *acc);
-
         void writeAccount(QXmlStreamWriter &stream, const Account *acc);
 
         void writeCategory(QXmlStreamWriter &stream, const Category *category);
@@ -68,8 +70,18 @@ class Storage2
         QVariant readList(QXmlStreamReader &stream);
         QVariant readStringList(QXmlStreamReader &stream);
 
-        bool readBoolFromString(QXmlStreamReader &stream, const QString &str);
 
+
+        quint32 categoryIdentifier(const Category *category);
+        quint32 postingIdentifier(const Posting *posting);
+
+        bool stringToBool(QXmlStreamReader &stream, const QString &str) const;
+
+        void writeColor(QXmlStreamWriter &stream, const QColor &color) const;
+        QColor readColor(QXmlStreamReader &stream) const;
+
+        void writeLimit(QXmlStreamWriter &stream, bool minEnabled,
+                        const Money &min, bool maxEnabled, const Money &max) const;
     private:
         class Private;
         Private *d;

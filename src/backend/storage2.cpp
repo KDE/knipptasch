@@ -16,28 +16,32 @@
  */
 #include "storage2.h"
 
+#include "storageexception.h"
+
 #include "account.h"
 #include "posting.h"
+#include "subposting.h"
+#include "category.h"
+#include "attachment.h"
 #include "money.h"
 
 #include <QBuffer>
+#include <QVector>
 #include <QFile>
 #include <QFileInfo>
 
 #include <QDebug>
-#include <qxmlstream.h>
-#include "category.h"
 #include <QImage>
 #include <QPixmap>
 #include <QUrl>
-#include "storageexception.h"
-
-#define FixStringAndThenMakeTranslable QString
+#include <qxmlstream.h>
 
 
 
 struct Storage2::Private
 {
+    QVector<const Category*> categories;
+    QVector<const Posting*> postings;
 };
 
 
@@ -56,15 +60,21 @@ Storage2::~Storage2()
 
 void Storage2::write(Account *acc, const QString &filename)
 {
+    write( static_cast<const Account*>( acc ), filename );
+    acc->setModified( false );
+}
+
+
+void Storage2::write(const Account *acc, const QString &filename)
+{
     Q_ASSERT( acc );
 
     if( filename.isEmpty() ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be written; check "
-                              "whether it exists or is writeable for the "
-                              "current user." ) );
+              QT_TR_NOOP( "The file given could not be written; check whether "
+                          "it exists or is writeable for the current user." ) );
     }
 
     QFile file( filename );
@@ -73,15 +83,12 @@ void Storage2::write(Account *acc, const QString &filename)
                  << " - File" << filename << "could not be opened.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be written; check "
-                              "whether it exists or is writeable for the "
-                              "current user." ) );
+              QT_TR_NOOP( "The file given could not be written; check whether "
+                          "it exists or is writeable for the current user." ) );
     }
 
     delete d;
     d = new Storage2::Private;
-
-    initWriter( acc );
 
     QByteArray byteArray;
     QBuffer buffer( &byteArray );
@@ -111,12 +118,15 @@ void Storage2::write(Account *acc, const QString &filename)
                  << size << "out of" << byteArray.size() << ").";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be written; check "
-                              "whether it exists or is writeable for the "
-                              "current user." ) );
+              QT_TR_NOOP( "The file given could not be written; check whether "
+                          "it exists or is writeable for the current user." ) );
     }
+}
 
-    acc->setModified( false );
+
+void Storage2::read(Account *acc, const QString &filename)
+{
+    //TODO
 }
 
 
@@ -131,25 +141,18 @@ void Storage2::writeAccount(QXmlStreamWriter &stream, const Account *acc)
     stream.writeTextElement( "description", acc->description() );
     stream.writeStartElement( "opening" );
         stream.writeAttribute( "date", acc->openingDate().toString( Qt::ISODate ) );
-        stream.writeAttribute( "balance", QString::number( acc->openingBalance() ) );
+        stream.writeAttribute( "balance", QString::number( acc->openingBalance().cents() ) );
     stream.writeEndElement(); //opening
 
-    stream.writeStartElement( "limit" );
-        stream.writeStartElement( "minimum" );
-            stream.writeAttribute( "enabled", acc->minimumBalanceEnabled() ? "yes" : "no" );
-            stream.writeAttribute( "value", QString::number( acc->minimumBalance() ) );
-        stream.writeEndElement(); //minimum
-
-        stream.writeStartElement( "maximum" );
-            stream.writeAttribute( "enabled", acc->maximumBalanceEnabled() ? "yes" : "no" );
-            stream.writeAttribute( "value", QString::number( acc->maximumBalance() ) );
-        stream.writeEndElement(); //maximum
-    stream.writeEndElement(); //limit
+    writeLimit( stream, acc->minimumBalanceEnabled(), acc->minimumBalance(),
+                acc->maximumBalanceEnabled(), acc->maximumBalance() );
 
     stream.writeTextElement( "owner", acc->owner() );
     stream.writeStartElement( "institution" );
+    if( !acc->bic().isEmpty() ) {
         stream.writeAttribute( "bic", acc->bic() );
-        stream.writeCharacters( acc->institution() );
+    }
+    stream.writeCharacters( acc->institution() );
     stream.writeEndElement(); //institution
 
     writeObjectData( stream, acc );
@@ -182,40 +185,83 @@ void Storage2::writeAccount(QXmlStreamWriter &stream, const Account *acc)
 }
 
 
-void Storage2::initWriter(Account *acc)
-{
-
-}
-
-
 void Storage2::writeCategory(QXmlStreamWriter &stream, const Category *category)
 {
-    stream.writeStartElement( "category" );
-    writeObjectData( stream, category );
+    Q_ASSERT( category );
 
-    //TODO
+    stream.writeStartElement( "category" );
+    stream.writeAttribute( "id", QString::number( categoryIdentifier( category ) ) );
+
+    stream.writeTextElement( "name", category->name() );
+    writeColor( stream, category->color() );
+    writeLimit( stream,
+                category->minimumLimitEnabled(), category->minimumLimit(),
+                category->maximumLimitEnabled(), category->maximumLimit() );
+
+    writeObjectData( stream, category );
 
     for(int i = 0; i < category->countCategories(); ++i ) {
         writeCategory( stream, category->category( i ) );
     }
+
     stream.writeEndElement(); // category
 }
 
 
 void Storage2::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *posting)
 {
+    Q_ASSERT( posting );
+
     writeObjectData( stream, posting );
 
-    //TODO
+    stream.writeTextElement( "maturity", posting->maturity().toString( Qt::ISODate ) );
+    stream.writeTextElement( "text", posting->postingText() );
+    stream.writeTextElement( "amount", QString::number( posting->amount().cents() ) );
+
+    if( posting->valueDate().isValid() ) {
+        stream.writeTextElement( "valuedate", posting->valueDate().toString( Qt::ISODate ) );
+    }
+
+    if( posting->page() != 0 ) {
+        stream.writeTextElement( "page", QString::number( posting->page() ) );
+    }
+
+    if( !posting->description().isEmpty() ) {
+        stream.writeTextElement( "description", posting->description() );
+    }
+
+    if( !posting->voucher().isEmpty() ) {
+        stream.writeTextElement( "voucher", posting->voucher() );
+    }
+
+    if( posting->warranty().isValid() ) {
+        stream.writeTextElement( "warranty", posting->warranty().toString( Qt::ISODate ) );
+    }
+
+    if( !posting->methodOfPayment().isEmpty() ) {
+        stream.writeTextElement( "methodOfPayment", posting->methodOfPayment() );
+    }
+
+    if( !posting->payee().isEmpty() ) {
+        stream.writeTextElement( "payee", posting->payee() );
+    }
+
+    if( posting->category() ) {
+        stream.writeEmptyElement( "category" );
+        stream.writeAttribute( "ref", QString::number( categoryIdentifier( posting->category() ) ) );
+    }
 }
+
 
 void Storage2::writePosting(QXmlStreamWriter &stream, const Posting *posting)
 {
     stream.writeStartElement( "posting" );
+    stream.writeAttribute( "id", QString::number( postingIdentifier( posting ) ) );
+
     writeBasePosting( stream, posting );
 
     for(int i = 0; i < posting->countSubPostings(); ++i ) {
-        writeCategory( stream, posting->subPosting( i ) );
+        writeSubPosting( stream, posting->subPosting( i ) );
     }
     stream.writeEndElement(); // posting
 }
@@ -225,11 +271,7 @@ void Storage2::writeSubPosting(QXmlStreamWriter &stream, const SubPosting *posti
 {
     stream.writeStartElement( "posting" );
     writeBasePosting( stream, posting );
-
-    //TODO
-
     stream.writeEndElement(); // posting
-
 }
 
 
@@ -237,13 +279,13 @@ void Storage2::writeObjectData(QXmlStreamWriter &stream, const Object *object)
 {
     Q_ASSERT( object );
 
+    // Flags
     const QSet<QByteArray> flags = object->flags();
-
     for(QSet<QByteArray>::const_iterator it = flags.constBegin(); it != flags.constEnd(); ++it) {
         stream.writeTextElement( "flag", (*it) );
     }
 
-
+    // Attributes
     const QHash<QByteArray, QVariant> attributes = object->attributes();
     for(QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it) {
         stream.writeStartElement( "attribute" );
@@ -252,6 +294,7 @@ void Storage2::writeObjectData(QXmlStreamWriter &stream, const Object *object)
         stream.writeEndElement();
     }
 
+    // Attachments
     for(int i = 0; i < object->countAttachments(); ++i ) {
         writeAttachment( stream, object->attachment( i ) );
     }
@@ -260,9 +303,20 @@ void Storage2::writeObjectData(QXmlStreamWriter &stream, const Object *object)
 
 void Storage2::writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment)
 {
-    stream.writeStartElement( "attachment" );
+    Q_ASSERT( attachment );
 
-    //TODO
+    stream.writeStartElement( "attachment" );
+    stream.writeAttribute( "inline", attachment->isInline() ? "yes" : "no" );
+
+    stream.writeTextElement( "title", attachment->title() );
+    stream.writeTextElement( "documentType", attachment->documentType() );
+    stream.writeTextElement( "documentNumber", attachment->documentNumber() );
+    stream.writeTextElement( "description", attachment->description() );
+    stream.writeTextElement( "url", attachment->url().toString() );
+    stream.writeTextElement( "mimeType", attachment->mimeType() );
+    stream.writeTextElement( "data", attachment->data().toBase64() );
+
+    writeObjectData( stream, attachment );
 
     stream.writeEndElement(); // attachment
 }
@@ -283,17 +337,7 @@ void Storage2::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
         stream.writeTextElement( "base64", value.toByteArray().toBase64() );
     }
     else if( value.type() == QVariant::Color ) {
-        int r, g, b, a;
-        QColor c =  value.value<QColor>();
-        c.getRgb( &r, &g, &b, &a );
-
-        stream.writeEmptyElement( "color" );
-        stream.writeAttribute( "red", QString::number( r ) );
-        stream.writeAttribute( "green", QString::number( g ) );
-        stream.writeAttribute( "blue", QString::number( b ) );
-        if( a < 255 ) {
-            stream.writeAttribute( "alpha", QString::number( a ) );
-        }
+        writeColor( stream, value.value<QColor>() );
     }
     else if( value.type() == QVariant::Date ) {
         stream.writeTextElement( "date", value.toDate().toString( Qt::ISODate ) );
@@ -444,37 +488,13 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                 return QVariant();
             }
             else if( name == "boolean" ) {
-                return readBoolFromString( xml, xml.readElementText() );
+                return stringToBool( xml, xml.readElementText() );
             }
             else if( name == "base64" ) {
                 return qVariantFromValue<QByteArray>( QByteArray::fromBase64( xml.readElementText().toAscii() ) );
             }
             else if( name == "color" ) {
-                bool ok;
-                int r = xml.attributes().value( "red" ).toString().toInt( &ok );
-                if( !ok ) {
-                    throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "red", xml );
-                }
-
-                int g = xml.attributes().value( "green" ).toString().toInt( &ok );
-                if( !ok ) {
-                    throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "green", xml );
-                }
-
-                int b = xml.attributes().value( "blue" ).toString().toInt( &ok );
-                if( !ok ) {
-                    throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "green", xml );
-                }
-
-                int a = 255;
-                if( xml.attributes().hasAttribute( "alpha" ) ) {
-                    a = xml.attributes().value( "alpha" ).toString().toInt( &ok );
-                    if( !ok ) {
-                        throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "alpha", xml );
-                    }
-                }
-
-                return QColor( r, g, b, a );
+                return readColor( xml );
             }
             else if( name == "date" ) {
                 return QDate::fromString( xml.readElementText(), Qt::ISODate );
@@ -486,7 +506,7 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                 bool ok;
                 double value = xml.readElementText().toDouble( &ok );
                 if( !ok ) {
-                    throw StorageParserException( FixStringAndThenMakeTranslable( "Parser Error" ), xml );
+                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
                 }
 
                 return qVariantFromValue<double>( value );
@@ -501,7 +521,7 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                     return readHash( xml );
                 }
 
-                throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "type", xml );
+                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
             }
             else if( name == "image" ) {
                 const QString imagetype = xml.attributes().value( "type" ).toString().trimmed().toLower();
@@ -515,13 +535,13 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                     return QPixmap::fromImage( img );
                 }
 
-                throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "type", xml );
+                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
             }
             else if( name == "int" || name == "i4" || name == "integer" ) {
                 bool ok;
                 int value = xml.readElementText().toInt( &ok );
                 if( !ok ) {
-                    throw StorageParserException( FixStringAndThenMakeTranslable( "Parser Error" ), xml );
+                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
                 }
 
                 return qVariantFromValue<int>( value );
@@ -536,13 +556,13 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                     return readStringList( xml );
                 }
 
-                throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "type", xml );
+                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
             }
             else if( name == "long" || name == "longlong" ) {
                 bool ok;
                 qlonglong value = xml.readElementText().toLongLong( &ok );
                 if( !ok ) {
-                    throw StorageParserException( FixStringAndThenMakeTranslable( "Parser Error" ), xml );
+                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
                 }
 
                 return qVariantFromValue<qlonglong>( value );
@@ -574,18 +594,18 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                         syntax = QRegExp::W3CXmlSchema11;
                     }
                     else {
-                        throw StorageParserAttributeException( FixStringAndThenMakeTranslable( "Attribute Error" ), "syntax", xml );
+                        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "syntax", xml );
                     }
                 }
 
                 if( xml.attributes().hasAttribute( "caseSensitiv" ) ) {
-                    cs = readBoolFromString( xml, xml.attributes().value( "caseSensitiv" ).toString() )
+                    cs = stringToBool( xml, xml.attributes().value( "caseSensitiv" ).toString() )
                             ? Qt::CaseSensitive
                             : Qt::CaseInsensitive;
                 }
 
                 if( xml.attributes().hasAttribute( "greedy" ) ) {
-                    greedy = readBoolFromString( xml, xml.attributes().value( "greedy" ).toString() );
+                    greedy = stringToBool( xml, xml.attributes().value( "greedy" ).toString() );
                 }
 
                 QRegExp exp( xml.readElementText(), cs, syntax );
@@ -603,7 +623,7 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                 bool ok;
                 quint32 value = xml.readElementText().toUInt( &ok );
                 if( !ok ) {
-                    throw StorageParserException( FixStringAndThenMakeTranslable( "Parser Error" ), xml );
+                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
                 }
 
                 return qVariantFromValue<quint32>( value );
@@ -612,7 +632,7 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                 bool ok;
                 qulonglong value = xml.readElementText().toULongLong( &ok );
                 if( !ok ) {
-                    throw StorageParserException( FixStringAndThenMakeTranslable( "Parser Error" ), xml );
+                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
                 }
 
                 return qVariantFromValue<qulonglong>( value );
@@ -621,7 +641,7 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
                 return QUrl( xml.readElementText() );
             }
 
-            throw StorageParserException( FixStringAndThenMakeTranslable( "Unknown Element" ), xml );
+            throw StorageParserException( QT_TR_NOOP( "Unknown Element" ), xml );
         }
     }
     return QVariant();
@@ -631,37 +651,58 @@ QVariant Storage2::readVariant(QXmlStreamReader &xml)
 QVariant Storage2::readHash(QXmlStreamReader &xml)
 {
     if( xml.name().toString() != "map" ) {
-        throw StorageParserException( FixStringAndThenMakeTranslable( "Unknown Element" ), xml );
+        throw StorageParserException( QT_TR_NOOP( "Unknown Element" ), xml );
     }
-/*
-    while( !xml.atEnd() ) {
-        xml.readNext();
-        if( xml.isStartElement() ) {
-            const QString name = xml.name().toString().trimmed().toLower();
-*/
+
+    //TODO
     return QVariant();
 }
 
 
 QVariant Storage2::readMap(QXmlStreamReader &stream)
 {
+    //TODO
     return QVariant();
 }
 
 
 QVariant Storage2::readList(QXmlStreamReader &stream)
 {
+    //TODO
     return QVariant();
 }
 
 
 QVariant Storage2::readStringList(QXmlStreamReader &stream)
 {
+    //TODO
     return QVariant();
 }
 
 
-bool Storage2::readBoolFromString(QXmlStreamReader &xml, const QString &str)
+quint32 Storage2::categoryIdentifier(const Category *category)
+{
+    if( !d->categories.contains( category ) ) {
+        d->categories.append( category );
+    }
+
+    Q_ASSERT( d->categories.lastIndexOf( category ) >= 0 );
+    return d->categories.lastIndexOf( category );
+}
+
+
+quint32 Storage2::postingIdentifier(const Posting *posting)
+{
+    if( !d->postings.contains( posting ) ) {
+        d->postings.append( posting );
+    }
+
+    Q_ASSERT( d->postings.lastIndexOf( posting ) >= 0 );
+    return d->postings.lastIndexOf( posting );
+}
+
+
+bool Storage2::stringToBool(QXmlStreamReader &xml, const QString &str) const
 {
     const QString in = str.trimmed().toLower();
 
@@ -672,7 +713,83 @@ bool Storage2::readBoolFromString(QXmlStreamReader &xml, const QString &str)
         return false;
     }
 
-    throw StorageParserException( FixStringAndThenMakeTranslable( "Illegal Value" ), xml );
+    throw StorageParserException( QT_TR_NOOP( "Illegal Value" ), xml );
+}
+
+
+void Storage2::writeColor(QXmlStreamWriter &stream, const QColor &color) const
+{
+    if( !color.isValid() ) {
+        return;
+    }
+
+    int r, g, b, a;
+    color.getRgb( &r, &g, &b, &a );
+
+    stream.writeEmptyElement( "color" );
+    stream.writeAttribute( "red", QString::number( r ) );
+    stream.writeAttribute( "green", QString::number( g ) );
+    stream.writeAttribute( "blue", QString::number( b ) );
+    if( a < 255 ) {
+        stream.writeAttribute( "alpha", QString::number( a ) );
+    }
+}
+
+
+QColor Storage2::readColor(QXmlStreamReader &stream) const
+{
+    Q_ASSERT( stream.name().toString().toLower() == "color" );
+
+    bool ok;
+    int r = stream.attributes().value( "red" ).toString().toInt( &ok );
+    if( !ok ) {
+        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "red", stream );
+    }
+
+    int g = stream.attributes().value( "green" ).toString().toInt( &ok );
+    if( !ok ) {
+        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
+    }
+
+    int b = stream.attributes().value( "blue" ).toString().toInt( &ok );
+    if( !ok ) {
+        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
+    }
+
+    int a = 255;
+    if( stream.attributes().hasAttribute( "alpha" ) ) {
+        a = stream.attributes().value( "alpha" ).toString().toInt( &ok );
+        if( !ok ) {
+            throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "alpha", stream );
+        }
+    }
+
+    return QColor( r, g, b, a );
+}
+
+
+void Storage2::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
+                    const Money &min, bool maxEnabled, const Money &max) const
+{
+    if( !minEnabled && !maxEnabled && min.cents() == 0 && max.cents() == 0 ) {
+        return;
+    }
+
+    stream.writeStartElement( "limit" );
+    if( minEnabled || min.abs().cents() > 0 ) {
+        stream.writeStartElement( "minimum" );
+        stream.writeAttribute( "enabled", minEnabled ? "yes" : "no" );
+        stream.writeCharacters( QString::number( min ) );
+        stream.writeEndElement(); //minimum
+    }
+
+    if( maxEnabled || max.abs().cents() > 0 ) {
+        stream.writeStartElement( "maximum" );
+        stream.writeAttribute( "enabled", maxEnabled ? "yes" : "no" );
+        stream.writeCharacters( QString::number( max ) );
+        stream.writeEndElement(); //maximum
+    }
+    stream.writeEndElement(); //limit
 }
 
 
