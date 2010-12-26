@@ -39,7 +39,6 @@
 #endif
 
 #include <QtCore/QEvent>
-#include <QtCore/QDate>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QApplication>
 #include <QtGui/QKeyEvent>

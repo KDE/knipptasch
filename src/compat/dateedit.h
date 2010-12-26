@@ -22,9 +22,9 @@
 #ifndef KNIPPTASCH_KDEPIM_KDATEEDIT_H
 #define KNIPPTASCH_KDEPIM_KDATEEDIT_H
 
+#include <QtCore/QDate>
 #include <QtGui/QComboBox>
 
-class QDate;
 class QEvent;
 class QMouseEvent;
 
@@ -56,6 +56,7 @@ class QMouseEvent;
 class DateEdit : public QComboBox
 {
     Q_OBJECT
+    Q_PROPERTY(QDate date READ date WRITE setDate USER true)
 
     public:
         /**
