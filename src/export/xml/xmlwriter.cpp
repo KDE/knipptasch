@@ -308,9 +308,11 @@ void XmlWriter::writeObjectData(QXmlStreamWriter &stream, const Object *object)
     const QHash<QByteArray, QVariant> attributes = object->attributes();
     for(QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it) {
         stream.writeStartElement( "attribute" );
-        stream.writeAttribute( "name", it.key() );
+        stream.writeTextElement( "key", it.key() );
+        stream.writeStartElement( "value" );
         writeVariant( stream, it.value() );
-        stream.writeEndElement();
+        stream.writeEndElement(); // value
+        stream.writeEndElement(); // attribute
     }
 
     // Attachments
@@ -374,10 +376,12 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
         stream.writeAttribute( "type", "hash" );
         while( it.hasNext() ) {
             it.next();
+            stream.writeStartElement( "item" );
+            stream.writeTextElement( "key", it.key() );
             stream.writeStartElement( "value" );
-            stream.writeAttribute( "name", it.key() );
             writeVariant( stream, it.value() );
-            stream.writeEndElement();
+            stream.writeEndElement(); // value
+            stream.writeEndElement(); // item
         }
         stream.writeEndElement();
     }
@@ -411,10 +415,12 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
         stream.writeStartElement( "map" );
         while( it.hasNext() ) {
             it.next();
+            stream.writeStartElement( "item" );
+            stream.writeTextElement( "key", it.key() );
             stream.writeStartElement( "value" );
-            stream.writeAttribute( "name", it.key() );
             writeVariant( stream, it.value() );
-            stream.writeEndElement();
+            stream.writeEndElement(); // value
+            stream.writeEndElement(); // item
         }
         stream.writeEndElement();
     }

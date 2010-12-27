@@ -113,6 +113,7 @@ void XmlReader::read(Account *acc, const QString &filename)
 
 void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
 {
+    Q_ASSERT( acc );
     Q_ASSERT( stream.name().toString().toLower() == "account" );
 
     while( !stream.atEnd() ) {
@@ -202,29 +203,118 @@ void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
 
 void XmlReader::readCategories(QXmlStreamReader &stream, Account *acc)
 {
+    Q_ASSERT( acc );
     Q_ASSERT( stream.name().toString().toLower() == "categories" );
+
     //FIXME
+/*
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "" ) {
+            }
+            else if( token == "" ) {
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( stream.name().toString().toLower() == "categories" ) {
+                break;
+            }
+        }
+    }
+*/
 }
 
 
 void XmlReader::readPostings(QXmlStreamReader &stream, Account *acc)
 {
+    Q_ASSERT( acc );
     Q_ASSERT( stream.name().toString().toLower() == "postings" );
+
     //FIXME
+/*
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "" ) {
+            }
+            else if( token == "" ) {
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( stream.name().toString().toLower() == "postings" ) {
+                break;
+            }
+        }
+    }
+*/
 }
 
 
 void XmlReader::readFlag(QXmlStreamReader &stream, Object *object)
 {
+    Q_ASSERT( object );
     Q_ASSERT( stream.name().toString().toLower() == "flag" );
-    //FIXME
+
+    object->insertFlag( stream.readElementText().toAscii() );
 }
 
 
 void XmlReader::readAttribute(QXmlStreamReader &stream, Object *object)
 {
+    Q_ASSERT( object );
     Q_ASSERT( stream.name().toString().toLower() == "attribute" );
-    //FIXME
+
+    QByteArray key;
+    QVariant value;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+
+        if( stream.isStartElement() ) {
+            if( stream.name().toString().toLower() == "key" ) {
+                key = stream.readElementText().toAscii();
+            }
+            else if(  stream.name().toString().toLower() == "value" ) {
+                value = readVariant( stream );
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( stream.name().toString().toLower() == "attribute" ) {
+                break;
+            }
+        }
+    }
+
+    object->insertAttribute( key, value );
 }
 
 
@@ -236,13 +326,8 @@ void XmlReader::readAttachment(QXmlStreamReader &stream, Object *object)
              ? stringToBool( stream, stream.attributes().value( "inline" ).toString() )
              : false;
 
-    QString title;
-    QString documentType;
-    QString documentNumber;
-    QString description;
-    QUrl url;
-    QString mimeType;
-    QByteArray data;
+    //FIXME: Potential memory leak if one of the next function throws an exception
+    Attachment *attachment = new Attachment;
 
     while( !stream.atEnd() ) {
         stream.readNext();
@@ -250,25 +335,34 @@ void XmlReader::readAttachment(QXmlStreamReader &stream, Object *object)
 
         if( stream.isStartElement() ) {
             if( token == "title" ) {
-                title = stream.readElementText();
+                attachment->setTitle( stream.readElementText() );
             }
             else if( token == "documentType" ) {
-                documentType = stream.readElementText();
+                attachment->setDocumentType( stream.readElementText() );
             }
             else if( token == "documentNumber" ) {
-                documentNumber = stream.readElementText();
+                attachment->setDocumentNumber( stream.readElementText() );
             }
             else if( token == "description" ) {
-                description = stream.readElementText();
+                attachment->setDescription( stream.readElementText() );
             }
             else if( token == "url" ) {
-                url = QUrl( stream.readElementText(), QUrl::TolerantMode );
+                attachment->setUrl( QUrl( stream.readElementText(), QUrl::TolerantMode ) );
             }
             else if( token == "mimeType" ) {
-                mimeType = stream.readElementText();
+                attachment->setMimeType( stream.readElementText() );
             }
             else if( token == "base64" ) {
-                data = QByteArray::fromBase64( stream.readElementText().toAscii() );
+                attachment->setData( QByteArray::fromBase64( stream.readElementText().toAscii() ) );
+            }
+            else if( token == "flag" ) {
+                readFlag( stream, attachment );
+            }
+            else if( token == "attribute" ) {
+                readAttribute( stream, attachment );
+            }
+            else if( token == "attachment" ) {
+                readAttachment( stream, attachment );
             }
             else {
                 if( m_errorOnUnknownElements ) {
@@ -284,18 +378,8 @@ void XmlReader::readAttachment(QXmlStreamReader &stream, Object *object)
         }
     }
 
-    Attachment *attachment = new Attachment;
     attachment->setInline( in );
-    attachment->setTitle( title );
-    attachment->setDocumentType( documentType );
-    attachment->setDocumentNumber( documentNumber );
-    attachment->setDescription( description );
-    attachment->setUrl( url );
-    attachment->setMimeType( mimeType );
-    attachment->setData( data );
-
     attachment->setModified( false );
-
     object->insertAttachment( attachment );
 }
 
@@ -310,7 +394,7 @@ QVariant XmlReader::readVariant(QXmlStreamReader &xml)
             if( name == "nil" ) {
                 return QVariant();
             }
-            else if( name == "boolean" ) {
+            else if( name == "boolean" || name == "bool" ) {
                 return stringToBool( xml, xml.readElementText() );
             }
             else if( name == "base64" ) {
@@ -490,29 +574,171 @@ QVariant XmlReader::readVariant(QXmlStreamReader &xml)
 
 QVariant XmlReader::readHash(QXmlStreamReader &stream)
 {
-    //FIXME
-    return QVariant();
+    Q_ASSERT( stream.name().toString().toLower() == "map" );
+
+    QVariantHash map;
+
+    QString key;
+    QVariant value;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "item" ) {
+                stream.readNextStartElement();
+                if( stream.name().toString().toLower() == "key" ) {
+                    key = stream.readElementText();
+                }
+                else if(  stream.name().toString().toLower() == "value" ) {
+                    value = readVariant( stream );
+                }
+                else {
+                    if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
+                    }
+
+                    stream.skipCurrentElement();
+                }
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( token == "map" ) {
+                break;
+            }
+            else if( token == "item" ) {
+                map.insert( key, value );
+
+                key.clear();
+                value.clear();
+            }
+        }
+    }
+
+    return map;
 }
 
 
 QVariant XmlReader::readMap(QXmlStreamReader &stream)
 {
-    //FIXME
-    return QVariant();
+    Q_ASSERT( stream.name().toString().toLower() == "map" );
+
+    QVariantMap map;
+
+    QString key;
+    QVariant value;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "item" ) {
+                stream.readNextStartElement();
+                if( stream.name().toString().toLower() == "key" ) {
+                    key = stream.readElementText();
+                }
+                else if(  stream.name().toString().toLower() == "value" ) {
+                    value = readVariant( stream );
+                }
+                else {
+                    if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
+                    }
+
+                    stream.skipCurrentElement();
+                }
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( token == "map" ) {
+                break;
+            }
+            else if( token == "item" ) {
+                map.insert( key, value );
+
+                key.clear();
+                value.clear();
+            }
+        }
+    }
+
+    return map;
 }
 
 
 QVariant XmlReader::readList(QXmlStreamReader &stream)
 {
-    //FIXME
-    return QVariant();
+    Q_ASSERT( stream.name().toString().toLower() == "list" );
+
+    QVariantList list;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+
+        if( stream.isStartElement() ) {
+            list.append( readVariant( stream ) );
+        }
+        else if( stream.isEndElement() ) {
+            if( stream.name().toString().toLower() == "list" ) {
+                break;
+            }
+        }
+    }
+
+    return list;
 }
 
 
 QVariant XmlReader::readStringList(QXmlStreamReader &stream)
 {
-    //FIXME
-    return QVariant();
+    Q_ASSERT( stream.name().toString().toLower() == "list" );
+
+    QStringList list;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+
+        if( stream.isStartElement() ) {
+            if( stream.name().toString().toLower() == "string" ) {
+                list.append( stream.readElementText() );
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( stream.name().toString().toLower() == "list" ) {
+                break;
+            }
+        }
+    }
+
+    return list;
 }
 
 
@@ -521,26 +747,32 @@ QColor XmlReader::readColor(QXmlStreamReader &stream) const
     Q_ASSERT( stream.name().toString().toLower() == "color" );
 
     bool ok;
+
     int r = stream.attributes().value( "red" ).toString().toInt( &ok );
     if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "red", stream );
+        throw StorageParserAttributeException(
+                            QT_TR_NOOP( "Attribute Error" ), "red", stream );
     }
 
     int g = stream.attributes().value( "green" ).toString().toInt( &ok );
     if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
+        throw StorageParserAttributeException(
+                            QT_TR_NOOP( "Attribute Error" ), "green", stream );
     }
 
     int b = stream.attributes().value( "blue" ).toString().toInt( &ok );
     if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
+        throw StorageParserAttributeException(
+                            QT_TR_NOOP( "Attribute Error" ), "green", stream );
     }
 
     int a = 255;
     if( stream.attributes().hasAttribute( "alpha" ) ) {
         a = stream.attributes().value( "alpha" ).toString().toInt( &ok );
+
         if( !ok ) {
-            throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "alpha", stream );
+            throw StorageParserAttributeException(
+                            QT_TR_NOOP( "Attribute Error" ), "alpha", stream );
         }
     }
 
@@ -618,6 +850,7 @@ bool XmlReader::stringToBool(QXmlStreamReader &xml, const QString &str) const
 
     throw StorageParserException( QT_TR_NOOP( "Illegal Value" ), xml );
 }
+
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
