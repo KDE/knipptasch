@@ -32,8 +32,10 @@
 #include "interface/importplugin.h"
 
 #include "export/csv/csvexportplugin.h"
+#include "export/xml/xmlexportplugin.h"
 
 #include "import/csv/csvimportplugin.h"
+#include "import/xml/xmlimportplugin.h"
 #include "import/demo/demoimportplugin.h"
 
 #include "compat/iconloader.h"
@@ -889,6 +891,7 @@ void MainWindow::loadExportPlugins()
     m_exportPlugins.clear();
 
     m_exportPlugins.append( new CsvExportPlugin );
+    m_exportPlugins.append( new XmlExportPlugin );
 
     QList<QAction*> actions;
     for(int i = 0; i < m_exportPlugins.size(); ++i ) {
@@ -917,6 +920,7 @@ void MainWindow::loadImportPlugins()
 
     m_importPlugins.append( new DemoImportPlugin );
     m_importPlugins.append( new CsvImportPlugin );
+    m_importPlugins.append( new XmlImportPlugin );
 
     QList<QAction*> actions;
     for(int i = 0; i < m_importPlugins.size(); ++i ) {

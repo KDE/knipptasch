@@ -58,6 +58,21 @@ StorageFileException::~StorageFileException() throw()
 
 
 
+/**************** StorageFileVersionException ****************/
+
+StorageFileVersionException::StorageFileVersionException(const QString &s)
+  : StorageFileException( s )
+{
+}
+
+
+StorageFileVersionException::~StorageFileVersionException() throw()
+{
+}
+
+
+
+
 /**************** StorageParserException ****************/
 
 StorageParserException::StorageParserException(const QString &s, const QString element, int line, int column, int characterOffset)

@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "storage2.h"
+#include "xmlwriter.h"
 
-#include "storageexception.h"
+#include "backend/storageexception.h"
 
-#include "account.h"
-#include "posting.h"
-#include "subposting.h"
-#include "category.h"
-#include "attachment.h"
-#include "money.h"
+#include "backend/account.h"
+#include "backend/posting.h"
+#include "backend/subposting.h"
+#include "backend/category.h"
+#include "backend/attachment.h"
+#include "backend/money.h"
 
 #include <QBuffer>
 #include <QVector>
@@ -38,7 +38,7 @@
 
 
 
-struct Storage2::Private
+struct XmlWriter::Private
 {
     QVector<const Category*> categories;
     QVector<const Posting*> postings;
@@ -46,26 +46,19 @@ struct Storage2::Private
 
 
 
-Storage2::Storage2()
+XmlWriter::XmlWriter()
   : d( 0 )
 {
 }
 
 
-Storage2::~Storage2()
+XmlWriter::~XmlWriter()
 {
     delete d;
 }
 
 
-void Storage2::write(Account *acc, const QString &filename)
-{
-    write( static_cast<const Account*>( acc ), filename );
-    acc->setModified( false );
-}
-
-
-void Storage2::write(const Account *acc, const QString &filename)
+void XmlWriter::write(const Account *acc, const QString &filename)
 {
     Q_ASSERT( acc );
 
@@ -88,7 +81,7 @@ void Storage2::write(const Account *acc, const QString &filename)
     }
 
     delete d;
-    d = new Storage2::Private;
+    d = new XmlWriter::Private;
 
     QByteArray byteArray;
     QBuffer buffer( &byteArray );
@@ -121,39 +114,61 @@ void Storage2::write(const Account *acc, const QString &filename)
               QT_TR_NOOP( "The file given could not be written; check whether "
                           "it exists or is writeable for the current user." ) );
     }
+
+    file.close();
 }
 
 
-void Storage2::read(Account *acc, const QString &filename)
-{
-    //TODO
-}
-
-
-void Storage2::writeAccount(QXmlStreamWriter &stream, const Account *acc)
+void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
 {
     stream.writeStartElement( "account" );
-    stream.writeAttribute( "level", QString::number( acc->securityLevel() ) );
 
-    stream.writeTextElement( "number", acc->number() );
-    stream.writeTextElement( "iban", acc->iban() );
+    //FIXME
+    //stream.writeAttribute( "level", QString::number( acc->securityLevel() ) );
+
     stream.writeTextElement( "name", acc->name() );
-    stream.writeTextElement( "description", acc->description() );
+
+    if( !acc->number().isEmpty() ) {
+        stream.writeTextElement( "number", acc->number() );
+    }
+
+    if( !acc->iban().isEmpty() ) {
+        stream.writeTextElement( "iban", acc->iban() );
+    }
+
+    if( !acc->description().isEmpty() ) {
+        stream.writeTextElement( "description", acc->description() );
+    }
+
     stream.writeStartElement( "opening" );
         stream.writeAttribute( "date", acc->openingDate().toString( Qt::ISODate ) );
-        stream.writeAttribute( "balance", QString::number( acc->openingBalance().cents() ) );
+        stream.writeCharacters( QString::number( acc->openingBalance().cents() ) );
     stream.writeEndElement(); //opening
 
     writeLimit( stream, acc->minimumBalanceEnabled(), acc->minimumBalance(),
                 acc->maximumBalanceEnabled(), acc->maximumBalance() );
 
-    stream.writeTextElement( "owner", acc->owner() );
-    stream.writeStartElement( "institution" );
-    if( !acc->bic().isEmpty() ) {
-        stream.writeAttribute( "bic", acc->bic() );
+    if( !acc->owner().isEmpty() ) {
+        stream.writeTextElement( "owner", acc->owner() );
     }
-    stream.writeCharacters( acc->institution() );
-    stream.writeEndElement(); //institution
+
+    if( !acc->bic().isEmpty() && !acc->institution().isEmpty() ) {
+        if( acc->institution().isEmpty() ) {
+            stream.writeEmptyElement( "institution" );
+        }
+        else {
+            stream.writeStartElement( "institution" );
+            stream.writeCharacters( acc->institution() );
+        }
+
+        if( !acc->bic().isEmpty() ) {
+            stream.writeAttribute( "bic", acc->bic() );
+        }
+
+        if( !acc->institution().isEmpty() ) {
+            stream.writeEndElement(); //institution
+        }
+    }
 
     writeObjectData( stream, acc );
 
@@ -185,7 +200,7 @@ void Storage2::writeAccount(QXmlStreamWriter &stream, const Account *acc)
 }
 
 
-void Storage2::writeCategory(QXmlStreamWriter &stream, const Category *category)
+void XmlWriter::writeCategory(QXmlStreamWriter &stream, const Category *category)
 {
     Q_ASSERT( category );
 
@@ -208,7 +223,7 @@ void Storage2::writeCategory(QXmlStreamWriter &stream, const Category *category)
 }
 
 
-void Storage2::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *posting)
+void XmlWriter::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *posting)
 {
     Q_ASSERT( posting );
 
@@ -253,8 +268,10 @@ void Storage2::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *pos
 }
 
 
-void Storage2::writePosting(QXmlStreamWriter &stream, const Posting *posting)
+void XmlWriter::writePosting(QXmlStreamWriter &stream, const Posting *posting)
 {
+    Q_ASSERT( posting );
+
     stream.writeStartElement( "posting" );
     stream.writeAttribute( "id", QString::number( postingIdentifier( posting ) ) );
 
@@ -267,15 +284,17 @@ void Storage2::writePosting(QXmlStreamWriter &stream, const Posting *posting)
 }
 
 
-void Storage2::writeSubPosting(QXmlStreamWriter &stream, const SubPosting *posting)
+void XmlWriter::writeSubPosting(QXmlStreamWriter &stream, const SubPosting *posting)
 {
+    Q_ASSERT( posting );
+
     stream.writeStartElement( "posting" );
     writeBasePosting( stream, posting );
     stream.writeEndElement(); // posting
 }
 
 
-void Storage2::writeObjectData(QXmlStreamWriter &stream, const Object *object)
+void XmlWriter::writeObjectData(QXmlStreamWriter &stream, const Object *object)
 {
     Q_ASSERT( object );
 
@@ -301,7 +320,7 @@ void Storage2::writeObjectData(QXmlStreamWriter &stream, const Object *object)
 }
 
 
-void Storage2::writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment)
+void XmlWriter::writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment)
 {
     Q_ASSERT( attachment );
 
@@ -314,7 +333,7 @@ void Storage2::writeAttachment(QXmlStreamWriter &stream, const Attachment *attac
     stream.writeTextElement( "description", attachment->description() );
     stream.writeTextElement( "url", attachment->url().toString() );
     stream.writeTextElement( "mimeType", attachment->mimeType() );
-    stream.writeTextElement( "data", attachment->data().toBase64() );
+    stream.writeTextElement( "base64", attachment->data().toBase64() );
 
     writeObjectData( stream, attachment );
 
@@ -322,8 +341,7 @@ void Storage2::writeAttachment(QXmlStreamWriter &stream, const Attachment *attac
 }
 
 
-
-void Storage2::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
+void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
 {
     ASSERT_LIMITED_VARIANT( value );
 
@@ -476,248 +494,7 @@ void Storage2::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
 }
 
 
-
-QVariant Storage2::readVariant(QXmlStreamReader &xml)
-{
-    while( !xml.atEnd() ) {
-        xml.readNext();
-        if( xml.isStartElement() ) {
-            const QString name = xml.name().toString().trimmed().toLower();
-
-            if( name == "nil" ) {
-                return QVariant();
-            }
-            else if( name == "boolean" ) {
-                return stringToBool( xml, xml.readElementText() );
-            }
-            else if( name == "base64" ) {
-                return qVariantFromValue<QByteArray>( QByteArray::fromBase64( xml.readElementText().toAscii() ) );
-            }
-            else if( name == "color" ) {
-                return readColor( xml );
-            }
-            else if( name == "date" ) {
-                return QDate::fromString( xml.readElementText(), Qt::ISODate );
-            }
-            else if( name == "datetime" ) {
-                return QDateTime::fromString( xml.readElementText(), Qt::ISODate );
-            }
-            else if( name == "double" ) {
-                bool ok;
-                double value = xml.readElementText().toDouble( &ok );
-                if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
-                }
-
-                return qVariantFromValue<double>( value );
-            }
-            else if( name == "map" ) {
-                const QString maptype = xml.attributes().value( "type" ).toString().trimmed().toLower();
-
-                if( maptype.isEmpty() || maptype == "map" ) {
-                    return readMap( xml );
-                }
-                else if( maptype == "hash" ) {
-                    return readHash( xml );
-                }
-
-                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
-            }
-            else if( name == "image" ) {
-                const QString imagetype = xml.attributes().value( "type" ).toString().trimmed().toLower();
-
-                const QImage img = QImage::fromData( QByteArray::fromBase64( xml.readElementText().toAscii() ) );
-
-                if( imagetype.isEmpty() || imagetype == "image" ) {
-                    return img;
-                }
-                else if( imagetype == "pixmap" ) {
-                    return QPixmap::fromImage( img );
-                }
-
-                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
-            }
-            else if( name == "int" || name == "i4" || name == "integer" ) {
-                bool ok;
-                int value = xml.readElementText().toInt( &ok );
-                if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
-                }
-
-                return qVariantFromValue<int>( value );
-            }
-            else if( name == "list" ) {
-                const QString listtype = xml.attributes().value( "type" ).toString().trimmed().toLower();
-
-                if( listtype.isEmpty() || listtype == "list" ) {
-                    return readList( xml );
-                }
-                else if( listtype == "stringlist" || listtype == "string" ) {
-                    return readStringList( xml );
-                }
-
-                throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "type", xml );
-            }
-            else if( name == "long" || name == "longlong" ) {
-                bool ok;
-                qlonglong value = xml.readElementText().toLongLong( &ok );
-                if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
-                }
-
-                return qVariantFromValue<qlonglong>( value );
-            }
-            else if( name == "regexp" ) {
-                QRegExp::PatternSyntax syntax = QRegExp::RegExp;
-                Qt::CaseSensitivity cs = Qt::CaseSensitive;
-                bool greedy = true;
-
-                if( xml.attributes().hasAttribute( "syntax" ) ) {
-                    const QString s = xml.attributes().value( "syntax" ).toString().trimmed().toLower();
-
-                    if( s == "regex" || s == "default" ) {
-                         syntax = QRegExp::RegExp;
-                    }
-                    else if( s == "regex2" ) {
-                        syntax = QRegExp::RegExp2;
-                    }
-                    else if( s == "wildcard" ) {
-                        syntax = QRegExp::Wildcard;
-                    }
-                    else if( s == "wildcardunix" || s == "wildcard_unix" ) {
-                        syntax = QRegExp::WildcardUnix;
-                    }
-                    else if( s == "fixed" ) {
-                        syntax = QRegExp::FixedString;
-                    }
-                    else if( s == "w3c_xml_schema" || s == "w3cxmlschema") {
-                        syntax = QRegExp::W3CXmlSchema11;
-                    }
-                    else {
-                        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "syntax", xml );
-                    }
-                }
-
-                if( xml.attributes().hasAttribute( "caseSensitiv" ) ) {
-                    cs = stringToBool( xml, xml.attributes().value( "caseSensitiv" ).toString() )
-                            ? Qt::CaseSensitive
-                            : Qt::CaseInsensitive;
-                }
-
-                if( xml.attributes().hasAttribute( "greedy" ) ) {
-                    greedy = stringToBool( xml, xml.attributes().value( "greedy" ).toString() );
-                }
-
-                QRegExp exp( xml.readElementText(), cs, syntax );
-                exp.setMinimal( !greedy );
-
-                return exp;
-            }
-            else if( name == "string" ) {
-                return xml.readElementText();
-            }
-            else if( name == "time" ) {
-                return QTime::fromString( xml.readElementText(), Qt::ISODate );
-            }
-            else if( name == "uint" || name == "uinteger"  || name == "unsigned" ) {
-                bool ok;
-                quint32 value = xml.readElementText().toUInt( &ok );
-                if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
-                }
-
-                return qVariantFromValue<quint32>( value );
-            }
-            else if( name == "ulong" || name == "ulonglong" ) {
-                bool ok;
-                qulonglong value = xml.readElementText().toULongLong( &ok );
-                if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), xml );
-                }
-
-                return qVariantFromValue<qulonglong>( value );
-            }
-            else if( name == "url" ) {
-                return QUrl( xml.readElementText() );
-            }
-
-            throw StorageParserException( QT_TR_NOOP( "Unknown Element" ), xml );
-        }
-    }
-    return QVariant();
-}
-
-
-QVariant Storage2::readHash(QXmlStreamReader &xml)
-{
-    if( xml.name().toString() != "map" ) {
-        throw StorageParserException( QT_TR_NOOP( "Unknown Element" ), xml );
-    }
-
-    //TODO
-    return QVariant();
-}
-
-
-QVariant Storage2::readMap(QXmlStreamReader &stream)
-{
-    //TODO
-    return QVariant();
-}
-
-
-QVariant Storage2::readList(QXmlStreamReader &stream)
-{
-    //TODO
-    return QVariant();
-}
-
-
-QVariant Storage2::readStringList(QXmlStreamReader &stream)
-{
-    //TODO
-    return QVariant();
-}
-
-
-quint32 Storage2::categoryIdentifier(const Category *category)
-{
-    if( !d->categories.contains( category ) ) {
-        d->categories.append( category );
-    }
-
-    Q_ASSERT( d->categories.lastIndexOf( category ) >= 0 );
-    return d->categories.lastIndexOf( category );
-}
-
-
-quint32 Storage2::postingIdentifier(const Posting *posting)
-{
-    if( !d->postings.contains( posting ) ) {
-        d->postings.append( posting );
-    }
-
-    Q_ASSERT( d->postings.lastIndexOf( posting ) >= 0 );
-    return d->postings.lastIndexOf( posting );
-}
-
-
-bool Storage2::stringToBool(QXmlStreamReader &xml, const QString &str) const
-{
-    const QString in = str.trimmed().toLower();
-
-    if( in == "1" || in == "yes" || in == "true" ) {
-        return true;
-    }
-    else if( in == "0" || in == "no" || in == "false" ) {
-        return false;
-    }
-
-    throw StorageParserException( QT_TR_NOOP( "Illegal Value" ), xml );
-}
-
-
-void Storage2::writeColor(QXmlStreamWriter &stream, const QColor &color) const
+void XmlWriter::writeColor(QXmlStreamWriter &stream, const QColor &color) const
 {
     if( !color.isValid() ) {
         return;
@@ -736,39 +513,7 @@ void Storage2::writeColor(QXmlStreamWriter &stream, const QColor &color) const
 }
 
 
-QColor Storage2::readColor(QXmlStreamReader &stream) const
-{
-    Q_ASSERT( stream.name().toString().toLower() == "color" );
-
-    bool ok;
-    int r = stream.attributes().value( "red" ).toString().toInt( &ok );
-    if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "red", stream );
-    }
-
-    int g = stream.attributes().value( "green" ).toString().toInt( &ok );
-    if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
-    }
-
-    int b = stream.attributes().value( "blue" ).toString().toInt( &ok );
-    if( !ok ) {
-        throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "green", stream );
-    }
-
-    int a = 255;
-    if( stream.attributes().hasAttribute( "alpha" ) ) {
-        a = stream.attributes().value( "alpha" ).toString().toInt( &ok );
-        if( !ok ) {
-            throw StorageParserAttributeException( QT_TR_NOOP( "Attribute Error" ), "alpha", stream );
-        }
-    }
-
-    return QColor( r, g, b, a );
-}
-
-
-void Storage2::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
+void XmlWriter::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
                     const Money &min, bool maxEnabled, const Money &max) const
 {
     if( !minEnabled && !maxEnabled && min.cents() == 0 && max.cents() == 0 ) {
@@ -792,6 +537,31 @@ void Storage2::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
     stream.writeEndElement(); //limit
 }
 
+
+quint32 XmlWriter::categoryIdentifier(const Category *category)
+{
+    Q_ASSERT( category );
+
+    if( !d->categories.contains( category ) ) {
+        d->categories.append( category );
+    }
+
+    Q_ASSERT( d->categories.lastIndexOf( category ) >= 0 );
+    return d->categories.lastIndexOf( category );
+}
+
+
+quint32 XmlWriter::postingIdentifier(const Posting *posting)
+{
+    Q_ASSERT( posting );
+
+    if( !d->postings.contains( posting ) ) {
+        d->postings.append( posting );
+    }
+
+    Q_ASSERT( d->postings.lastIndexOf( posting ) >= 0 );
+    return d->postings.lastIndexOf( posting );
+}
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

@@ -47,6 +47,14 @@ class StorageFileException : public StorageException
 };
 
 
+class StorageFileVersionException : public StorageFileException
+{
+    public:
+        StorageFileVersionException(const QString &s);
+        ~StorageFileVersionException() throw();
+};
+
+
 class StorageParserException : public StorageException
 {
     public:

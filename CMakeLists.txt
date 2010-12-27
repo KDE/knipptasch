@@ -153,8 +153,14 @@ set(knipptasch_SOURCES
     src/accounttabwidgets/descriptiontabwidget.cpp
     src/accounttabwidgets/splitpostingtabwidget.cpp
 
+    src/export/xml/xmlexportplugin.cpp
+    src/export/xml/xmlwriter.cpp
+
     src/export/csv/csvexportplugin.cpp
     src/export/csv/csvexportdialog.cpp
+
+    src/import/xml/xmlimportplugin.cpp
+    src/import/xml/xmlreader.cpp
 
     src/import/csv/csvimportplugin.cpp
     src/import/csv/csvimportdialog.cpp

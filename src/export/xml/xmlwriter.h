@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef STORAGE2_H
-#define STORAGE2_H
-
-#include <stdexcept>
+#ifndef XMLWRITER_H
+#define XMLWRITER_H
 
 #include <QString>
 #include <QtGlobal>
+#include <QPair>
 
 class Object;
 class Account;
@@ -38,15 +37,23 @@ class QXmlStreamWriter;
 class QXmlStreamReader;
 
 
-class Storage2
+class XmlWriter
 {
     public:
-        Storage2();
-        ~Storage2();
+        XmlWriter();
+        ~XmlWriter();
 
         void write(const Account *acc, const QString &filename);
-        void write(Account *acc, const QString &filename);
-        void read(Account *acc, const QString &filename);
+
+        bool errorOnUnknownElement() const
+        {
+            return m_errorOnUnknownElements;
+        }
+
+        void setErrorOnUnknownElement(bool enabled = true)
+        {
+            m_errorOnUnknownElements = enabled;
+        }
 
         bool isPasswordProtected() const;
         QByteArray password() const;
@@ -64,25 +71,18 @@ class Storage2
         void writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment);
 
         void writeVariant(QXmlStreamWriter &stream, const QVariant &variant);
-        QVariant readVariant(QXmlStreamReader &stream);
-        QVariant readHash(QXmlStreamReader &stream);
-        QVariant readMap(QXmlStreamReader &stream);
-        QVariant readList(QXmlStreamReader &stream);
-        QVariant readStringList(QXmlStreamReader &stream);
 
+        void writeColor(QXmlStreamWriter &stream, const QColor &color) const;
 
+        void writeLimit(QXmlStreamWriter &stream, bool minEnabled,
+                        const Money &min, bool maxEnabled, const Money &max) const;
 
         quint32 categoryIdentifier(const Category *category);
         quint32 postingIdentifier(const Posting *posting);
 
-        bool stringToBool(QXmlStreamReader &stream, const QString &str) const;
-
-        void writeColor(QXmlStreamWriter &stream, const QColor &color) const;
-        QColor readColor(QXmlStreamReader &stream) const;
-
-        void writeLimit(QXmlStreamWriter &stream, bool minEnabled,
-                        const Money &min, bool maxEnabled, const Money &max) const;
     private:
+        bool m_errorOnUnknownElements;
+
         class Private;
         Private *d;
 };
