@@ -33,7 +33,6 @@ class Posting;
 class QVariant;
 class QColor;
 class QByteArray;
-class QXmlStreamWriter;
 class QXmlStreamReader;
 
 
@@ -51,9 +50,17 @@ class XmlReader
 
     private:
         void readAccount(QXmlStreamReader &stream, Account *acc);
+        void finalizeAccount(Account *acc);
 
         void readCategories(QXmlStreamReader &stream, Account *acc);
+        void readCategory(QXmlStreamReader &stream, Category *parent);
+
+        bool parseObject(QXmlStreamReader &stream, Object *object);
+        bool parseBasePosting(QXmlStreamReader &stream, BasePosting *posting);
+
         void readPostings(QXmlStreamReader &stream, Account *acc);
+        void readPosting(QXmlStreamReader &stream, Account *acc);
+        void readSubPosting(QXmlStreamReader &stream, Posting *parent);
 
         void readFlag(QXmlStreamReader &stream, Object *object);
         void readAttribute(QXmlStreamReader &stream, Object *object);

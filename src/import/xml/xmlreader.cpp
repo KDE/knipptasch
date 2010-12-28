@@ -40,6 +40,10 @@
 
 struct XmlReader::Private
 {
+    QMap<quint32, Category*> categoryIdMap;
+    QMap<quint32, Posting*> postingIdMap;
+
+    QMultiMap<quint32, BasePosting*> basePostingCategoryIdMap;
 };
 
 
@@ -84,7 +88,8 @@ void XmlReader::read(Account *acc, const QString &filename)
     QXmlStreamReader stream( &file );
     if( stream.readNextStartElement() ) {
         if( stream.name() != "knipptasch" ) {
-            throw StorageFileException( QT_TR_NOOP( "The file is not an Knipptasch file." ) );
+            throw StorageFileException(
+                        QT_TR_NOOP( "The file is not an Knipptasch file." ) );
         }
 
         if( stream.attributes().value( "version" ) != "1.2" ) {
@@ -98,7 +103,8 @@ void XmlReader::read(Account *acc, const QString &filename)
             }
             else {
                 if( m_errorOnUnknownElements ) {
-                    throw StorageParserException( QT_TR_NOOP( "Unknown Element Error" ), stream );
+                    throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
                 }
 
                 stream.skipCurrentElement();
@@ -107,7 +113,6 @@ void XmlReader::read(Account *acc, const QString &filename)
      }
 
     file.close();
-    acc->setModified( false );
 }
 
 
@@ -148,7 +153,8 @@ void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
                 money.setCents( stream.readElementText().toLongLong( &ok ) );
 
                 if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+                    throw StorageParserException(
+                                        QT_TR_NOOP( "Parser Error" ), stream );
                 }
             }
             else if( token == "limit" ) {
@@ -174,16 +180,7 @@ void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
             else if( token == "postings" ) {
                 readPostings( stream, acc );
             }
-            else if( token == "flag" ) {
-                readFlag( stream, acc );
-            }
-            else if( token == "attribute" ) {
-                readAttribute( stream, acc );
-            }
-            else if( token == "attachment" ) {
-                readAttachment( stream, acc );
-            }
-            else {
+            else if( !parseObject( stream, acc ) ) {
                 if( m_errorOnUnknownElements ) {
                     throw StorageParserException(
                                 QT_TR_NOOP( "Unknown Element Error" ), stream );
@@ -198,6 +195,31 @@ void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
             }
         }
     }
+
+    finalizeAccount( acc );
+}
+
+
+void XmlReader::finalizeAccount(Account *acc)
+{
+    QList<quint32> keys = d->basePostingCategoryIdMap.uniqueKeys();
+    foreach(quint32 key, keys) {
+
+        // This 'is' never true, because we will use an XML-Schema validator
+        if( !d->categoryIdMap.contains( key ) ) {
+            qDebug() << "Illegal category reference with id" << key;
+            throw StorageException(  QT_TR_NOOP( "Illegal category reference." ) );
+        }
+
+        Category *category = d->categoryIdMap[ key ];
+        QList<BasePosting*> values = d->basePostingCategoryIdMap.values( key );
+
+        foreach(BasePosting *posting, values) {
+            posting->setCategory( category );
+        }
+    }
+
+    acc->setModified( false );
 }
 
 
@@ -206,16 +228,13 @@ void XmlReader::readCategories(QXmlStreamReader &stream, Account *acc)
     Q_ASSERT( acc );
     Q_ASSERT( stream.name().toString().toLower() == "categories" );
 
-    //FIXME
-/*
     while( !stream.atEnd() ) {
         stream.readNext();
         const QString token = stream.name().toString().toLower();
 
         if( stream.isStartElement() ) {
-            if( token == "" ) {
-            }
-            else if( token == "" ) {
+            if( token == "category" ) {
+                readCategory( stream, acc->rootCategory() );
             }
             else {
                 if( m_errorOnUnknownElements ) {
@@ -227,12 +246,71 @@ void XmlReader::readCategories(QXmlStreamReader &stream, Account *acc)
             }
         }
         else if( stream.isEndElement() ) {
-            if( stream.name().toString().toLower() == "categories" ) {
+            if( token == "categories" ) {
                 break;
             }
         }
     }
-*/
+}
+
+
+void XmlReader::readCategory(QXmlStreamReader &stream, Category *parent)
+{
+    Q_ASSERT( parent );
+    Q_ASSERT( stream.name().toString().toLower() == "category" );
+
+    bool ok;
+    quint32 id = stream.attributes().value( "id" ).toString().toUInt( &ok );
+
+    if( !ok ) {
+        throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+    }
+
+    //WARNING: Potential memory leak if an exception occurs.
+    Category *category = new Category;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "name" ) {
+                category->setName( stream.readElementText() );
+            }
+            else if( token == "color" ) {
+                category->setColor( readColor( stream ) );
+            }
+            else if( token == "limit" ) {
+                QPair<QPair<bool,Money>, QPair<bool, Money> > v = readLimit( stream );
+
+                category->setMinimumLimitEnabled( v.first.first );
+                category->setMinimumLimit( v.first.second );
+                category->setMaximumLimitEnabled( v.second.first );
+                category->setMaximumLimit( v.second.second );
+            }
+            else if( token == "category" ) {
+                readCategory( stream, category );
+            }
+            else if( !parseObject( stream, category ) )
+            {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( token == "category" ) {
+                break;
+            }
+        }
+    }
+
+    d->categoryIdMap.insert( id, category );
+
+    parent->addCategory( category );
 }
 
 
@@ -241,16 +319,13 @@ void XmlReader::readPostings(QXmlStreamReader &stream, Account *acc)
     Q_ASSERT( acc );
     Q_ASSERT( stream.name().toString().toLower() == "postings" );
 
-    //FIXME
-/*
     while( !stream.atEnd() ) {
         stream.readNext();
         const QString token = stream.name().toString().toLower();
 
         if( stream.isStartElement() ) {
-            if( token == "" ) {
-            }
-            else if( token == "" ) {
+            if( token == "posting" ) {
+                readPosting( stream, acc );
             }
             else {
                 if( m_errorOnUnknownElements ) {
@@ -262,12 +337,180 @@ void XmlReader::readPostings(QXmlStreamReader &stream, Account *acc)
             }
         }
         else if( stream.isEndElement() ) {
-            if( stream.name().toString().toLower() == "postings" ) {
+            if( token == "postings" ) {
                 break;
             }
         }
     }
-*/
+}
+
+
+bool XmlReader::parseObject(QXmlStreamReader &stream, Object *object)
+{
+    Q_ASSERT( object );
+    Q_ASSERT( stream.isStartElement() );
+
+    const QString token = stream.name().toString().toLower();
+
+    if( token == "flag" ) {
+        readFlag( stream, object );
+    }
+    else if( token == "attribute" ) {
+        readAttribute( stream, object );
+    }
+    else if( token == "attachment" ) {
+        readAttachment( stream, object );
+    }
+    else {
+        return false;
+    }
+
+    return true;
+}
+
+
+bool XmlReader::parseBasePosting(QXmlStreamReader &stream, BasePosting *posting)
+{
+    Q_ASSERT( posting );
+    Q_ASSERT( stream.isStartElement() );
+
+    const QString token = stream.name().toString().toLower();
+
+    if( token == "maturity" ) {
+        posting->setMaturity( QDate::fromString(
+                                    stream.readElementText(), Qt::ISODate ) );
+    }
+    else if( token == "text" ) {
+        posting->setPostingText( stream.readElementText() );
+    }
+    else if( token == "amount" ) {
+        Money money;
+        bool ok;
+        money.setCents( stream.readElementText().toLongLong( &ok ) );
+
+        if( !ok ) {
+            throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+        }
+
+        posting->setAmount( money );
+    }
+    else if( token == "valuedate" ) {
+        posting->setValueDate( QDate::fromString(
+                                    stream.readElementText(), Qt::ISODate ) );
+    }
+    else if( token == "page" ) {
+        posting->setPage( stream.readElementText().toInt() );
+    }
+    else if( token == "description" ) {
+        posting->setDescription( stream.readElementText() );
+    }
+    else if( token == "voucher" ) {
+        posting->setVoucher( stream.readElementText() );
+    }
+    else if( token == "warranty" ) {
+        posting->setWarranty( QDate::fromString(
+                                    stream.readElementText(), Qt::ISODate ) );
+    }
+    else if( token == "methodofpayment" ) {
+        posting->setMethodOfPayment( stream.readElementText() );
+    }
+    else if( token == "payee" ) {
+        posting->setPayee( stream.readElementText() );
+    }
+    else if( token == "category" ) {
+        bool ok;
+        quint32 ref = stream.attributes().value( "ref" ).toString().toUInt( &ok );
+
+        if( !ok ) {
+            throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+        }
+
+        d->basePostingCategoryIdMap.insert( ref, posting );
+    }
+    else {
+        return parseObject( stream, posting );
+    }
+
+    return true;
+}
+
+
+void XmlReader::readPosting(QXmlStreamReader &stream, Account *acc)
+{
+    Q_ASSERT( acc );
+    Q_ASSERT( stream.name().toString().toLower() == "posting" );
+
+    bool ok;
+    quint32 id = stream.attributes().value( "id" ).toString().toUInt( &ok );
+
+    if( !ok ) {
+        throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+    }
+
+    //WARNING: Potential memory leak if an exception occurs.
+    Posting *posting= new Posting;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( token == "posting" ) {
+                readSubPosting( stream, posting );
+            }
+            else if( parseBasePosting( stream, posting ) ) {
+            }
+            else {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( token == "posting" ) {
+                break;
+            }
+        }
+    }
+
+    d->postingIdMap.insert( id, posting );
+    acc->addPosting( posting );
+}
+
+
+void XmlReader::readSubPosting(QXmlStreamReader &stream, Posting *parent)
+{
+    Q_ASSERT( parent );
+    Q_ASSERT( stream.name().toString().toLower() == "posting" );
+
+    //WARNING: Potential memory leak if an exception occurs.
+    SubPosting *posting= new SubPosting;
+
+    while( !stream.atEnd() ) {
+        stream.readNext();
+        const QString token = stream.name().toString().toLower();
+
+        if( stream.isStartElement() ) {
+            if( !parseBasePosting( stream, posting ) ) {
+                if( m_errorOnUnknownElements ) {
+                    throw StorageParserException(
+                            QT_TR_NOOP( "Unknown Element Error" ), stream );
+                }
+
+                stream.skipCurrentElement();
+            }
+        }
+        else if( stream.isEndElement() ) {
+            if( token == "posting" ) {
+                break;
+            }
+        }
+    }
+
+    parent->addSubPosting( posting );
 }
 
 
@@ -326,7 +569,7 @@ void XmlReader::readAttachment(QXmlStreamReader &stream, Object *object)
              ? stringToBool( stream, stream.attributes().value( "inline" ).toString() )
              : false;
 
-    //FIXME: Potential memory leak if one of the next function throws an exception
+    //WARNING: Potential memory leak if an exception occurs.
     Attachment *attachment = new Attachment;
 
     while( !stream.atEnd() ) {
@@ -355,16 +598,8 @@ void XmlReader::readAttachment(QXmlStreamReader &stream, Object *object)
             else if( token == "base64" ) {
                 attachment->setData( QByteArray::fromBase64( stream.readElementText().toAscii() ) );
             }
-            else if( token == "flag" ) {
-                readFlag( stream, attachment );
-            }
-            else if( token == "attribute" ) {
-                readAttribute( stream, attachment );
-            }
-            else if( token == "attachment" ) {
-                readAttachment( stream, attachment );
-            }
-            else {
+            else if( !parseObject( stream, attachment ) )
+            {
                 if( m_errorOnUnknownElements ) {
                     throw StorageParserException(
                                 QT_TR_NOOP( "Unknown Element Error" ), stream );
@@ -800,13 +1035,18 @@ QPair<QPair<bool,Money>, QPair<bool, Money> > XmlReader::readLimit(QXmlStreamRea
 
             if( token == "minimum" || token == "maximim" ) {
                 if( stream.attributes().hasAttribute( "enabled" ) ) {
-                    enabled = stringToBool( stream, stream.attributes().value( "enabled" ).toString() );
+                    enabled = stringToBool( stream,
+                                            stream.attributes()
+                                                  .value( "enabled" )
+                                                  .toString()
+                                          );
                 }
                 bool ok;
                 money.setCents( stream.readElementText().toLongLong( &ok ) );
 
                 if( !ok ) {
-                    throw StorageParserException( QT_TR_NOOP( "Parser Error" ), stream );
+                    throw StorageParserException(
+                                        QT_TR_NOOP( "Parser Error" ), stream );
                 }
 
                 if( token == "minimum" ) {
@@ -819,7 +1059,8 @@ QPair<QPair<bool,Money>, QPair<bool, Money> > XmlReader::readLimit(QXmlStreamRea
                 }
             }
             else {
-                throw StorageParserException( QT_TR_NOOP( "Unknown Element Error" ), stream );
+                throw StorageParserException(
+                                QT_TR_NOOP( "Unknown Element Error" ), stream );
             }
         }
         else if( stream.isEndElement() ) {
