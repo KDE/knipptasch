@@ -43,38 +43,6 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 
     DateEdit *input = new DateEdit( parent );
 //    input->setCalendarPopup( true );
-
-    QDate dt;
-    if( index.isValid() ) {
-        const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>( model );
-        QModelIndex idx = index;
-
-        if( proxy ) {
-            QModelIndex idx = proxy->mapToSource( index );
-        }
-
-        Q_ASSERT( idx.isValid() );
-
-        if( idx.column() == AccountModel::VALUEDATE ) {
-            dt = model->data(
-                            model->index( idx.row(), AccountModel::MATURITY ),
-                            Qt::EditRole
-                        ).toDate();
-        }
-        else if( idx.column() == AccountModel::WARRANTY ) {
-            dt = model->data(
-                            model->index( idx.row(), AccountModel::VALUEDATE ),
-                             Qt::EditRole
-                        ).toDate();
-
-            if( dt.isValid() ) {
-                dt = dt.addMonths( Preferences::self()->defaultLengthOfWarrantyInMonth() );
-            }
-        }
-    }
-
-    input->setDate( dt.isValid() ? dt : QDate::currentDate() );
-
 //    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );
 
@@ -91,7 +59,44 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
         QStyledItemDelegate::setEditorData( editor, index );
     }
     else {
-        input->setDate( model->data(index, Qt::EditRole).toDate() );
+        QDate dt;
+        if( index.isValid() ) {
+            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>( model );
+            QModelIndex idx = index;
+
+            if( proxy ) {
+                QModelIndex idx = proxy->mapToSource( index );
+            }
+
+            Q_ASSERT( idx.isValid() );
+
+            dt = model->data( index, Qt::EditRole ).toDate();
+
+            if( !dt.isValid() ) {
+                if( idx.column() == AccountModel::MATURITY ) {
+                    dt = QDate::currentDate();
+                }
+                else if( idx.column() == AccountModel::VALUEDATE ) {
+                    dt = model->data(
+                            model->index( idx.row(), AccountModel::MATURITY ),
+                            Qt::EditRole
+                        ).toDate();
+                }
+                else if( idx.column() == AccountModel::WARRANTY ) {
+                    dt = model->data(
+                            model->index( idx.row(), AccountModel::VALUEDATE ),
+                            Qt::EditRole
+                        ).toDate();
+
+                    if( dt.isValid() ) {
+                        dt = dt.addMonths( Preferences::self()->defaultLengthOfWarrantyInMonth() );
+                    }
+                }
+            }
+        }
+
+        qDebug() << "set editor data:" << ( dt.isValid() ? dt : QDate::currentDate() );
+        input->setDate( dt.isValid() ? dt : QDate::currentDate() );
     }
 }
 
@@ -108,6 +113,7 @@ void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
         QStyledItemDelegate::setModelData( editor, model, index );
     }
     else {
+        qDebug() << "set model data:" << input->date();
         model->setData( index, input->date(), Qt::EditRole );
     }
 }
