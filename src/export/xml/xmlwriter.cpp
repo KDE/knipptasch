@@ -152,13 +152,12 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
         stream.writeTextElement( "owner", acc->owner() );
     }
 
-    if( !acc->bic().isEmpty() && !acc->institution().isEmpty() ) {
+    if( !acc->bic().isEmpty() || !acc->institution().isEmpty() ) {
         if( acc->institution().isEmpty() ) {
             stream.writeEmptyElement( "institution" );
         }
         else {
             stream.writeStartElement( "institution" );
-            stream.writeCharacters( acc->institution() );
         }
 
         if( !acc->bic().isEmpty() ) {
@@ -166,6 +165,7 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
         }
 
         if( !acc->institution().isEmpty() ) {
+            stream.writeCharacters( acc->institution() );
             stream.writeEndElement(); //institution
         }
     }

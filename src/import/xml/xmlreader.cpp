@@ -156,6 +156,9 @@ void XmlReader::readAccount(QXmlStreamReader &stream, Account *acc)
                     throw StorageParserException(
                                         QT_TR_NOOP( "Parser Error" ), stream );
                 }
+
+                acc->setOpeningDate( date );
+                acc->setOpeningBalance( money );
             }
             else if( token == "limit" ) {
                 QPair<QPair<bool, Money>, QPair<bool, Money> > v = readLimit( stream );
