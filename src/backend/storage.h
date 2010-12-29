@@ -22,6 +22,12 @@
 class Account;
 
 
+/**
+ * @class Storage
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Storage
 {
     public:

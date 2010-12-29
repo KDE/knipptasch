@@ -31,6 +31,12 @@ namespace Ui {
 }
 
 
+/**
+ * @class SaveModifiedDialog
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class SaveModifiedDialog : public QDialog
 {
     Q_OBJECT

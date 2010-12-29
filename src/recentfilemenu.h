@@ -21,6 +21,12 @@
 #include <QStringList>
 
 
+/**
+ * @class RecentFileMenu
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class RecentFileMenu : public QMenu
 {
     Q_OBJECT

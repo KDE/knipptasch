@@ -23,9 +23,16 @@ class QString;
 
 
 namespace Ui {
-    class AboutDialog;     
+    class AboutDialog;
 }
 
+
+/**
+ * @class AboutDialog
+ * @brief A nice qt only about dialog
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class AboutDialog : public QDialog
 {
     Q_OBJECT

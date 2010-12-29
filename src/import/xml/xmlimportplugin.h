@@ -20,6 +20,12 @@
 #include "interface/importplugin.h"
 
 
+/**
+ * @class XmlImportPlugin
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class XmlImportPlugin : public ImportPlugin
 {
     public:

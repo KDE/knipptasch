@@ -24,6 +24,12 @@
 class QUrl;
 
 
+/**
+ * @class Attachment
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Attachment : public Object
 {
     Q_OBJECT

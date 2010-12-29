@@ -20,6 +20,12 @@
 #include <QStyledItemDelegate>
 
 
+/**
+ * @class PostingTextDelegate
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class PostingTextDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

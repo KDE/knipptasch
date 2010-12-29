@@ -29,6 +29,12 @@ class Money;
 class QDataStream;
 
 
+/**
+ * @class BasePosting
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class BasePosting : public Object
 {
     Q_OBJECT

@@ -20,6 +20,12 @@
 #include <QStyledItemDelegate>
 
 
+/**
+ * @class CategoryDelegate
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class CategoryDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

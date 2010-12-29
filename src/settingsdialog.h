@@ -25,6 +25,12 @@ namespace Ui {
 }
 
 
+/**
+ * @class SettingsDialog
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class SettingsDialog : public QDialog
 {
     Q_OBJECT

@@ -20,6 +20,12 @@
 #include "interface/importplugin.h"
 
 
+/**
+ * @class CsvImportPlugin
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class CsvImportPlugin : public ImportPlugin
 {
     public:

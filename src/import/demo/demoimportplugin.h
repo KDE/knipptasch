@@ -20,6 +20,12 @@
 #include "interface/importplugin.h"
 
 
+/**
+ * @class DemoImportPlugin
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class DemoImportPlugin : public ImportPlugin
 {
     public:

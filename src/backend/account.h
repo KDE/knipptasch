@@ -44,6 +44,12 @@ namespace QCA {
 #endif
 
 
+/**
+ * @class Account
+ * @brief This class represents a Account.
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Account : public Object
 {
     Q_OBJECT

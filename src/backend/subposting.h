@@ -20,6 +20,12 @@
 #include "baseposting.h"
 
 
+/**
+ * @class SubPosting
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class SubPosting : public BasePosting
 {
     Q_OBJECT

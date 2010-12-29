@@ -30,6 +30,12 @@ namespace Ui
 }
 
 
+/**
+ * @class CsvExportDialog
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class CsvExportDialog : public QDialog
 {
     Q_OBJECT

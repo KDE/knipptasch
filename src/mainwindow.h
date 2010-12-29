@@ -43,6 +43,12 @@ namespace Ui
 }
 
 
+/**
+ * @class MainWindow
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class MainWindow :
 #if defined(HAVE_KDE)
     public KXmlGuiWindow

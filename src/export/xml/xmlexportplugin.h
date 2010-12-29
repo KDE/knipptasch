@@ -20,6 +20,12 @@
 #include "interface/exportplugin.h"
 
 
+/**
+ * @class XmlExportPlugin
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class XmlExportPlugin : public ExportPlugin
 {
     public:

@@ -24,7 +24,10 @@ class QXmlStreamReader;
 
 
 /**
+ * @class StorageException
  * @brief Base class for exception used by the Knipptasch storage engine.
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
  */
 class StorageException : public std::runtime_error
 {
@@ -39,6 +42,12 @@ class StorageException : public std::runtime_error
 };
 
 
+/**
+ * @class StorageFileException
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class StorageFileException : public StorageException
 {
     public:
@@ -47,6 +56,12 @@ class StorageFileException : public StorageException
 };
 
 
+/**
+ * @class StorageFileVersionException
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class StorageFileVersionException : public StorageFileException
 {
     public:
@@ -55,6 +70,12 @@ class StorageFileVersionException : public StorageFileException
 };
 
 
+/**
+ * @class StorageParserException
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class StorageParserException : public StorageException
 {
     public:
@@ -75,6 +96,12 @@ class StorageParserException : public StorageException
 };
 
 
+/**
+ * @class StorageParserAttributeException
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class StorageParserAttributeException : public StorageParserException
 {
     public:
@@ -88,6 +115,12 @@ class StorageParserAttributeException : public StorageParserException
 };
 
 
+/**
+ * @class StoragePasswordException
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class StoragePasswordException : public StorageException
 {
     public:

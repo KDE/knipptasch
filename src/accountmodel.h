@@ -22,6 +22,12 @@
 #include <QAbstractTableModel>
 
 
+/**
+ * @class AccountModel
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class AccountModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -70,7 +76,7 @@ class AccountModel : public QAbstractTableModel
         Posting* posting(int row);
 
         PostingTypeFlags postingType(int row) const;
-        
+
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
 

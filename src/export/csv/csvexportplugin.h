@@ -20,6 +20,12 @@
 #include "interface/exportplugin.h"
 
 
+/**
+ * @class CsvExportPlugin
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class CsvExportPlugin : public ExportPlugin
 {
     public:

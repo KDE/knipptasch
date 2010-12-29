@@ -25,7 +25,12 @@ namespace Ui {
 }
 
 
-
+/**
+ * @class PasswordDialog
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class PasswordDialog : public QDialog
 {
     Q_OBJECT

@@ -29,6 +29,12 @@ namespace Ui
 
 
 
+/**
+ * @class QuickReportWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class QuickReportWidget : public QWidget
 {
     Q_OBJECT

@@ -17,6 +17,7 @@
 #ifndef EXPORTPLUGIN_H
 #define EXPORTPLUGIN_H
 
+#include <QString>
 #include <QList>
 
 class Posting;
@@ -26,15 +27,45 @@ class QPixmap;
 class Account;
 
 
+/**
+ * @class ExportPlugin
+ * @brief Abstract base class that provides an interface for export plugins.
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class ExportPlugin
 {
     public:
+        /**
+         * Default Destructor
+         */
         virtual ~ExportPlugin() {}
 
+        /**
+         * The name of the plugin.
+         * @return The name of the plugin
+         */
         virtual QString exportActionName() const = 0;
+
+        /**
+         * The icon of the plugin.
+         * @return The icon of the plugin
+         */
         virtual QPixmap exportActionIcon() const = 0;
 
-        virtual void exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0) const = 0;
+        /**
+         * The toolTip of the plugin.
+         * @return The toolTip of the plugin
+         */
+        virtual QString exportActionToolTip() const
+        {
+            return QString();
+        }
+
+
+        virtual void exportAccount(const Account *account,
+                                   const QList<const Posting*> &selected,
+                                   QWidget *parent = 0) const = 0;
 };
 
 

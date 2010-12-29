@@ -23,6 +23,12 @@ class QDataWidgetMapper;
 class QPlainTextEdit;
 
 
+/**
+ * @class DescriptionTabWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class DescriptionTabWidget : public AbstractAccountTabWidget
 {
     Q_OBJECT

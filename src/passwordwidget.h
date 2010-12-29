@@ -26,7 +26,12 @@ namespace Ui {
 }
 
 
-
+/**
+ * @class PasswordWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class PasswordWidget : public QWidget
 {
     Q_OBJECT

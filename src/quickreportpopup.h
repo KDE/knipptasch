@@ -24,6 +24,12 @@ class QuickReportWidget;
 class AccountSortFilterProxyModel;
 
 
+/**
+ * @class QuickReportPopup
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class QuickReportPopup : public QMenu
 {
     Q_OBJECT

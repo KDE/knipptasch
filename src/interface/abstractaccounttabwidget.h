@@ -23,6 +23,12 @@ class AccountModel;
 class QModelIndex;
 
 
+/**
+ * @class AbstractAccountTabWidget
+ * @brief Abstract base class that provides an interface for account tab widgets.
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class AbstractAccountTabWidget : public QWidget
 {
     Q_OBJECT
@@ -31,6 +37,9 @@ class AbstractAccountTabWidget : public QWidget
         explicit AbstractAccountTabWidget(const QString &title, QWidget *parent = 0);
         AbstractAccountTabWidget(const QString &title, const QIcon &icon, QWidget *parent = 0);
 
+        /**
+         * Default Destructor
+         */
         virtual ~AbstractAccountTabWidget();
 
         AccountModel* accountModel();

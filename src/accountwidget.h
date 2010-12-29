@@ -39,6 +39,12 @@ class QModelIndex;
 class MainWindow;
 
 
+/**
+ * @class AccountWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class AccountWidget : public QWidget
 {
     Q_OBJECT
@@ -103,7 +109,7 @@ class AccountWidget : public QWidget
         void slotSetIndexToCurrentInput();
         void slotUpdateAccountInfo();
         void slotCurrentRowChanged();
-        
+
         void slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget);
 
         void closeSearchWidget();

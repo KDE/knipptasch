@@ -31,6 +31,12 @@
 #define INCOMPLETE_POSTING_BACKGROUND_COLOR QColor( 190, 0, 0, 40 )
 
 
+/**
+ * @class Preferences
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Preferences
 {
     public:
@@ -51,7 +57,7 @@ class Preferences
         {
             m_settings.sync();
         }
-        
+
         bool showStatusBar() const
         {
             return m_settings.value( "General/ShowStatusBar", true ).toBool();
@@ -73,7 +79,7 @@ class Preferences
             m_settings.setValue( "General/DefaultLengthOfWarrantyInMonth", value );
             sync();
         }
-        
+
         QStringList recentFilesList() const
         {
             return m_settings.value( "General/RecentFilesList" ).toStringList();
@@ -276,19 +282,19 @@ class Preferences
         {
             return m_settings.value( "TableView/SortPostingsByMaturity", true ).toBool();
         }
-        
+
         void setSortPostingsByMaturity(bool b)
         {
             m_settings.setValue( "TableView/SortPostingsByMaturity", b );
             sync();
         }
-        
-        QString horizontalHeaderState() const 
+
+        QString horizontalHeaderState() const
         {
             return m_settings.value( "TableView/HorizontalHeaderState" ).toByteArray();
         }
-        
-        void setHorizontalHeaderState(const QString &str) 
+
+        void setHorizontalHeaderState(const QString &str)
         {
             m_settings.setValue( "TableView/HorizontalHeaderState", str );
             sync();
@@ -298,111 +304,111 @@ class Preferences
         {
             return m_settings.value( "TableView/MovableColumns", true ).toBool();
         }
-        
+
         void setMovableColumns(bool b)
         {
             m_settings.setValue( "TableView/MovableColumns", b );
             sync();
         }
-        
+
         bool cascadingSectionResize() const
         {
             return m_settings.value( "TableView/CascadingSectionResize", false ).toBool();
         }
-        
+
         void setCascadingSectionResize(bool b)
         {
             m_settings.setValue( "TableView/CascadingSectionResize", b );
             sync();
         }
-        
+
         bool doubleClickResizeColumnToCountent() const
         {
             return m_settings.value( "TableView/DoubleClickResizeColumnToCountent", false ).toBool();
         }
-        
+
         void setDoubleClickResizeColumnToCountent(bool b)
         {
             m_settings.setValue( "TableView/DoubleClickResizeColumnToCountent", b );
             sync();
         }
-                
+
         bool resetCurrentIndexWhenCurrentRowChanged()
         {
-            return m_settings.value( "TableView/ResetCurrentIndexWhenCurrentRowChanged", true ).toBool();            
+            return m_settings.value( "TableView/ResetCurrentIndexWhenCurrentRowChanged", true ).toBool();
         }
-        
+
         void setResetCurrentIndexWhenCurrentRowChanged(bool b)
         {
             m_settings.setValue( "TableView/ResetCurrentIndexWhenCurrentRowChanged", b );
-            sync();            
+            sync();
         }
-        
+
         QString windowGeometry() const
         {
             return m_settings.value( "Window/WindowGeometry" ).toByteArray();
         }
-        
+
         void setWindowGeometry(const QString &str)
         {
             m_settings.setValue( "Window/WindowGeometry", str );
             sync();
         }
-        
+
         QString windowState() const
         {
             return m_settings.value( "Window/WindowState" ).toString();
         }
-        
+
         void setWindowState(const QString &str)
         {
             m_settings.setValue( "Window/WindowState", str );
             sync();
         }
-               
+
         bool movableTabs() const
         {
             return m_settings.value( "Window/MovableTabs", true ).toBool();
         }
-        
+
         void setMovableTabs(bool b)
         {
             m_settings.setValue( "Window/MovableTabs", b );
             sync();
-        } 
-        
+        }
+
         bool closeButtonOnTabs() const
         {
             return m_settings.value( "Window/CloseButtonOnTabs", true ).toBool();
         }
-        
+
         void setCloseButtonOnTabs(bool b)
         {
             m_settings.setValue( "Window/CloseButtonOnTabs", b );
             sync();
         }
-        
-          
+
+
         bool tabCornerCloseButton() const
         {
             return m_settings.value( "Window/TabCornerCloseButton", true ).toBool();
         }
-        
+
         void setTabCornerCloseButton(bool b)
         {
             m_settings.setValue( "Window/TabCornerCloseButton", b );
             sync();
         }
-        
+
     private:
-        Preferences() 
+        Preferences()
         {
         }
-                
+
         ~Preferences()
         {
         }
-        
+
     private:
         QSettings m_settings;
 };

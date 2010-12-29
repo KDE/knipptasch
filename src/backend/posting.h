@@ -22,6 +22,12 @@
 class SubPosting;
 
 
+/**
+ * @class Posting
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Posting : public BasePosting
 {
     Q_OBJECT

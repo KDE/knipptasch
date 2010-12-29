@@ -23,6 +23,12 @@
 #include <QVariant>
 
 
+/**
+ * @class Money
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Money
 {
     public:

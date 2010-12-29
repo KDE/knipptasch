@@ -27,6 +27,12 @@ namespace Ui
 }
 
 
+/**
+ * @class CsvImportDialog
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class CsvImportDialog : public QDialog
 {
     Q_OBJECT
@@ -37,7 +43,7 @@ class CsvImportDialog : public QDialog
 
         Account* account() const;
 
-    private slots: 
+    private slots:
         void onDelimiterComboBoxIndexChanged(int);
         void onDelimiterComboBoxTextChanged();
 

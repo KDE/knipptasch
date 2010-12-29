@@ -23,6 +23,12 @@
 class Money;
 
 
+/**
+ * @class Category
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Category : public Object
 {
     Q_OBJECT

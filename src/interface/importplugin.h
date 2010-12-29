@@ -17,19 +17,49 @@
 #ifndef IMPORTPLUGIN_H
 #define IMPORTPLUGIN_H
 
+#include <QString>
+
 class QWidget;
 class Account;
 class QString;
 class QPixmap;
 
 
+/**
+ * @class ImportPlugin
+ * @brief Abstract base class that provides an interface for import plugins.
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class ImportPlugin
 {
-  public:
+    public:
+        /**
+         * Default Destructor
+         */
         virtual ~ImportPlugin() {}
 
+        /**
+         * The name of the plugin.
+         * @return The name of the plugin
+         */
         virtual QString importActionName() const = 0;
+
+        /**
+         * The icon of the plugin.
+         * @return The icon of the plugin
+         */
         virtual QPixmap importActionIcon() const = 0;
+
+        /**
+         * The toolTip of the plugin.
+         * @return The toolTip of the plugin
+         */
+        virtual QString importActionToolTip() const
+        {
+            return QString();
+        }
+
 
         virtual Account* importAccount(QWidget *parent = 0) const = 0;
 };

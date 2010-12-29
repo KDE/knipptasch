@@ -36,6 +36,12 @@ class QByteArray;
 class QXmlStreamReader;
 
 
+/**
+ * @class XmlReader
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class XmlReader
 {
     public:

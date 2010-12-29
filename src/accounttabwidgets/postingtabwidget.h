@@ -27,6 +27,12 @@ namespace Ui
 }
 
 
+/**
+ * @class PostingTabWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class PostingTabWidget : public AbstractAccountTabWidget
 {
     Q_OBJECT

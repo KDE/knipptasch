@@ -26,6 +26,12 @@ namespace Ui
 }
 
 
+/**
+ * @class SplitPostingTabWidget
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class SplitPostingTabWidget : public AbstractAccountTabWidget
 {
     Q_OBJECT

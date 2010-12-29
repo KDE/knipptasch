@@ -53,6 +53,13 @@ class Account;
         Q_ASSERT( x.isNull() || allowedQVariantTypes.contains( x.type() ) ); \
     } (void) 0
 
+
+/**
+ * @class Object
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class Object : public QObject
 {
     Q_OBJECT

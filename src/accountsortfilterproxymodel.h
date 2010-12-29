@@ -24,7 +24,12 @@
 #include <QMap>
 
 
-
+/**
+ * @class AccountSortFilterProxyModel
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class AccountSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT

@@ -37,6 +37,12 @@ class QXmlStreamWriter;
 class QXmlStreamReader;
 
 
+/**
+ * @class XmlWriter
+ * @brief
+ *
+ * @author Stefan Böhmann <kde@hilefoks.org>
+ */
 class XmlWriter
 {
     public:
