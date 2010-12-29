@@ -40,6 +40,7 @@
     <file alias="oxygen/22x22/actions/dialog-close.png">oxygen/22x22/actions/dialog-close.png</file>
     <file alias="oxygen/22x22/actions/dialog-ok.png">oxygen/22x22/actions/dialog-ok.png</file>
     <file alias="oxygen/22x22/mimetypes/text-csv.png">oxygen/22x22/mimetypes/text-csv.png</file>
+    <file alias="oxygen/22x22/mimetypes/text-xml.png">oxygen/22x22/mimetypes/text-xml.png</file>
     <file alias="oxygen/22x22/categories/applications-education-miscellaneous.png">oxygen/22x22/categories/applications-education-miscellaneous.png</file>
   </qresource>
 </RCC>
