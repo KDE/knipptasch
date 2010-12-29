@@ -25,7 +25,7 @@
 #include <QDate>
 #include <QApplication>
 #include <QSortFilterProxyModel>
-
+#include <QDebug>
 
 
 DateDelegate::DateDelegate(QObject *parent)
