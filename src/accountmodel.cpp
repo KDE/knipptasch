@@ -23,6 +23,8 @@
 #include "backend/category.h"
 #include "backend/money.h"
 
+#include "compat/utils.h"
+
 #include <QVariant>
 #include <QBrush>
 #include <QStringList>
@@ -109,14 +111,14 @@ Posting* AccountModel::posting(int row)
 }
 
 
-AccountModel::PostingTypeFlags AccountModel::postingType(int row) const 
+AccountModel::PostingTypeFlags AccountModel::postingType(int row) const
 {
     if( row < m_account->countPostings() ) {
         return postingType( m_account->posting( row ) );
     }
-    
+
     return postingType( m_posting );
-}   
+}
 
 
 int AccountModel::rowCount(const QModelIndex &parent) const
@@ -187,8 +189,16 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
     switch( index.column() )
     {
         case MATURITY:
-            return entry->maturity();
-
+        {
+            QDate dt = entry->maturity();
+            if( role == Qt::EditRole ) {
+                return dt;
+            }
+            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            }
+            return formatShortDate( dt );
+        }
         case POSTINGTEXT:
             return entry->postingText();
 
@@ -205,8 +215,16 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             break;
 
         case VALUEDATE:
-            return entry->valueDate();
-
+        {
+            QDate dt = entry->valueDate();
+            if( role == Qt::EditRole ) {
+                return dt;
+            }
+            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            }
+            return formatShortDate( dt );
+        }
         case CATEGORY:
             if( role == Qt::EditRole ) {
                 if( entry->category() ) {
@@ -234,8 +252,16 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             entry->voucher();
 
         case WARRANTY:
-            return entry->warranty();
-
+        {
+            QDate dt = entry->warranty();
+            if( role == Qt::EditRole ) {
+                return dt;
+            }
+            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            }
+            return formatShortDate( dt );
+        }
         case PAYMENT:
             return entry->methodOfPayment();
 
