@@ -24,7 +24,7 @@
 
 #include "datepickerpopup.h"
 
-#include "utils.h"
+#include "compat/utils.h"
 
 #if defined(HAVE_KDE)
 #include <KMessageBox>
@@ -46,6 +46,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QValidator>
 
+#include <QtCore/QDebug>
+
 
 class DateValidator : public QValidator
 {
@@ -56,14 +58,23 @@ class DateValidator : public QValidator
         {
         }
 
+        ~DateValidator()
+        {
+            QStatusTipEvent *event = new QStatusTipEvent( "" );
+            qApp->sendEvent( parent(), event );
+        }
+
+
         virtual State validate(QString &str, int &value) const
         {
             Q_UNUSED( value );
 
-            int length = str.length();
+            QStatusTipEvent *event = new QStatusTipEvent( "" );
+            qApp->sendEvent( parent(), event );
 
-            // empty string is intermediate so one can clear the edit line and start from scratch
-            if( length <= 0 ) {
+            // empty string is intermediate so one can clear the
+            // edit line and start from scratch
+            if( str.isEmpty() ) {
                 return Intermediate;
             }
 
@@ -72,9 +83,16 @@ class DateValidator : public QValidator
             }
 
             bool ok = false;
-            readDate( str, &ok );
+            QDate date = readDate( str, &ok );
 
-            return ok ? Acceptable : Intermediate;
+            if( ok ) {
+                QStatusTipEvent *event = new QStatusTipEvent( formatLongDate( date ) );
+                qApp->sendEvent( parent(), event );
+
+                return Acceptable;
+            }
+
+            return Intermediate;
         }
 
     private:
@@ -87,6 +105,7 @@ class DateEdit::Private
     public:
         Private(DateEdit *qq)
           : q( qq ),
+            mPopup( 0 ),
             mReadOnly( false ),
             mDiscardNextMousePress( false )
         {
@@ -292,9 +311,14 @@ void DateEdit::Private::dateSelected(const QDate &date)
 
 
 DateEdit::DateEdit(QWidget *parent)
+#if defined( HAVE_KDE )
+  : KComboBox( parent ),
+#else
   : QComboBox( parent ),
-    d( new Private( this ) )
+#endif
+  d( new Private( this ) )
 {
+
     // need at least one entry for popup to work
     setMaxCount( 1 );
     setEditable( true );

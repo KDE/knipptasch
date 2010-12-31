@@ -34,9 +34,11 @@
 #include <KIO/CopyJob>
 #include <KIO/FileCopyJob>
 #include <KIO/JobUiDelegate>
+#include <kcalendarsystem.h>
 #endif
 
 #include <QDebug>
+#include <preferences.h>
 
 
 
@@ -401,30 +403,172 @@ QString formatTime(const QTime& t)
 }
 
 
-QDate readDate(const QString& s, bool* ok)
+
+QDate readDate(const QString &str, bool *ok)
 {
+    bool valid = false;
+    QDate date;
+
+    if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+        date = QDate::fromString( str, Preferences::self()->userDefinedDateFormat() );
+        valid = date.isValid();
+    }
+
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->readDate(s, ok);
-#else
-    QDate rval;
-    QList<Qt::DateFormat> formats;
-    formats << Qt::TextDate << Qt::ISODate << Qt::SystemLocaleDate << Qt::SystemLocaleShortDate
-            << Qt:: SystemLocaleLongDate << Qt::DefaultLocaleShortDate << Qt::DefaultLocaleLongDate;
-
-    foreach (Qt::DateFormat f, formats) { // krazy:exclude=foreach
-        rval = QDate::fromString(s, f);
-
-        if (rval.isValid())
-            break;
+    if( !valid ) {
+        date = KGlobal::locale()->calendar()->readDate( str, &valid );
     }
-
-    if( ok != NULL ) {
-        *ok = rval.isValid();
-    }
-
-    return rval;
 #endif
+
+    if( !valid ) {
+        date = QDate::fromString( str, QLocale().dateFormat( QLocale::ShortFormat ) );
+        valid = date.isValid();
+    }
+
+    if( !valid ) {
+        QString fmt = QLocale().dateFormat( QLocale::ShortFormat );
+        fmt.replace( "yy", "yyyy" );
+
+        date = QDate::fromString( str, fmt );
+        valid = date.isValid();
+    }
+
+    if( !valid ) {
+        /*
+         * Try without the year.
+         * The tricky part is that we need to remove any separator around the
+         * year. For instance %Y-%m-%d becomes %m-%d and %d/%m/%Y becomes %d/%m
+         * If the year is in the middle, say %m-%Y/%d, we'll remove the sep.
+         * before it (%m/%d).
+         */
+#if defined(HAVE_KDE)
+        /*
+         * KDE version (the format variables are different between KDE and Qt)
+         *
+         *  %Y  with the whole year (e.g. "2004" for "2004")
+         *  %y  with the lower 2 digits of the year (e.g. "04" for "2004")
+         *  %n  with the month (January="1", December="12")
+         *  %m  with the month with two digits (January="01", December="12")
+         *  %e  with the day of the month (e.g. "1" on the first of march)
+         *  %d  with the day of the month with two digits (e.g. "01" on the first of march)
+         *  %b  with the short form of the month (e.g. "Jan" for January)
+         *  %B  with the long form of the month (e.g. "January")
+         *  %a  with the short form of the weekday (e.g. "Wed" for Wednesday)
+         *  %A  with the long form of the weekday (e.g. "Wednesday" for Wednesday)
+         */
+        QString fmt = KGlobal::locale()->dateFormatShort();
+
+        int pos = fmt.indexOf( "%y", 0, Qt::CaseInsensitive );
+        if( pos > -1 ) {
+            if( pos == 0 ) {
+                fmt.remove( 0, 2 );
+                while( !fmt.isEmpty() && !fmt.startsWith( '%' ) ) {
+                    fmt.remove( 0, 1 );
+                }
+            }
+            else {
+                fmt.remove( pos, 2 );
+                while(pos > 0 && fmt[pos - 1] != '%') {
+                    fmt.remove( pos, 1 );
+                    --pos;
+                }
+            }
+        }
+
+        date = KGlobal::locale()->calendar()->readDate( str, fmt, &valid );
+#else
+       /*
+        * Qt version (the format variables are different between KDE and Qt)
+        *
+        *  d     The day as a number without a leading zero (1 to 31)
+        *  dd    The day as a number with a leading zero (01 to 31)
+        *  ddd   The abbreviated localized day name (e.g. 'Mon' to 'Sun')
+        *  dddd  The long localized day name (e.g. 'Monday' to 'Sunday')
+        *  M     The month as a number without a leading zero (1 to 12)
+        *  MM    The month as a number with a leading zero (01 to 12)
+        *  MMM   The abbreviated localized month name (e.g. 'Jan' to 'Dec')
+        *  MMMM  The long localized month name (e.g. 'January' to 'December')
+        *  yy    The year as two digit number (00 to 99)
+        *  yyyy  The year as four digit number. If the year is negative, a minus sign is prepended in addition.
+        */
+        QString fmt = QLocale().dateFormat( QLocale::ShortFormat );
+
+        fmt.replace( "yyyy", "yy" );
+
+        int pos = fmt.indexOf( "yy", 0 );
+        if( pos > -1 ) {
+            if( pos == 0 ) {
+                fmt.remove( 0, 2 );
+
+                while( !fmt.isEmpty() && !fmt.startsWith( 'd' ) && !fmt.startsWith( 'M' ) ) {
+                    fmt.remove( 0, 1 );
+                }
+            }
+            else {
+                fmt.remove( pos, 2 );
+
+                while(pos > 0 && !fmt.isEmpty() && fmt[pos - 1] != 'd' && fmt[pos - 1] != 'M') {
+                    fmt.remove( pos, 1 );
+                    --pos;
+                }
+            }
+        }
+        date = QDate::fromString( str, fmt );
+        valid = date.isValid();
+#endif
+    }
+
+    if( !valid ) {
+        // try to use the standard Qt ISO date parsing
+        date = QDate::fromString( str, Qt::ISODate );
+        valid = date.isValid();
+    }
+
+
+    if( !valid ) {
+        // try to use the standard Qt ISO date parsing without the year
+        date = QDate::fromString( str, "MM-dd" );
+        valid = date.isValid();
+    }
+
+    if( valid ) {
+        Q_ASSERT( date.isValid() );
+
+        if( date.year() < 100 ) {
+            date.addYears( 2000 );
+        }
+        Q_ASSERT( date.isValid() );
+
+        /*
+         * Unlike KDE, Qt interprets two digit years as is, i.e., years 0 - 99.
+         * For a finance application, this is an unexpected behaviour.
+         */
+        if( ( date.year() < 30 ) ) {
+            date = date.addYears( 2000 );
+        }
+        else if( date.year() < 100 ) {
+            date = date.addYears( 1900 );
+        }
+
+        if( date.year() >= 1900 &&  date.year() <= 1970 ) {
+            QString y4d = QString::number( date.year() );
+            QString y2d = QString::number( date.year() % 100 );
+
+            if( !str.contains( y4d ) && str.contains( y2d ) ) {
+                date = date.addYears( 100 );
+            }
+        }
+
+        Q_ASSERT( date.isValid() );
+    }
+
+    if( ok ) {
+        *ok = valid;
+    }
+
+    return date;
 }
+
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;

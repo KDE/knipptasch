@@ -23,10 +23,17 @@
 #define KNIPPTASCH_KDEPIM_KDATEEDIT_H
 
 #include <QtCore/QDate>
-#include <QtGui/QComboBox>
+
+#if defined( HAVE_KDE )
+#include <KComboBox>
+#else
+#include <QComboBox>
+#endif
+
 
 class QEvent;
 class QMouseEvent;
+class QStatusBar;
 
 
 /**
@@ -53,7 +60,12 @@ class QMouseEvent;
   @author Tobias Koenig <tokoe@kde.org>
   @author Stefan Böhmann <kde@hilefoks.org>
 */
+
+#if defined( HAVE_KDE )
+class DateEdit : public KComboBox
+#else
 class DateEdit : public QComboBox
+#endif
 {
     Q_OBJECT
     Q_PROPERTY(QDate date READ date WRITE setDate USER true)

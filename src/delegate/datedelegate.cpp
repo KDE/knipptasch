@@ -19,7 +19,7 @@
 #include "accountmodel.h"
 #include "preferences.h"
 
-#include "compat/dateedit.h"
+#include "dateedit.h"
 
 #include <QPainter>
 #include <QDate>

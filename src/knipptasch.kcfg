@@ -4,25 +4,25 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="knipptaschrc" />
-  
+
   <group name="General">
     <entry name="ShowStatusBar" type="Bool">
       <label context="@label">Show status bar</label>
       <whatsthis context="@info:whatsthis">Whether to show the status bar in the application window.</whatsthis>
       <default>true</default>
     </entry>
-    
+
     <entry name="DefaultLengthOfWarrantyInMonth" type="Int">
       <label context="@label"></label>
       <default>24</default>
       <min>1</min>
       <max>960</max>
     </entry>
-    
+
     <entry name="RecentFilesList" type="StringList">
       <label context="@label"></label>
     </entry>
-    
+
     <entry name="RecentFilesListMaximumCount" type="Int">
       <label context="@label"></label>
       <default>10</default>
@@ -30,137 +30,141 @@
       <max>99</max>
     </entry>
   </group>
-    
-  
+
+
   <group name="Appearance">
     <entry name="PositiveAmountForegroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="PositiveAmountForegroundColor" type="Color">
       <label context="@label"></label>
       <default>0, 140, 0</default>
     </entry>
-    
+
     <entry name="NegativeAmountForegroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="NegativeAmountForegroundColor" type="Color">
       <label context="@label"></label>
       <default>140, 0, 0</default>
     </entry>
-    
+
     <entry name="AvailableWarrantyForegroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="AvailableWarrantyForegroundColor" type="Color">
       <label context="@label"></label>
       <default>0, 0, 140</default>
     </entry>
-    
+
     <entry name="ExpiredWarrantyForegroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="ExpiredWarrantyForegroundColor" type="Color">
       <label context="@label"></label>
       <default>186, 189, 182</default>
     </entry>
-    
+
     <entry name="CurrentPostingBackgroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="CurrentPostingBackgroundColor" type="Color">
       <label context="@label"></label>
       <default>255, 210, 0, 40</default>
     </entry>
-    
+
     <entry name="FuturePostingBackgroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="FuturePostingBackgroundColor" type="Color">
       <label context="@label"></label>
       <default>100, 200, 255, 40</default>
     </entry>
-    
+
     <entry name="IncompletePostingBackgroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="IncompletePostingBackgroundColor" type="Color">
       <label context="@label"></label>
       <default>190, 0, 0, 40</default>
     </entry>
-    
+
     <entry name="DefaultPostingBackgroundEnabled" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-    
+
     <entry name="DefaultPostingBackgroundColor" type="Color">
       <label context="@label"></label>
       <default>90, 255, 70, 40</default>
-    </entry>   
+    </entry>
   </group>
-  
-  
-  <group name="TableView"> 
+
+
+  <group name="TableView">
     <entry name="SortPostingsByMaturity" type="Bool">
       <label context="@label"></label>
       <default>true</default>
-    </entry>  
-    
+    </entry>
+
     <entry name="HorizontalHeaderState" type="String">
       <label context="@label"></label>
-    </entry>  
-    
+    </entry>
+
     <entry name="MovableColumns" type="Bool">
       <label context="@label"></label>
       <default>true</default>
-    </entry>    
-    
+    </entry>
+
     <entry name="CascadingSectionResize" type="Bool">
       <label context="@label"></label>
       <default>false</default>
-    </entry>  
-    
+    </entry>
+
     <entry name="DoubleClickResizeColumnToCountent" type="Bool">
       <label context="@label"></label>
       <default>false</default>
     </entry>
-    
+
     <entry name="ResetCurrentIndexWhenCurrentRowChanged" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
+
+    <entry name="UserDefinedDateFormat" type="String">
+      <label context="@label"></label>
+    </entry>
   </group>
 
-        
-  <group name="Window">     
+
+  <group name="Window">
     <entry name="WindowState" type="String">
       <label context="@label"></label>
-    </entry>  
-    
+    </entry>
+
     <entry name="WindowGeometry" type="String">
       <label context="@label"></label>
-    </entry>  
-    
+    </entry>
+
     <entry name="MovableTabs" type="Bool">
       <label context="@label"></label>
       <default>true</default>
     </entry>
-   
+
     <entry name="CloseButtonOnTabs" type="Bool">
       <label context="@label"></label>
       <default>true</default>

@@ -150,6 +150,8 @@ set(knipptasch_SOURCES
     src/quickreportwidget.cpp
     src/passworddialog.cpp
     src/passwordwidget.cpp
+    src/datepickerpopup.cpp
+    src/dateedit.cpp
     src/main.cpp
 
     src/interface/abstractaccounttabwidget.cpp
@@ -189,8 +191,6 @@ set(knipptasch_SOURCES
     src/compat/actioncollection.cpp
     src/compat/standardaction.cpp
     src/compat/iconloader.cpp
-    src/compat/datepickerpopup.cpp
-    src/compat/dateedit.cpp
     src/compat/utils.cpp
 
     3rdparty/modeltest/modeltest.cpp
@@ -211,6 +211,8 @@ set( knipptasch_HEADERS
     src/quickreportwidget.h
     src/passworddialog.h
     src/passwordwidget.h
+    src/datepickerpopup.h
+    src/dateedit.h
 
     src/interface/abstractaccounttabwidget.h
 
@@ -239,8 +241,6 @@ set( knipptasch_HEADERS
     src/backend/subposting.h
 
     src/compat/actioncollection.h
-    src/compat/datepickerpopup.h
-    src/compat/dateedit.h
 
     3rdparty/modeltest/modeltest.h
  )

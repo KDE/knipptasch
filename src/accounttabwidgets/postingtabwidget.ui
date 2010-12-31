@@ -222,7 +222,7 @@
   <customwidget>
    <class>DateEdit</class>
    <extends>QDateEdit</extends>
-   <header>compat/dateedit.h</header>
+   <header>dateedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

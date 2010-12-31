@@ -344,6 +344,17 @@ class Preferences
             sync();
         }
 
+        QString userDefinedDateFormat() const
+        {
+            return m_settings.value( "TableView/UserDefinedDateFormat" ).toString();
+        }
+
+        void setUserDefinedDateFormat(const QString &str)
+        {
+            m_settings.setValue( "TableView/UserDefinedDateFormat", str );
+            sync();
+        }
+
         QString windowGeometry() const
         {
             return m_settings.value( "Window/WindowGeometry" ).toByteArray();
@@ -387,7 +398,6 @@ class Preferences
             m_settings.setValue( "Window/CloseButtonOnTabs", b );
             sync();
         }
-
 
         bool tabCornerCloseButton() const
         {
