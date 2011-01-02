@@ -21,10 +21,13 @@
 
 #include "dateedit.h"
 
+#include <compat/utils.h>
+
 #include <QPainter>
 #include <QDate>
 #include <QApplication>
 #include <QSortFilterProxyModel>
+#include <QFontMetrics>
 #include <QDebug>
 
 
@@ -121,7 +124,26 @@ void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 
 QSize DateDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    return QStyledItemDelegate::sizeHint( option, index ) + QSize( 25, 0 );
+    static int fix = 0;
+
+    if( fix <= 0 ) {
+        fix = qApp->fontMetrics()
+                        .size(
+                                Qt::TextSingleLine,
+                                formatShortDate( QDate::currentDate() )
+                         ).width();
+
+        fix += 40;
+    }
+
+    const QSize size = QStyledItemDelegate::sizeHint( option, index )
+                        + QSize( 25, 0 );
+
+    if( size.width() >= fix ) {
+        return size;
+    }
+
+    return QSize( fix, size.height() );
 }
 
 
