@@ -227,17 +227,13 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         }
         case CATEGORY:
             if( role == Qt::EditRole ) {
-                if( entry->category() ) {
-                    return entry->category()->hash();
-                }
+                return account()->identifierByObject( entry->category() );
             }
-            else {
-                if( entry->category() ) {
-                    return entry->category()->name();
-                }
+            else if( entry->category() ) {
+                return entry->category()->name();
             }
 
-            return QByteArray();
+            return QVariant();
 
         case PAYEE:
             return entry->payee();
@@ -381,9 +377,21 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             break;
 
         case CATEGORY:
-            entry->setCategory(
-              account()->rootCategory()->findCategoryByHash( value.toByteArray() )
-            );
+            if( role == Qt::EditRole ) {
+                bool ok;
+                int v = value.toInt( &ok );
+                Q_ASSERT( ok );
+
+                Object *object = account()->objectByIdentifier( v );
+                Category *category = 0;
+
+                if( object ) {
+                    category = qobject_cast<Category*>( object );
+                    Q_ASSERT( category );
+                }
+
+                 entry->setCategory( category );
+            }
             break;
 
         case PAYEE:
