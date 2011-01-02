@@ -151,6 +151,7 @@ set(knipptasch_SOURCES
     src/passworddialog.cpp
     src/passwordwidget.cpp
     src/datepickerpopup.cpp
+    src/categorycombobox.cpp
     src/dateedit.cpp
     src/main.cpp
 
@@ -212,6 +213,7 @@ set( knipptasch_HEADERS
     src/passworddialog.h
     src/passwordwidget.h
     src/datepickerpopup.h
+    src/categorycombobox.h
     src/dateedit.h
 
     src/interface/abstractaccounttabwidget.h

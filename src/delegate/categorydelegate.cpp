@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "categorydelegate.h"
+#include "categorycombobox.h"
 
 #include "accountsortfilterproxymodel.h"
 #include "backend/posting.h"
+#include "backend/category.h"
 
 #include <QPainter>
 #include <QApplication>
+#include <QStandardItemModel>
 
-#include <KLineEdit>
-#include <QCompleter>
-#include <QSet>
 
 
 CategoryDelegate::CategoryDelegate(QObject *parent)
@@ -42,22 +42,8 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    KLineEdit *input = new KLineEdit( parent );
+    CategoryComboBox *input = new CategoryComboBox( model->account(), parent );
     input->setFrame( false );
-/*
-    QSet<QString> set;
-    const QList<const Posting*> list = model->account()->postings();
-    foreach(const Posting *p, list) {
-        set.insert( p->category() );
-    }
-
-    QCompleter *completer = new QCompleter( set.toList(), input );
-    completer->setCaseSensitivity( Qt::CaseInsensitive );
-    input->setCompleter( completer );
-*/
-#if defined(HAVE_KDE)
-    input->setClearButtonShown( true );
-#endif
 
     return input;
 }
@@ -65,31 +51,50 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
 void CategoryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
-    const QAbstractItemModel *model = index.model();
+    CategoryComboBox *input = qobject_cast<CategoryComboBox*>( editor );
+
+    const AccountSortFilterProxyModel *model =
+            qobject_cast<const AccountSortFilterProxyModel*>( index.model() );
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
     }
     else {
-        input->setText( model->data( index, Qt::EditRole ).toString() );
+        bool ok;
+        int id = model->data( index, Qt::EditRole ).toInt( &ok );
+
+        Category *category = 0;
+
+        if( ok ) {
+            Object *object = model->account()->objectByIdentifier( id );
+            if( object ) {
+                category = qobject_cast<Category*>( object );
+                Q_ASSERT( category );
+            }
+        }
+
+        input->setSelectedCategory( category );
     }
 }
 
 
-void CategoryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void CategoryDelegate::setModelData(QWidget *editor, QAbstractItemModel *m, const QModelIndex &index) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
+    CategoryComboBox *input = qobject_cast<CategoryComboBox*>( editor );
 
-    if( !input ) {
+    AccountSortFilterProxyModel *model =
+            qobject_cast<AccountSortFilterProxyModel*>( m );
+
+    if( !input || !model ) {
         QStyledItemDelegate::setModelData( editor, model, index );
     }
     else {
-        model->setData( index, input->text(), Qt::EditRole );
+        int id = model->account()->identifierByObject( input->selectedCategory() );
+        model->setData( index, id, Qt::EditRole );
     }
 }
 
