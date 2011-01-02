@@ -22,6 +22,7 @@
 class Category;
 class Money;
 class Posting;
+class BasePosting;
 class QString;
 class QDate;
 class QDataStream;
@@ -127,6 +128,14 @@ class Account : public Object
         Category* rootCategory();
         const Category* rootCategory() const;
 
+        int identifierByObject(const Object *object) const;
+
+        Object* objectByIdentifier(int id) const;
+
+    public slots:
+        void clearObjectIdentifier();
+
+    public:
         friend QDataStream& operator<<(QDataStream &stream, const Account &acc);
         friend QDataStream& operator>>(QDataStream &stream, Account &acc);
 

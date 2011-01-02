@@ -22,6 +22,7 @@
 
 #include <QDataStream>
 #include <QDebug>
+#include <QPointer>
 
 
 struct Account::Private
@@ -63,6 +64,8 @@ struct Account::Private
 
     QList<Posting*> postings;
     Category *category;
+
+    mutable QVector<QPointer<Object> > objects;
 
     bool modified;
 };
@@ -489,6 +492,35 @@ const Category* Account::rootCategory() const
     Q_ASSERT( d->category );
 
     return d->category;
+}
+
+
+int Account::identifierByObject(const Object *object) const
+{
+    if( !object ) {
+        return -1;
+    }
+
+    Object *obj = const_cast<Object*>( object );
+
+    if( !d->objects.contains( obj ) ) {
+        d->objects.append( obj );
+    }
+
+    Q_ASSERT( d->objects.lastIndexOf( obj ) >= 0 );
+    return d->objects.lastIndexOf( obj );
+}
+
+
+Object* Account::objectByIdentifier(int id) const
+{
+    return d->objects.value( id );
+}
+
+
+void Account::clearObjectIdentifier()
+{
+    d->objects.clear();
 }
 
 
