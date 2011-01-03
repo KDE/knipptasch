@@ -22,6 +22,7 @@
 class QTreeView;
 class QEvent;
 class QStandardItem;
+class QStandardItemModel;
 class Category;
 class Account;
 
@@ -37,7 +38,7 @@ class CategoryComboBox : public KComboBox
     Q_OBJECT
 
     public:
-        CategoryComboBox(const Account *account, QWidget* parent = 0);
+        CategoryComboBox(const Account *account, QWidget *parent = 0);
 
         const Account* account() const;
         void setAccount(const Account *account);
@@ -46,7 +47,7 @@ class CategoryComboBox : public KComboBox
         Category* selectedCategory();
         void setSelectedCategory(const Category *category);
 
-        bool eventFilter(QObject* object, QEvent* event);
+        bool eventFilter(QObject *object, QEvent *event);
 
         void showPopup();
         void hidePopup();
@@ -56,6 +57,7 @@ class CategoryComboBox : public KComboBox
 
     private:
         QTreeView *m_view;
+        QStandardItemModel *m_model;
         const Account *m_account;
         bool m_skipNextHide;
 };

@@ -31,15 +31,15 @@
 CategoryComboBox::CategoryComboBox(const Account *account, QWidget* parent)
   : KComboBox( parent ),
     m_view( new QTreeView( this ) ),
+    m_model( new QStandardItemModel( this ) ),
     m_account( 0 ),
     m_skipNextHide( false )
 {
     m_view->header()->hide();
     m_view->setMinimumSize( 200, 250 );
+    m_view->setRootIsDecorated( false );
     setView( m_view );
-
-    QStandardItemModel *m = new QStandardItemModel;
-    setModel( m );
+    setModel( m_model );
 
     view()->viewport()->installEventFilter( this );
 
@@ -55,38 +55,36 @@ const Account* CategoryComboBox::account() const
 
 void CategoryComboBox::setAccount(const Account *account)
 {
+    Q_ASSERT( m_model );
+
     m_account = account;
 
-    QStandardItemModel *m = qobject_cast<QStandardItemModel*>( model() );
-    Q_ASSERT( m );
-
-    m->clear();
+    m_model->clear();
 
     if( !m_account ) {
         return;
     }
 
     Q_ASSERT( m_account->rootCategory() );
+
+    QStandardItem *item = new QStandardItem( tr( "None" ) );
+    item->setData( -1, Qt::UserRole );
+
     for(int i = 0; i < m_account->rootCategory()->countCategories(); ++i) {
-        const Category *c = m_account->rootCategory()->category( i );
-
-        QStandardItem *item = new QStandardItem( c->name() );
-        item->setData( m_account->identifierByObject( c ), Qt::UserRole );
-
-        for(int i = 0; i < c->countCategories(); ++i) {
-            addCategory( item, c->category( i ) );
-        }
-
-        m->appendRow( item );
+        addCategory( item, m_account->rootCategory()->category( i ) );
     }
+
+    m_model->appendRow( item );
+    m_view->expandToDepth( 3 );
 }
 
 
 const Category* CategoryComboBox::selectedCategory() const
 {
-    if( currentIndex() >= 0 ) {
+    if( m_view->currentIndex().isValid() ) {
         bool ok;
-        int id = itemData( currentIndex(), Qt::UserRole ).toInt( &ok );
+        int id = m_model->itemFromIndex( m_view->currentIndex() )
+                        ->data( Qt::UserRole ).toInt( &ok );
         Q_ASSERT( ok );
 
         Object *object = account()->objectByIdentifier( id );
@@ -104,9 +102,10 @@ const Category* CategoryComboBox::selectedCategory() const
 
 Category* CategoryComboBox::selectedCategory()
 {
-    if( currentIndex() >= 0 ) {
+    if( m_view->currentIndex().isValid() ) {
         bool ok;
-        int id = itemData( currentIndex(), Qt::UserRole ).toInt( &ok );
+        int id = m_model->itemFromIndex( m_view->currentIndex() )
+                        ->data( Qt::UserRole ).toInt( &ok );
         Q_ASSERT( ok );
 
         Object *object = account()->objectByIdentifier( id );
@@ -135,12 +134,14 @@ void CategoryComboBox::setSelectedCategory(const Category *category)
 
 bool CategoryComboBox::eventFilter(QObject* object, QEvent* event)
 {
-    if( event->type() == QEvent::MouseButtonPress && object == view()->viewport() ) {
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
+    if( event->type() == QEvent::MouseButtonPress ) {
+        if( object == view()->viewport() ) {
+            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
 
-        QModelIndex index = view()->indexAt( mouseEvent->pos() );
-        if( !view()->visualRect( index ).contains( mouseEvent->pos() ) ) {
-            m_skipNextHide = true;
+            QModelIndex index = view()->indexAt( mouseEvent->pos() );
+            if( !view()->visualRect( index ).contains( mouseEvent->pos() ) ) {
+                m_skipNextHide = true;
+            }
         }
     }
 
@@ -168,18 +169,18 @@ void CategoryComboBox::hidePopup()
 }
 
 
-void CategoryComboBox::addCategory(QStandardItem *parent, const Category *category)
+void CategoryComboBox::addCategory(QStandardItem *parent, const Category *cat)
 {
     Q_ASSERT( parent );
-    Q_ASSERT( category );
+    Q_ASSERT( cat );
 
-    QStandardItem *item = new QStandardItem( category->name() );
-    item->setData( account()->identifierByObject( category ) );
+    QStandardItem *item = new QStandardItem( cat->name() );
+    item->setData( account()->identifierByObject( cat ), Qt::UserRole );
 
     parent->appendRow( item );
 
-    for(int i = 0; i < category->countCategories(); ++i) {
-        addCategory( item, category->category( i ) );
+    for(int i = 0; i < cat->countCategories(); ++i) {
+        addCategory( item, cat->category( i ) );
     }
 }
 
