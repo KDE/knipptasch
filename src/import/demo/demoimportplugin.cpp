@@ -109,28 +109,34 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
 
         {
             Category *p = acc->rootCategory()->addCategory( QObject::tr( "Auto" ) );
-            p->addCategory( QObject::tr( "Fuel" ) );
-            p->addCategory( QObject::tr( "Insurance" ) );
-            p->addCategory( QObject::tr( "Tax" ) );
-            p->addCategory( QObject::tr( "Service" ) );
+            p->setColor( Qt::blue );
+
+            p->addCategory( QObject::tr( "Fuel" ) )->setColor( Qt::red );
+            p->addCategory( QObject::tr( "Insurance" ) )->setColor( Qt::green );
+            p->addCategory( QObject::tr( "Tax" ) )->setColor( Qt::gray );
+            p->addCategory( QObject::tr( "Service" ) )->setColor( Qt::darkMagenta );
         }
         {
             Category *p = acc->rootCategory()->addCategory( QObject::tr( "Food" ) );
-            p->addCategory( QObject::tr( "Dining Out" ) );
+            p->setColor( Qt::cyan );
+            p->addCategory( QObject::tr( "Dining Out" ) )->setColor( Qt::darkBlue );
         }
         {
             Category *p = acc->rootCategory()->addCategory( QObject::tr( "Recreation" ) );
-            p->addCategory( QObject::tr( "Books" ) );
-            p->addCategory( QObject::tr( "Photo" ) );
+            p->setColor( Qt::yellow );
+
+            p->addCategory( QObject::tr( "Books" ) )->setColor( Qt::darkRed );
+            p->addCategory( QObject::tr( "Photo" ) )->setColor( Qt::black );
             p->addCategory( QObject::tr( "Sport" ) );
             Category *p1 = p->addCategory( QObject::tr( "Culture" ) );
-            p1->addCategory( QObject::tr( "Theater" ) );
+            p1->setColor( Qt::darkGreen );
+            p1->addCategory( QObject::tr( "Theater" ) )->setColor( Qt::lightGray );
             p1->addCategory( QObject::tr( "Stage" ) );
             p1->addCategory( QObject::tr( "Exposition" ) );
             p1->addCategory( QObject::tr( "Classical Music" ) );
             p1->addCategory( QObject::tr( "Museum" ) );
             p1->addCategory( QObject::tr( "Art" ) );
-            p->addCategory( QObject::tr( "Entertainment" ) );
+            p->addCategory( QObject::tr( "Entertainment" ) )->setColor( Qt::darkYellow );
         }
 
         Money total = acc->openingBalance();
