@@ -288,12 +288,14 @@ else( HAVE_KDE )
     set( knipptasch_SOURCES
         src/aboutdialog.cpp
         src/compat/qtingkde/kcolorbutton.cpp
+        src/compat/qtingkde/kcolorcombo.cpp
         ${knipptasch_SOURCES}
     )
 
     set( knipptasch_HEADERS
         src/aboutdialog.h
         src/compat/qtingkde/kcolorbutton.h
+        src/compat/qtingkde/kcolorcombo.h
         ${knipptasch_HEADERS}
     )
 
