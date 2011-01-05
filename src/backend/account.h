@@ -19,6 +19,8 @@
 
 #include "object.h"
 
+#include <QByteArray>
+
 class Category;
 class Money;
 class Posting;
@@ -37,7 +39,6 @@ namespace QCA
 }
 
 #else
-#include <QByteArray>
 
 namespace QCA {
     typedef QByteArray SecureArray;
@@ -127,6 +128,9 @@ class Account : public Object
 
         Category* rootCategory();
         const Category* rootCategory() const;
+
+        Category* findCategoryParent(const Category *child);
+        const Category* findCategoryParent(const Category *child) const;
 
         int identifierByObject(const Object *object) const;
 

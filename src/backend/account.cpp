@@ -25,6 +25,58 @@
 #include <QPointer>
 
 
+
+const Category* doFindCategoryParent(const Category *current, const Category *target)
+{
+    Q_ASSERT( current );
+    Q_ASSERT( target );
+    Q_ASSERT( current != target );
+
+    for(int i = 0; i < current->countCategories(); ++i) {
+        const Category *c = current->category( i );
+        Q_ASSERT( c );
+
+        if( c == target ) {
+            return current;
+        }
+
+        const Category *child = doFindCategoryParent( c, target );
+        if( child ) {
+            return child;
+        }
+    }
+
+    return 0;
+}
+
+
+
+Category* doFindCategoryParent(Category *current, const Category *target)
+{
+    Q_ASSERT( current );
+    Q_ASSERT( target );
+    Q_ASSERT( current != target );
+
+    for(int i = 0; i < current->countCategories(); ++i) {
+        Category *c = current->category( i );
+        Q_ASSERT( c );
+
+        if( c == target ) {
+            return current;
+        }
+
+        Category *child = doFindCategoryParent( c, target );
+        if( child ) {
+            return child;
+        }
+    }
+
+    return 0;
+}
+
+
+
+
 struct Account::Private
 {
     Private()
@@ -492,6 +544,34 @@ const Category* Account::rootCategory() const
     Q_ASSERT( d->category );
 
     return d->category;
+}
+
+
+Category* Account::findCategoryParent(const Category *child)
+{
+    if( !child ) {
+        return 0;
+    }
+
+    if( child == rootCategory() ) {
+        return 0;
+    }
+
+    return doFindCategoryParent( rootCategory(), child );
+}
+
+
+const Category* Account::findCategoryParent(const Category *child) const
+{
+    if( !child ) {
+        return 0;
+    }
+
+    if( child == rootCategory() ) {
+        return 0;
+    }
+
+    return doFindCategoryParent( rootCategory(), child );
 }
 
 
