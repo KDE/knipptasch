@@ -19,9 +19,14 @@
 
 #include <QDialog>
 
-class PasswordWidget;
 class QString;
+class QModelIndex;
+
 class Account;
+class Category;
+class PasswordWidget;
+class CategoryModel;
+
 
 namespace Ui {
     class AccountSettingsDialog;
@@ -49,12 +54,26 @@ class AccountSettingsDialog : public QDialog
     private slots:
         void onValueChanged();
         void onApplyChanges();
+        void onCategoryChanged();
+
+        void onContextMenu(const QPoint &point);
+
+        void addCategoryClicked();
+        void addSubCategoryClicked();
+        void importCategoryClicked();
+        void exportCategoryClicked();
+        void removeCategoryClicked();
+
+        void selectNewCategory(const QModelIndex&, int);
+
+    private:
+        void addCategory(bool belowOfCurrent);
 
     private:
         Ui::AccountSettingsDialog *ui;
         PasswordWidget *m_passwordWidget;
 
-        Account *m_account;
+        CategoryModel *m_model;
 };
 
 
