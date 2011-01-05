@@ -92,6 +92,7 @@ class AccountModel : public QAbstractTableModel
         QVariant backgroundRoleData(const QModelIndex &index) const;
         QVariant foregroundRoleData(const QModelIndex &index) const;
         QVariant textAlignmentRoleData(const QModelIndex &index) const;
+        QVariant decorationRoleData(const QModelIndex &index) const;
 
         void initDemoAccountAddPosting(const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true);
 

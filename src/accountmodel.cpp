@@ -123,11 +123,11 @@ AccountModel::PostingTypeFlags AccountModel::postingType(int row) const
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
-    if( parent.isValid() ) {
+    if( !m_account ) {
         return 0;
     }
 
-    if( !m_account ) {
+    if( parent.isValid() ) {
         return 0;
     }
 
@@ -166,7 +166,10 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             return backgroundRoleData( index );
 
         case Qt::ForegroundRole:
-            return foregroundRoleData(index );
+            return foregroundRoleData( index );
+
+        case Qt::DecorationRole:
+            return decorationRoleData( index );
 
         case Qt::EditRole:
         case Qt::DisplayRole:
@@ -443,7 +446,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
         return QAbstractItemModel::flags( index );
     }
 
-    return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+    return QAbstractTableModel::flags( index ) | Qt::ItemIsEditable;
 }
 
 
@@ -594,6 +597,35 @@ QVariant AccountModel::textAlignmentRoleData(const QModelIndex &index) const
 
     return QVariant();
 }
+
+
+QVariant AccountModel::decorationRoleData(const QModelIndex &index) const
+{
+    switch( index.column() ) {
+        case AccountModel::CATEGORY:
+        {
+            Posting *entry = 0;
+            if( index.row() < m_account->countPostings() ) {
+                entry = m_account->posting( index.row() );
+            }
+            else {
+                entry = m_posting;
+            }
+
+            Q_ASSERT( entry );
+
+            if( entry->category() && entry->category()->color().isValid() ) {
+                return entry->category()->color();
+            }
+        }
+
+        default:
+            break;
+    }
+
+    return QVariant();
+}
+
 
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
