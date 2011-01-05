@@ -20,6 +20,7 @@
 #include <QColor>
 #include <QVariant>
 #include <QSettings>
+#include <QSize>
 
 #define POSITIVE_AMOUNT_FOREGROUND_COLOR QColor( 0, 140, 0 )
 #define NEGATIVE_AMOUNT_FOREGROUND_COLOR QColor( 140, 0, 0 )
@@ -275,6 +276,17 @@ class Preferences
         void setDefaultPostingBackgroundColor(const QColor &color)
         {
             m_settings.setValue( "Appearance/DefaultPostingBackgroundColor", color );
+            sync();
+        }
+
+        QSize minimumCategoryComboBoxPopupSize() const
+        {
+            return m_settings.value( "Appearance/MinimumCategoryComboBoxPopupSize", QSize( 250, 300 ) ).value<QSize>();
+        }
+
+        void setMinimumCategoryComboBoxPopupSize(const QSize &size)
+        {
+            m_settings.setValue( "Appearance/MinimumCategoryComboBoxPopupSize", size );
             sync();
         }
 

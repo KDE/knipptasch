@@ -18,11 +18,14 @@
 #define CATEGORYCOMBOBOX_H
 
 #include <KComboBox>
+#include <QSet>
 
 class QTreeView;
 class QEvent;
 class QStandardItem;
 class QStandardItemModel;
+class QStandardItem;
+
 class Category;
 class Account;
 
@@ -54,12 +57,15 @@ class CategoryComboBox : public KComboBox
 
     private:
         void addCategory(QStandardItem *parent, const Category *category);
+        QIcon renderCategoryIcon(const Category *category);
 
     private:
         QTreeView *m_view;
         QStandardItemModel *m_model;
+        QSet<QStandardItem*> m_items;
         const Account *m_account;
         bool m_skipNextHide;
+        int m_selectedCategory;
 };
 
 

@@ -5,6 +5,8 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="knipptaschrc" />
 
+  <include>QSize</include>
+
   <group name="General">
     <entry name="ShowStatusBar" type="Bool">
       <label context="@label">Show status bar</label>
@@ -111,6 +113,11 @@
     <entry name="DefaultPostingBackgroundColor" type="Color">
       <label context="@label"></label>
       <default>90, 255, 70, 40</default>
+    </entry>
+
+    <entry name="MinimumCategoryComboBoxPopupSize" type="Size">
+      <label context="@label"></label>
+      <default code="true">QSize(250, 300)</default>
     </entry>
   </group>
 
