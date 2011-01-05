@@ -55,7 +55,7 @@ void MoneyDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
         QStyledItemDelegate::setEditorData( editor, index );
     }
     else {
-        double value = model->data(index, Qt::EditRole).value<Money>();
+        double value = model->data( index, Qt::EditRole ).value<Money>();
         input->setValue( value );
     }
 }
@@ -83,7 +83,7 @@ QSize MoneyDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIn
     static int minsize = qApp->fontMetrics().width( "-2000,00" );
     const QSize size = QStyledItemDelegate::sizeHint( option, index );
     int width = size.width() + 25;
-    
+
     return QSize( qMax( minsize, width ), size.height() );
 }
 

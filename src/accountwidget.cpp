@@ -315,7 +315,6 @@ void AccountWidget::loadConfig()
 
 void AccountWidget::saveConfig()
 {
-    qDebug() << "AccountWidget::saveConfig()";
     Preferences::self()->setHorizontalHeaderState( ui->view->horizontalHeader()->saveState().toBase64() );
 }
 
@@ -495,7 +494,6 @@ void AccountWidget::slotSetIndexToCurrentInput()
 
 void AccountWidget::slotUpdateAccountInfo()
 {
-    qDebug() << "AccountWidget::slotUpdateAccountInfo()";
     const QString &acname = (!account() || account()->name().isEmpty() )
                                 ? tr( "Unnamed Account" ) : account()->name();
     ui->accountName->setText( acname );
