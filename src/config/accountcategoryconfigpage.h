@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010,2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,49 +14,65 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTSETTINGSDIALOG_H
-#define ACCOUNTSETTINGSDIALOG_H
+#ifndef ACCOUNTCATEGORYCONFIGPAGE_H
+#define ACCOUNTCATEGORYCONFIGPAGE_H
 
-#include <QDialog>
+#include "abstractconfigpage.h"
 
-class QString;
 class QModelIndex;
 
 class Account;
-class Category;
-class PasswordWidget;
 class CategoryModel;
 
-
-namespace Ui {
-    class AccountSettingsDialog;
+namespace Ui
+{
+    class AccountCategoryConfigPage;
 }
 
 
 /**
- * @class AccountSettingsDialog
+ * @class AccountCategoryConfigPage
  * @brief
+ *
+ * @see AbstractConfigPage
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class AccountSettingsDialog : public QDialog
+class AccountCategoryConfigPage : public AbstractConfigPage
 {
     Q_OBJECT
+    Q_DISABLE_COPY(AccountCategoryConfigPage)
 
     public:
-        explicit AccountSettingsDialog(Account *account, QWidget* parent = 0);
-        ~AccountSettingsDialog();
+        /**
+         * Constructs a new AccountCategoryConfigPage
+         */
+        explicit AccountCategoryConfigPage(Account *account, ConfigWidget *parent);
 
-        Account* account();
-        const Account* account() const;
-        void setAccount(Account *account);
+        /**
+         * Destructs the config page.
+         */
+        virtual ~AccountCategoryConfigPage();
+
+        /**
+         * Returns whether the current state of the dialog is different
+         * from the current configuration.
+         */
+        virtual bool isModified() const;
+
+    public slots:
+        /**
+         * Apply all changes.
+         */
+        virtual bool commit();
+
+        /**
+         * Revert all changes and reload the initial data.
+         */
+        virtual void revert();
 
     private slots:
         void onValueChanged();
-        void onApplyChanges();
-        void onCategoryChanged();
-
-        void onContextMenu(const QPoint &point);
 
         void addCategoryClicked();
         void addSubCategoryClicked();
@@ -70,9 +86,8 @@ class AccountSettingsDialog : public QDialog
         void addCategory(bool belowOfCurrent);
 
     private:
-        Ui::AccountSettingsDialog *ui;
-        PasswordWidget *m_passwordWidget;
-
+        Ui::AccountCategoryConfigPage *ui;
+        Account *m_account;
         CategoryModel *m_model;
 };
 

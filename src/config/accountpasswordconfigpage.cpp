@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010,2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,64 +14,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "passwordwidget.h"
-#include "ui_passwordwidget.h"
+#include "accountpasswordconfigpage.h"
+
+#include "ui_accountpasswordconfigpage.h"
 
 #include "compat/iconloader.h"
+
 #include "backend/account.h"
 
+#include <QDebug>
 
-PasswordWidget::PasswordWidget(QWidget *parent)
-  : QWidget( parent ),
-    ui( new Ui::PasswordWidget ),
-    m_account( 0 )
+
+
+AccountPasswordConfigPage::AccountPasswordConfigPage(Account *account, ConfigWidget* parent)
+  : AbstractConfigPage( tr( "Password" ), DesktopIcon("dialog-password"), parent ),
+    ui( new Ui::AccountPasswordConfigPage ),
+    m_account( account )
 {
     ui->setupUi( this );
 
     ui->iconLabel->setPixmap( DesktopIcon("dialog-password") );
     ui->messageIcon->setPixmap( DesktopIcon("dialog-warning") );
 
-    ui->level->clear();
-    ui->level->addItem( tr( "High" ), static_cast<int>( Account::High ) );
-    ui->level->addItem( tr( "Average" ), static_cast<int>( Account::Average ) );
-    ui->level->addItem( tr( "Low" ), static_cast<int>( Account::Low ) );
-    ui->level->setCurrentIndex( 2 );
-
     connect( ui->usePassword, SIGNAL( toggled(bool) ), this, SLOT( onValueChanged() ) );
-    connect( ui->level, SIGNAL( currentIndexChanged(int) ), this, SLOT( onValueChanged() ) );
     connect( ui->pw1, SIGNAL( textChanged(QString) ), this, SLOT( onValueChanged() ) );
     connect( ui->pw2, SIGNAL( textChanged(QString) ), this, SLOT( onValueChanged() ) );
+
+#if defined( WITH_QCA2 )
+    ui->usePassword->setEnabled( QCA::isSupported( "aes256-cbc-pkcs7" ) );
+#else
+    ui->usePassword->setEnabled( false );
+#endif
+
+    onValueChanged();
 }
 
 
-PasswordWidget::~PasswordWidget()
+AccountPasswordConfigPage::~AccountPasswordConfigPage()
 {
+    delete ui;
 }
 
 
-bool PasswordWidget::isValid() const
+bool AccountPasswordConfigPage::isModified() const
 {
-    if( !m_account ) {
-        return true;
-    }
-
-    if( !ui->usePassword->isChecked() ) {
-        return true;
-    }
-
-    if( !ui->pw1->text().isEmpty() && ( ui->pw1->text() == ui->pw2->text() ) ) {
-        return true;
-    }
-
-    return false;
-}
-
-
-bool PasswordWidget::isModified() const
-{
-    if( !m_account ) {
-        return false;
-    }
+    Q_ASSERT( m_account );
 
     if( m_account->isPasswordEnabled() != ui->usePassword->isChecked() ) {
         return true;
@@ -85,34 +72,50 @@ bool PasswordWidget::isModified() const
 }
 
 
-void PasswordWidget::onApplyChanges()
+bool AccountPasswordConfigPage::isValid() const
 {
-    m_account->setPasswordEnabled( ui->usePassword->isChecked() );
-    m_account->setPassword( ui->pw1->text().toUtf8() );
-    m_account->setSecurityLevel(
-        static_cast<Account::SecurityLevel>( ui->level->itemData( ui->level->currentIndex() ).toInt() )
-    );
+    Q_ASSERT( m_account );
+
+    if( !ui->usePassword->isChecked() ) {
+        return true;
+    }
+
+    if( !ui->pw1->text().isEmpty() && ( ui->pw1->text() == ui->pw2->text() ) ) {
+        return true;
+    }
+
+    return false;
 }
 
 
-void PasswordWidget::setAccount(Account *account)
+bool AccountPasswordConfigPage::commit()
 {
-    m_account = account;
+    Q_ASSERT( m_account );
+
+    m_account->setPasswordEnabled( ui->usePassword->isChecked() );
+    m_account->setPassword( ui->pw1->text().toUtf8() );
+
+    return true;
+}
+
+
+void AccountPasswordConfigPage::revert()
+{
+    Q_ASSERT( m_account );
 
     bool block = blockSignals( true );
 
-    ui->level->setCurrentIndex( ui->level->findData( account->securityLevel() ) );
-    ui->pw1->setText( account->password() );
-    ui->pw2->setText( account->password() );
-    ui->usePassword->setChecked( account->isPasswordEnabled() );
+    ui->pw1->setText( m_account->password() );
+    ui->pw2->setText( m_account->password() );
+    ui->usePassword->setChecked( m_account->isPasswordEnabled() );
 
     blockSignals( block );
 
-    emit valueChanged();
+    onValueChanged();
 }
 
 
-void PasswordWidget::onValueChanged()
+void AccountPasswordConfigPage::onValueChanged()
 {
     ui->messageWidget->setVisible( false );
 
@@ -127,7 +130,7 @@ void PasswordWidget::onValueChanged()
         }
     }
 
-    emit valueChanged();
+    emit pageModified();
 }
 
 

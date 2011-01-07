@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,48 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PASSWORDWIDGET_H
-#define PASSWORDWIDGET_H
+#ifndef ACCOUNTCONFIGDIALOG_H
+#define ACCOUNTCONFIGDIALOG_H
 
-#include <QWidget>
+#include "configdialog.h"
 
 class Account;
 
-namespace Ui {
-    class PasswordWidget;
-}
-
 
 /**
- * @class PasswordWidget
+ * @class AccountConfigDialog
  * @brief
+ *
+ * @see ConfigDialog
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class PasswordWidget : public QWidget
+class AccountConfigDialog : public ConfigDialog
 {
     Q_OBJECT
+    Q_DISABLE_COPY(AccountConfigDialog)
 
     public:
-        explicit PasswordWidget(QWidget *parent = 0);
-        ~PasswordWidget();
+        /**
+         * Constructs a new ConfigDialog
+         */
+        explicit AccountConfigDialog(Account *account, QWidget *parent = 0);
 
-        bool isValid() const;
-        bool isModified() const;
-
-        void onApplyChanges();
-
-        void setAccount(Account *account);
-
-    signals:
-        void valueChanged();
-
-    private slots:
-        void onValueChanged();
-
-    private:
-        Ui::PasswordWidget *ui;
-        Account *m_account;
+        /**
+         * Destructs the config dialog.
+         */
+        virtual ~AccountConfigDialog();
 };
 
 

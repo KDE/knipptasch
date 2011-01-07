@@ -21,8 +21,9 @@
 #include "preferences.h"
 #include "accountmodel.h"
 #include "accountsortfilterproxymodel.h"
-#include "accountsettingsdialog.h"
 #include "quickreportpopup.h"
+
+#include "config/accountconfigdialog.h"
 
 #include "delegate/datedelegate.h"
 #include "delegate/postingtextdelegate.h"
@@ -38,10 +39,11 @@
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
 #include "compat/standardaction.h"
-#include <compat/utils.h>
+#include "compat/utils.h"
 
 #include "backend/money.h"
 #include "backend/storage.h"
+#include "backend/storageexception.h"
 
 #include <modeltest/modeltest.h>
 
@@ -59,7 +61,6 @@
 #include <QCompleter>
 #include <QTimer>
 #include <QDebug>
-#include "backend/storageexception.h"
 
 
 AccountWidget::AccountWidget(MainWindow *mainWindow)
@@ -461,7 +462,9 @@ void AccountWidget::onPostingValueDateToMaturity()
 
 void AccountWidget::onConfigureAccount()
 {
-    QPointer<AccountSettingsDialog> dialog = new AccountSettingsDialog( account(), this );
+    QPointer<AccountConfigDialog> dialog = new AccountConfigDialog( account(), this );
+    connect( dialog, SIGNAL( committed() ), this, SLOT( slotUpdateAccountInfo() ) );
+    connect( dialog, SIGNAL( committed() ), this, SIGNAL( changed() ) );
 
     if( dialog->exec() == QDialog::Accepted ) {
         slotUpdateAccountInfo();
