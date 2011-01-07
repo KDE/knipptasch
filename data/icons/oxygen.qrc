@@ -3,6 +3,7 @@
     <file alias="oxygen/16x16/actions/dialog-ok.png">oxygen/16x16/actions/dialog-ok.png</file>
     <file alias="oxygen/48x48/status/dialog-warning.png">oxygen/48x48/status/dialog-warning.png</file>
     <file alias="oxygen/48x48/status/dialog-password.png">oxygen/48x48/status/dialog-password.png</file>
+    <file alias="oxygen/48x48/actions/view-categories.png">oxygen/48x48/actions/view-categories.png</file>
     <file alias="oxygen/48x48/actions/view-bank-account.png">oxygen/48x48/actions/view-bank-account.png</file>
     <file alias="oxygen/48x48/mimetypes/text-csv.png">oxygen/48x48/mimetypes/text-csv.png</file>
     <file alias="oxygen/22x22/status/dialog-error.png">oxygen/22x22/status/dialog-error.png</file>
