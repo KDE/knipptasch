@@ -143,18 +143,26 @@ set(knipptasch_SOURCES
     src/welcomewidget.cpp
     src/mainwindow.cpp
     src/savemodifieddialog.cpp
-    src/accountsettingsdialog.cpp
     src/settingsdialog.cpp
     src/recentfilemenu.cpp
     src/quickreportpopup.cpp
     src/quickreportwidget.cpp
     src/passworddialog.cpp
-    src/passwordwidget.cpp
     src/datepickerpopup.cpp
     src/categorycombobox.cpp
     src/categorymodel.cpp
     src/dateedit.cpp
     src/main.cpp
+
+    src/config/configdialog.cpp
+    src/config/configwidget.cpp
+    src/config/abstractconfigpage.cpp
+
+    src/config/accountconfigwidget.cpp
+    src/config/accountconfigdialog.cpp
+    src/config/accountcategoryconfigpage.cpp
+    src/config/accountgeneralconfigpage.cpp
+    src/config/accountpasswordconfigpage.cpp
 
     src/interface/abstractaccounttabwidget.cpp
 
@@ -206,17 +214,25 @@ set( knipptasch_HEADERS
     src/welcomewidget.h
     src/aboutdialog.h
     src/savemodifieddialog.h
-    src/accountsettingsdialog.h
     src/settingsdialog.h
     src/recentfilemenu.h
     src/quickreportpopup.h
     src/quickreportwidget.h
     src/passworddialog.h
-    src/passwordwidget.h
     src/datepickerpopup.h
     src/categorycombobox.h
     src/categorymodel.h
     src/dateedit.h
+
+    src/config/configdialog.h
+    src/config/configwidget.h
+    src/config/abstractconfigpage.h
+
+    src/config/accountconfigwidget.h
+    src/config/accountconfigdialog.h
+    src/config/accountcategoryconfigpage.h
+    src/config/accountgeneralconfigpage.h
+    src/config/accountpasswordconfigpage.h
 
     src/interface/abstractaccounttabwidget.h
 
@@ -254,11 +270,13 @@ set( knipptasch_FORMS
     src/mainwindow.ui
     src/welcomewidget.ui
     src/savemodifieddialog.ui
-    src/accountsettingsdialog.ui
     src/settingsdialog.ui
     src/quickreportwidget.ui
     src/passworddialog.ui
-    src/passwordwidget.ui
+
+    src/config/accountcategoryconfigpage.ui
+    src/config/accountgeneralconfigpage.ui
+    src/config/accountpasswordconfigpage.ui
 
     src/accounttabwidgets/postingtabwidget.ui
     src/accounttabwidgets/splitpostingtabwidget.ui
