@@ -201,24 +201,24 @@ void MainWindow::setupActions()
     StandardAction::find( this, SLOT( onFind() ), actionCollection() );
 
     // Posting Actions
-    QAction *postingDeleteAction = actionCollection()->addAction( "posting_delete", this, SLOT( onPostingDelete() ) );
+    KAction *postingDeleteAction = actionCollection()->addAction( "posting_delete", this, SLOT( onPostingDelete() ) );
     postingDeleteAction->setText( tr( "&Delete Posting" ) );
     postingDeleteAction->setIcon( BarIcon("edit-delete") );
 
-    QAction *postingCloneAction = actionCollection()->addAction( "posting_clone", this, SLOT( onPostingClone() ) );
+    KAction *postingCloneAction = actionCollection()->addAction( "posting_clone", this, SLOT( onPostingClone() ) );
     postingCloneAction->setText( tr( "&Clone Posting" ) );
     //postingCloneAction->setIcon( BarIcon("") );
 
-    QAction *postingValueDateToTodayAction = actionCollection()->addAction( "posting_valuedate_to_today", this, SLOT( onPostingValueDateToToday() ) );
+    KAction *postingValueDateToTodayAction = actionCollection()->addAction( "posting_valuedate_to_today", this, SLOT( onPostingValueDateToToday() ) );
     postingValueDateToTodayAction->setText( tr( "Set Value Date to Today" ) );
     postingValueDateToTodayAction->setIcon( BarIcon("view-calendar") );
 
-    QAction *postingValueDateToMaturityAction = actionCollection()->addAction( "posting_valuedate_to_maturity", this, SLOT( onPostingValueDateToMaturity() ) );
+    KAction *postingValueDateToMaturityAction = actionCollection()->addAction( "posting_valuedate_to_maturity", this, SLOT( onPostingValueDateToMaturity() ) );
     postingValueDateToMaturityAction->setText( tr( "Set Value Date to Maturity" ) );
     postingValueDateToMaturityAction->setIcon( BarIcon("view-calendar") );
 
     // Settings Actions
-    QAction* configureAccountAction = actionCollection()->addAction( "configure_account", this, SLOT( onConfigureAccount() ) );
+    KAction* configureAccountAction = actionCollection()->addAction( "configure_account", this, SLOT( onConfigureAccount() ) );
     configureAccountAction->setText( tr( "Configure &Account..." ) );
     configureAccountAction->setIcon( BarIcon("view-bank-account") );
 
@@ -896,7 +896,7 @@ void MainWindow::loadExportPlugins()
     QList<QAction*> actions;
     for(int i = 0; i < m_exportPlugins.size(); ++i ) {
         const ExportPlugin *plugin = m_exportPlugins.at( i );
-        QAction *action = new QAction( KIcon( plugin->exportActionIcon() ), plugin->exportActionName(), this );
+        KAction *action = new KAction( KIcon( plugin->exportActionIcon() ), plugin->exportActionName(), this );
         action->setData( i );
 
         actions.append( action );
@@ -925,7 +925,7 @@ void MainWindow::loadImportPlugins()
     QList<QAction*> actions;
     for(int i = 0; i < m_importPlugins.size(); ++i ) {
         const ImportPlugin *plugin = m_importPlugins.at( i );
-        QAction *action = new QAction( KIcon( plugin->importActionIcon() ), plugin->importActionName(), this );
+        KAction *action = new KAction( KIcon( plugin->importActionIcon() ), plugin->importActionName(), this );
         action->setData( i );
 
         actions.append( action );
