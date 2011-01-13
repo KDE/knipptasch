@@ -20,11 +20,18 @@
 
 #include <QtGlobal>
 #include <QString>
+#include <QFileDialog>
 
 class QDateTime;
 class QDate;
 class QTime;
 class QWidget;
+
+
+
+QString getOpenFileName(QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0);
+QString getSaveFileName(QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0);
+
 
 QStringList findDataDirPaths();
 QString findExistingFilePath(const QString& fileName);

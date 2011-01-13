@@ -311,6 +311,8 @@ void AccountWidget::loadConfig()
 
     ui->view->horizontalHeader()->setCascadingSectionResizes(
                                     Preferences::self()->cascadingSectionResize() );
+
+    ui->view->reset();
 }
 
 
@@ -346,14 +348,9 @@ bool AccountWidget::onSaveAsFile(const QString &str)
 
     QString filename = str.trimmed();
     if( filename.isEmpty() ) {
-#if defined(HAVE_KDE)
-        filename = KFileDialog::getSaveFileName( KUrl(), "*.ka|" + tr( "All Supported Files" ), this );
-#else
-        filename = QFileDialog::getSaveFileName( this, // krazy:exclude=qclasses
-                     tr( "Save File - %1" ).arg( QCoreApplication::applicationName() ),
-                     QString(), tr( "All Supported Files" ) + " (*.ka)"
-                   );
-#endif
+        filename = getSaveFileName( this, QString(), QString(),
+                                    Storage::filterStringQt(),
+                                    Storage::filterStringKDE() );
 
         if( filename.isEmpty() ) {
             return false;

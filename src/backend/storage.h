@@ -34,6 +34,9 @@ class Storage
         static void writeAccount(Account *acc, const QString &filename);
         static void readAccount(Account *acc, const QString &filename, const QByteArray &password = QByteArray());
 
+        static QString filterStringQt();
+        static QString filterStringKDE();
+
     private:
         Storage();
         ~Storage();

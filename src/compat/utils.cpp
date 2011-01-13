@@ -30,6 +30,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KStandardDirs>
+#include <KFileDialog>
 #include <KIO/NetAccess>
 #include <KIO/CopyJob>
 #include <KIO/FileCopyJob>
@@ -40,6 +41,32 @@
 #include <QDebug>
 #include <preferences.h>
 
+
+
+QString getOpenFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options)
+{
+    QString cap = caption.isEmpty() ? QObject::tr( "Open File" ) : caption;
+
+#if defined(HAVE_KDE)
+    return KFileDialog::getOpenFileName( KUrl::fromPath( dir ), filterKDE, parent, cap );
+#endif
+
+    cap.append( QString( " - %1" ).arg( QCoreApplication::applicationName() ) );
+    return QFileDialog::getOpenFileName( parent, cap, dir, filterQt, selectedFilter, options );
+}
+
+
+QString getSaveFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options)
+{
+    QString cap = caption.isEmpty() ? QObject::tr( "Save File" ) : caption;
+
+#if defined(HAVE_KDE)
+    return KFileDialog::getSaveFileName( KUrl::fromPath( dir ), filterKDE, parent, cap );
+#endif
+
+    cap.append( QString( " - %1" ).arg( QCoreApplication::applicationName() ) );
+    return QFileDialog::getSaveFileName( parent, cap, dir, filterQt, selectedFilter, options );
+}
 
 
 bool copyFile(QWidget* parent, const QString& src, const QString& dest)

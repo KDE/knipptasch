@@ -73,6 +73,7 @@
 
 #include <QDebug>
 #include "passworddialog.h"
+#include "compat/utils.h"
 
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
@@ -533,14 +534,9 @@ void MainWindow::onOpenFile(const QString &str)
 {
     QString filename = str.trimmed();
     if( filename.isEmpty() ) {
-#if defined(HAVE_KDE)
-        filename = KFileDialog::getOpenFileName( KUrl(), "*.ka|" + tr( "All Supported Files" ), this );
-#else
-        filename = QFileDialog::getOpenFileName( this, // krazy:exclude=qclasses
-                     tr( "Open File - %1" ).arg( QCoreApplication::applicationName() ),
-                     QString(), tr( "All Supported Files" ) + " (*.ka)"
-                   );
-#endif
+        filename = getOpenFileName( this, QString(), QString(),
+                                    Storage::filterStringQt(),
+                                    Storage::filterStringKDE() );
 
         if( filename.isEmpty() ) {
             return;

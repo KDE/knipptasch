@@ -40,6 +40,18 @@ void Storage::readAccount(Account *acc, const QString &filename, const QByteArra
 }
 
 
+QString Storage::filterStringQt()
+{
+    return QObject::tr( "Knipptasch Account File" ) + " (*.ka)";
+}
+
+
+QString Storage::filterStringKDE()
+{
+    return QString( "*.ka|%1" ).arg( QObject::tr( "Knipptasch Account File" ) );
+}
+
+
 Storage::Storage()
 {
 }
