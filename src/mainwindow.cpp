@@ -21,8 +21,9 @@
 #include "preferences.h"
 
 #include "savemodifieddialog.h"
-#include "settingsdialog.h"
 #include "recentfilemenu.h"
+
+#include "config/preferencesconfigdialog.h"
 
 #include "backend/account.h"
 #include "backend/storage.h"
@@ -74,6 +75,7 @@
 #include <QDebug>
 #include "passworddialog.h"
 #include "compat/utils.h"
+#include <QTimer>
 
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
@@ -115,7 +117,7 @@ MainWindow::MainWindow(QWidget* parent) :
     loadExportPlugins();
     loadImportPlugins();
 
-    loadConfig();
+    onLoadConfig();
 
     connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ),
              this, SLOT( onNewFile() ) );
@@ -142,6 +144,29 @@ MainWindow::MainWindow(QWidget* parent) :
 #endif
 
     checkActionStates();
+
+    QApplication::processEvents();
+
+    switch( Preferences::self()->onStartupAction() ) {
+        case Preferences::WelcomePage:
+            break;
+
+        case Preferences::BlankFile:
+            onNewFile();
+            break;
+
+        case Preferences::LastFile:
+            if( !Preferences::self()->recentFilesList().isEmpty() ) {
+                onOpenFile( Preferences::self()->recentFilesList().first() );
+            }
+            break;
+
+        case Preferences::DefaultFile:
+            if( !Preferences::self()->onStartupActionDefaultFile().isEmpty() ) {
+                onOpenFile( Preferences::self()->onStartupActionDefaultFile() );
+            }
+            break;
+    }
 }
 
 
@@ -289,44 +314,6 @@ void MainWindow::setupActions()
     mainToolBar->addAction( actionCollection()->action( "file_close" ) );
 
     addToolBar( mainToolBar );
-#endif
-}
-
-
-void MainWindow::loadConfig()
-{
-    QList<AccountWidget*> list = allAccountWidgets();
-    foreach(AccountWidget *widget, list ) {
-        widget->loadConfig();
-    }
-
-    ui->tabWidget->setMovable( Preferences::self()->movableTabs() );
-    ui->tabWidget->setTabsClosable( Preferences::self()->closeButtonOnTabs() );
-
-    if( Preferences::self()->tabCornerCloseButton() ) {
-
-        if( !ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
-            QToolButton *button = new QToolButton( ui->tabWidget );
-            button->setToolTip( tr( "Close the current tab" ) );
-            button->setIcon( BarIcon("tab-close") );
-            button->setAutoRaise( true );
-            button->setEnabled( ui->stackedWidget->currentIndex() != 0 );
-
-            connect( button, SIGNAL( clicked(bool) ), this, SLOT( onCloseFile() ) );
-
-            ui->tabWidget->setCornerWidget( button, Qt::TopRightCorner );
-        }
-        else {
-            ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( true );
-        }
-    }
-    else {
-        ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( false );
-    }
-
-#if !defined(HAVE_KDE)
-    actionCollection()->action( "options_show_statusbar" )->setChecked( Preferences::self()->showStatusBar() );
-    onShowStatusbar();
 #endif
 }
 
@@ -484,6 +471,12 @@ void MainWindow::checkActionStates()
             }
         }
 
+#if defined(HAVE_KDE) // only available in KTabWidget, not in QTabWidget
+        if( ui->tabWidget->count() == 1 ) {
+            ui->tabWidget->setTabBarHidden( Preferences::self()->hideEmptyTabBar() );
+        }
+#endif
+
         Q_ASSERT( currentAccountWidget() );
 
         currentAccountWidget()->checkActionState();
@@ -519,6 +512,45 @@ void MainWindow::onTabCloseRequest(int index)
     }
 
     checkActionStates();
+}
+
+
+void MainWindow::onLoadConfig()
+{
+    QList<AccountWidget*> list = allAccountWidgets();
+    foreach(AccountWidget *widget, list ) {
+        widget->loadConfig();
+    }
+
+    ui->tabWidget->setMovable( Preferences::self()->movableTabs() );
+    ui->tabWidget->setTabsClosable( Preferences::self()->closeButtonOnTabs() );
+
+    if( Preferences::self()->tabCornerCloseButton() ) {
+
+        if( !ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
+            QToolButton *button = new QToolButton( ui->tabWidget );
+            button->setToolTip( tr( "Close the current tab" ) );
+            button->setIcon( BarIcon("tab-close") );
+            button->setAutoRaise( true );
+            button->setEnabled( ui->stackedWidget->currentIndex() != 0 );
+
+            connect( button, SIGNAL( clicked(bool) ), this, SLOT( onCloseFile() ) );
+
+            ui->tabWidget->setCornerWidget( button, Qt::TopRightCorner );
+        }
+        else {
+            ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( true );
+        }
+    }
+    else {
+        ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( false );
+    }
+
+#if !defined(HAVE_KDE)
+    actionCollection()->action( "options_show_statusbar" )
+                      ->setChecked( Preferences::self()->showStatusBar() );
+    onShowStatusbar();
+#endif
 }
 
 
@@ -782,10 +814,11 @@ void MainWindow::onConfigureAccount()
 
 void MainWindow::onConfigure()
 {
-    QPointer<SettingsDialog> dialog = new SettingsDialog( this );
+    QPointer<PreferencesConfigDialog> dialog = new PreferencesConfigDialog( this );
+    connect( dialog, SIGNAL( committed() ), this, SLOT( onLoadConfig() ) );
 
     if( dialog->exec() == QDialog::Accepted ) {
-        loadConfig();
+        onLoadConfig();
     }
 
     delete dialog;

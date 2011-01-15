@@ -189,7 +189,8 @@ void AccountWidget::setAccount(Account *acc)
     m_model->setAccount( acc );
     slotUpdateAccountInfo();
 
-    QTimer::singleShot( 250, this, SLOT( selectCurrentPosting() ) );
+    QTimer::singleShot( 0, this, SLOT( loadConfig() ) );
+    QTimer::singleShot( 0, this, SLOT( selectCurrentPosting() ) );
 }
 
 

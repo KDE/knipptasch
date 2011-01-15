@@ -143,7 +143,6 @@ set(knipptasch_SOURCES
     src/welcomewidget.cpp
     src/mainwindow.cpp
     src/savemodifieddialog.cpp
-    src/settingsdialog.cpp
     src/recentfilemenu.cpp
     src/quickreportpopup.cpp
     src/quickreportwidget.cpp
@@ -157,12 +156,17 @@ set(knipptasch_SOURCES
     src/config/configdialog.cpp
     src/config/configwidget.cpp
     src/config/abstractconfigpage.cpp
-
     src/config/accountconfigwidget.cpp
     src/config/accountconfigdialog.cpp
     src/config/accountcategoryconfigpage.cpp
     src/config/accountgeneralconfigpage.cpp
     src/config/accountpasswordconfigpage.cpp
+    src/config/preferencesconfigdialog.cpp
+    src/config/preferencesconfigwidget.cpp
+    src/config/preferencesgeneralconfigpage.cpp
+    src/config/preferencesappearanceconfigpage.cpp
+    src/config/preferencesaccounttableconfigpage.cpp
+    src/config/appearancecolorchooserwidget.cpp
 
     src/interface/abstractaccounttabwidget.cpp
 
@@ -214,7 +218,6 @@ set( knipptasch_HEADERS
     src/welcomewidget.h
     src/aboutdialog.h
     src/savemodifieddialog.h
-    src/settingsdialog.h
     src/recentfilemenu.h
     src/quickreportpopup.h
     src/quickreportwidget.h
@@ -227,12 +230,17 @@ set( knipptasch_HEADERS
     src/config/configdialog.h
     src/config/configwidget.h
     src/config/abstractconfigpage.h
-
     src/config/accountconfigwidget.h
     src/config/accountconfigdialog.h
     src/config/accountcategoryconfigpage.h
     src/config/accountgeneralconfigpage.h
     src/config/accountpasswordconfigpage.h
+    src/config/preferencesconfigdialog.h
+    src/config/preferencesconfigwidget.h
+    src/config/preferencesgeneralconfigpage.h
+    src/config/preferencesappearanceconfigpage.h
+    src/config/preferencesaccounttableconfigpage.h
+    src/config/appearancecolorchooserwidget.h
 
     src/interface/abstractaccounttabwidget.h
 
@@ -270,13 +278,17 @@ set( knipptasch_FORMS
     src/mainwindow.ui
     src/welcomewidget.ui
     src/savemodifieddialog.ui
-    src/settingsdialog.ui
     src/quickreportwidget.ui
     src/passworddialog.ui
 
+    src/config/configwidget.ui
     src/config/accountcategoryconfigpage.ui
     src/config/accountgeneralconfigpage.ui
     src/config/accountpasswordconfigpage.ui
+    src/config/preferencesgeneralconfigpage.ui
+    src/config/preferencesappearanceconfigpage.ui
+    src/config/preferencesaccounttableconfigpage.ui
+    src/config/appearancecolorchooserwidget.ui
 
     src/accounttabwidgets/postingtabwidget.ui
     src/accounttabwidgets/splitpostingtabwidget.ui

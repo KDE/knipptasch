@@ -27,7 +27,7 @@
 
 
 AccountPasswordConfigPage::AccountPasswordConfigPage(Account *account, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Password" ), DesktopIcon("dialog-password"), parent ),
+  : AbstractConfigPage( tr( "Password" ), tr( "Password Options" ), DesktopIcon("preferences-desktop-cryptography"), parent ),
     ui( new Ui::AccountPasswordConfigPage ),
     m_account( account )
 {
@@ -46,7 +46,7 @@ AccountPasswordConfigPage::AccountPasswordConfigPage(Account *account, ConfigWid
     ui->usePassword->setEnabled( false );
 #endif
 
-    onValueChanged();
+    revert();
 }
 
 

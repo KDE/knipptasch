@@ -24,7 +24,7 @@
 
 
 AccountGeneralConfigPage::AccountGeneralConfigPage(Account *account, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "General" ), DesktopIcon("view-bank-account"), parent ),
+  : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon("view-bank-account"), parent ),
     ui( new Ui::AccountGeneralConfigPage ),
     m_account( account )
 {

@@ -41,6 +41,12 @@
 class Preferences
 {
     public:
+        enum EnumSortPostingsBy { Maturity, ValueDate };
+
+        enum EnumOnStartupAction { WelcomePage, BlankFile, LastFile, DefaultFile };
+
+
+        //TODO
         enum EnumInvalidPostingPosition {
             Inline,
             ToTop,
@@ -54,9 +60,35 @@ class Preferences
             return &pref;
         }
 
+
         void sync()
         {
             m_settings.sync();
+        }
+
+
+        // == General ==
+
+        int onStartupAction() const
+        {
+            return m_settings.value( "General/OnStartupAction", static_cast<int>( WelcomePage ) ).toInt();
+        }
+
+        void setOnStartupAction(int value)
+        {
+            m_settings.setValue( "General/OnStartupAction", value );
+            sync();
+        }
+
+        QString onStartupActionDefaultFile() const
+        {
+            return m_settings.value( "General/OnStartupActionDefaultFile" ).toString();
+        }
+
+        void setOnStartupActionDefaultFile(const QString &fileName)
+        {
+            m_settings.setValue( "General/OnStartupActionDefaultFile", fileName );
+            sync();
         }
 
         bool showStatusBar() const
@@ -102,6 +134,74 @@ class Preferences
             m_settings.setValue( "General/RecentFilesMaximumCount", v > 0 ? v : 0 );
             sync();
         }
+
+        bool splashScreenEnabled() const
+        {
+            return m_settings.value( "General/SplashScreenEnabled", true ).toBool();
+        }
+
+        void setSplashScreenEnabled(bool b)
+        {
+            m_settings.setValue( "General/SplashScreenEnabled", b );
+            sync();
+        }
+
+        bool hideEmptyTabBar() const
+        {
+            return m_settings.value( "General/HideEmptyTabBar", false ).toBool();
+        }
+
+        void setHideEmptyTabBar(bool b)
+        {
+            m_settings.setValue( "General/HideEmptyTabBar", b );
+            sync();
+        }
+
+        bool middleClickCloseTab() const
+        {
+            return m_settings.value( "General/MiddleClickCloseTab", false ).toBool();
+        }
+
+        void setMiddleClickCloseTab(bool b)
+        {
+            m_settings.setValue( "General/MiddleClickCloseTab", b );
+            sync();
+        }
+
+        bool movableTabs() const
+        {
+            return m_settings.value( "General/MovableTabs", true ).toBool();
+        }
+
+        void setMovableTabs(bool b)
+        {
+            m_settings.setValue( "General/MovableTabs", b );
+            sync();
+        }
+
+        bool closeButtonOnTabs() const
+        {
+            return m_settings.value( "General/CloseButtonOnTabs", true ).toBool();
+        }
+
+        void setCloseButtonOnTabs(bool b)
+        {
+            m_settings.setValue( "General/CloseButtonOnTabs", b );
+            sync();
+        }
+
+        bool tabCornerCloseButton() const
+        {
+            return m_settings.value( "General/TabCornerCloseButton", true ).toBool();
+        }
+
+        void setTabCornerCloseButton(bool b)
+        {
+            m_settings.setValue( "General/TabCornerCloseButton", b );
+            sync();
+        }
+
+        // == Appearance ==
 
         bool positiveAmountForegroundEnabled() const
         {
@@ -290,14 +390,18 @@ class Preferences
             sync();
         }
 
-        bool sortPostingsByMaturity() const
+
+        // == TableView ==
+
+
+        int sortPostingsBy() const
         {
-            return m_settings.value( "TableView/SortPostingsByMaturity", true ).toBool();
+            return m_settings.value( "TableView/SortPostingsBy", static_cast<int>( Maturity ) ).toInt();
         }
 
-        void setSortPostingsByMaturity(bool b)
+        void setSortPostingsBy(int value)
         {
-            m_settings.setValue( "TableView/SortPostingsByMaturity", b );
+            m_settings.setValue( "TableView/SortPostingsBy", value );
             sync();
         }
 
@@ -367,6 +471,21 @@ class Preferences
             sync();
         }
 
+        bool autoCompletionEnabled()
+        {
+            return m_settings.value( "TableView/AutoCompletionEnabled", true ).toBool();
+        }
+
+        void setAutoCompletionEnabled(bool b)
+        {
+            m_settings.setValue( "TableView/AutoCompletionEnabled", b );
+            sync();
+        }
+
+
+        // == Window ==
+
+
         QString windowGeometry() const
         {
             return m_settings.value( "Window/WindowGeometry" ).toByteArray();
@@ -386,39 +505,6 @@ class Preferences
         void setWindowState(const QString &str)
         {
             m_settings.setValue( "Window/WindowState", str );
-            sync();
-        }
-
-        bool movableTabs() const
-        {
-            return m_settings.value( "Window/MovableTabs", true ).toBool();
-        }
-
-        void setMovableTabs(bool b)
-        {
-            m_settings.setValue( "Window/MovableTabs", b );
-            sync();
-        }
-
-        bool closeButtonOnTabs() const
-        {
-            return m_settings.value( "Window/CloseButtonOnTabs", true ).toBool();
-        }
-
-        void setCloseButtonOnTabs(bool b)
-        {
-            m_settings.setValue( "Window/CloseButtonOnTabs", b );
-            sync();
-        }
-
-        bool tabCornerCloseButton() const
-        {
-            return m_settings.value( "Window/TabCornerCloseButton", true ).toBool();
-        }
-
-        void setTabCornerCloseButton(bool b)
-        {
-            m_settings.setValue( "Window/TabCornerCloseButton", b );
             sync();
         }
 

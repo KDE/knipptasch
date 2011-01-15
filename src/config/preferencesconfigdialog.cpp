@@ -14,41 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTCONFIGDIALOG_H
-#define ACCOUNTCONFIGDIALOG_H
-
-#include "configdialog.h"
-
-class Account;
+#include "preferencesconfigdialog.h"
+#include "preferencesconfigwidget.h"
+#include <QCoreApplication>
 
 
-/**
- * @class AccountConfigDialog
- * @brief
- *
- * @see ConfigDialog
- *
- * @author Stefan Böhmann <kde@hilefoks.org>
- */
-class AccountConfigDialog : public ConfigDialog
+PreferencesConfigDialog::PreferencesConfigDialog(QWidget *parent)
+  : ConfigDialog( parent )
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountConfigDialog)
+    setWindowTitle( tr( "Configure Knipptasch - %1" ).arg( QCoreApplication::applicationName() ) );
 
-    public:
-        /**
-         * Constructs a new AccountConfigDialog
-         */
-        explicit AccountConfigDialog(Account *account, QWidget *parent = 0);
-
-        /**
-         * Destructs the config dialog.
-         */
-        virtual ~AccountConfigDialog();
-};
+    ConfigWidget *old = configWidget();
+    setConfigWidget( new PreferencesConfigWidget( this ) );
+    delete old;
+}
 
 
-#endif
+PreferencesConfigDialog::~PreferencesConfigDialog()
+{
+}
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

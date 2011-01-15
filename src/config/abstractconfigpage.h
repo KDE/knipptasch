@@ -39,11 +39,29 @@ class AbstractConfigPage : public QWidget
     Q_OBJECT
     Q_DISABLE_COPY(AbstractConfigPage)
 
+    public:
+        enum ErrorMessageType
+        {
+            InfoMessage,
+            WarningMessage,
+            ErrorMessage
+        };
+
     protected:
         /**
          * Constructs a new AbstractConfigPage
          */
-        explicit AbstractConfigPage(const QString &title, const QIcon &icon, ConfigWidget *parent);
+        explicit AbstractConfigPage(const QString &label, const QString &title, const QIcon &icon, ConfigWidget *parent);
+
+        /**
+         * Constructs a new AbstractConfigPage
+         */
+        explicit AbstractConfigPage(const QString &label, const QIcon &icon, ConfigWidget *parent);
+
+        /**
+         * Constructs a new AbstractConfigPage
+         */
+        explicit AbstractConfigPage(const QString &label, ConfigWidget *parent);
 
     public:
         /**
@@ -62,8 +80,78 @@ class AbstractConfigPage : public QWidget
         /**
          * Returns whether the current state of the page is valid.
          * This base implementation returns true.
+         *
+         * @see errorMessageEnabled
+         * @see errorMessageType
+         * @see errorMessageTitle
+         * @see errorMessageDescription
+         * @see errorMessageChanged
          */
         virtual bool isValid() const;
+
+
+        /**
+         *
+         * @see errorMessageType
+         * @see errorMessageTitle
+         * @see errorMessageDescription
+         * @see errorMessageChanged
+         */
+        bool errorMessageEnabled() const;
+
+
+        /**
+         *
+         */
+        void setErrorMessageEnabled(bool b);
+
+
+        /**
+         *
+         * @see errorMessageEnabled
+         * @see errorMessageTitle
+         * @see errorMessageDescription
+         * @see errorMessageChanged
+         */
+        ErrorMessageType errorMessageType() const;
+
+
+        /**
+         *
+         */
+        void setErrorMessageType(ErrorMessageType type);
+
+
+        /**
+         *
+         * @see errorMessageEnabled
+         * @see errorMessageType
+         * @see errorMessageDescription
+         * @see errorMessageChanged
+         */
+        QString errorMessageTitle() const;
+
+
+        /**
+         *
+         */
+        void setErrorMessageTitle(const QString &str);
+
+
+        /**
+         *
+         * @see errorMessageEnabled
+         * @see errorMessageType
+         * @see errorMessageTitle
+         * @see errorMessageChanged
+         */
+        QString errorMessageDescription() const;
+
+
+        /**
+         *
+         */
+        void setErrorMessageDescription(const QString &str);
 
 
         /**
@@ -76,6 +164,17 @@ class AbstractConfigPage : public QWidget
          *
          */
         void setConfigWidget(ConfigWidget *widget);
+
+
+        /**
+         *
+         */
+        QString pageLabel() const;
+
+        /**
+         *
+         */
+        void setPageLabel(const QString &str);
 
 
         /**
@@ -92,6 +191,18 @@ class AbstractConfigPage : public QWidget
          * @see pageTitle()
          */
         void setPageTitle(const QString &str);
+
+
+        /**
+         *
+         */
+        QString pageDescription() const;
+
+
+        /**
+         *
+         */
+        void setPageDescription(const QString &str);
 
 
         /**
@@ -167,14 +278,27 @@ class AbstractConfigPage : public QWidget
          */
         void pageModified();
 
+        /**
+         *
+         * @see errorMessageEnabled
+         * @see errorMessageType
+         * @see errorMessageTitle
+         * @see errorMessageDescription
+         */
+        void errorMessageChanged();
 
     private:
+        ConfigWidget *m_configWidget;
+        bool m_errorMessageEnabled;
+        ErrorMessageType m_errorMessageType;
+        QString m_errorMessageTitle;
+        QString m_errorMessageDescription;
+        QString m_label;
         QString m_title;
+        QString m_description;
         QIcon m_icon;
         QString m_toolTip;
         QString m_whatsThis;
-
-        ConfigWidget *m_configWidget;
 };
 
 

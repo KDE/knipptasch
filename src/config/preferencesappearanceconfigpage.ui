@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Stefan Böhmann</author>
+ <class>PreferencesAppearanceConfigPage</class>
+ <widget class="QWidget" name="PreferencesAppearanceConfigPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>651</width>
+    <height>409</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Foreground Colors</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="positiveAmountForegroundEnabled">
+        <property name="text">
+         <string>positive amount:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="AppearanceColorChooserWidget" name="fgPositiveAmountWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="negativeAmountForegroundEnabled">
+        <property name="text">
+         <string>negative amount:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="AppearanceColorChooserWidget" name="fgNegativeAmountWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="availableWarrantyForegroundEnabled">
+        <property name="text">
+         <string>available warranty:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="AppearanceColorChooserWidget" name="fgAvailableWarrantyWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="expiredWarrantyForegroundEnabled">
+        <property name="text">
+         <string>expired warranty:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="AppearanceColorChooserWidget" name="fgExpiredWarrantyWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Background Colors</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="defaultPostingBackgroundEnabled">
+        <property name="text">
+         <string>normal posting:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="AppearanceColorChooserWidget" name="bgNormalPostingWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="currentPostingBackgroundEnabled">
+        <property name="text">
+         <string>current posting:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="AppearanceColorChooserWidget" name="bgCurrentPostingWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="futurePostingBackgroundEnabled">
+        <property name="text">
+         <string>future postings:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="AppearanceColorChooserWidget" name="bgFuturePostingWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="incompletePostingBackgroundEnabled">
+        <property name="text">
+         <string>incomplete postings:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="AppearanceColorChooserWidget" name="bgIncompletePostingWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AppearanceColorChooserWidget</class>
+   <extends>QWidget</extends>
+   <header>config/appearancecolorchooserwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>positiveAmountForegroundEnabled</tabstop>
+  <tabstop>negativeAmountForegroundEnabled</tabstop>
+  <tabstop>availableWarrantyForegroundEnabled</tabstop>
+  <tabstop>expiredWarrantyForegroundEnabled</tabstop>
+  <tabstop>defaultPostingBackgroundEnabled</tabstop>
+  <tabstop>currentPostingBackgroundEnabled</tabstop>
+  <tabstop>futurePostingBackgroundEnabled</tabstop>
+  <tabstop>incompletePostingBackgroundEnabled</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

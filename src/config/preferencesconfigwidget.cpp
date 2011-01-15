@@ -14,41 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTCONFIGDIALOG_H
-#define ACCOUNTCONFIGDIALOG_H
+#include "preferencesconfigwidget.h"
 
-#include "configdialog.h"
+#include "preferencesgeneralconfigpage.h"
+#include "preferencesappearanceconfigpage.h"
+#include "preferencesaccounttableconfigpage.h"
 
-class Account;
 
 
-/**
- * @class AccountConfigDialog
- * @brief
- *
- * @see ConfigDialog
- *
- * @author Stefan Böhmann <kde@hilefoks.org>
- */
-class AccountConfigDialog : public ConfigDialog
+PreferencesConfigWidget::PreferencesConfigWidget(QWidget* parent)
+  : ConfigWidget( parent )
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountConfigDialog)
-
-    public:
-        /**
-         * Constructs a new AccountConfigDialog
-         */
-        explicit AccountConfigDialog(Account *account, QWidget *parent = 0);
-
-        /**
-         * Destructs the config dialog.
-         */
-        virtual ~AccountConfigDialog();
-};
+    addPage( new PreferencesGeneralConfigPage( this ) );
+    addPage( new PreferencesAppearanceConfigPage( this ) );
+    addPage( new PreferencesAccountTableConfigPage( this ) );
+}
 
 
-#endif
+PreferencesConfigWidget::~PreferencesConfigWidget()
+{
+}
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

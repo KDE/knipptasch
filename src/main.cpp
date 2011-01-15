@@ -86,11 +86,6 @@ int main(int argc, char* argv[])
 #else
     QApplication app(argc, argv);
 
-    QCoreApplication::setOrganizationName( "Hilefoks" );
-    QCoreApplication::setOrganizationDomain( "hilefoks.org" );
-    QCoreApplication::setApplicationName( "Knipptasch" );
-    QCoreApplication::setApplicationVersion( KNIPPTASCH_VERSION );
-
     QTranslator t1;
     const QString locale = QLocale::system().name();
     const QString qtLocaleName = "qt_" + locale;
@@ -135,6 +130,11 @@ int main(int argc, char* argv[])
         qDebug() << "AES256 (CBC mode with PKCS#7 padding) not supported!";
     }
 #endif
+
+    QCoreApplication::setOrganizationName( "KDE" );
+    QCoreApplication::setOrganizationDomain( "kde.org" );
+    QCoreApplication::setApplicationName( QCoreApplication::tr( "Knipptasch" ) );
+    QCoreApplication::setApplicationVersion( KNIPPTASCH_VERSION );
 
     MainWindow* mainWindow = new MainWindow;
     mainWindow->show();

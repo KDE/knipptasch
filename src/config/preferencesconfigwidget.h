@@ -14,37 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTCONFIGDIALOG_H
-#define ACCOUNTCONFIGDIALOG_H
+#ifndef PREFERENCESCONFIGWIDGET_H
+#define PREFERENCESCONFIGWIDGET_H
 
-#include "configdialog.h"
-
-class Account;
+#include "configwidget.h"
 
 
 /**
- * @class AccountConfigDialog
+ * @class PreferencesConfigWidget
  * @brief
  *
- * @see ConfigDialog
+ * @see ConfigWidget
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class AccountConfigDialog : public ConfigDialog
+class PreferencesConfigWidget : public ConfigWidget
 {
     Q_OBJECT
-    Q_DISABLE_COPY(AccountConfigDialog)
+    Q_DISABLE_COPY(PreferencesConfigWidget)
 
     public:
         /**
-         * Constructs a new AccountConfigDialog
+         * Constructs a new PreferencesConfigWidget
          */
-        explicit AccountConfigDialog(Account *account, QWidget *parent = 0);
+        explicit PreferencesConfigWidget(QWidget *parent = 0);
 
         /**
-         * Destructs the config dialog.
+         * Destructs the config widget.
          */
-        virtual ~AccountConfigDialog();
+        virtual ~PreferencesConfigWidget();
 };
 
 

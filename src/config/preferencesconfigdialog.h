@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,42 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef PREFERENCESCONFIGDIALOG_H
+#define PREFERENCESCONFIGDIALOG_H
 
-#include <QDialog>
-
-
-namespace Ui {
-    class SettingsDialog;
-}
+#include "configdialog.h"
 
 
 /**
- * @class SettingsDialog
+ * @class PreferencesConfigDialog
  * @brief
+ *
+ * @see ConfigDialog
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class SettingsDialog : public QDialog
+class PreferencesConfigDialog : public ConfigDialog
 {
     Q_OBJECT
+    Q_DISABLE_COPY(PreferencesConfigDialog)
 
     public:
-        SettingsDialog(QWidget* parent = 0);
-        ~SettingsDialog();
+        /**
+         * Constructs a new PreferencesConfigDialog
+         */
+        explicit PreferencesConfigDialog(QWidget *parent = 0);
 
-    private slots:
-        void onValueChanged();
-        void onApplyChanges();
-
-        void onRestoreDefaults();
-
-    private:
-        void loadPreferences();
-
-    private:
-        Ui::SettingsDialog *ui;
+        /**
+         * Destructs the config dialog.
+         */
+        virtual ~PreferencesConfigDialog();
 };
 
 

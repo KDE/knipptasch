@@ -75,7 +75,6 @@ class MainWindow :
         void closeEvent(QCloseEvent* event);
 
         void setupActions();
-        void loadConfig();
 
         void addAccountWidget(Account *acc, const QString &filename = QString() );
 
@@ -90,6 +89,8 @@ class MainWindow :
     protected slots:
         void checkActionStates();
         void onTabCloseRequest(int index);
+
+        void onLoadConfig();
 
         void onNewFile();
         void onOpenFile(const QString &str = QString());

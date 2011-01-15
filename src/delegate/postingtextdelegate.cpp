@@ -19,6 +19,8 @@
 #include "accountsortfilterproxymodel.h"
 #include "backend/posting.h"
 
+#include "preferences.h"
+
 #include <QPainter>
 #include <QApplication>
 
@@ -45,15 +47,17 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     KLineEdit *input = new KLineEdit( parent );
     input->setFrame( false );
 
-    QSet<QString> set;
-    const QList<const Posting*> list = model->account()->postings();
-    foreach(const Posting *p, list) {
-        set.insert( p->postingText() );
-    }
+    if( Preferences::self()->autoCompletionEnabled() ) {
+        QSet<QString> set;
+        const QList<const Posting*> list = model->account()->postings();
+        foreach(const Posting *p, list) {
+            set.insert( p->postingText() );
+        }
 
-    QCompleter *completer = new QCompleter( set.toList(), input );
-    completer->setCaseSensitivity( Qt::CaseInsensitive );
-    input->setCompleter( completer );
+        QCompleter *completer = new QCompleter( set.toList(), input );
+        completer->setCaseSensitivity( Qt::CaseInsensitive );
+        input->setCompleter( completer );
+    }
 
 #if defined(HAVE_KDE)
     input->setClearButtonShown( true );

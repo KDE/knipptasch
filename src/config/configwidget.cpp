@@ -15,7 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "configwidget.h"
+#include "ui_configwidget.h"
+
 #include "abstractconfigpage.h"
+
+#include "compat/iconloader.h"
 
 #include <QListWidget>
 #include <QStackedWidget>
@@ -23,32 +27,78 @@
 #include <QSplitter>
 
 #include <QDebug>
+#include <QStyledItemDelegate>
+
+
+
+/**
+ *
+ */
+class ListWidgetDelegate : public QStyledItemDelegate
+{
+    public:
+        ListWidgetDelegate(ConfigWidget *parent)
+          : QStyledItemDelegate( parent ),
+            m_configWidget( parent )
+        {
+        }
+
+
+        void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+        {
+            if( !index.isValid() || !index.internalPointer() ) {
+                return;
+            }
+
+            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4*>( &option ) );
+            opt.decorationPosition = QStyleOptionViewItem::Top;
+            opt.decorationSize = m_configWidget->iconSize();
+            opt.textElideMode = Qt::ElideNone;
+
+            QStyledItemDelegate::paint( painter, opt, index );
+        }
+
+
+        QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+        {
+            if( !index.isValid() || !index.internalPointer() ) {
+                return QSize();
+            }
+
+            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4*>( &option ) );
+            opt.decorationPosition = QStyleOptionViewItem::Top;
+            opt.decorationSize = m_configWidget->iconSize();
+            opt.textElideMode = Qt::ElideNone;
+
+            return QStyledItemDelegate::sizeHint( opt, index );
+        }
+
+    private:
+        ConfigWidget *m_configWidget;
+};
 
 
 
 ConfigWidget::ConfigWidget(QWidget* parent)
   : QWidget( parent ),
-    m_splitter( new QSplitter( this ) ),
-    m_stack( new QStackedWidget( this ) ),
-    m_view( new QListWidget( this ) )
+    ui( new Ui::ConfigWidget )
 {
-    m_view->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    m_view->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-    m_view->setSelectionMode( QAbstractItemView::SingleSelection );
-    m_view->setEditTriggers( QAbstractItemView::NoEditTriggers );
-    m_view->setTabKeyNavigation( true );
-    m_view->setIconSize( QSize( 48, 48 ) );
+    ui->setupUi( this );
 
-    m_splitter->setOrientation( Qt::Horizontal );
-    m_splitter->addWidget( m_view );
-    m_splitter->addWidget( m_stack );
+    ui->view->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ui->view->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+    ui->view->setSelectionMode( QAbstractItemView::SingleSelection );
+    ui->view->setEditTriggers( QAbstractItemView::NoEditTriggers );
+    ui->view->setItemDelegate( new ListWidgetDelegate( this ) );
+    ui->view->setTabKeyNavigation( true );
+    ui->view->setIconSize( QSize( 48, 48 ) );
 
-    QVBoxLayout *layout = new QVBoxLayout( this );
-    layout->addWidget( m_splitter );
-    setLayout( layout );
 
-    connect( m_view, SIGNAL( currentRowChanged(int) ), this, SLOT( setCurrentIndex(int) ) );
-    connect( m_stack, SIGNAL( currentChanged(int) ), this, SIGNAL( currentIndexChanged(int) ) );
+    ui->errorWidget->setVisible( false );
+
+
+    connect( ui->view, SIGNAL( currentRowChanged(int) ), this, SLOT( setCurrentIndex(int) ) );
+    connect( ui->stackedWidget, SIGNAL( currentChanged(int) ), this, SIGNAL( currentIndexChanged(int) ) );
 }
 
 
@@ -83,13 +133,13 @@ bool ConfigWidget::isValid() const
 
 QSize ConfigWidget::iconSize() const
 {
-    return m_view->iconSize();
+    return ui->view->iconSize();
 }
 
 
 void ConfigWidget::setIconSize(const QSize& size)
 {
-    m_view->setIconSize( size );
+    ui->view->setIconSize( size );
 }
 
 
@@ -106,20 +156,21 @@ int ConfigWidget::insertPage(int index, AbstractConfigPage *page)
         return -1;
     }
 
-    index = m_stack->insertWidget( index, page );
+    index = ui->stackedWidget->insertWidget( index, page );
 
     connect( page, SIGNAL( pageModified() ), this, SLOT( onPageModified() ) );
+    connect( page, SIGNAL( errorMessageChanged() ), this, SLOT( onErrorMessageChanged() ) );
 
-    QListWidgetItem *item = new QListWidgetItem( m_view );
-    item->setText( page->pageTitle() );
-    item->setTextAlignment( Qt::AlignVCenter );
+    QListWidgetItem *item = new QListWidgetItem( ui->view );
+    item->setText( page->pageLabel() );
+    item->setTextAlignment( Qt::AlignCenter );
     item->setIcon( page->pageIcon() );
     item->setToolTip( page->pageToolTip() );
     item->setWhatsThis( page->pageWhatsThis() );
     item->setFlags( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
 
     setCurrentIndex( 0 );
-    m_view->updateGeometry();
+    ui->view->updateGeometry();
 
     emit pageModified( page );
 
@@ -129,7 +180,7 @@ int ConfigWidget::insertPage(int index, AbstractConfigPage *page)
 
 AbstractConfigPage* ConfigWidget::takePage(int index)
 {
-    QWidget *p = m_stack->widget( index );
+    QWidget *p = ui->stackedWidget->widget( index );
 
     if( p ) {
         AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( p );
@@ -137,8 +188,8 @@ AbstractConfigPage* ConfigWidget::takePage(int index)
 
         disconnect( page, 0, this, 0 );
 
-        m_stack->removeWidget( page );
-        delete m_view->item( index );
+        ui->stackedWidget->removeWidget( page );
+        delete ui->view->item( index );
 
         emit pageModified( page );
 
@@ -152,44 +203,53 @@ AbstractConfigPage* ConfigWidget::takePage(int index)
 
 int ConfigWidget::countPages() const
 {
-    return m_stack->count();
+    return ui->stackedWidget->count();
 }
 
 
 int ConfigWidget::currentIndex() const
 {
-    return m_stack->currentIndex();
+    return ui->stackedWidget->currentIndex();
 }
 
 
 AbstractConfigPage* ConfigWidget::currentPage() const
 {
-    return qobject_cast<AbstractConfigPage*>( m_stack->currentWidget() );
+    return qobject_cast<AbstractConfigPage*>( ui->stackedWidget->currentWidget() );
 }
 
 
 int ConfigWidget::indexOf(AbstractConfigPage* page) const
 {
-    return m_stack->indexOf( page );
+    return ui->stackedWidget->indexOf( page );
 }
 
 
 AbstractConfigPage* ConfigWidget::page(int index) const
 {
-    return qobject_cast<AbstractConfigPage*>( m_stack->widget( index ) );
+    return qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( index ) );
 }
 
 
 void ConfigWidget::setCurrentIndex(int index)
 {
-    m_stack->setCurrentIndex( index );
-    m_view->setCurrentItem( m_view->item( index ) );
+    AbstractConfigPage *p = page( index );
+
+    ui->stackedWidget->setCurrentIndex( index );
+    ui->view->setCurrentItem( ui->view->item( index ) );
+
+    ui->pageIcon->setPixmap( p->pageIcon().pixmap( 48, 48 ) );
+    ui->pageTitle->setText( p->pageTitle() );
+    ui->pageText->setText( p->pageDescription() );
+    ui->pageText->setVisible( !p->pageDescription().isEmpty() );
+
+    onErrorMessageChanged();
 }
 
 
 void ConfigWidget::setCurrentPage(AbstractConfigPage *page)
 {
-    setCurrentIndex( m_stack->indexOf( page ) );
+    setCurrentIndex( ui->stackedWidget->indexOf( page ) );
 }
 
 
@@ -197,10 +257,10 @@ bool ConfigWidget::commit()
 {
     bool b = false;
 
-    Q_ASSERT( m_stack );
-    for(int i = 0; i < m_stack->count(); ++i) {
-        Q_ASSERT( m_stack->widget( i ) );
-        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( m_stack->widget( i ) );
+    Q_ASSERT( ui->stackedWidget );
+    for(int i = 0; i < ui->stackedWidget->count(); ++i) {
+        Q_ASSERT( ui->stackedWidget->widget( i ) );
+        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( i ) );
         Q_ASSERT( page );
 
         b = page->commit() || b;
@@ -214,10 +274,10 @@ bool ConfigWidget::commit()
 
 void ConfigWidget::revert()
 {
-    Q_ASSERT( m_stack );
-    for(int i = 0; i < m_stack->count(); ++i) {
-        Q_ASSERT( m_stack->widget( i ) );
-        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( m_stack->widget( i ) );
+    Q_ASSERT( ui->stackedWidget );
+    for(int i = 0; i < ui->stackedWidget->count(); ++i) {
+        Q_ASSERT( ui->stackedWidget->widget( i ) );
+        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( i ) );
         Q_ASSERT( page );
 
         page->revert();
@@ -227,21 +287,15 @@ void ConfigWidget::revert()
 }
 
 
-QSplitter* ConfigWidget::splitter() const
-{
-    return m_splitter;
-}
-
-
 QListWidget* ConfigWidget::listWidget() const
 {
-    return m_view;
+    return ui->view;
 }
 
 
 QStackedWidget* ConfigWidget::stackedWidget() const
 {
-    return m_stack;
+    return ui->stackedWidget;
 }
 
 
@@ -251,6 +305,30 @@ void ConfigWidget::onPageModified()
     Q_ASSERT( page );
 
     emit pageModified( page );
+}
+
+
+void ConfigWidget::onErrorMessageChanged()
+{
+    AbstractConfigPage *p = currentPage();
+
+    ui->errorTitle->setText( p->errorMessageTitle() );
+    ui->errorText->setText( p->errorMessageDescription() );
+    switch( p->errorMessageType() ) {
+        case AbstractConfigPage::InfoMessage:
+            ui->errorIcon->setPixmap( DesktopIcon("dialog-information") );
+            break;
+
+        case AbstractConfigPage::WarningMessage:
+            ui->errorIcon->setPixmap( DesktopIcon("dialog-warning") );
+            break;
+
+        case AbstractConfigPage::ErrorMessage:
+            ui->errorIcon->setPixmap( DesktopIcon("dialog-error") );
+            break;
+    }
+
+    ui->errorWidget->setVisible( p->errorMessageEnabled() );
 }
 
 

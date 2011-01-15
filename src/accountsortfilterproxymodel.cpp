@@ -221,17 +221,22 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
 
     QDate l_primary, r_primary, l_secondary, r_secondary;
 
-    if( Preferences::self()->sortPostingsByMaturity() ) {
-        l_primary = l_maturity;
-        r_primary = r_maturity;
-        l_secondary = l_valuedate;
-        r_secondary = r_valuedate;
-    }
-    else {
-        l_primary = l_valuedate;
-        r_primary = r_valuedate;
-        l_secondary = l_maturity;
-        r_secondary = r_maturity;
+    switch( Preferences::self()->sortPostingsBy() ) {
+        case Preferences::Maturity:
+            l_primary = l_maturity;
+            r_primary = r_maturity;
+            l_secondary = l_valuedate;
+            r_secondary = r_valuedate;
+            break;
+
+        case Preferences::ValueDate:
+            l_primary = l_valuedate;
+            r_primary = r_valuedate;
+            l_secondary = l_maturity;
+            r_secondary = r_maturity;
+
+        default:
+            Q_ASSERT_X( false, Q_FUNC_INFO, "Unhandled 'SortPostingBy' configuration value" );
     }
 
     if( l_primary.isValid() && !r_primary.isValid() ) {

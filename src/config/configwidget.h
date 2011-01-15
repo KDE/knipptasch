@@ -27,6 +27,12 @@ class QStackedWidget;
 class AbstractConfigPage;
 
 
+namespace Ui
+{
+    class ConfigWidget;
+}
+
+
 
 /**
  * @class ConfigWidget
@@ -183,6 +189,7 @@ class ConfigWidget : public QWidget
         */
         void setCurrentPage(AbstractConfigPage *page);
 
+
         /**
          *
          */
@@ -193,6 +200,7 @@ class ConfigWidget : public QWidget
          *
          */
         virtual void revert();
+
 
     signals:
         /**
@@ -206,19 +214,19 @@ class ConfigWidget : public QWidget
          */
         void pageModified(AbstractConfigPage *page);
 
+
+        /**
+         *
+         */
         void committed();
+
+
+        /**
+         *
+         */
         void reverted();
 
     protected:
-        /**
-         * Returns the internal splitter
-         *
-         * @see tableWidget()
-         * @see stackedWidget()
-         */
-        QSplitter* splitter() const;
-
-
         /**
          * Returns the internal table widget used for showing page icons.
          *
@@ -241,10 +249,13 @@ class ConfigWidget : public QWidget
          */
         void onPageModified();
 
+        /**
+         *
+         */
+        void onErrorMessageChanged();
+
     private:
-        QSplitter *m_splitter;
-        QStackedWidget *m_stack;
-        QListWidget *m_view;
+        Ui::ConfigWidget *ui;
 };
 
 

@@ -8,6 +8,21 @@
   <include>QSize</include>
 
   <group name="General">
+    <entry name="OnStartupAction" type="Enum">
+      <label context="@label"></label>
+      <choices>
+        <choice name="WelcomePage" />
+        <choice name="BlankFile" />
+        <choice name="LastFile" />
+        <choice name="DefaultFile" />
+      </choices>
+      <default>WelcomePage</default>
+    </entry>
+
+    <entry name="OnStartupActionDefaultFile" type="String">
+      <label context="@label"></label>
+    </entry>
+
     <entry name="ShowStatusBar" type="Bool">
       <label context="@label">Show status bar</label>
       <whatsthis context="@info:whatsthis">Whether to show the status bar in the application window.</whatsthis>
@@ -30,6 +45,36 @@
       <default>10</default>
       <min>0</min>
       <max>99</max>
+    </entry>
+
+    <entry name="SplashScreenEnabled" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
+    </entry>
+
+    <entry name="HideEmptyTabBar" type="Bool">
+      <label context="@label"></label>
+      <default>false</default>
+    </entry>
+
+    <entry name="MiddleClickCloseTab" type="Bool">
+      <label context="@label"></label>
+      <default>false</default>
+    </entry>
+
+    <entry name="MovableTabs" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
+    </entry>
+
+    <entry name="CloseButtonOnTabs" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
+    </entry>
+
+    <entry name="TabCornerCloseButton" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
     </entry>
   </group>
 
@@ -123,9 +168,13 @@
 
 
   <group name="TableView">
-    <entry name="SortPostingsByMaturity" type="Bool">
+    <entry name="SortPostingsBy" type="Enum">
       <label context="@label"></label>
-      <default>true</default>
+      <choices>
+        <choice name="Maturity" />
+        <choice name="ValueDate" />
+      </choices>
+      <default>Maturity</default>
     </entry>
 
     <entry name="HorizontalHeaderState" type="String">
@@ -155,6 +204,11 @@
     <entry name="UserDefinedDateFormat" type="String">
       <label context="@label"></label>
     </entry>
+
+    <entry name="AutoCompletionEnabled" type="Bool">
+      <label context="@label"></label>
+      <default>true</default>
+    </entry>
   </group>
 
 
@@ -165,21 +219,6 @@
 
     <entry name="WindowGeometry" type="String">
       <label context="@label"></label>
-    </entry>
-
-    <entry name="MovableTabs" type="Bool">
-      <label context="@label"></label>
-      <default>true</default>
-    </entry>
-
-    <entry name="CloseButtonOnTabs" type="Bool">
-      <label context="@label"></label>
-      <default>true</default>
-    </entry>
-
-    <entry name="TabCornerCloseButton" type="Bool">
-      <label context="@label"></label>
-      <default>true</default>
     </entry>
   </group>
 </kcfg>

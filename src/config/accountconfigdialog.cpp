@@ -17,10 +17,15 @@
 #include "accountconfigdialog.h"
 #include "accountconfigwidget.h"
 
+#include <QCoreApplication>
+
+
 
 AccountConfigDialog::AccountConfigDialog(Account *account, QWidget *parent)
   : ConfigDialog( parent )
 {
+    setWindowTitle( tr( "Configure Account - %1" ).arg( QCoreApplication::applicationName() ) );
+
     ConfigWidget *old = configWidget();
     setConfigWidget( new AccountConfigWidget( account, this ) );
     delete old;
