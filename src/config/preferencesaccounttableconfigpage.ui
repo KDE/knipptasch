@@ -68,7 +68,7 @@
    <item row="4" column="1">
     <widget class="QCheckBox" name="doubleClickResizeColumnToContent">
      <property name="text">
-      <string>Double click resize column to countent</string>
+      <string>Double click resize column to content</string>
      </property>
     </widget>
    </item>
