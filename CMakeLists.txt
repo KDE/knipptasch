@@ -305,6 +305,8 @@ set( knipptasch_RESOURCES
 
 
 if( HAVE_KDE )
+    #TODO build and install po files?
+
     kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
     kde4_add_app_icon( knipptasch_SOURCES data/icons/hi*-app-knipptasch.png )
 
@@ -336,6 +338,9 @@ else( HAVE_KDE )
         ${knipptasch_FORMS}
     )
 
+    file( GLOB TS_FILES "l10n/knipptasch_*.ts" )
+    qt4_add_translation( QM_FILES ${TS_FILES} )
+
     qt4_wrap_ui( knipptasch_SOURCES ${knipptasch_FORMS} )
     qt4_wrap_cpp( knipptasch_SOURCES ${knipptasch_HEADERS} )
     qt4_add_resources( knipptasch_SOURCES ${knipptasch_RESOURCES} )
@@ -345,13 +350,15 @@ else( HAVE_KDE )
         set( KNIPPTASCH_QT_MAINLIB ${QT_QTMAIN_LIBRARY} )
     endif( WIN32 AND HAVE_DEPLOY )
 
-    add_executable( knipptasch ${WIN32_EXE} ${knipptasch_SOURCES} )
+    add_executable( knipptasch ${WIN32_EXE} ${QM_FILES} ${knipptasch_SOURCES} )
     target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
 
     if( WIN32 )
-        install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
+        install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
+	install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
     else( WIN32 )
-        install(TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+        install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knipptasch )
     endif( WIN32 )
 
     if( WIN32 )
@@ -391,6 +398,5 @@ macro_optional_add_subdirectory( cmake )
 macro_optional_add_subdirectory( strigi-analyzer )
 add_subdirectory( 3rdparty )
 add_subdirectory( data )
-
 
 macro_display_feature_log()
