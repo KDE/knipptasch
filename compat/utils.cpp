@@ -39,7 +39,6 @@
 #endif
 
 #include <QDebug>
-#include <preferences.h>
 
 
 
@@ -431,13 +430,13 @@ QString formatTime(const QTime& t)
 
 
 
-QDate readDate(const QString &str, bool *ok)
+QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *ok)
 {
     bool valid = false;
     QDate date;
 
-    if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-        date = QDate::fromString( str, Preferences::self()->userDefinedDateFormat() );
+    if( !userDefinedDateFormat.isEmpty() ) {
+        date = QDate::fromString( str, userDefinedDateFormat );
         valid = date.isValid();
     }
 

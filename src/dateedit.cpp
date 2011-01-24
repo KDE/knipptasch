@@ -24,6 +24,8 @@
 
 #include "datepickerpopup.h"
 
+#include "preferences.h"
+
 #include "compat/utils.h"
 
 #if defined(HAVE_KDE)
@@ -83,7 +85,7 @@ class DateValidator : public QValidator
             }
 
             bool ok = false;
-            QDate date = readDate( str, &ok );
+            QDate date = readDate( str, Preferences::self()->userDefinedDateFormat(), &ok );
 
             if( ok ) {
                 QStatusTipEvent *event = new QStatusTipEvent( formatLongDate( date ) );

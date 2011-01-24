@@ -113,8 +113,8 @@ if( HAVE_KDE )
 else( HAVE_KDE )
     include( ${QT_USE_FILE} )
     include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/compat/qtingkde
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/compat/qtingkde/KDE
+        ${CMAKE_CURRENT_SOURCE_DIR}/compat/qtingkde
+        ${CMAKE_CURRENT_SOURCE_DIR}/compat/qtingkde/KDE
     )
 
     set( KNIPPTASCH_DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/apps/knipptasch )
@@ -202,11 +202,6 @@ set(knipptasch_SOURCES
     src/backend/storage.cpp
     src/backend/storageexception.cpp
 
-    src/compat/actioncollection.cpp
-    src/compat/standardaction.cpp
-    src/compat/iconloader.cpp
-    src/compat/utils.cpp
-
     3rdparty/modeltest/modeltest.cpp
  )
 
@@ -268,8 +263,6 @@ set( knipptasch_HEADERS
     src/backend/baseposting.h
     src/backend/subposting.h
 
-    src/compat/actioncollection.h
-
     3rdparty/modeltest/modeltest.h
  )
 
@@ -313,7 +306,7 @@ if( HAVE_KDE )
     kde4_add_kcfg_files(knipptasch_SOURCES src/preferences.kcfgc)
 
     kde4_add_executable( knipptasch ${knipptasch_SOURCES} )
-    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QCA2_LIBRARIES} )
+    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QCA2_LIBRARIES} compat)
 
     install( TARGETS knipptasch ${INSTALL_TARGETS_DEFAULT_ARGS} )
 else( HAVE_KDE )
@@ -321,15 +314,11 @@ else( HAVE_KDE )
 
     set( knipptasch_SOURCES
         src/aboutdialog.cpp
-        src/compat/qtingkde/kcolorbutton.cpp
-        src/compat/qtingkde/kcolorcombo.cpp
         ${knipptasch_SOURCES}
     )
 
     set( knipptasch_HEADERS
         src/aboutdialog.h
-        src/compat/qtingkde/kcolorbutton.h
-        src/compat/qtingkde/kcolorcombo.h
         ${knipptasch_HEADERS}
     )
 
@@ -351,14 +340,14 @@ else( HAVE_KDE )
     endif( WIN32 AND HAVE_DEPLOY )
 
     add_executable( knipptasch ${WIN32_EXE} ${QM_FILES} ${knipptasch_SOURCES} )
-    target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} )
+    target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} compat)
 
     if( WIN32 )
         install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
-	install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
+        install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
     else( WIN32 )
         install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-	install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knipptasch )
+        install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knipptasch )
     endif( WIN32 )
 
     if( WIN32 )
@@ -397,6 +386,7 @@ endif( HAVE_KDE )
 macro_optional_add_subdirectory( cmake )
 macro_optional_add_subdirectory( strigi-analyzer )
 add_subdirectory( 3rdparty )
+add_subdirectory( compat )
 add_subdirectory( data )
 
 macro_display_feature_log()

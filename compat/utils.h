@@ -41,7 +41,7 @@ QString formatDateTime(const QDateTime&);
 QString formatShortDate(const QDate& d);
 QString formatLongDate(const QDate& d);
 QString formatTime(const QTime& t);
-QDate readDate(const QString& s, bool* ok = NULL);
+QDate readDate(const QString& s, const QString &userDefinedDateFormat = QString(), bool* ok = 0);
 QString formatNumber(qint32 i);
 QString formatNumber(double num, int precision = -1);
 
