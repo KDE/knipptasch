@@ -120,273 +120,58 @@ else( HAVE_KDE )
     set( KNIPPTASCH_DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/apps/knipptasch )
 endif( HAVE_KDE )
 
+include( config-destination.cmake )
 
-message( STATUS "Knipptasch ${VERSION} will be built for install into ${CMAKE_INSTALL_PREFIX}" )
+message( STATUS "Knipptasch ${VERSION} will be built for install into ${KNIPPTASCH_INSTALL_PREFIX}" )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/core
+    ${CMAKE_CURRENT_BINARY_DIR}/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/include
+    ${CMAKE_CURRENT_BINARY_DIR}/core/include
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
-    ${CMAKE_CURRENT_BINARY_DIR}/src
     ${CMAKE_CURRENT_BINARY_DIR}/3rdparty
     ${QCA2_INCLUDE_DIR}
     ${QT_INCLUDES}
  )
 
 
-set(knipptasch_SOURCES
-    src/accountmodel.cpp
-    src/accountsortfilterproxymodel.cpp
-    src/accountwidget.cpp
-    src/welcomewidget.cpp
-    src/mainwindow.cpp
-    src/savemodifieddialog.cpp
-    src/recentfilemenu.cpp
-    src/quickreportpopup.cpp
-    src/quickreportwidget.cpp
-    src/passworddialog.cpp
-    src/datepickerpopup.cpp
-    src/categorycombobox.cpp
-    src/categorymodel.cpp
-    src/dateedit.cpp
-    src/main.cpp
-
-    src/config/configdialog.cpp
-    src/config/configwidget.cpp
-    src/config/abstractconfigpage.cpp
-    src/config/accountconfigwidget.cpp
-    src/config/accountconfigdialog.cpp
-    src/config/accountcategoryconfigpage.cpp
-    src/config/accountgeneralconfigpage.cpp
-    src/config/accountpasswordconfigpage.cpp
-    src/config/preferencesconfigdialog.cpp
-    src/config/preferencesconfigwidget.cpp
-    src/config/preferencesgeneralconfigpage.cpp
-    src/config/preferencesappearanceconfigpage.cpp
-    src/config/preferencesaccounttableconfigpage.cpp
-    src/config/appearancecolorchooserwidget.cpp
-
-    src/interface/abstractaccounttabwidget.cpp
-
-    src/accounttabwidgets/postingtabwidget.cpp
-    src/accounttabwidgets/descriptiontabwidget.cpp
-    src/accounttabwidgets/splitpostingtabwidget.cpp
-
-    src/export/xml/xmlexportplugin.cpp
-    src/export/xml/xmlwriter.cpp
-
-    src/export/csv/csvexportplugin.cpp
-    src/export/csv/csvexportdialog.cpp
-
-    src/import/xml/xmlimportplugin.cpp
-    src/import/xml/xmlreader.cpp
-
-    src/import/csv/csvimportplugin.cpp
-    src/import/csv/csvimportdialog.cpp
-    src/import/demo/demoimportplugin.cpp
-
-    src/delegate/datedelegate.cpp
-    src/delegate/moneydelegate.cpp
-    src/delegate/postingtextdelegate.cpp
-    src/delegate/categorydelegate.cpp
-
-    src/backend/object.cpp
-    src/backend/category.cpp
-    src/backend/account.cpp
-    src/backend/attachment.cpp
-    src/backend/posting.cpp
-    src/backend/baseposting.cpp
-    src/backend/subposting.cpp
-    src/backend/storage.cpp
-    src/backend/storageexception.cpp
-
-    3rdparty/modeltest/modeltest.cpp
- )
-
-set( knipptasch_HEADERS
-    src/mainwindow.h
-    src/accountwidget.h
-    src/accountmodel.h
-    src/accountsortfilterproxymodel.h
-    src/welcomewidget.h
-    src/aboutdialog.h
-    src/savemodifieddialog.h
-    src/recentfilemenu.h
-    src/quickreportpopup.h
-    src/quickreportwidget.h
-    src/passworddialog.h
-    src/datepickerpopup.h
-    src/categorycombobox.h
-    src/categorymodel.h
-    src/dateedit.h
-
-    src/config/configdialog.h
-    src/config/configwidget.h
-    src/config/abstractconfigpage.h
-    src/config/accountconfigwidget.h
-    src/config/accountconfigdialog.h
-    src/config/accountcategoryconfigpage.h
-    src/config/accountgeneralconfigpage.h
-    src/config/accountpasswordconfigpage.h
-    src/config/preferencesconfigdialog.h
-    src/config/preferencesconfigwidget.h
-    src/config/preferencesgeneralconfigpage.h
-    src/config/preferencesappearanceconfigpage.h
-    src/config/preferencesaccounttableconfigpage.h
-    src/config/appearancecolorchooserwidget.h
-
-    src/interface/abstractaccounttabwidget.h
-
-    src/accounttabwidgets/postingtabwidget.h
-    src/accounttabwidgets/descriptiontabwidget.h
-    src/accounttabwidgets/splitpostingtabwidget.h
-
-    #src/export/csv/csvexportplugin.h
-    src/export/csv/csvexportdialog.h
-
-    #src/import/csv/csvimportplugin.h
-    src/import/csv/csvimportdialog.h
-    #src/import/demo/demoimportplugin.h
-
-    src/delegate/datedelegate.h
-    src/delegate/moneydelegate.h
-    src/delegate/postingtextdelegate.h
-    src/delegate/categorydelegate.h
-
-    src/backend/object.h
-    src/backend/category.h
-    src/backend/account.h
-    src/backend/attachment.h
-    src/backend/posting.h
-    src/backend/baseposting.h
-    src/backend/subposting.h
-
-    3rdparty/modeltest/modeltest.h
- )
-
-set( knipptasch_FORMS
-    src/accountwidget.ui
-    src/mainwindow.ui
-    src/welcomewidget.ui
-    src/savemodifieddialog.ui
-    src/quickreportwidget.ui
-    src/passworddialog.ui
-
-    src/config/configwidget.ui
-    src/config/accountcategoryconfigpage.ui
-    src/config/accountgeneralconfigpage.ui
-    src/config/accountpasswordconfigpage.ui
-    src/config/preferencesgeneralconfigpage.ui
-    src/config/preferencesappearanceconfigpage.ui
-    src/config/preferencesaccounttableconfigpage.ui
-    src/config/appearancecolorchooserwidget.ui
-
-    src/accounttabwidgets/postingtabwidget.ui
-    src/accounttabwidgets/splitpostingtabwidget.ui
-
-    src/export/csv/csvexportdialog.ui
-    src/import/csv/csvimportdialog.ui
-)
-
-set( knipptasch_RESOURCES
-    data/icons/appicon.qrc
-    data/icons/oxygen.qrc
-    data/resources/resources.qrc
- )
-
-
-if( HAVE_KDE )
-    #TODO build and install po files?
-
-    kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
-    kde4_add_app_icon( knipptasch_SOURCES data/icons/hi*-app-knipptasch.png )
-
-    kde4_add_kcfg_files(knipptasch_SOURCES src/preferences.kcfgc)
-
-    kde4_add_executable( knipptasch ${knipptasch_SOURCES} )
-    target_link_libraries( knipptasch ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QCA2_LIBRARIES} compat)
-
-    install( TARGETS knipptasch ${INSTALL_TARGETS_DEFAULT_ARGS} )
-else( HAVE_KDE )
-    CONFIGURE_FILE( src/preferences_qt.h ${CMAKE_CURRENT_BINARY_DIR}/src/preferences.h COPYONLY)
-
-    set( knipptasch_SOURCES
-        src/aboutdialog.cpp
-        ${knipptasch_SOURCES}
-    )
-
-    set( knipptasch_HEADERS
-        src/aboutdialog.h
-        ${knipptasch_HEADERS}
-    )
-
-    set( knipptasch_FORMS
-        src/aboutdialog.ui
-        ${knipptasch_FORMS}
-    )
-
-    file( GLOB TS_FILES "l10n/knipptasch_*.ts" )
-    qt4_add_translation( QM_FILES ${TS_FILES} )
-
-    qt4_wrap_ui( knipptasch_SOURCES ${knipptasch_FORMS} )
-    qt4_wrap_cpp( knipptasch_SOURCES ${knipptasch_HEADERS} )
-    qt4_add_resources( knipptasch_SOURCES ${knipptasch_RESOURCES} )
-
-    if( WIN32 AND HAVE_DEPLOY )
-    set( WIN32_EXE WIN32 )
-        set( KNIPPTASCH_QT_MAINLIB ${QT_QTMAIN_LIBRARY} )
-    endif( WIN32 AND HAVE_DEPLOY )
-
-    add_executable( knipptasch ${WIN32_EXE} ${QM_FILES} ${knipptasch_SOURCES} )
-    target_link_libraries(knipptasch ${QT_LIBRARIES} ${QCA2_LIBRARIES} ${KNIPPTASCH_QT_MAINLIB} compat)
-
-    if( WIN32 )
-        install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX} )
-        install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
-    else( WIN32 )
-        install( TARGETS knipptasch RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-        install( FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knipptasch )
-    endif( WIN32 )
-
-    if( WIN32 )
-        install( FILES ${QT_BINARY_DIR}/mingwm10.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-
-        install( FILES ${QT_LIBRARY_DIR}/QtCore4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-        install( FILES ${QT_LIBRARY_DIR}/QtGui4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-
-        #install( FILES ${QT_LIBRARY_DIR}/QtCored4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-        #install( FILES ${QT_LIBRARY_DIR}/QtGuid4.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qgif4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qico4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qjpeg4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qmng4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qsvg4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-        install( FILES ${QT_PLUGINS_DIR}/imageformats/qtiff4.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/imageformats )
-
-        file( GLOB QTQM_FILES ${QT_TRANSLATIONS_DIR}/qt_*.qm )
-        install( FILES ${QTQM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
-
-        file( GLOB QTCONFIGQM_FILES ${QT_TRANSLATIONS_DIR}/qtconfig_*.qm )
-        install( FILES ${QTCONFIGQM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/translations )
-
-        configure_file( knipptasch.nsi.cmake ${CMAKE_INSTALL_PREFIX}/knipptasch.nsi @ONLY )
-
-        # TODO
-        #if( QCA2_FOUND )
-        #    install( FILES ${QT_LIBRARY_DIR}/qca2.dll DESTINATION ${CMAKE_INSTALL_PREFIX} )
-        #endif( QCA2_FOUND )
-
-    endif( WIN32 )
-endif( HAVE_KDE )
-
-
 macro_optional_add_subdirectory( cmake )
 macro_optional_add_subdirectory( strigi-analyzer )
 add_subdirectory( 3rdparty )
-add_subdirectory( compat )
 add_subdirectory( data )
+add_subdirectory( core )
+add_subdirectory( compat )
+add_subdirectory( gui )
+add_subdirectory( plugins )
 
 macro_display_feature_log()
+
+
+if( WIN32 )
+    install( FILES ${QT_BINARY_DIR}/mingwm10.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+
+    install( FILES ${QT_LIBRARY_DIR}/QtCore4.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+    install( FILES ${QT_LIBRARY_DIR}/QtGui4.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+    #install( FILES ${QT_LIBRARY_DIR}/QtSvg4.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+    #install( FILES ${QT_LIBRARY_DIR}/QtXml4.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+
+    file( GLOB qtImageFormats_FILES "${QT_PLUGINS_DIR}/imageformats/*.dll" )
+    install( FILES ${qtImageFormats_FILES} DESTINATION ${KNIPPTASCH_INSTALL_PREFIX}/imageformats )
+
+    file( GLOB qtqm_FILES ${QT_TRANSLATIONS_DIR}/qt_*.qm )
+    install( FILES ${qtqm_FILES} DESTINATION ${KNIPPTASCH_LOCALE_INSTALL_DIR} )
+
+    file( GLOB qtconfigqm_FILES ${QT_TRANSLATIONS_DIR}/qtconfig_*.qm )
+    install( FILES ${qtconfigqm_FILES} DESTINATION ${KNIPPTASCH_LOCALE_INSTALL_DIR} )
+
+    configure_file( knipptasch.nsi.cmake ${KNIPPTASCH_INSTALL_PREFIX} @ONLY )
+
+    # TODO
+    #if( QCA2_FOUND )
+    #    install( FILES ${QT_LIBRARY_DIR}/qca2.dll DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR} )
+    #endif( QCA2_FOUND )
+endif( WIN32 )

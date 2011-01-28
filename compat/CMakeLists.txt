@@ -1,7 +1,5 @@
 project( compat )
 
-find_package( Qt4 4.6.0 COMPONENTS QtCore QtGui REQUIRED )
-
 set(compat_SOURCES
     actioncollection.cpp
     standardaction.cpp
@@ -19,7 +17,7 @@ if( HAVE_KDE )
     add_definitions( -DHAVE_KDE ${KDE4_DEFINITIONS} )
 
     kde4_add_library( compat ${compat_SOURCES} )
-    target_link_libraries( compat ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
+    target_link_libraries( compat ${QT_LIBRARIES} ${KDE4_KDECORE_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
 else( HAVE_KDE )
     include( ${QT_USE_FILE} )
     include_directories(
@@ -43,3 +41,9 @@ else( HAVE_KDE )
     add_library( compat ${compat_SOURCES} )
     target_link_libraries(compat ${QT_LIBRARIES} )
 endif( HAVE_KDE )
+
+
+if( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+  set_target_properties(compat PROPERTIES COMPILE_FLAGS "-fPIC")
+endif( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+

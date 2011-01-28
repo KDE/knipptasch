@@ -9,10 +9,10 @@ kde:
 	cd build/kde; cmake ../.. -DCMAKE_BUILD_TYPE=DebugFull -DCMAKE_INSTALL_PREFIX=../../install/kde -DQTONLY=0 && make && make install
 
 rq: qt
-	LC_ALL="de_DE.utf8" ./install/qt/bin/knipptasch &
+	LD_LIBRARY_PATH="./install/qt/lib" LC_ALL="de_DE.utf8" ./install/qt/bin/knipptasch &
 
 rk: kde
-	LC_ALL="de_DE.utf8" ./install/kde/bin/knipptasch &
+	LD_LIBRARY_PATH="./install/kde/lib" LC_ALL="de_DE.utf8" ./install/kde/bin/knipptasch &
 
 clean:
 	find . -iname *~ -exec rm {} \;
