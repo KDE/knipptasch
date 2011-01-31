@@ -17,7 +17,7 @@
 #ifndef XMLEXPORTPLUGIN_H
 #define XMLEXPORTPLUGIN_H
 
-#include "interface/exportplugin.h"
+#include <Knipptasch/ExportPlugin>
 
 
 /**
@@ -26,10 +26,18 @@
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class XmlExportPlugin : public ExportPlugin
+class XmlExportPlugin : public QObject, public Knipptasch::ExportPlugin
 {
+    Q_OBJECT
+    Q_INTERFACES( Knipptasch::Plugin )
+    Q_INTERFACES( Knipptasch::ExportPlugin )
+
     public:
-        XmlExportPlugin();
+        XmlExportPlugin(QObject *parent = 0);
+
+        QByteArray pluginIdentifier() const;
+        QString pluginName() const;
+        QByteArray pluginVersion() const;
 
         QString exportActionName() const;
         QPixmap exportActionIcon() const;

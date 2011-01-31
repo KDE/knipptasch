@@ -17,7 +17,7 @@
 #ifndef XMLIMPORTPLUGIN_H
 #define XMLIMPORTPLUGIN_H
 
-#include "interface/importplugin.h"
+#include <Knipptasch/ImportPlugin>
 
 
 /**
@@ -26,10 +26,18 @@
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class XmlImportPlugin : public ImportPlugin
+class XmlImportPlugin : public QObject, public Knipptasch::ImportPlugin
 {
+    Q_OBJECT
+    Q_INTERFACES( Knipptasch::Plugin )
+    Q_INTERFACES( Knipptasch::ImportPlugin )
+
     public:
-        XmlImportPlugin();
+        XmlImportPlugin(QObject *parent = 0);
+
+        QByteArray pluginIdentifier() const;
+        QString pluginName() const;
+        QByteArray pluginVersion() const;
 
         QString importActionName() const;
         QPixmap importActionIcon() const;

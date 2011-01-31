@@ -29,8 +29,28 @@
 #include <QCoreApplication>
 
 
-XmlExportPlugin::XmlExportPlugin()
+XmlExportPlugin::XmlExportPlugin(QObject *parent)
+  : QObject( parent )
 {
+}
+
+
+QByteArray XmlExportPlugin::pluginIdentifier() const
+{
+    return "xml_export_plugin";
+}
+
+
+QString XmlExportPlugin::pluginName() const
+{
+    return tr( "XML Export Plugin" );
+
+}
+
+
+QByteArray XmlExportPlugin::pluginVersion() const
+{
+    return "0.0.1";
 }
 
 
@@ -66,6 +86,8 @@ void XmlExportPlugin::exportAccount(const Account *account, const QList<const Po
     writer.write( account, filename );
 }
 
+
+Q_EXPORT_PLUGIN2( "XmlExportPlugin", XmlExportPlugin );
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

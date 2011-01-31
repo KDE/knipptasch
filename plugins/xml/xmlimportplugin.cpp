@@ -35,9 +35,29 @@
 
 
 
-XmlImportPlugin::XmlImportPlugin()
+XmlImportPlugin::XmlImportPlugin(QObject *parent)
+  : QObject( parent )
 {
     qsrand( QTime::currentTime().msec() );
+}
+
+
+QByteArray XmlImportPlugin::pluginIdentifier() const
+{
+    return "xml_import_plugin";
+}
+
+
+QString XmlImportPlugin::pluginName() const
+{
+    return tr( "XML Import Plugin" );
+
+}
+
+
+QByteArray XmlImportPlugin::pluginVersion() const
+{
+    return "0.0.1";
 }
 
 
@@ -79,6 +99,8 @@ Account* XmlImportPlugin::importAccount(QWidget *parent) const
     return acc;
 }
 
+
+Q_EXPORT_PLUGIN2( "XmlImportPlugin", XmlImportPlugin );
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

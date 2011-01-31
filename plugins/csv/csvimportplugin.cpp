@@ -40,7 +40,7 @@ QByteArray CsvImportPlugin::pluginIdentifier() const
 QString CsvImportPlugin::pluginName() const
 {
     return tr( "CSV Import Plugin" );
-    
+
 }
 
 
@@ -66,7 +66,7 @@ Account* CsvImportPlugin::importAccount(QWidget *parent) const
 {
     QPointer<CsvImportDialog> dialog = new CsvImportDialog( parent );
     Account *account = 0;
-    
+
     if( dialog->exec() == QDialog::Accepted ) {
         if( dialog ) {
             account = dialog->account();

@@ -37,7 +37,7 @@ QByteArray CsvExportPlugin::pluginIdentifier() const
 QString CsvExportPlugin::pluginName() const
 {
     return tr( "CSV Export Plugin" );
-    
+
 }
 
 
