@@ -10,7 +10,6 @@ set(knipptasch_SOURCES
     quickreportpopup.cpp
     quickreportwidget.cpp
     passworddialog.cpp
-    categorycombobox.cpp
     main.cpp
 
     config/configdialog.cpp
@@ -45,7 +44,6 @@ set( knipptasch_HEADERS
     quickreportpopup.h
     quickreportwidget.h
     passworddialog.h
-    categorycombobox.h
 
     config/configdialog.h
     config/configwidget.h

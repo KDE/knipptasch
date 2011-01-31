@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -16,6 +16,8 @@
  */
 #ifndef CATEGORYCOMBOBOX_H
 #define CATEGORYCOMBOBOX_H
+
+#include "knipptasch_core_export.h"
 
 #include <KComboBox>
 #include <QSet>
@@ -36,7 +38,7 @@ class Account;
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class CategoryComboBox : public KComboBox
+class KNIPPTASCH_CORE_EXPORT CategoryComboBox : public KComboBox
 {
     Q_OBJECT
 

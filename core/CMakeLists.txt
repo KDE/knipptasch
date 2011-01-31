@@ -26,6 +26,7 @@ set( knipptasch_core_SOURCES
     widgets/dateedit.cpp
     widgets/datevalidator.cpp
     widgets/datepickerpopup.cpp
+    widgets/categorycombobox.cpp
 
     backend/object.cpp
     backend/category.cpp
@@ -53,6 +54,7 @@ set( knipptasch_core_HEADERS
     widgets/dateedit.h
     widgets/datevalidator.h
     widgets/datepickerpopup.h
+    widgets/categorycombobox.h
 
     backend/object.h
     backend/category.h

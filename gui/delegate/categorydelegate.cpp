@@ -15,17 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "categorydelegate.h"
-#include "categorycombobox.h"
 
-#include "backend/account.h"
-#include "backend/posting.h"
-#include "backend/category.h"
+#include <Knipptasch/CategoryComboBox>
+
+#include <Knipptasch/Account>
+#include <Knipptasch/Posting>
+#include <Knipptasch/Category>
 
 #include "accountsortfilterproxymodel.h"
+
+#include "preferences.h"
 
 #include <QPainter>
 #include <QApplication>
 #include <QStandardItemModel>
+#include <QAbstractItemView>
 
 
 
@@ -46,6 +50,7 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
     CategoryComboBox *input = new CategoryComboBox( model->account(), parent );
     input->setFrame( false );
+    input->view()->setMinimumSize( Preferences::self()->minimumCategoryComboBoxPopupSize() );
 
     return input;
 }

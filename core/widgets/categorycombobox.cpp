@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,7 +18,6 @@
 
 #include "backend/account.h"
 #include "backend/category.h"
-#include "preferences.h"
 
 #include <QMouseEvent>
 #include <QTreeView>
@@ -28,7 +27,6 @@
 #include <QLineEdit>
 #include <QPainter>
 
-#include <QDebug>
 
 
 CategoryComboBox::CategoryComboBox(const Account *account, QWidget* parent)
@@ -40,7 +38,6 @@ CategoryComboBox::CategoryComboBox(const Account *account, QWidget* parent)
     m_selectedCategory( -1 )
 {
     m_view->header()->hide();
-    m_view->setMinimumSize( Preferences::self()->minimumCategoryComboBoxPopupSize() );
     m_view->setRootIsDecorated( false );
     m_view->setAnimated( true );
     m_view->setUniformRowHeights( true );
