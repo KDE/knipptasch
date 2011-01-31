@@ -22,7 +22,10 @@
 #ifndef KNIPPTASCH_KDEPIM_KDATEEDIT_H
 #define KNIPPTASCH_KDEPIM_KDATEEDIT_H
 
+#include "knipptasch_core_export.h"
+
 #include <QtCore/QDate>
+
 
 #if defined( HAVE_KDE )
 #include <KComboBox>
@@ -62,9 +65,9 @@ class QStatusBar;
 */
 
 #if defined( HAVE_KDE )
-class DateEdit : public KComboBox
+class KNIPPTASCH_CORE_EXPORT DateEdit : public KComboBox
 #else
-class DateEdit : public QComboBox
+class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
 #endif
 {
     Q_OBJECT
@@ -77,6 +80,14 @@ class DateEdit : public QComboBox
          * @param parent The parent widget.
          */
         explicit DateEdit(QWidget *parent = 0);
+
+        /**
+         * Creates a new date edit.
+         *
+         * @param dateFormat own date format string
+         * @param parent The parent widget.
+         */
+        explicit DateEdit(const QString &dateFormat, QWidget *parent = 0);
 
         /**
          * Destroys the date edit.

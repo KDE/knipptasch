@@ -19,7 +19,7 @@
 #include "accountmodel.h"
 #include "preferences.h"
 
-#include "dateedit.h"
+#include <Knipptasch/DateEdit>
 
 #include <compat/utils.h>
 
@@ -44,7 +44,7 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    DateEdit *input = new DateEdit( parent );
+    DateEdit *input = new DateEdit( Preferences::self()->userDefinedDateFormat(), parent );
 //    input->setCalendarPopup( true );
 //    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );

@@ -143,10 +143,10 @@ macro_optional_add_subdirectory( cmake )
 macro_optional_add_subdirectory( strigi-analyzer )
 add_subdirectory( 3rdparty )
 add_subdirectory( data )
-add_subdirectory( core )
 add_subdirectory( compat )
+add_subdirectory( core )
 add_subdirectory( gui )
-add_subdirectory( plugins )
+#add_subdirectory( plugins )
 
 macro_display_feature_log()
 

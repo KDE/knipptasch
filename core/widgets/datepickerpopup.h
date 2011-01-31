@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNIPPTASCH_DATEPICKERPOPUP_H
-#define KNIPPTASCH_DATEPICKERPOPUP_H
+#ifndef KNIPPTASCH_CORE_DATEPICKERPOPUP_H
+#define KNIPPTASCH_CORE_DATEPICKERPOPUP_H
 
 #include <QtCore/QDate>
 #include <QtGui/QMenu>

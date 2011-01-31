@@ -11,10 +11,8 @@ set(knipptasch_SOURCES
     quickreportpopup.cpp
     quickreportwidget.cpp
     passworddialog.cpp
-    datepickerpopup.cpp
     categorycombobox.cpp
     categorymodel.cpp
-    dateedit.cpp
     main.cpp
 
     config/configdialog.cpp
@@ -56,10 +54,8 @@ set( knipptasch_HEADERS
     quickreportpopup.h
     quickreportwidget.h
     passworddialog.h
-    datepickerpopup.h
     categorycombobox.h
     categorymodel.h
-    dateedit.h
 
     config/configdialog.h
     config/configwidget.h

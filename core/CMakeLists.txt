@@ -17,6 +17,10 @@ set( knipptasch_core_SOURCES
     exportplugin.cpp
     importplugin.cpp
 
+    widgets/dateedit.cpp
+    widgets/datevalidator.cpp
+    widgets/datepickerpopup.cpp
+
     backend/object.cpp
     backend/category.cpp
     backend/account.cpp
@@ -34,6 +38,10 @@ set( knipptasch_core_HEADERS
     exportplugin.h
     importplugin.h
 
+    widgets/dateedit.h
+    widgets/datevalidator.h
+    widgets/datepickerpopup.h
+
     backend/object.h
     backend/category.h
     backend/account.h
@@ -46,10 +54,14 @@ set( knipptasch_core_HEADERS
  )
 
 
-qt4_wrap_cpp( knipptasch_core_SOURCES ${knipptasch_core_HEADERS} )
-add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
-
-target_link_libraries( knipptasch ${QT_LIBRARIES} modeltest )
+if( HAVE_KDE )
+  kde4_add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
+  target_link_libraries( knipptasch ${QT_LIBRARIES} modeltest compat )
+else( HAVE_KDE )
+  qt4_wrap_cpp( knipptasch_core_SOURCES ${knipptasch_core_HEADERS} )
+  add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
+  target_link_libraries( knipptasch ${QT_LIBRARIES} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} modeltest compat )
+endif( HAVE_KDE )
 
 set_target_properties(
     knipptasch
@@ -57,5 +69,6 @@ set_target_properties(
     VERSION "${knipptasch_core_MAJOR_VERSION}.${knipptasch_core_MINOR_VERSION}.${knipptasch_core_PATCH_LEVEL}"
     SOVERSION "${knipptasch_core_MAJOR_VERSION}.${knipptasch_core_MINOR_VERSION}"
 )
+
 
 install( TARGETS knipptasch DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS} )

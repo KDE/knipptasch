@@ -22,9 +22,8 @@
  */
 #include "dateedit.h"
 
+#include "datevalidator.h"
 #include "datepickerpopup.h"
-
-#include "preferences.h"
 
 #include "compat/utils.h"
 
@@ -36,8 +35,8 @@
 #include <KLocale>
 #include <KLocalizedString>
 #else
-#include <QMessageBox>
-#include <QDesktopWidget>
+#include <QtGui/QMessageBox>
+#include <QtGui/QDesktopWidget>
 #endif
 
 #include <QtCore/QEvent>
@@ -50,56 +49,6 @@
 
 #include <QtCore/QDebug>
 
-
-class DateValidator : public QValidator
-{
-    public:
-        DateValidator(const QStringList &keywords, QWidget *parent)
-          : QValidator( parent ),
-            mKeywords( keywords )
-        {
-        }
-
-        ~DateValidator()
-        {
-            QStatusTipEvent *event = new QStatusTipEvent( "" );
-            qApp->sendEvent( parent(), event );
-        }
-
-
-        virtual State validate(QString &str, int &value) const
-        {
-            Q_UNUSED( value );
-
-            QStatusTipEvent *event = new QStatusTipEvent( "" );
-            qApp->sendEvent( parent(), event );
-
-            // empty string is intermediate so one can clear the
-            // edit line and start from scratch
-            if( str.isEmpty() ) {
-                return Intermediate;
-            }
-
-            if( mKeywords.contains( str.toLower() ) ) {
-                return Acceptable;
-            }
-
-            bool ok = false;
-            QDate date = readDate( str, Preferences::self()->userDefinedDateFormat(), &ok );
-
-            if( ok ) {
-                QStatusTipEvent *event = new QStatusTipEvent( formatLongDate( date ) );
-                qApp->sendEvent( parent(), event );
-
-                return Acceptable;
-            }
-
-            return Intermediate;
-        }
-
-    private:
-        QStringList mKeywords;
-};
 
 
 class DateEdit::Private
@@ -318,9 +267,8 @@ DateEdit::DateEdit(QWidget *parent)
 #else
   : QComboBox( parent ),
 #endif
-  d( new Private( this ) )
+    d( new Private( this ) )
 {
-
     // need at least one entry for popup to work
     setMaxCount( 1 );
     setEditable( true );
@@ -350,7 +298,50 @@ DateEdit::DateEdit(QWidget *parent)
     d->setupKeywords();
     lineEdit()->installEventFilter( this );
 
-    setValidator( new DateValidator( d->mKeywordMap.keys(), this ) );
+    setValidator( new DateValidator( QString(), d->mKeywordMap.keys(), this ) );
+
+    d->mTextChanged = false;
+}
+
+
+DateEdit::DateEdit(const QString &dateFormat, QWidget *parent)
+#if defined( HAVE_KDE )
+  : KComboBox( parent ),
+#else
+  : QComboBox( parent ),
+#endif
+    d( new Private( this ) )
+{
+    // need at least one entry for popup to work
+    setMaxCount( 1 );
+    setEditable( true );
+
+    const QString today = formatShortDate( d->mDate );
+
+    addItem( today );
+    setCurrentIndex( 0 );
+
+    connect( lineEdit(), SIGNAL( returnPressed() ),
+            this, SLOT( lineEnterPressed() ) );
+    connect( this, SIGNAL( editTextChanged( const QString& ) ),
+             this, SLOT( slotTextChanged( const QString& ) ) );
+
+    d->mPopup = new DatePickerPopup(
+                            DatePickerPopup::NoDate
+                          | DatePickerPopup::DatePicker
+                          | DatePickerPopup::Words,
+                        QDate::currentDate(), this );
+
+    d->mPopup->hide();
+    d->mPopup->installEventFilter( this );
+
+    connect( d->mPopup, SIGNAL( dateChanged(const QDate&) ), this, SLOT( dateSelected(const QDate&) ) );
+
+    // handle keyword entry
+    d->setupKeywords();
+    lineEdit()->installEventFilter( this );
+
+    setValidator( new DateValidator( dateFormat, d->mKeywordMap.keys(), this ) );
 
     d->mTextChanged = false;
 }
