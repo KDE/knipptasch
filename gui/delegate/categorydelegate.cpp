@@ -17,9 +17,11 @@
 #include "categorydelegate.h"
 #include "categorycombobox.h"
 
-#include "accountsortfilterproxymodel.h"
+#include "backend/account.h"
 #include "backend/posting.h"
 #include "backend/category.h"
+
+#include "accountsortfilterproxymodel.h"
 
 #include <QPainter>
 #include <QApplication>

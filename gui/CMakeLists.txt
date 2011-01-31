@@ -1,7 +1,6 @@
 project( knipptasch )
 
 set(knipptasch_SOURCES
-    accountmodel.cpp
     accountsortfilterproxymodel.cpp
     accountwidget.cpp
     welcomewidget.cpp
@@ -45,7 +44,6 @@ set(knipptasch_SOURCES
 set( knipptasch_HEADERS
     mainwindow.h
     accountwidget.h
-    accountmodel.h
     accountsortfilterproxymodel.h
     welcomewidget.h
     aboutdialog.h

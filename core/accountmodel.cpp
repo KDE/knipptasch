@@ -16,8 +16,6 @@
  */
 #include "accountmodel.h"
 
-#include "preferences.h"
-
 #include "backend/account.h"
 #include "backend/posting.h"
 #include "backend/category.h"
@@ -34,18 +32,61 @@
 #include <QDebug>
 
 
+
+struct AccountModel::Private
+{
+    Private()
+      : account( 0 ),
+        posting( new Posting )
+    {
+    }
+
+
+    ~Private()
+    {
+        delete posting;
+        delete account;
+    }
+
+
+    Account *account;
+    Posting *posting;
+
+    QString dateFormat;
+    QColor positiveAmountForegroundColor;
+    QColor negativeAmountForegroundColor;
+    QColor availableWarrantyForegroundColor;
+    QColor expiredWarrantyForegroundColor;
+    QColor currentPostingBackgroundColor;
+    QColor futurePostingBackgroundColor;
+    QColor incompletePostingBackgroundColor;
+    QColor defaultPostingBackgroundColor;
+};
+
+
+
 AccountModel::AccountModel(QObject *parent)
   : QAbstractTableModel( parent ),
-    m_account( 0 ),
-    m_posting( new Posting )
+    d( new AccountModel::Private )
 {
 }
 
 
 AccountModel::~AccountModel()
 {
-    delete m_posting;
-    delete m_account;
+    delete d;
+}
+
+
+Account* AccountModel::account()
+{
+    return d->account;
+}
+
+
+const Account* AccountModel::account() const
+{
+    return d->account;
 }
 
 
@@ -55,9 +96,9 @@ void AccountModel::setAccount(Account *account)
     beginResetModel();
 #endif
 
-    m_account = account;
-    delete m_posting;
-    m_posting = new Posting;
+    d->account = account;
+    delete d->posting;
+    d->posting = new Posting;
 
 #if QT_VERSION >= 0x040600
     endResetModel();
@@ -113,17 +154,17 @@ Posting* AccountModel::posting(int row)
 
 AccountModel::PostingTypeFlags AccountModel::postingType(int row) const
 {
-    if( row < m_account->countPostings() ) {
-        return postingType( m_account->posting( row ) );
+    if( row < d->account->countPostings() ) {
+        return postingType( d->account->posting( row ) );
     }
 
-    return postingType( m_posting );
+    return postingType( d->posting );
 }
 
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
-    if( !m_account ) {
+    if( !d->account ) {
         return 0;
     }
 
@@ -131,7 +172,7 @@ int AccountModel::rowCount(const QModelIndex &parent) const
         return 0;
     }
 
-    return m_account->countPostings() + 1;
+    return d->account->countPostings() + 1;
 }
 
 
@@ -151,12 +192,12 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if( !m_account ) {
+    if( !d->account ) {
         return QVariant();
     }
 
     Q_ASSERT( index.row() >= 0 );
-    Q_ASSERT( index.row() <= m_account->countPostings() );
+    Q_ASSERT( index.row() <= d->account->countPostings() );
 
     switch( role ) {
         case Qt::TextAlignmentRole:
@@ -180,11 +221,11 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
     }
 
     Posting *entry = 0;
-    if( index.row() < m_account->countPostings() ) {
-        entry = m_account->posting( index.row() );
+    if( index.row() < d->account->countPostings() ) {
+        entry = d->account->posting( index.row() );
     }
     else {
-        entry = m_posting;
+        entry = d->posting;
     }
 
     Q_ASSERT( entry );
@@ -197,8 +238,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            if( !dateFormat().isEmpty() ) {
+                return dt.toString( dateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -223,8 +264,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            if( !dateFormat().isEmpty() ) {
+                return dt.toString( dateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -256,8 +297,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Preferences::self()->userDefinedDateFormat() );
+            if( !dateFormat().isEmpty() ) {
+                return dt.toString( dateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -327,7 +368,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
         return false;
     }
 
-    if( !m_account ) {
+    if( !d->account ) {
         return false;
     }
 
@@ -340,12 +381,12 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
     }
 
     Posting *entry = 0;
-    if( index.row() < m_account->countPostings() ) {
-        entry = m_account->posting( index.row() );
+    if( index.row() < d->account->countPostings() ) {
+        entry = d->account->posting( index.row() );
     }
     else {
-        Q_ASSERT( index.row() == m_account->countPostings() );
-        entry = m_posting;
+        Q_ASSERT( index.row() == d->account->countPostings() );
+        entry = d->posting;
     }
 
     Q_ASSERT( entry );
@@ -414,18 +455,20 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             break;
     }
 
-    if( index.row() >= m_account->countPostings() ) {
-        if( postingIsValid( m_posting ) ) {
+    if( index.row() >= d->account->countPostings() ) {
+        if( postingIsValid( d->posting ) ) {
             beginInsertRows( QModelIndex(), rowCount(), rowCount() );
-            m_account->addPosting( entry );
+            d->account->addPosting( entry );
             endInsertRows();
 
-            m_posting = new Posting;
-            emit dataChanged( createIndex( rowCount()-1, 0 ), createIndex( rowCount(), columnCount() ) );
+            d->posting = new Posting;
+            emit dataChanged( createIndex( rowCount()-1, 0 ),
+                              createIndex( rowCount(), columnCount() ) );
         }
     }
     else {
-        emit dataChanged( createIndex( index.row(), index.column() ), createIndex( index.row(), index.column() ) );
+        emit dataChanged( createIndex( index.row(), index.column() ),
+                          createIndex( index.row(), index.column() ) );
     }
 
     return true;
@@ -438,7 +481,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
         return 0;
     }
 
-    if( !m_account ) {
+    if( !d->account ) {
         return 0;
     }
 
@@ -452,23 +495,23 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
 
 bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    if( !m_account ) {
+    if( !d->account ) {
         return false;
     }
 
     bool re = false;
 
-    if( ( row + count - 1 ) == m_account->countPostings() ) {
+    if( ( row + count - 1 ) == d->account->countPostings() ) {
         count -= 1;
-        m_posting = new Posting;
+        d->posting = new Posting;
         re = true;
     }
 
-    if( ( row + count - 1 ) < m_account->countPostings() ) {
+    if( ( row + count - 1 ) < d->account->countPostings() ) {
         beginRemoveRows( parent, row, row + count - 1 );
 
         for(int i = 0; i < count; ++i) {
-            m_account->removePosting( row );
+            d->account->removePosting( row );
         }
 
         endRemoveRows();
@@ -479,14 +522,121 @@ bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 
+QString AccountModel::dateFormat() const
+{
+    return d->dateFormat;
+}
+
+
+void AccountModel::setDateFormat(const QString &str)
+{
+    d->dateFormat = str;
+}
+
+
+QColor AccountModel::positiveAmountForegroundColor() const
+{
+    return d->positiveAmountForegroundColor;
+}
+
+
+void AccountModel::setPositiveAmountForegroundColor(const QColor &color)
+{
+    d->positiveAmountForegroundColor = color;
+}
+
+
+QColor AccountModel::negativeAmountForegroundColor() const
+{
+    return d->negativeAmountForegroundColor;
+}
+
+
+void AccountModel::setNegativeAmountForegroundColor(const QColor &color)
+{
+    d->negativeAmountForegroundColor = color;
+}
+
+QColor AccountModel::availableWarrantyForegroundColor() const
+{
+    return d->availableWarrantyForegroundColor;
+}
+
+
+void AccountModel::setAvailableWarrantyForegroundColor(const QColor &color)
+{
+    d->availableWarrantyForegroundColor = color;
+}
+
+
+QColor AccountModel::expiredWarrantyForegroundColor() const
+{
+    return d->expiredWarrantyForegroundColor;
+}
+
+
+void AccountModel::setExpiredWarrantyForegroundColor(const QColor &color)
+{
+    d->expiredWarrantyForegroundColor = color;
+}
+
+
+QColor AccountModel::currentPostingBackgroundColor() const
+{
+    return d->currentPostingBackgroundColor;
+}
+
+
+void AccountModel::setCurrentPostingBackgroundColor(const QColor &color)
+{
+    d->currentPostingBackgroundColor = color;
+}
+
+
+QColor AccountModel::futurePostingBackgroundColor() const
+{
+    return d->futurePostingBackgroundColor;
+}
+
+
+void AccountModel::setFuturePostingBackgroundColor(const QColor &color)
+{
+    d->futurePostingBackgroundColor = color;
+}
+
+
+QColor AccountModel::incompletePostingBackgroundColor() const
+{
+    return d->incompletePostingBackgroundColor;
+}
+
+
+void AccountModel::setIncompletePostingBackgroundColor(const QColor &color)
+{
+    d->incompletePostingBackgroundColor = color;
+}
+
+
+QColor AccountModel::defaultPostingBackgroundColor() const
+{
+    return d->defaultPostingBackgroundColor;
+}
+
+
+void AccountModel::setDefaultPostingBackgroundColor(const QColor &color)
+{
+    d->defaultPostingBackgroundColor = color;
+}
+
+
 AccountModel::PostingTypeFlags AccountModel::postingType(const Posting *ptr) const
 {
-    Q_ASSERT( m_posting );
+    Q_ASSERT( d->posting );
     Q_ASSERT( ptr );
 
     PostingTypeFlags type = 0;
 
-    if( ptr == m_posting ) {
+    if( ptr == d->posting ) {
         type |= Current;
     }
 
@@ -530,18 +680,17 @@ QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
 {
     AccountModel::PostingTypeFlags type = postingType( index.row() );
 
-    if( type & AccountModel::Current && Preferences::self()->currentPostingBackgroundEnabled() ) {
-        return Preferences::self()->currentPostingBackgroundColor();
+    if( type & AccountModel::Current && currentPostingBackgroundColor().isValid() ) {
+        return currentPostingBackgroundColor();
     }
-    else if( type & AccountModel::Future && Preferences::self()->futurePostingBackgroundEnabled() ) {
-        return Preferences::self()->futurePostingBackgroundColor();
+    else if( type & AccountModel::Future && futurePostingBackgroundColor().isValid() ) {
+        return futurePostingBackgroundColor();
     }
-    else if( type & AccountModel::Incomplete && Preferences::self()->incompletePostingBackgroundEnabled() ) {
-        return Preferences::self()->incompletePostingBackgroundColor();
+    else if( type & AccountModel::Incomplete && incompletePostingBackgroundColor().isValid() ) {
+        return incompletePostingBackgroundColor();
     }
-
-    if( Preferences::self()->defaultPostingBackgroundEnabled() ) {
-        return Preferences::self()->defaultPostingBackgroundColor();
+    else if( defaultPostingBackgroundColor().isValid() ) {
+        return defaultPostingBackgroundColor();
     }
 
     return QVariant();
@@ -550,36 +699,26 @@ QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
 
 QVariant AccountModel::foregroundRoleData(const QModelIndex &index) const
 {
+    QColor c;
+
     switch( index.column() ) {
         case AccountModel::AMOUNT:
-        {
-            Money m = data( index, Qt::EditRole ).value<Money>();
-            if( m >= 0.0 && Preferences::self()->positiveAmountForegroundEnabled() ) {
-                return Preferences::self()->positiveAmountForegroundColor();
-            }
-            else if( m < 0.0 && Preferences::self()->negativeAmountForegroundEnabled() ) {
-                return Preferences::self()->negativeAmountForegroundColor();
-            }
-        }
+            c = data( index, Qt::EditRole ).value<Money>() >= 0.0
+                 ? positiveAmountForegroundColor()
+                 : negativeAmountForegroundColor();
         break;
 
         case AccountModel::WARRANTY:
-        {
-            QDate d = data( index, Qt::EditRole ).value<QDate>();
-            if( d < QDate::currentDate() && Preferences::self()->availableWarrantyForegroundEnabled() ) {
-                return Preferences::self()->availableWarrantyForegroundColor();
-            }
-            else if( Preferences::self()->expiredWarrantyForegroundEnabled() ) {
-                return Preferences::self()->expiredWarrantyForegroundColor();
-            }
-        }
+            c = data( index, Qt::EditRole ).value<QDate>() < QDate::currentDate()
+                 ? availableWarrantyForegroundColor()
+                 : expiredWarrantyForegroundColor();
         break;
 
         default:
             break;
     }
 
-    return QVariant();
+    return c.isValid() ? c : QVariant();
 }
 
 
@@ -605,11 +744,11 @@ QVariant AccountModel::decorationRoleData(const QModelIndex &index) const
         case AccountModel::CATEGORY:
         {
             Posting *entry = 0;
-            if( index.row() < m_account->countPostings() ) {
-                entry = m_account->posting( index.row() );
+            if( index.row() < d->account->countPostings() ) {
+                entry = d->account->posting( index.row() );
             }
             else {
-                entry = m_posting;
+                entry = d->posting;
             }
 
             Q_ASSERT( entry );

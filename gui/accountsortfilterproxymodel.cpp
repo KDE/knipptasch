@@ -18,6 +18,7 @@
 
 #include "preferences.h"
 #include "backend/money.h"
+#include "backend/account.h"
 #include "backend/posting.h"
 
 #include <QDate>

@@ -41,6 +41,7 @@
 #include "compat/standardaction.h"
 #include "compat/utils.h"
 
+#include <Knipptasch/Account>
 #include <Knipptasch/Money>
 #include <Knipptasch/Storage>
 #include <Knipptasch/StorageException>
@@ -288,6 +289,8 @@ QList<const Posting*> AccountWidget::selectedPostings() const
 
 void AccountWidget::loadConfig()
 {
+    Preferences *p = Preferences::self();
+
     QByteArray arr = QByteArray::fromBase64(
                                 Preferences::self()->horizontalHeaderState().toAscii() );
     if( arr.isEmpty() ) {
@@ -305,13 +308,58 @@ void AccountWidget::loadConfig()
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
-    // TODO: Make configurable
-    //ui->view->setEditTriggers( QAbstractItemView::AllEditTriggers );
 
-    ui->view->horizontalHeader()->setMovable( Preferences::self()->movableColumns() );
+    m_model->setPositiveAmountForegroundColor(
+                        p->positiveAmountForegroundEnabled()
+                            ? p->positiveAmountForegroundColor()
+                            : QColor()
+    );
 
-    ui->view->horizontalHeader()->setCascadingSectionResizes(
-                                    Preferences::self()->cascadingSectionResize() );
+    m_model->setNegativeAmountForegroundColor(
+                        p->negativeAmountForegroundEnabled()
+                            ? p->negativeAmountForegroundColor()
+                            : QColor()
+    );
+
+    m_model->setAvailableWarrantyForegroundColor(
+                        p->availableWarrantyForegroundEnabled()
+                            ? p->availableWarrantyForegroundColor()
+                            : QColor()
+    );
+
+    m_model->setExpiredWarrantyForegroundColor(
+                        p->expiredWarrantyForegroundEnabled()
+                            ? p->expiredWarrantyForegroundColor()
+                            : QColor()
+    );
+
+    m_model->setCurrentPostingBackgroundColor(
+                        p->currentPostingBackgroundEnabled()
+                            ? p->currentPostingBackgroundColor()
+                            : QColor()
+    );
+
+    m_model->setFuturePostingBackgroundColor(
+                        p->futurePostingBackgroundEnabled()
+                            ? p->futurePostingBackgroundColor()
+                            : QColor()
+    );
+
+    m_model->setIncompletePostingBackgroundColor(
+                        p->incompletePostingBackgroundEnabled()
+                            ? p->incompletePostingBackgroundColor()
+                            : QColor()
+    );
+
+    m_model->setDefaultPostingBackgroundColor(
+                        p->defaultPostingBackgroundEnabled()
+                            ? p->defaultPostingBackgroundColor()
+                            : QColor()
+    );
+
+    QHeaderView *h = ui->view->horizontalHeader();
+    h->setMovable( p->movableColumns() );
+    h->setCascadingSectionResizes( p->cascadingSectionResize() );
 
     ui->view->reset();
 }
@@ -319,7 +367,9 @@ void AccountWidget::loadConfig()
 
 void AccountWidget::saveConfig()
 {
-    Preferences::self()->setHorizontalHeaderState( ui->view->horizontalHeader()->saveState().toBase64() );
+    Preferences::self()->setHorizontalHeaderState(
+                        ui->view->horizontalHeader()->saveState().toBase64()
+    );
 }
 
 

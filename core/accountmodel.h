@@ -14,12 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ACCOUNTMODEL_H
-#define ACCOUNTMODEL_H
+#ifndef KNIPPTASCH_CORE_ACCOUNTMODEL_H
+#define KNIPPTASCH_CORE_ACCOUNTMODEL_H
 
-#include <Knipptasch/Account>
+#include "knipptasch_core_export.h"
 
-#include <QAbstractTableModel>
+#include <QtCore/QAbstractTableModel>
+
+class Account;
+class Posting;
+class Money;
+
+class QColor;
 
 
 /**
@@ -28,7 +34,7 @@
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class AccountModel : public QAbstractTableModel
+class KNIPPTASCH_CORE_EXPORT AccountModel : public QAbstractTableModel
 {
     Q_OBJECT
 
@@ -66,8 +72,8 @@ class AccountModel : public QAbstractTableModel
         explicit AccountModel(QObject *parent = 0);
         ~AccountModel();
 
-        Account* account() { return m_account; }
-        const Account* account() const { return m_account; }
+        Account* account();
+        const Account* account() const;
         void setAccount(Account *account);
 
         const Posting* posting(const QModelIndex &index) const;
@@ -88,6 +94,26 @@ class AccountModel : public QAbstractTableModel
 
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
+        QString dateFormat() const;
+        void setDateFormat(const QString &str);
+
+        QColor positiveAmountForegroundColor() const;
+        void setPositiveAmountForegroundColor(const QColor &color);
+        QColor negativeAmountForegroundColor() const;
+        void setNegativeAmountForegroundColor(const QColor &color);
+        QColor availableWarrantyForegroundColor() const;
+        void setAvailableWarrantyForegroundColor(const QColor &color);
+        QColor expiredWarrantyForegroundColor() const;
+        void setExpiredWarrantyForegroundColor(const QColor &color);
+        QColor currentPostingBackgroundColor() const;
+        void setCurrentPostingBackgroundColor(const QColor &color);
+        QColor futurePostingBackgroundColor() const;
+        void setFuturePostingBackgroundColor(const QColor &color);
+        QColor incompletePostingBackgroundColor() const;
+        void setIncompletePostingBackgroundColor(const QColor &color);
+        QColor defaultPostingBackgroundColor() const;
+        void setDefaultPostingBackgroundColor(const QColor &color);
+
     private:
         QVariant backgroundRoleData(const QModelIndex &index) const;
         QVariant foregroundRoleData(const QModelIndex &index) const;
@@ -100,9 +126,10 @@ class AccountModel : public QAbstractTableModel
         static bool postingIsValid(const Posting *p);
 
     private:
-        Account *m_account;
-        Posting *m_posting;
+        class Private;
+        Private* const d;
 };
+
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( AccountModel::PostingTypeFlags )
 Q_DECLARE_METATYPE( AccountModel::PostingTypeFlags )

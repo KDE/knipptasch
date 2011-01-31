@@ -16,8 +16,10 @@
  */
 #include "postingtextdelegate.h"
 
-#include "accountsortfilterproxymodel.h"
+#include "backend/account.h"
 #include "backend/posting.h"
+
+#include "accountsortfilterproxymodel.h"
 
 #include "preferences.h"
 

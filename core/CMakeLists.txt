@@ -17,6 +17,8 @@ set( knipptasch_core_SOURCES
     exportplugin.cpp
     importplugin.cpp
 
+    accountmodel.cpp
+
     widgets/dateedit.cpp
     widgets/datevalidator.cpp
     widgets/datepickerpopup.cpp
@@ -37,6 +39,8 @@ set( knipptasch_core_HEADERS
     plugin.h
     exportplugin.h
     importplugin.h
+
+    accountmodel.h
 
     widgets/dateedit.h
     widgets/datevalidator.h

@@ -17,6 +17,10 @@
 #include "quickreportwidget.h"
 #include "ui_quickreportwidget.h"
 
+#include "backend/account.h"
+#include "backend/money.h"
+#include "backend/posting.h"
+
 #include "accountsortfilterproxymodel.h"
 
 #include "preferences.h"
@@ -31,8 +35,6 @@
 
 #include <QLocale>
 #include <QShowEvent>
-#include "backend/money.h"
-#include "backend/posting.h"
 
 
 bool doSortPostings(const Posting *p1, const Posting *p2)
