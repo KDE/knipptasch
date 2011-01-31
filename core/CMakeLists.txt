@@ -16,6 +16,9 @@ set( knipptasch_core_SOURCES
     plugin.cpp
     exportplugin.cpp
     importplugin.cpp
+    abstractaccounttabwidgetplugin.cpp
+
+    abstractaccounttabwidget.cpp
 
     accountmodel.cpp
 
@@ -39,6 +42,9 @@ set( knipptasch_core_HEADERS
     plugin.h
     exportplugin.h
     importplugin.h
+    abstractaccounttabwidgetplugin.h
+
+    abstractaccounttabwidget.h
 
     accountmodel.h
 

@@ -30,12 +30,6 @@
 #include "delegate/moneydelegate.h"
 #include "delegate/categorydelegate.h"
 
-#include "interface/abstractaccounttabwidget.h"
-
-#include "accounttabwidgets/postingtabwidget.h"
-#include "accounttabwidgets/splitpostingtabwidget.h"
-#include "accounttabwidgets/descriptiontabwidget.h"
-
 #include "compat/iconloader.h"
 #include "compat/actioncollection.h"
 #include "compat/standardaction.h"
@@ -45,6 +39,7 @@
 #include <Knipptasch/Money>
 #include <Knipptasch/Storage>
 #include <Knipptasch/StorageException>
+#include <Knipptasch/AbstractAccountTabWidget>
 
 #include <modeltest/modeltest.h>
 

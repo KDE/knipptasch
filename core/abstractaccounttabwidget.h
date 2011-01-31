@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef ABSTRACTACCOUNTTABWIDGET_H
-#define ABSTRACTACCOUNTTABWIDGET_H
+#ifndef KNIPPTASCH_CORE_ABSTRACTACCOUNTTABWIDGET_H
+#define KNIPPTASCH_CORE_ABSTRACTACCOUNTTABWIDGET_H
+
+#include "knipptasch_core_export.h"
 
 #include <QWidget>
 
@@ -29,7 +31,7 @@ class QModelIndex;
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class AbstractAccountTabWidget : public QWidget
+class KNIPPTASCH_CORE_EXPORT AbstractAccountTabWidget : public QWidget
 {
     Q_OBJECT
 

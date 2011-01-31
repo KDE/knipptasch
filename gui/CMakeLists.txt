@@ -29,12 +29,6 @@ set(knipptasch_SOURCES
     config/preferencesaccounttableconfigpage.cpp
     config/appearancecolorchooserwidget.cpp
 
-    interface/abstractaccounttabwidget.cpp
-
-    #accounttabwidgets/postingtabwidget.cpp
-    #accounttabwidgets/descriptiontabwidget.cpp
-    #accounttabwidgets/splitpostingtabwidget.cpp
-
     delegate/datedelegate.cpp
     delegate/moneydelegate.cpp
     delegate/postingtextdelegate.cpp
@@ -69,8 +63,6 @@ set( knipptasch_HEADERS
     config/preferencesappearanceconfigpage.h
     config/preferencesaccounttableconfigpage.h
     config/appearancecolorchooserwidget.h
-
-    interface/abstractaccounttabwidget.h
 
     delegate/datedelegate.h
     delegate/moneydelegate.h
@@ -166,7 +158,7 @@ else( HAVE_KDE )
     )
 
     set_target_properties( knipptasch-bin PROPERTIES OUTPUT_NAME knipptasch )
-    
+
     install( TARGETS knipptasch-bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
     install( FILES ${QM_FILES} DESTINATION ${KNIPPTASCH_LOCALE_INSTALL_DIR} )
 endif( HAVE_KDE )

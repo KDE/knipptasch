@@ -18,7 +18,6 @@
 
 #include "accountmodel.h"
 #include "backend/account.h"
-#include "preferences.h"
 
 #include <QIcon>
 #include <QCoreApplication>
