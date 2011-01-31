@@ -11,7 +11,6 @@ set(knipptasch_SOURCES
     quickreportwidget.cpp
     passworddialog.cpp
     categorycombobox.cpp
-    categorymodel.cpp
     main.cpp
 
     config/configdialog.cpp
@@ -47,7 +46,6 @@ set( knipptasch_HEADERS
     quickreportwidget.h
     passworddialog.h
     categorycombobox.h
-    categorymodel.h
 
     config/configdialog.h
     config/configwidget.h

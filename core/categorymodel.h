@@ -17,7 +17,10 @@
 #ifndef CATEGORYMODEL_H
 #define CATEGORYMODEL_H
 
-#include <QAbstractItemModel>
+#include "knipptasch_core_export.h"
+
+#include <QtCore/QAbstractItemModel>
+
 
 class Account;
 class Category;
@@ -29,7 +32,7 @@ class Category;
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class CategoryModel : public QAbstractItemModel
+class KNIPPTASCH_CORE_EXPORT CategoryModel : public QAbstractItemModel
 {
     Q_OBJECT
 

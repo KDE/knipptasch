@@ -18,13 +18,8 @@
 
 #include "backend/account.h"
 #include "backend/category.h"
-#include "preferences.h"
 
 #include <qmimedata.h>
-
-#include <QDebug>
-
-
 
 
 CategoryModel::CategoryModel(QObject *parent)

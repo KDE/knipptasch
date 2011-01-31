@@ -21,6 +21,7 @@ set( knipptasch_core_SOURCES
     abstractaccounttabwidget.cpp
 
     accountmodel.cpp
+    categorymodel.cpp
 
     widgets/dateedit.cpp
     widgets/datevalidator.cpp
@@ -47,6 +48,7 @@ set( knipptasch_core_HEADERS
     abstractaccounttabwidget.h
 
     accountmodel.h
+    categorymodel.h
 
     widgets/dateedit.h
     widgets/datevalidator.h
