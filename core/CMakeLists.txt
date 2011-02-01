@@ -24,10 +24,10 @@ set( knipptasch_core_SOURCES
     categorymodel.cpp
     accountsortfilterproxymodel.cpp
 
-    widgets/dateedit.cpp
-    widgets/datevalidator.cpp
-    widgets/datepickerpopup.cpp
-    widgets/categorycombobox.cpp
+    dateedit.cpp
+    datevalidator.cpp
+    datepickerpopup.cpp
+    categorycombobox.cpp
 
     backend/object.cpp
     backend/category.cpp
@@ -53,10 +53,10 @@ set( knipptasch_core_HEADERS
     categorymodel.h
     accountsortfilterproxymodel.h
 
-    widgets/dateedit.h
-    widgets/datevalidator.h
-    widgets/datepickerpopup.h
-    widgets/categorycombobox.h
+    dateedit.h
+    datevalidator.h
+    datepickerpopup.h
+    categorycombobox.h
 
     backend/object.h
     backend/category.h
