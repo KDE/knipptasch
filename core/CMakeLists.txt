@@ -22,6 +22,7 @@ set( knipptasch_core_SOURCES
 
     accountmodel.cpp
     categorymodel.cpp
+    accountsortfilterproxymodel.cpp
 
     widgets/dateedit.cpp
     widgets/datevalidator.cpp
@@ -50,6 +51,7 @@ set( knipptasch_core_HEADERS
 
     accountmodel.h
     categorymodel.h
+    accountsortfilterproxymodel.h
 
     widgets/dateedit.h
     widgets/datevalidator.h

@@ -17,6 +17,8 @@
 #ifndef ACCOUNTSORTFILTERPROXYMODEL_H
 #define ACCOUNTSORTFILTERPROXYMODEL_H
 
+#include "knipptasch_core_export.h"
+
 #include "accountmodel.h"
 #include "backend/money.h"
 
@@ -30,11 +32,17 @@
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class AccountSortFilterProxyModel : public QSortFilterProxyModel
+class KNIPPTASCH_CORE_EXPORT AccountSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
     public:
+        enum PostingSortOrder
+        {
+            Maturity = 0,
+            ValueDate
+        };
+
         explicit AccountSortFilterProxyModel(QObject *parent = 0);
 
         Account* account();
@@ -42,6 +50,9 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
         bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+        AccountSortFilterProxyModel::PostingSortOrder postingSortOrder() const;
+        void setPostingSortOrder(AccountSortFilterProxyModel::PostingSortOrder order);
 
     public slots:
         void updateCache(int firstRow = 0);
@@ -55,6 +66,7 @@ class AccountSortFilterProxyModel : public QSortFilterProxyModel
 
     private:
         mutable QMap<int, Money> m_cache;
+        AccountSortFilterProxyModel::PostingSortOrder m_postingSortOrder;
 };
 
 

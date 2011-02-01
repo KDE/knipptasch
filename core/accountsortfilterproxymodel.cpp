@@ -16,14 +16,14 @@
  */
 #include "accountsortfilterproxymodel.h"
 
-#include "preferences.h"
 #include "backend/money.h"
 #include "backend/account.h"
 #include "backend/posting.h"
 
 #include <QDate>
-#include <QDebug>
 #include <QTimer>
+#include <QColor>
+
 
 #define TEST_LESS_THAN_RESULT_TRUE 1
 #define TEST_LESS_THAN_RESULT_FALSE 0
@@ -78,12 +78,15 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
                 return QVariant();
             }
 
+            const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+            Q_ASSERT( model );
+
             Money m = data( idx, Qt::EditRole ).value<Money>();
-            if( m >= 0.0 && Preferences::self()->positiveAmountForegroundEnabled() ) {
-                return Preferences::self()->positiveAmountForegroundColor();
+            if( m >= 0.0 && model->positiveAmountForegroundColor().isValid() ) {
+                return model->positiveAmountForegroundColor();
             }
-            else if( m < 0.0 && Preferences::self()->negativeAmountForegroundEnabled() ) {
-                return Preferences::self()->negativeAmountForegroundColor();
+            else if( m < 0.0 && model->negativeAmountForegroundColor().isValid() ) {
+                return model->negativeAmountForegroundColor();
             }
         }
         else if( role == Qt::EditRole ) {
@@ -92,8 +95,8 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
         }
         else if( role == Qt::DisplayRole ) {
             return m_cache.contains( idx.row() )
-                    ? m_cache.value( idx.row() ).toString()
-                    : "-";
+                      ? m_cache.value( idx.row() ).toString()
+                      : "-";
         }
     }
 
@@ -112,6 +115,18 @@ bool AccountSortFilterProxyModel::setData(const QModelIndex &idx, const QVariant
     }
 
     return true;
+}
+
+
+AccountSortFilterProxyModel::PostingSortOrder AccountSortFilterProxyModel::postingSortOrder() const
+{
+    return m_postingSortOrder;
+}
+
+
+void AccountSortFilterProxyModel::setPostingSortOrder(AccountSortFilterProxyModel::PostingSortOrder order)
+{
+    m_postingSortOrder = order;
 }
 
 
@@ -222,22 +237,22 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
 
     QDate l_primary, r_primary, l_secondary, r_secondary;
 
-    switch( Preferences::self()->sortPostingsBy() ) {
-        case Preferences::Maturity:
+    switch( postingSortOrder() ) {
+        case AccountSortFilterProxyModel::Maturity:
             l_primary = l_maturity;
             r_primary = r_maturity;
             l_secondary = l_valuedate;
             r_secondary = r_valuedate;
             break;
 
-        case Preferences::ValueDate:
+        case AccountSortFilterProxyModel::ValueDate:
             l_primary = l_valuedate;
             r_primary = r_valuedate;
             l_secondary = l_maturity;
             r_secondary = r_maturity;
 
         default:
-            Q_ASSERT_X( false, Q_FUNC_INFO, "Unhandled 'SortPostingBy' configuration value" );
+            Q_ASSERT_X( false, Q_FUNC_INFO, "Unhandled 'AbstractPreferences::PostingSortOrder' configuration value" );
     }
 
     if( l_primary.isValid() && !r_primary.isValid() ) {

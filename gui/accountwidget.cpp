@@ -303,6 +303,8 @@ void AccountWidget::loadConfig()
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
+    m_proxy->setPostingSortOrder( static_cast<AccountSortFilterProxyModel::PostingSortOrder>( p->sortPostingsBy() ) );
+
 
     m_model->setPositiveAmountForegroundColor(
                         p->positiveAmountForegroundEnabled()
