@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DATEDELEGATE_H
-#define DATEDELEGATE_H
+#ifndef MONEYDELEGATE_H
+#define MONEYDELEGATE_H
+
+#include "knipptasch_core_export.h"
 
 #include <QStyledItemDelegate>
 
@@ -28,17 +30,17 @@ namespace Knipptasch
 
 
 /**
- * @class DateDelegate
+ * @class MoneyDelegate
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class DateDelegate : public QStyledItemDelegate
+class KNIPPTASCH_CORE_EXPORT MoneyDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        DateDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
+        MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
 
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 

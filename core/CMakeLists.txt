@@ -40,6 +40,11 @@ set( knipptasch_core_SOURCES
     backend/subposting.cpp
     backend/storage.cpp
     backend/storageexception.cpp
+
+    delegate/datedelegate.cpp
+    delegate/moneydelegate.cpp
+    delegate/postingtextdelegate.cpp
+    delegate/categorydelegate.cpp
  )
 
 
@@ -71,6 +76,11 @@ set( knipptasch_core_HEADERS
     backend/subposting.h
     backend/storage.h
     backend/storageexception.h
+
+    delegate/datedelegate.h
+    delegate/moneydelegate.h
+    delegate/postingtextdelegate.h
+    delegate/categorydelegate.h
  )
 
 

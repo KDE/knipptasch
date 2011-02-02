@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef POSTINGTEXTDELEGATE_H
-#define POSTINGTEXTDELEGATE_H
+#ifndef CATEGORYDELEGATE_H
+#define CATEGORYDELEGATE_H
+
+#include "knipptasch_core_export.h"
 
 #include <QStyledItemDelegate>
 
@@ -26,24 +28,25 @@ namespace Knipptasch
 }
 
 
+
 /**
- * @class PostingTextDelegate
+ * @class CategoryDelegate
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class PostingTextDelegate : public QStyledItemDelegate
+class KNIPPTASCH_CORE_EXPORT CategoryDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
     public:
-        PostingTextDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
+        CategoryDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &opt, const QModelIndex &index) const;
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-        
+                          
     private:
         Knipptasch::Preferences *m_preferences;
 };

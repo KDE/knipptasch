@@ -26,11 +26,6 @@ set(knipptasch_SOURCES
     config/preferencesappearanceconfigpage.cpp
     config/preferencesaccounttableconfigpage.cpp
     config/appearancecolorchooserwidget.cpp
-
-    delegate/datedelegate.cpp
-    delegate/moneydelegate.cpp
-    delegate/postingtextdelegate.cpp
-    delegate/categorydelegate.cpp
  )
 
 set( knipptasch_HEADERS
@@ -59,11 +54,6 @@ set( knipptasch_HEADERS
     config/preferencesappearanceconfigpage.h
     config/preferencesaccounttableconfigpage.h
     config/appearancecolorchooserwidget.h
-
-    delegate/datedelegate.h
-    delegate/moneydelegate.h
-    delegate/postingtextdelegate.h
-    delegate/categorydelegate.h
  )
 
 set( knipptasch_FORMS
