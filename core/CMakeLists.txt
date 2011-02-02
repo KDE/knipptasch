@@ -28,6 +28,7 @@ set( knipptasch_core_SOURCES
     datevalidator.cpp
     datepickerpopup.cpp
     categorycombobox.cpp
+    accounttablewidget.cpp
 
     preferences.cpp
 
@@ -64,6 +65,7 @@ set( knipptasch_core_HEADERS
     datevalidator.h
     datepickerpopup.h
     categorycombobox.h
+    accounttablewidget.h
 
     preferences.h
 
