@@ -18,13 +18,14 @@
 #include "ui_preferencesaccounttableconfigpage.h"
 
 #include "compat/iconloader.h"
-#include "preferences.h"
+
+#include <Knipptasch/Preferences>
 
 #include <QDebug>
 #include <compat/utils.h>
 
 
-PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Preferences *pref, ConfigWidget* parent)
+PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon("table"), parent ),
     ui( new Ui::PreferencesAccountTableConfigPage ),
     m_preferences( pref )
@@ -32,8 +33,8 @@ PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Preferences
     ui->setupUi( this );
 
     ui->sortPostingsBy->clear();
-    ui->sortPostingsBy->addItem( tr( "Maturity" ), Preferences::Maturity );
-    ui->sortPostingsBy->addItem( tr( "Value Date" ), Preferences::ValueDate );
+    ui->sortPostingsBy->addItem( tr( "Maturity" ), Knipptasch::Preferences::Maturity );
+    ui->sortPostingsBy->addItem( tr( "Value Date" ), Knipptasch::Preferences::ValueDate );
 
     connect( ui->sortPostingsBy, SIGNAL( currentIndexChanged(int) ),
              this, SIGNAL( pageModified() ) );

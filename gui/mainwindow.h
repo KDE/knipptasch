@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2007-2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -28,6 +28,7 @@
 
 #include <KAction>
 
+class GuiPreferences;
 class QUrl;
 class QMenu;
 class AccountWidget;
@@ -38,9 +39,11 @@ class Account;
 
 namespace Knipptasch 
 {        
+    class Preferences;
     class ImportPlugin;
     class ExportPlugin;
 }
+
 
 namespace Ui
 {
@@ -68,6 +71,9 @@ class MainWindow :
         explicit MainWindow(QWidget* parent = 0);
         ~MainWindow();
 
+        Knipptasch::Preferences* preferences();
+        const Knipptasch::Preferences* preferences() const;
+        
 #if defined(HAVE_KDE)
         KActionCollection* mainWindowActionCollection() { return actionCollection(); }
 #else
@@ -138,6 +144,9 @@ class MainWindow :
 
     private:
         Ui::MainWindow *ui;
+        
+        GuiPreferences *m_preferences;
+        
         ActionCollection *m_ActionCollection;
         RecentFileMenu *m_recentFileMenu;
 

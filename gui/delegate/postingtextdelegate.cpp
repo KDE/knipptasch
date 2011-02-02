@@ -21,7 +21,7 @@
 
 #include "accountsortfilterproxymodel.h"
 
-#include "preferences.h"
+#include <Knipptasch/Preferences>
 
 #include <QPainter>
 #include <QApplication>
@@ -31,8 +31,9 @@
 #include <QSet>
 
 
-PostingTextDelegate::PostingTextDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+PostingTextDelegate::PostingTextDelegate(Knipptasch::Preferences *preferences, QObject *parent)
+  : QStyledItemDelegate( parent ),
+    m_preferences( preferences )
 {
 }
 
@@ -49,7 +50,7 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     KLineEdit *input = new KLineEdit( parent );
     input->setFrame( false );
 
-    if( Preferences::self()->autoCompletionEnabled() ) {
+    if( m_preferences->autoCompletionEnabled() ) {
         QSet<QString> set;
         const QList<const Posting*> list = model->account()->postings();
         foreach(const Posting *p, list) {

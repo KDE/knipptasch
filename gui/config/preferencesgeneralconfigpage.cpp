@@ -19,7 +19,7 @@
 
 #include "compat/iconloader.h"
 
-#include "preferences.h"
+#include <Knipptasch/Preferences>
 
 #include <QApplication>
 #include <QFileInfo>
@@ -60,7 +60,7 @@ class FileSystemModel : public QFileSystemModel
 };
 
 
-PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Preferences *pref, ConfigWidget* parent)
+PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon("go-home"), parent ),
     ui( new Ui::PreferencesGeneralConfigPage ),
     m_preferences( pref )
@@ -78,10 +78,10 @@ PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Preferences *pref, Co
 #endif
 
     ui->startupCombo->clear();
-    ui->startupCombo->addItem( tr( "Show Welcome Page" ), Preferences::WelcomePage );
-    ui->startupCombo->addItem( tr( "Open Blank File" ), Preferences::BlankFile );
-    ui->startupCombo->addItem( tr( "Open Last-Used File" ), Preferences::LastFile );
-    ui->startupCombo->addItem( tr( "Open My Default Account File" ), Preferences::DefaultFile );
+    ui->startupCombo->addItem( tr( "Show Welcome Page" ), Knipptasch::Preferences::WelcomePage );
+    ui->startupCombo->addItem( tr( "Open Blank File" ), Knipptasch::Preferences::BlankFile );
+    ui->startupCombo->addItem( tr( "Open Last-Used File" ), Knipptasch::Preferences::LastFile );
+    ui->startupCombo->addItem( tr( "Open My Default Account File" ), Knipptasch::Preferences::DefaultFile );
 
     ui->defaultAccountFileRequesterButton->setIcon( BarIcon("document-open") );
 
@@ -123,7 +123,7 @@ bool PreferencesGeneralConfigPage::isValid() const
     int onStartupActionValue = ui->startupCombo->itemData(
                                     ui->startupCombo->currentIndex() ).toInt();
 
-    if( onStartupActionValue != Preferences::DefaultFile ) {
+    if( onStartupActionValue != Knipptasch::Preferences::DefaultFile ) {
         return true;
     }
 
@@ -210,9 +210,9 @@ bool PreferencesGeneralConfigPage::isModified() const
 bool PreferencesGeneralConfigPage::commit()
 {
     int onStartupActionValue = ui->startupCombo->itemData( ui->startupCombo->currentIndex() ).toInt();
-    m_preferences->setOnStartupAction( onStartupActionValue );
+    m_preferences->setOnStartupAction( static_cast<Knipptasch::Preferences::EnumOnStartupAction>( onStartupActionValue ) );
     QString str;
-    if( onStartupActionValue == Preferences::DefaultFile ) {
+    if( onStartupActionValue == Knipptasch::Preferences::DefaultFile ) {
         str = ui->defaultAccountFileRequesterLineEdit->text().trimmed();
     }
     m_preferences->setOnStartupActionDefaultFile( str );
@@ -236,7 +236,7 @@ void PreferencesGeneralConfigPage::revert()
     ui->startupCombo->setCurrentIndex( ui->startupCombo->findData( m_preferences->onStartupAction() ) );
 
     int onStartupActionValue = ui->startupCombo->itemData( ui->startupCombo->currentIndex() ).toInt();
-    if( !m_preferences->onStartupActionDefaultFile().isEmpty() || onStartupActionValue == Preferences::DefaultFile ) {
+    if( !m_preferences->onStartupActionDefaultFile().isEmpty() || onStartupActionValue == Knipptasch::Preferences::DefaultFile ) {
         ui->defaultAccountFileRequesterLineEdit->setText( m_preferences->onStartupActionDefaultFile() );
     }
     ui->splashScreen->setChecked( m_preferences->splashScreenEnabled() );
@@ -255,9 +255,9 @@ void PreferencesGeneralConfigPage::revert()
 void PreferencesGeneralConfigPage::onStartupComboIndexChanged()
 {
     int value = ui->startupCombo->itemData( ui->startupCombo->currentIndex() ).toInt();
-    ui->defaultAccountFileLabel->setVisible( value == Preferences::DefaultFile );
-    ui->defaultAccountFileRequesterLineEdit->setVisible( value == Preferences::DefaultFile );
-    ui->defaultAccountFileRequesterButton->setVisible( value == Preferences::DefaultFile );
+    ui->defaultAccountFileLabel->setVisible( value == Knipptasch::Preferences::DefaultFile );
+    ui->defaultAccountFileRequesterLineEdit->setVisible( value == Knipptasch::Preferences::DefaultFile );
+    ui->defaultAccountFileRequesterButton->setVisible( value == Knipptasch::Preferences::DefaultFile );
 
     pageModified();
 }

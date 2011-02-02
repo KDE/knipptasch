@@ -185,9 +185,9 @@ void QuickReportWidget::updateView()
     ui->expenseValue->setText( formatMoney( expense ) );
     ui->diffValue->setText( formatMoney( income - expense.abs() ) );
 
-    if( Preferences::self()->positiveAmountForegroundEnabled() ) {
+    if( model->positiveAmountForegroundColor().isValid() ) {
         QString style = QString::fromLatin1("color: %1;").arg(
-                Preferences::self()->positiveAmountForegroundColor().name() );
+                model->positiveAmountForegroundColor().name() );
 
         ui->incomeValue->setStyleSheet( style );
 
@@ -196,9 +196,9 @@ void QuickReportWidget::updateView()
         }
     }
 
-    if( Preferences::self()->negativeAmountForegroundEnabled() ) {
+    if( model->negativeAmountForegroundColor().isValid() ) {
         QString style = QString::fromLatin1("color: %1;").arg(
-                Preferences::self()->negativeAmountForegroundColor().name() );
+                model->negativeAmountForegroundColor().name() );
 
         ui->expenseValue->setStyleSheet( style );
 

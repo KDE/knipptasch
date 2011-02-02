@@ -20,7 +20,7 @@
 #include <QCoreApplication>
 
 
-PreferencesConfigDialog::PreferencesConfigDialog(Preferences *pref, QWidget *parent)
+PreferencesConfigDialog::PreferencesConfigDialog(Knipptasch::Preferences *pref, QWidget *parent)
   : ConfigDialog( parent )
 {
     setWindowTitle( tr( "Configure Knipptasch - %1" ).arg( QCoreApplication::applicationName() ) );

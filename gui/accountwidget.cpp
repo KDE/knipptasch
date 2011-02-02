@@ -18,7 +18,6 @@
 #include "ui_accountwidget.h"
 
 #include "mainwindow.h"
-#include "preferences.h"
 #include "accountmodel.h"
 #include "accountsortfilterproxymodel.h"
 #include "quickreportpopup.h"
@@ -40,6 +39,7 @@
 #include <Knipptasch/Storage>
 #include <Knipptasch/StorageException>
 #include <Knipptasch/AbstractAccountTabWidget>
+#include <Knipptasch/Preferences>
 
 #include <modeltest/modeltest.h>
 
@@ -103,13 +103,13 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->view->setModel( m_proxy );
 
-    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( m_mainWindow->preferences(), this ) );
 
     ui->view->resizeColumnsToContents();
     ui->view->verticalHeader()->hide();
@@ -284,10 +284,10 @@ QList<const Posting*> AccountWidget::selectedPostings() const
 
 void AccountWidget::loadConfig()
 {
-    Preferences *p = Preferences::self();
+    Knipptasch::Preferences *p = m_mainWindow->preferences();
 
-    QByteArray arr = QByteArray::fromBase64(
-                                Preferences::self()->horizontalHeaderState().toAscii() );
+    QByteArray arr = QByteArray::fromBase64( p->horizontalHeaderState().toAscii() );
+
     if( arr.isEmpty() ) {
         ui->view->setColumnHidden( AccountModel::PAYEE, true );
         ui->view->setColumnHidden( AccountModel::STATEMENT, true );
@@ -364,7 +364,7 @@ void AccountWidget::loadConfig()
 
 void AccountWidget::saveConfig()
 {
-    Preferences::self()->setHorizontalHeaderState(
+    m_mainWindow->preferences()->setHorizontalHeaderState(
                         ui->view->horizontalHeader()->saveState().toBase64()
     );
 }
@@ -522,7 +522,7 @@ void AccountWidget::onConfigureAccount()
 
 void AccountWidget::onResizeColumnToContents(int index)
 {
-    if( Preferences::self()->doubleClickResizeColumnToCountent() ) {
+    if( m_mainWindow->preferences()->doubleClickResizeColumnToCountent() ) {
         ui->view->resizeColumnToContents( index );
         saveConfig();
     }
@@ -552,13 +552,13 @@ void AccountWidget::slotUpdateAccountInfo()
     const Money value = m_proxy->data( index, Qt::EditRole ).value<Money>();
 
     QString stylesheet;
-    if( Preferences::self()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
+    if( m_mainWindow->preferences()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
         stylesheet = QString::fromLatin1("color: %1;").arg(
-                 Preferences::self()->positiveAmountForegroundColor().name() );
+                 m_mainWindow->preferences()->positiveAmountForegroundColor().name() );
     }
-    else if( Preferences::self()->negativeAmountForegroundEnabled() && value < 0.0 ) {
+    else if( m_mainWindow->preferences()->negativeAmountForegroundEnabled() && value < 0.0 ) {
         stylesheet = QString::fromLatin1("color: %1;").arg(
-                 Preferences::self()->negativeAmountForegroundColor().name() );
+                 m_mainWindow->preferences()->negativeAmountForegroundColor().name() );
     }
 
     ui->balance->setStyleSheet( stylesheet );
@@ -575,7 +575,7 @@ void AccountWidget::slotCurrentRowChanged()
         w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
     }
 
-    if( Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
+    if( m_mainWindow->preferences()->resetCurrentIndexWhenCurrentRowChanged() ) {
         ui->view->setCurrentIndex( ui->view->model()->index( ui->view->currentIndex().row(), 0 ) );
     }
 }

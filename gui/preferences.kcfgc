@@ -1,7 +1,0 @@
-File=knipptasch.kcfg
-ClassName=Preferences
-Singleton=true
-MemberVariables=private
-ItemAccessors=true
-Mutators=true
-GlobalEnums=true

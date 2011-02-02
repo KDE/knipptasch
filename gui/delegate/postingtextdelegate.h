@@ -20,6 +20,12 @@
 #include <QStyledItemDelegate>
 
 
+namespace Knipptasch
+{
+    class Preferences;
+}
+
+
 /**
  * @class PostingTextDelegate
  * @brief
@@ -31,12 +37,15 @@ class PostingTextDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        PostingTextDelegate(QObject *parent = 0);
+        PostingTextDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
 
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+        
+    private:
+        Knipptasch::Preferences *m_preferences;
 };
 
 #endif

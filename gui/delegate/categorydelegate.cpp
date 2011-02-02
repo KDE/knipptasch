@@ -21,10 +21,10 @@
 #include <Knipptasch/Account>
 #include <Knipptasch/Posting>
 #include <Knipptasch/Category>
+#include <Knipptasch/Preferences>
 
 #include "accountsortfilterproxymodel.h"
 
-#include "preferences.h"
 
 #include <QPainter>
 #include <QApplication>
@@ -33,8 +33,9 @@
 
 
 
-CategoryDelegate::CategoryDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+CategoryDelegate::CategoryDelegate(Knipptasch::Preferences *preferences, QObject *parent)
+  : QStyledItemDelegate( parent ),
+    m_preferences( preferences )
 {
 }
 
@@ -50,7 +51,7 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
     CategoryComboBox *input = new CategoryComboBox( model->account(), parent );
     input->setFrame( false );
-    input->view()->setMinimumSize( Preferences::self()->minimumCategoryComboBoxPopupSize() );
+    input->view()->setMinimumSize( m_preferences->minimumCategoryComboBoxPopupSize() );
 
     return input;
 }

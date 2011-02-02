@@ -19,7 +19,12 @@
 
 #include "abstractconfigpage.h"
 
-class Preferences;
+
+namespace Knipptasch
+{
+    class Preferences;
+}
+
 
 namespace Ui
 {
@@ -44,7 +49,7 @@ class PreferencesAccountTableConfigPage : public AbstractConfigPage
         /**
          * Constructs a new PreferencesAccountTableConfigPage
          */
-        explicit PreferencesAccountTableConfigPage(Preferences *pref, ConfigWidget *parent);
+        explicit PreferencesAccountTableConfigPage(Knipptasch::Preferences *pref, ConfigWidget *parent);
 
 
         /**
@@ -73,7 +78,7 @@ class PreferencesAccountTableConfigPage : public AbstractConfigPage
 
     private:
         Ui::PreferencesAccountTableConfigPage *ui;
-        Preferences *m_preferences;
+        Knipptasch::Preferences *m_preferences;
 };
 
 

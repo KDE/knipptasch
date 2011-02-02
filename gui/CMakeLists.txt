@@ -9,6 +9,7 @@ set(knipptasch_SOURCES
     quickreportpopup.cpp
     quickreportwidget.cpp
     passworddialog.cpp
+    guipreferences.cpp
     main.cpp
 
     config/configdialog.cpp
@@ -42,6 +43,7 @@ set( knipptasch_HEADERS
     quickreportpopup.h
     quickreportwidget.h
     passworddialog.h
+    guipreferences.h
 
     config/configdialog.h
     config/configwidget.h
@@ -95,8 +97,6 @@ if( HAVE_KDE )
     kde4_add_ui_files( knipptasch_SOURCES ${knipptasch_FORMS} )
     kde4_add_app_icon( knipptasch_SOURCES ../data/icons/hi*-app-knipptasch.png )
 
-    kde4_add_kcfg_files(knipptasch_SOURCES preferences.kcfgc)
-
     kde4_add_executable( knipptasch-bin ${knipptasch_SOURCES} )
     target_link_libraries( knipptasch-bin
         ${KDE4_KDECORE_LIBS}
@@ -112,8 +112,6 @@ if( HAVE_KDE )
 
     install( TARGETS knipptasch-bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 else( HAVE_KDE )
-    CONFIGURE_FILE( preferences_qt.h ${CMAKE_CURRENT_BINARY_DIR}/preferences.h COPYONLY)
-
     set( knipptasch_SOURCES
         aboutdialog.cpp
         ${knipptasch_SOURCES}

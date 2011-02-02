@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,44 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef RECENTFILEMENU_H
-#define RECENTFILEMENU_H
+#ifndef GUI_PREFERENCES_H
+#define GUI_PREFERENCES_H
 
-#include <QMenu>
-#include <QStringList>
+#include <Knipptasch/Preferences>
 
-class MainWindow;
 
 /**
- * @class RecentFileMenu
+ * @class GuiPreferences
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class RecentFileMenu : public QMenu
+class GuiPreferences : public Knipptasch::Preferences
 {
-    Q_OBJECT
-
     public:
-        explicit RecentFileMenu(MainWindow *parent);
-        explicit RecentFileMenu(const QString &title, MainWindow *parent);
+        GuiPreferences(QObject *parent = 0);
 
-    public slots:
-        QStringList files() const;
-        void addFile(const QString &fileName);
-        void removeFile(const QString &fileName);
-        void clearMenu();
+        QString windowGeometry() const;
+        void setWindowGeometry(const QString &str);
 
-    signals:
-        void openFile(const QString &fileName);
-
-    private slots:
-        void slotMenuAction(QAction *action);
-        void updateActions();
-
-    private:
-        QStringList m_fileList;
-        MainWindow *m_mainWindow;
+        QString windowState() const;
+        void setWindowState(const QString &str);
 };
 
 

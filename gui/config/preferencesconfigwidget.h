@@ -19,7 +19,11 @@
 
 #include "configwidget.h"
 
-class Preferences;
+namespace Knipptasch
+{
+    class Preferences;
+}
+
 
 /**
  * @class PreferencesConfigWidget
@@ -38,7 +42,7 @@ class PreferencesConfigWidget : public ConfigWidget
         /**
          * Constructs a new PreferencesConfigWidget
          */
-        explicit PreferencesConfigWidget(Preferences *pref, QWidget *parent = 0);
+        explicit PreferencesConfigWidget(Knipptasch::Preferences *pref, QWidget *parent = 0);
 
         /**
          * Destructs the config widget.

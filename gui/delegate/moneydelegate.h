@@ -20,6 +20,13 @@
 #include <QStyledItemDelegate>
 
 
+namespace Knipptasch
+{
+    class Preferences;
+}
+
+
+
 /**
  * @class MoneyDelegate
  * @brief
@@ -31,7 +38,7 @@ class MoneyDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        MoneyDelegate(QObject *parent = 0);
+        MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
 
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
@@ -39,6 +46,9 @@ class MoneyDelegate : public QStyledItemDelegate
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
         QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        
+    private:
+        Knipptasch::Preferences *m_preferences;
 };
 
 #endif

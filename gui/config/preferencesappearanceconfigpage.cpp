@@ -18,12 +18,13 @@
 #include "ui_preferencesappearanceconfigpage.h"
 
 #include "compat/iconloader.h"
-#include "preferences.h"
+
+#include <Knipptasch/Preferences>
 
 #include <QDebug>
 
 
-PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage(Preferences *pref, ConfigWidget* parent)
+PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "Appearance" ), DesktopIcon("preferences-desktop-theme"), parent ),
     ui( new Ui::PreferencesAppearanceConfigPage ),
     m_preferences( pref )

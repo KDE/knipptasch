@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -14,48 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef RECENTFILEMENU_H
-#define RECENTFILEMENU_H
+#include "guipreferences.h"
 
-#include <QMenu>
-#include <QStringList>
 
-class MainWindow;
-
-/**
- * @class RecentFileMenu
- * @brief
- *
- * @author Stefan Böhmann <kde@hilefoks.org>
- */
-class RecentFileMenu : public QMenu
+GuiPreferences::GuiPreferences(QObject *parent)
+  : Knipptasch::Preferences( parent )
 {
-    Q_OBJECT
-
-    public:
-        explicit RecentFileMenu(MainWindow *parent);
-        explicit RecentFileMenu(const QString &title, MainWindow *parent);
-
-    public slots:
-        QStringList files() const;
-        void addFile(const QString &fileName);
-        void removeFile(const QString &fileName);
-        void clearMenu();
-
-    signals:
-        void openFile(const QString &fileName);
-
-    private slots:
-        void slotMenuAction(QAction *action);
-        void updateActions();
-
-    private:
-        QStringList m_fileList;
-        MainWindow *m_mainWindow;
-};
+}
 
 
-#endif
+QString GuiPreferences::windowGeometry() const
+{
+    return value( "Window/WindowGeometry" ).toByteArray();
+}
+
+
+void GuiPreferences::setWindowGeometry(const QString &str)
+{
+    setValue( "Window/WindowGeometry", str );
+    sync();
+}
+
+
+QString GuiPreferences::windowState() const
+{
+    return value( "Window/WindowState" ).toString();
+}
+
+
+void GuiPreferences::setWindowState(const QString &str)
+{
+    setValue( "Window/WindowState", str );
+    sync();
+}
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

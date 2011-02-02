@@ -17,7 +17,7 @@
 #include "welcomewidget.h"
 #include "ui_welcomewidget.h"
 
-#include "preferences.h"
+//#include "preferences.h"
 
 #include "compat/iconloader.h"
 
@@ -94,6 +94,7 @@ void WelcomeWidget::paintEvent(QPaintEvent *event)
 
 void WelcomeWidget::slotUpdateList()
 {
+/* FIXME
     ui->list->clear();
 
     foreach(const QString &str, Preferences::self()->recentFilesList() ) {
@@ -102,6 +103,7 @@ void WelcomeWidget::slotUpdateList()
         item->setText( QString( "%1 [%2]" ).arg( finfo.fileName() ).arg( str ) );
         item->setData( Qt::EditRole, str );
     }
+*/
 }
 
 

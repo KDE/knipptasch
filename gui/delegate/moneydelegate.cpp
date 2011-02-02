@@ -17,14 +17,17 @@
 #include "moneydelegate.h"
 #include "backend/money.h"
 
+#include <Knipptasch/Preferences>
+
 #include <QPainter>
 #include <QDoubleSpinBox>
 #include <QApplication>
 
 
 
-MoneyDelegate::MoneyDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+MoneyDelegate::MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent)
+  : QStyledItemDelegate( parent ),
+    m_preferences( preferences )
 {
 }
 

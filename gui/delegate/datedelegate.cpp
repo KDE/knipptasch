@@ -17,9 +17,10 @@
 #include "datedelegate.h"
 
 #include "accountmodel.h"
-#include "preferences.h"
+
 
 #include <Knipptasch/DateEdit>
+#include <Knipptasch/Preferences>
 
 #include <compat/utils.h>
 
@@ -31,8 +32,9 @@
 #include <QDebug>
 
 
-DateDelegate::DateDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+DateDelegate::DateDelegate(Knipptasch::Preferences *preferences, QObject *parent)
+  : QStyledItemDelegate( parent ),
+    m_preferences( preferences )
 {
 }
 
@@ -44,7 +46,7 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    DateEdit *input = new DateEdit( Preferences::self()->userDefinedDateFormat(), parent );
+    DateEdit *input = new DateEdit( m_preferences->userDefinedDateFormat(), parent );
 //    input->setCalendarPopup( true );
 //    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );
@@ -92,7 +94,7 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
                         ).toDate();
 
                     if( dt.isValid() ) {
-                        dt = dt.addMonths( Preferences::self()->defaultLengthOfWarrantyInMonth() );
+                        dt = dt.addMonths( m_preferences->defaultLengthOfWarrantyInMonth() );
                     }
                 }
             }

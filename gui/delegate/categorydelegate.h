@@ -20,6 +20,13 @@
 #include <QStyledItemDelegate>
 
 
+namespace Knipptasch
+{
+    class Preferences;
+}
+
+
+
 /**
  * @class CategoryDelegate
  * @brief
@@ -31,14 +38,15 @@ class CategoryDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        CategoryDelegate(QObject *parent = 0);
+        CategoryDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &opt,
-                              const QModelIndex &index) const;
+        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &opt, const QModelIndex &index) const;
 
         void setEditorData(QWidget *editor, const QModelIndex &index) const;
-        void setModelData(QWidget *editor, QAbstractItemModel *model,
-                          const QModelIndex &index) const;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+                          
+    private:
+        Knipptasch::Preferences *m_preferences;
 };
 
 #endif

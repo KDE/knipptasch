@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2007-2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,7 +18,7 @@
 #include "ui_mainwindow.h"
 
 #include "accountwidget.h"
-#include "preferences.h"
+#include "guipreferences.h"
 
 #include "savemodifieddialog.h"
 #include "recentfilemenu.h"
@@ -69,7 +69,7 @@
 #include "passworddialog.h"
 #include "compat/utils.h"
 #include <QTimer>
-#include <preferences.h>
+
 
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget* parent) :
     QMainWindow( parent ),
 #endif
     ui( new Ui::MainWindow ),
+    m_preferences( new GuiPreferences( this ) ),
     m_ActionCollection( new ActionCollection( this ) ),
     m_recentFileMenu( new RecentFileMenu( tr( "Open &Recent" ), this ) ),
     m_exportPluginActionGroup( new QActionGroup( this ) ),
@@ -101,8 +102,8 @@ MainWindow::MainWindow(QWidget* parent) :
 #if defined(HAVE_KDE)
     setupGUI();
 #else
-    restoreGeometry( QByteArray::fromBase64( Preferences::self()->windowGeometry().toAscii() ) );
-    restoreState( QByteArray::fromBase64( Preferences::self()->windowState().toAscii() ) );
+    restoreGeometry( QByteArray::fromBase64( m_preferences->windowGeometry().toAscii() ) );
+    restoreState( QByteArray::fromBase64( m_preferences->windowState().toAscii() ) );
     setWindowIcon( QIcon(":/oxygen/32x32/apps/knipptasch.png") );
 #endif
 
@@ -141,23 +142,23 @@ MainWindow::MainWindow(QWidget* parent) :
 
     QApplication::processEvents();
 
-    switch( Preferences::self()->onStartupAction() ) {
-        case Preferences::WelcomePage:
+    switch( preferences()->onStartupAction() ) {
+        case Knipptasch::Preferences::WelcomePage:
             break;
 
-        case Preferences::BlankFile:
+        case Knipptasch::Preferences::BlankFile:
             onNewFile();
             break;
 
-        case Preferences::LastFile:
-            if( !Preferences::self()->recentFilesList().isEmpty() ) {
-                onOpenFile( Preferences::self()->recentFilesList().first() );
+        case Knipptasch::Preferences::LastFile:
+            if( !preferences()->recentFilesList().isEmpty() ) {
+                onOpenFile( preferences()->recentFilesList().first() );
             }
             break;
 
-        case Preferences::DefaultFile:
-            if( !Preferences::self()->onStartupActionDefaultFile().isEmpty() ) {
-                onOpenFile( Preferences::self()->onStartupActionDefaultFile() );
+        case Knipptasch::Preferences::DefaultFile:
+            if( !preferences()->onStartupActionDefaultFile().isEmpty() ) {
+                onOpenFile( preferences()->onStartupActionDefaultFile() );
             }
             break;
     }
@@ -167,6 +168,18 @@ MainWindow::MainWindow(QWidget* parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+
+Knipptasch::Preferences* MainWindow::preferences()
+{
+    return m_preferences;
+}
+
+
+const Knipptasch::Preferences* MainWindow::preferences() const
+{
+    return m_preferences;
 }
 
 
@@ -188,8 +201,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
 #if defined(HAVE_KDE)
     KXmlGuiWindow::closeEvent( event );
 #else
-    Preferences::self()->setWindowGeometry( saveGeometry().toBase64() );
-    Preferences::self()->setWindowState( saveState().toBase64() );
+    m_preferences->setWindowGeometry( saveGeometry().toBase64() );
+    m_preferences->setWindowState( saveState().toBase64() );
 
     QMainWindow::closeEvent( event );
 #endif
@@ -467,7 +480,7 @@ void MainWindow::checkActionStates()
 
 #if defined(HAVE_KDE) // only available in KTabWidget, not in QTabWidget
         if( ui->tabWidget->count() == 1 ) {
-            ui->tabWidget->setTabBarHidden( Preferences::self()->hideEmptyTabBar() );
+            ui->tabWidget->setTabBarHidden( preferences()->hideEmptyTabBar() );
         }
 #endif
 
@@ -516,10 +529,10 @@ void MainWindow::onLoadConfig()
         widget->loadConfig();
     }
 
-    ui->tabWidget->setMovable( Preferences::self()->movableTabs() );
-    ui->tabWidget->setTabsClosable( Preferences::self()->closeButtonOnTabs() );
+    ui->tabWidget->setMovable( preferences()->movableTabs() );
+    ui->tabWidget->setTabsClosable( preferences()->closeButtonOnTabs() );
 
-    if( Preferences::self()->tabCornerCloseButton() ) {
+    if( preferences()->tabCornerCloseButton() ) {
 
         if( !ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
             QToolButton *button = new QToolButton( ui->tabWidget );
@@ -542,7 +555,7 @@ void MainWindow::onLoadConfig()
 
 #if !defined(HAVE_KDE)
     actionCollection()->action( "options_show_statusbar" )
-                      ->setChecked( Preferences::self()->showStatusBar() );
+                      ->setChecked( preferences()->showStatusBar() );
     onShowStatusbar();
 #endif
 }
@@ -808,7 +821,7 @@ void MainWindow::onConfigureAccount()
 
 void MainWindow::onConfigure()
 {
-    QPointer<PreferencesConfigDialog> dialog = new PreferencesConfigDialog( Preferences::self(), this );
+    QPointer<PreferencesConfigDialog> dialog = new PreferencesConfigDialog( preferences(), this );
     connect( dialog, SIGNAL( committed() ), this, SLOT( onLoadConfig() ) );
 
     if( dialog->exec() == QDialog::Accepted ) {
@@ -824,7 +837,7 @@ void MainWindow::onShowStatusbar()
     bool statusbarState = actionCollection()->action( "options_show_statusbar" )->isChecked();
     statusBar()->setVisible( statusbarState );
 
-    Preferences::self()->setShowStatusBar( statusbarState );
+    preferences()->setShowStatusBar( statusbarState );
 }
 
 

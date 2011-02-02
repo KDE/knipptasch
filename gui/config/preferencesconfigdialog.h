@@ -19,7 +19,11 @@
 
 #include "configdialog.h"
 
-class Preferences;
+
+namespace Knipptasch
+{
+    class Preferences;
+}
 
 
 /**
@@ -39,7 +43,7 @@ class PreferencesConfigDialog : public ConfigDialog
         /**
          * Constructs a new PreferencesConfigDialog
          */
-        explicit PreferencesConfigDialog(Preferences *pref, QWidget *parent = 0);
+        explicit PreferencesConfigDialog(Knipptasch::Preferences *pref, QWidget *parent = 0);
 
         /**
          * Destructs the config dialog.
