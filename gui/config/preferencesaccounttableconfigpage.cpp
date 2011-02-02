@@ -24,9 +24,10 @@
 #include <compat/utils.h>
 
 
-PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(ConfigWidget* parent)
+PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon("table"), parent ),
-    ui( new Ui::PreferencesAccountTableConfigPage )
+    ui( new Ui::PreferencesAccountTableConfigPage ),
+    m_preferences( pref )
 {
     ui->setupUi( this );
 
@@ -67,34 +68,32 @@ PreferencesAccountTableConfigPage::~PreferencesAccountTableConfigPage()
 
 bool PreferencesAccountTableConfigPage::isModified() const
 {
-    Preferences *p = Preferences::self();
-
     int sortPostingBy = ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt();
-    if( sortPostingBy != p->sortPostingsBy() ) {
+    if( sortPostingBy != m_preferences->sortPostingsBy() ) {
         return true;
     }
 
-    if( ui->defaultWarrantyPeriod->value() != p->defaultLengthOfWarrantyInMonth() ) {
+    if( ui->defaultWarrantyPeriod->value() != m_preferences->defaultLengthOfWarrantyInMonth() ) {
         return true;
     }
 
-    if( ui->movableColumns->isChecked() != p->movableColumns() ) {
+    if( ui->movableColumns->isChecked() != m_preferences->movableColumns() ) {
         return true;
     }
 
-    if( ui->cascadingSectionResize->isChecked() != p->cascadingSectionResize() ) {
+    if( ui->cascadingSectionResize->isChecked() != m_preferences->cascadingSectionResize() ) {
         return true;
     }
 
-    if( ui->doubleClickResizeColumnToContent->isChecked() != p->doubleClickResizeColumnToCountent() ) {
+    if( ui->doubleClickResizeColumnToContent->isChecked() != m_preferences->doubleClickResizeColumnToCountent() ) {
         return true;
     }
 
-    if( ui->resetCurrentColumnOnRowChanged->isChecked() != p->resetCurrentIndexWhenCurrentRowChanged() ) {
+    if( ui->resetCurrentColumnOnRowChanged->isChecked() != m_preferences->resetCurrentIndexWhenCurrentRowChanged() ) {
         return true;
     }
 
-    if( ui->autoCompletionEnabled->isChecked() != p->autoCompletionEnabled() ) {
+    if( ui->autoCompletionEnabled->isChecked() != m_preferences->autoCompletionEnabled() ) {
         return true;
     }
 
@@ -104,15 +103,13 @@ bool PreferencesAccountTableConfigPage::isModified() const
 
 bool PreferencesAccountTableConfigPage::commit()
 {
-    Preferences *p = Preferences::self();
-
-    p->setSortPostingsBy( ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt() );
-    p->setDefaultLengthOfWarrantyInMonth( ui->defaultWarrantyPeriod->value() );
-    p->setMovableColumns( ui->movableColumns->isChecked() );
-    p->setCascadingSectionResize( ui->cascadingSectionResize->isChecked() );
-    p->setDoubleClickResizeColumnToCountent( ui->doubleClickResizeColumnToContent->isChecked() );
-    p->setResetCurrentIndexWhenCurrentRowChanged( ui->resetCurrentColumnOnRowChanged->isChecked() );
-    p->setAutoCompletionEnabled( ui->autoCompletionEnabled->isChecked() );
+    m_preferences->setSortPostingsBy( ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt() );
+    m_preferences->setDefaultLengthOfWarrantyInMonth( ui->defaultWarrantyPeriod->value() );
+    m_preferences->setMovableColumns( ui->movableColumns->isChecked() );
+    m_preferences->setCascadingSectionResize( ui->cascadingSectionResize->isChecked() );
+    m_preferences->setDoubleClickResizeColumnToCountent( ui->doubleClickResizeColumnToContent->isChecked() );
+    m_preferences->setResetCurrentIndexWhenCurrentRowChanged( ui->resetCurrentColumnOnRowChanged->isChecked() );
+    m_preferences->setAutoCompletionEnabled( ui->autoCompletionEnabled->isChecked() );
 
     emit pageModified();
 
@@ -124,15 +121,13 @@ void PreferencesAccountTableConfigPage::revert()
 {
     bool block = blockSignals( true );
 
-    Preferences *p = Preferences::self();
-
-    ui->sortPostingsBy->setCurrentIndex( ui->sortPostingsBy->findData( p->sortPostingsBy() ) );
-    ui->defaultWarrantyPeriod->setValue( p->defaultLengthOfWarrantyInMonth() );
-    ui->movableColumns->setChecked( p->movableColumns() );
-    ui->cascadingSectionResize->setChecked( p->cascadingSectionResize() );
-    ui->doubleClickResizeColumnToContent->setChecked( p->doubleClickResizeColumnToCountent() );
-    ui->resetCurrentColumnOnRowChanged->setChecked( p->resetCurrentIndexWhenCurrentRowChanged() );
-    ui->autoCompletionEnabled->setChecked( p->autoCompletionEnabled() );
+    ui->sortPostingsBy->setCurrentIndex( ui->sortPostingsBy->findData( m_preferences->sortPostingsBy() ) );
+    ui->defaultWarrantyPeriod->setValue( m_preferences->defaultLengthOfWarrantyInMonth() );
+    ui->movableColumns->setChecked( m_preferences->movableColumns() );
+    ui->cascadingSectionResize->setChecked( m_preferences->cascadingSectionResize() );
+    ui->doubleClickResizeColumnToContent->setChecked( m_preferences->doubleClickResizeColumnToCountent() );
+    ui->resetCurrentColumnOnRowChanged->setChecked( m_preferences->resetCurrentIndexWhenCurrentRowChanged() );
+    ui->autoCompletionEnabled->setChecked( m_preferences->autoCompletionEnabled() );
 
     blockSignals( block );
 

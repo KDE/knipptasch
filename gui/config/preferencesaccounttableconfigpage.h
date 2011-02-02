@@ -19,6 +19,7 @@
 
 #include "abstractconfigpage.h"
 
+class Preferences;
 
 namespace Ui
 {
@@ -43,7 +44,7 @@ class PreferencesAccountTableConfigPage : public AbstractConfigPage
         /**
          * Constructs a new PreferencesAccountTableConfigPage
          */
-        explicit PreferencesAccountTableConfigPage(ConfigWidget *parent);
+        explicit PreferencesAccountTableConfigPage(Preferences *pref, ConfigWidget *parent);
 
 
         /**
@@ -72,6 +73,7 @@ class PreferencesAccountTableConfigPage : public AbstractConfigPage
 
     private:
         Ui::PreferencesAccountTableConfigPage *ui;
+        Preferences *m_preferences;
 };
 
 

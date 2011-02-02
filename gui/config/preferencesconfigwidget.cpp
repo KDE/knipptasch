@@ -22,12 +22,12 @@
 
 
 
-PreferencesConfigWidget::PreferencesConfigWidget(QWidget* parent)
+PreferencesConfigWidget::PreferencesConfigWidget(Preferences *pref, QWidget* parent)
   : ConfigWidget( parent )
 {
-    addPage( new PreferencesGeneralConfigPage( this ) );
-    addPage( new PreferencesAppearanceConfigPage( this ) );
-    addPage( new PreferencesAccountTableConfigPage( this ) );
+    addPage( new PreferencesGeneralConfigPage( pref, this ) );
+    addPage( new PreferencesAppearanceConfigPage( pref, this ) );
+    addPage( new PreferencesAccountTableConfigPage( pref, this ) );
 }
 
 

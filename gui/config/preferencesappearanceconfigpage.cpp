@@ -23,9 +23,10 @@
 #include <QDebug>
 
 
-PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage(ConfigWidget* parent)
+PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage(Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "Appearance" ), DesktopIcon("preferences-desktop-theme"), parent ),
-    ui( new Ui::PreferencesAppearanceConfigPage )
+    ui( new Ui::PreferencesAppearanceConfigPage ),
+    m_preferences( pref )
 {
     ui->setupUi( this );
 
@@ -92,69 +93,67 @@ PreferencesAppearanceConfigPage::~PreferencesAppearanceConfigPage()
 
 bool PreferencesAppearanceConfigPage::isModified() const
 {
-    Preferences *p = Preferences::self();
-
-    if( ui->positiveAmountForegroundEnabled->isChecked() != p->positiveAmountForegroundEnabled() ) {
+    if( ui->positiveAmountForegroundEnabled->isChecked() != m_preferences->positiveAmountForegroundEnabled() ) {
         return true;
     }
 
-    if( ui->negativeAmountForegroundEnabled->isChecked() != p->negativeAmountForegroundEnabled() ) {
+    if( ui->negativeAmountForegroundEnabled->isChecked() != m_preferences->negativeAmountForegroundEnabled() ) {
         return true;
     }
 
-    if( ui->availableWarrantyForegroundEnabled->isChecked() != p->availableWarrantyForegroundEnabled() ) {
+    if( ui->availableWarrantyForegroundEnabled->isChecked() != m_preferences->availableWarrantyForegroundEnabled() ) {
         return true;
     }
 
-    if( ui->expiredWarrantyForegroundEnabled->isChecked() != p->expiredWarrantyForegroundEnabled() ) {
+    if( ui->expiredWarrantyForegroundEnabled->isChecked() != m_preferences->expiredWarrantyForegroundEnabled() ) {
         return true;
     }
 
-    if( ui->currentPostingBackgroundEnabled->isChecked() != p->currentPostingBackgroundEnabled() ) {
+    if( ui->currentPostingBackgroundEnabled->isChecked() != m_preferences->currentPostingBackgroundEnabled() ) {
         return true;
     }
 
-    if( ui->futurePostingBackgroundEnabled->isChecked() != p->futurePostingBackgroundEnabled() ) {
+    if( ui->futurePostingBackgroundEnabled->isChecked() != m_preferences->futurePostingBackgroundEnabled() ) {
         return true;
     }
 
-    if( ui->defaultPostingBackgroundEnabled->isChecked() != p->defaultPostingBackgroundEnabled() ) {
+    if( ui->defaultPostingBackgroundEnabled->isChecked() != m_preferences->defaultPostingBackgroundEnabled() ) {
         return true;
     }
 
-    if( ui->incompletePostingBackgroundEnabled->isChecked() != p->incompletePostingBackgroundEnabled() ) {
+    if( ui->incompletePostingBackgroundEnabled->isChecked() != m_preferences->incompletePostingBackgroundEnabled() ) {
         return true;
     }
 
-    if( ui->fgPositiveAmountWidget->color() != p->positiveAmountForegroundColor() ) {
+    if( ui->fgPositiveAmountWidget->color() != m_preferences->positiveAmountForegroundColor() ) {
         return true;
     }
 
-    if( ui->fgNegativeAmountWidget->color() != p->negativeAmountForegroundColor() ) {
+    if( ui->fgNegativeAmountWidget->color() != m_preferences->negativeAmountForegroundColor() ) {
         return true;
     }
 
-    if( ui->fgAvailableWarrantyWidget->color() != p->availableWarrantyForegroundColor() ) {
+    if( ui->fgAvailableWarrantyWidget->color() != m_preferences->availableWarrantyForegroundColor() ) {
         return true;
     }
 
-    if( ui->fgExpiredWarrantyWidget->color() != p->expiredWarrantyForegroundColor() ) {
+    if( ui->fgExpiredWarrantyWidget->color() != m_preferences->expiredWarrantyForegroundColor() ) {
         return true;
     }
 
-    if( ui->bgCurrentPostingWidget->color() != p->currentPostingBackgroundColor() ) {
+    if( ui->bgCurrentPostingWidget->color() != m_preferences->currentPostingBackgroundColor() ) {
         return true;
     }
 
-    if( ui->bgFuturePostingWidget->color() != p->futurePostingBackgroundColor() ) {
+    if( ui->bgFuturePostingWidget->color() != m_preferences->futurePostingBackgroundColor() ) {
         return true;
     }
 
-    if( ui->bgNormalPostingWidget->color() != p->defaultPostingBackgroundColor() ) {
+    if( ui->bgNormalPostingWidget->color() != m_preferences->defaultPostingBackgroundColor() ) {
         return true;
     }
 
-    if( ui->bgIncompletePostingWidget->color() != p->incompletePostingBackgroundColor() ) {
+    if( ui->bgIncompletePostingWidget->color() != m_preferences->incompletePostingBackgroundColor() ) {
         return true;
     }
 
@@ -164,23 +163,22 @@ bool PreferencesAppearanceConfigPage::isModified() const
 
 bool PreferencesAppearanceConfigPage::commit()
 {
-    Preferences *p = Preferences::self();
-    p->setPositiveAmountForegroundEnabled( ui->positiveAmountForegroundEnabled->checkState() );
-    p->setPositiveAmountForegroundColor( ui->fgPositiveAmountWidget->color() );
-    p->setNegativeAmountForegroundEnabled( ui->negativeAmountForegroundEnabled->isChecked() );
-    p->setNegativeAmountForegroundColor( ui->fgNegativeAmountWidget->color() );
-    p->setAvailableWarrantyForegroundEnabled( ui->availableWarrantyForegroundEnabled->isChecked() );
-    p->setAvailableWarrantyForegroundColor( ui->fgAvailableWarrantyWidget->color() );
-    p->setExpiredWarrantyForegroundEnabled( ui->availableWarrantyForegroundEnabled->isChecked() );
-    p->setExpiredWarrantyForegroundColor( ui->fgExpiredWarrantyWidget->color() );
-    p->setCurrentPostingBackgroundEnabled( ui->currentPostingBackgroundEnabled->isChecked() );
-    p->setCurrentPostingBackgroundColor( ui->bgCurrentPostingWidget->color() );
-    p->setFuturePostingBackgroundEnabled( ui->futurePostingBackgroundEnabled->isChecked() );
-    p->setFuturePostingBackgroundColor( ui->bgFuturePostingWidget->color() );
-    p->setDefaultPostingBackgroundEnabled( ui->defaultPostingBackgroundEnabled->isChecked() );
-    p->setDefaultPostingBackgroundColor( ui->bgNormalPostingWidget->color() );
-    p->setIncompletePostingBackgroundEnabled( ui->incompletePostingBackgroundEnabled->isChecked() );
-    p->setIncompletePostingBackgroundColor( ui->bgIncompletePostingWidget->color() );
+    m_preferences->setPositiveAmountForegroundEnabled( ui->positiveAmountForegroundEnabled->checkState() );
+    m_preferences->setPositiveAmountForegroundColor( ui->fgPositiveAmountWidget->color() );
+    m_preferences->setNegativeAmountForegroundEnabled( ui->negativeAmountForegroundEnabled->isChecked() );
+    m_preferences->setNegativeAmountForegroundColor( ui->fgNegativeAmountWidget->color() );
+    m_preferences->setAvailableWarrantyForegroundEnabled( ui->availableWarrantyForegroundEnabled->isChecked() );
+    m_preferences->setAvailableWarrantyForegroundColor( ui->fgAvailableWarrantyWidget->color() );
+    m_preferences->setExpiredWarrantyForegroundEnabled( ui->availableWarrantyForegroundEnabled->isChecked() );
+    m_preferences->setExpiredWarrantyForegroundColor( ui->fgExpiredWarrantyWidget->color() );
+    m_preferences->setCurrentPostingBackgroundEnabled( ui->currentPostingBackgroundEnabled->isChecked() );
+    m_preferences->setCurrentPostingBackgroundColor( ui->bgCurrentPostingWidget->color() );
+    m_preferences->setFuturePostingBackgroundEnabled( ui->futurePostingBackgroundEnabled->isChecked() );
+    m_preferences->setFuturePostingBackgroundColor( ui->bgFuturePostingWidget->color() );
+    m_preferences->setDefaultPostingBackgroundEnabled( ui->defaultPostingBackgroundEnabled->isChecked() );
+    m_preferences->setDefaultPostingBackgroundColor( ui->bgNormalPostingWidget->color() );
+    m_preferences->setIncompletePostingBackgroundEnabled( ui->incompletePostingBackgroundEnabled->isChecked() );
+    m_preferences->setIncompletePostingBackgroundColor( ui->bgIncompletePostingWidget->color() );
 
     emit pageModified();
 
@@ -192,24 +190,23 @@ void PreferencesAppearanceConfigPage::revert()
 {
     bool block = blockSignals( true );
 
-    Preferences *p = Preferences::self();
-    ui->positiveAmountForegroundEnabled->setChecked( p->positiveAmountForegroundEnabled() );
-    ui->negativeAmountForegroundEnabled->setChecked( p->negativeAmountForegroundEnabled() );
-    ui->availableWarrantyForegroundEnabled->setChecked( p->availableWarrantyForegroundEnabled() );
-    ui->expiredWarrantyForegroundEnabled->setChecked( p->expiredWarrantyForegroundEnabled() );
-    ui->currentPostingBackgroundEnabled->setChecked( p->currentPostingBackgroundEnabled() );
-    ui->futurePostingBackgroundEnabled->setChecked( p->futurePostingBackgroundEnabled() );
-    ui->defaultPostingBackgroundEnabled->setChecked( p->defaultPostingBackgroundEnabled() );
-    ui->incompletePostingBackgroundEnabled->setChecked( p->incompletePostingBackgroundEnabled() );
+    ui->positiveAmountForegroundEnabled->setChecked( m_preferences->positiveAmountForegroundEnabled() );
+    ui->negativeAmountForegroundEnabled->setChecked( m_preferences->negativeAmountForegroundEnabled() );
+    ui->availableWarrantyForegroundEnabled->setChecked( m_preferences->availableWarrantyForegroundEnabled() );
+    ui->expiredWarrantyForegroundEnabled->setChecked( m_preferences->expiredWarrantyForegroundEnabled() );
+    ui->currentPostingBackgroundEnabled->setChecked( m_preferences->currentPostingBackgroundEnabled() );
+    ui->futurePostingBackgroundEnabled->setChecked( m_preferences->futurePostingBackgroundEnabled() );
+    ui->defaultPostingBackgroundEnabled->setChecked( m_preferences->defaultPostingBackgroundEnabled() );
+    ui->incompletePostingBackgroundEnabled->setChecked( m_preferences->incompletePostingBackgroundEnabled() );
 
-    ui->fgPositiveAmountWidget->setColor( p->positiveAmountForegroundColor() );
-    ui->fgNegativeAmountWidget->setColor( p->negativeAmountForegroundColor() );
-    ui->fgAvailableWarrantyWidget->setColor( p->availableWarrantyForegroundColor() );
-    ui->fgExpiredWarrantyWidget->setColor( p->expiredWarrantyForegroundColor() );
-    ui->bgCurrentPostingWidget->setColor( p->currentPostingBackgroundColor() );
-    ui->bgFuturePostingWidget->setColor( p->futurePostingBackgroundColor() );
-    ui->bgNormalPostingWidget->setColor( p->defaultPostingBackgroundColor() );
-    ui->bgIncompletePostingWidget->setColor( p->incompletePostingBackgroundColor() );
+    ui->fgPositiveAmountWidget->setColor( m_preferences->positiveAmountForegroundColor() );
+    ui->fgNegativeAmountWidget->setColor( m_preferences->negativeAmountForegroundColor() );
+    ui->fgAvailableWarrantyWidget->setColor( m_preferences->availableWarrantyForegroundColor() );
+    ui->fgExpiredWarrantyWidget->setColor( m_preferences->expiredWarrantyForegroundColor() );
+    ui->bgCurrentPostingWidget->setColor( m_preferences->currentPostingBackgroundColor() );
+    ui->bgFuturePostingWidget->setColor( m_preferences->futurePostingBackgroundColor() );
+    ui->bgNormalPostingWidget->setColor( m_preferences->defaultPostingBackgroundColor() );
+    ui->bgIncompletePostingWidget->setColor( m_preferences->incompletePostingBackgroundColor() );
 
     blockSignals( block );
 

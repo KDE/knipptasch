@@ -16,16 +16,17 @@
  */
 #include "preferencesconfigdialog.h"
 #include "preferencesconfigwidget.h"
+
 #include <QCoreApplication>
 
 
-PreferencesConfigDialog::PreferencesConfigDialog(QWidget *parent)
+PreferencesConfigDialog::PreferencesConfigDialog(Preferences *pref, QWidget *parent)
   : ConfigDialog( parent )
 {
     setWindowTitle( tr( "Configure Knipptasch - %1" ).arg( QCoreApplication::applicationName() ) );
 
     ConfigWidget *old = configWidget();
-    setConfigWidget( new PreferencesConfigWidget( this ) );
+    setConfigWidget( new PreferencesConfigWidget( pref, this ) );
     delete old;
 }
 

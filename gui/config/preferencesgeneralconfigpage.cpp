@@ -60,9 +60,10 @@ class FileSystemModel : public QFileSystemModel
 };
 
 
-PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(ConfigWidget* parent)
+PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Preferences *pref, ConfigWidget* parent)
   : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon("go-home"), parent ),
-    ui( new Ui::PreferencesGeneralConfigPage )
+    ui( new Ui::PreferencesGeneralConfigPage ),
+    m_preferences( pref )
 {
     ui->setupUi( this );
 
@@ -171,36 +172,34 @@ bool PreferencesGeneralConfigPage::isValid() const
 
 bool PreferencesGeneralConfigPage::isModified() const
 {
-    Preferences *p = Preferences::self();
-
     int onStartupActionValue = ui->startupCombo->itemData(
                                     ui->startupCombo->currentIndex() ).toInt();
 
-    if( onStartupActionValue != p->onStartupAction() ) {
+    if( onStartupActionValue != m_preferences->onStartupAction() ) {
         return true;
     }
 
-    if( ui->splashScreen->isChecked() != p->splashScreenEnabled() ) {
+    if( ui->splashScreen->isChecked() != m_preferences->splashScreenEnabled() ) {
         return true;
     }
 
-    if( ui->hideTabBarIfEmpty->isChecked() != p->hideEmptyTabBar() ) {
+    if( ui->hideTabBarIfEmpty->isChecked() != m_preferences->hideEmptyTabBar() ) {
         return true;
     }
 
-    if( ui->showCloseButtonOnTabs->isChecked() != p->closeButtonOnTabs() ) {
+    if( ui->showCloseButtonOnTabs->isChecked() != m_preferences->closeButtonOnTabs() ) {
         return true;
     }
 
-    if( ui->showCornerCloseButton->isChecked() != p->tabCornerCloseButton() ) {
+    if( ui->showCornerCloseButton->isChecked() != m_preferences->tabCornerCloseButton() ) {
         return true;
     }
 
-    if( ui->middleClickCloseTab->isChecked() != p->middleClickCloseTab() ) {
+    if( ui->middleClickCloseTab->isChecked() != m_preferences->middleClickCloseTab() ) {
         return true;
     }
 
-    if( ui->movableTabs->isChecked() != p->movableTabs() ) {
+    if( ui->movableTabs->isChecked() != m_preferences->movableTabs() ) {
         return true;
     }
 
@@ -210,21 +209,19 @@ bool PreferencesGeneralConfigPage::isModified() const
 
 bool PreferencesGeneralConfigPage::commit()
 {
-    Preferences *p = Preferences::self();
-
     int onStartupActionValue = ui->startupCombo->itemData( ui->startupCombo->currentIndex() ).toInt();
-    p->setOnStartupAction( onStartupActionValue );
+    m_preferences->setOnStartupAction( onStartupActionValue );
     QString str;
     if( onStartupActionValue == Preferences::DefaultFile ) {
         str = ui->defaultAccountFileRequesterLineEdit->text().trimmed();
     }
-    p->setOnStartupActionDefaultFile( str );
-    p->setSplashScreenEnabled( ui->splashScreen->isChecked() );
-    p->setHideEmptyTabBar( ui->hideTabBarIfEmpty->isChecked() );
-    p->setCloseButtonOnTabs( ui->showCloseButtonOnTabs->isChecked() );
-    p->setTabCornerCloseButton( ui->showCornerCloseButton->isChecked() );
-    p->setMiddleClickCloseTab( ui->middleClickCloseTab->isChecked() );
-    p->setMovableTabs( ui->movableTabs->isChecked() );
+    m_preferences->setOnStartupActionDefaultFile( str );
+    m_preferences->setSplashScreenEnabled( ui->splashScreen->isChecked() );
+    m_preferences->setHideEmptyTabBar( ui->hideTabBarIfEmpty->isChecked() );
+    m_preferences->setCloseButtonOnTabs( ui->showCloseButtonOnTabs->isChecked() );
+    m_preferences->setTabCornerCloseButton( ui->showCornerCloseButton->isChecked() );
+    m_preferences->setMiddleClickCloseTab( ui->middleClickCloseTab->isChecked() );
+    m_preferences->setMovableTabs( ui->movableTabs->isChecked() );
 
     pageModified();
 
@@ -236,19 +233,18 @@ void PreferencesGeneralConfigPage::revert()
 {
     bool block = blockSignals( true );
 
-    Preferences *p = Preferences::self();
-    ui->startupCombo->setCurrentIndex( ui->startupCombo->findData( p->onStartupAction() ) );
+    ui->startupCombo->setCurrentIndex( ui->startupCombo->findData( m_preferences->onStartupAction() ) );
 
     int onStartupActionValue = ui->startupCombo->itemData( ui->startupCombo->currentIndex() ).toInt();
-    if( !p->onStartupActionDefaultFile().isEmpty() || onStartupActionValue == Preferences::DefaultFile ) {
-        ui->defaultAccountFileRequesterLineEdit->setText( p->onStartupActionDefaultFile() );
+    if( !m_preferences->onStartupActionDefaultFile().isEmpty() || onStartupActionValue == Preferences::DefaultFile ) {
+        ui->defaultAccountFileRequesterLineEdit->setText( m_preferences->onStartupActionDefaultFile() );
     }
-    ui->splashScreen->setChecked( p->splashScreenEnabled() );
-    ui->hideTabBarIfEmpty->setChecked( p->hideEmptyTabBar() );
-    ui->showCloseButtonOnTabs->setChecked( p->closeButtonOnTabs() );
-    ui->showCornerCloseButton->setChecked( p->tabCornerCloseButton() );
-    ui->middleClickCloseTab->setChecked( p->middleClickCloseTab() );
-    ui->movableTabs->setChecked( p->movableTabs() );
+    ui->splashScreen->setChecked( m_preferences->splashScreenEnabled() );
+    ui->hideTabBarIfEmpty->setChecked( m_preferences->hideEmptyTabBar() );
+    ui->showCloseButtonOnTabs->setChecked( m_preferences->closeButtonOnTabs() );
+    ui->showCornerCloseButton->setChecked( m_preferences->tabCornerCloseButton() );
+    ui->middleClickCloseTab->setChecked( m_preferences->middleClickCloseTab() );
+    ui->movableTabs->setChecked( m_preferences->movableTabs() );
 
     blockSignals( block );
 

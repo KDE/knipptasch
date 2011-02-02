@@ -19,6 +19,8 @@
 
 #include "configdialog.h"
 
+class Preferences;
+
 
 /**
  * @class PreferencesConfigDialog
@@ -37,7 +39,7 @@ class PreferencesConfigDialog : public ConfigDialog
         /**
          * Constructs a new PreferencesConfigDialog
          */
-        explicit PreferencesConfigDialog(QWidget *parent = 0);
+        explicit PreferencesConfigDialog(Preferences *pref, QWidget *parent = 0);
 
         /**
          * Destructs the config dialog.

@@ -69,6 +69,7 @@
 #include "passworddialog.h"
 #include "compat/utils.h"
 #include <QTimer>
+#include <preferences.h>
 
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
@@ -807,7 +808,7 @@ void MainWindow::onConfigureAccount()
 
 void MainWindow::onConfigure()
 {
-    QPointer<PreferencesConfigDialog> dialog = new PreferencesConfigDialog( this );
+    QPointer<PreferencesConfigDialog> dialog = new PreferencesConfigDialog( Preferences::self(), this );
     connect( dialog, SIGNAL( committed() ), this, SLOT( onLoadConfig() ) );
 
     if( dialog->exec() == QDialog::Accepted ) {
