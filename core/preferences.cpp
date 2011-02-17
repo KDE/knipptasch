@@ -31,20 +31,23 @@
 #define INCOMPLETE_POSTING_BACKGROUND_COLOR QColor( 190, 0, 0, 40 )
 
 
+Q_GLOBAL_STATIC( Knipptasch::Preferences, private_knipptasch_preferences )
+
+
 namespace Knipptasch
 {
+    
+
+Preferences* Preferences::self()
+{
+    return private_knipptasch_preferences();
+}
 
 
 Preferences::Preferences(QObject *parent)
   : QSettings( QSettings::UserScope, "kde.org", "knipptasch", parent )
 {
 }
-
-
-Preferences::~Preferences()
-{
-}
-
 
 
 Preferences::EnumOnStartupAction Preferences::onStartupAction() const
@@ -428,15 +431,15 @@ void Preferences::setMinimumCategoryComboBoxPopupSize(const QSize &size)
 // == TableView ==
 
 
-int Preferences::sortPostingsBy() const
+Knipptasch::Preferences::PostingSortOrder Preferences::postingSortOrder() const
 {
-    return value( "TableView/SortPostingsBy", static_cast<int>( Maturity ) ).toInt();
+    return static_cast<PostingSortOrder>( value( "TableView/SortPostingsBy", static_cast<int>( Maturity ) ).toInt() );
 }
 
 
-void Preferences::setSortPostingsBy(int value)
+void Preferences::setPostingSortOrder(Knipptasch::Preferences::PostingSortOrder value)
 {
-    setValue( "TableView/SortPostingsBy", value );
+    setValue( "TableView/SortPostingsBy", static_cast<int>( value ) );
     sync();
 }
 
@@ -528,6 +531,32 @@ bool Preferences::autoCompletionEnabled()
 void Preferences::setAutoCompletionEnabled(bool b)
 {
     setValue( "TableView/AutoCompletionEnabled", b );
+    sync();
+}
+
+
+QString Preferences::windowGeometry() const
+{
+    return value( "Window/WindowGeometry" ).toByteArray();
+}
+
+
+void Preferences::setWindowGeometry(const QString &str)
+{
+    setValue( "Window/WindowGeometry", str );
+    sync();
+}
+
+
+QString Preferences::windowState() const
+{
+    return value( "Window/WindowState" ).toString();
+}
+
+
+void Preferences::setWindowState(const QString &str)
+{
+    setValue( "Window/WindowState", str );
     sync();
 }
 

@@ -23,6 +23,8 @@
 
 
 
+
+
 /**
  * @namespace Knipptasch
  * @brief Default namespace for Knipptasch
@@ -39,15 +41,14 @@ namespace Knipptasch
      * @author Stefan Böhmann <kde@hilefoks.org>
      */
     class KNIPPTASCH_CORE_EXPORT Preferences : public QSettings
-    {
-        Q_OBJECT
-
+    {        
         public:
-            enum EnumSortPostingsBy { Maturity, ValueDate };
+            enum PostingSortOrder { Maturity, ValueDate };
             enum EnumOnStartupAction { WelcomePage, BlankFile, LastFile, DefaultFile };
 
+            static Preferences* self();
+
             explicit Preferences(QObject *parent = 0);
-            virtual ~Preferences();
             
             // == General ==
 
@@ -142,8 +143,8 @@ namespace Knipptasch
 
             // == TableView ==
 
-            int sortPostingsBy() const;
-            void setSortPostingsBy(int value);
+            PostingSortOrder postingSortOrder() const;
+            void setPostingSortOrder(PostingSortOrder value);
 
             QString horizontalHeaderState() const;
             void setHorizontalHeaderState(const QString &str);
@@ -165,8 +166,16 @@ namespace Knipptasch
 
             bool autoCompletionEnabled();
             void setAutoCompletionEnabled(bool b);
-    };
+            
+            // == MainWindow ==
 
+            QString windowGeometry() const;
+            void setWindowGeometry(const QString &str);
+
+            QString windowState() const;
+            void setWindowState(const QString &str);
+    };
+    
 } // EndNamspace Knipptasch
 
 #endif

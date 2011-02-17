@@ -21,6 +21,8 @@
 
 #include "compat/iconloader.h"
 
+#include <Knipptasch/Preferences>
+
 #include <QPainter>
 #include <QImage>
 
@@ -94,16 +96,14 @@ void WelcomeWidget::paintEvent(QPaintEvent *event)
 
 void WelcomeWidget::slotUpdateList()
 {
-/* FIXME
     ui->list->clear();
 
-    foreach(const QString &str, Preferences::self()->recentFilesList() ) {
+    foreach(const QString &str, Knipptasch::Preferences::self()->recentFilesList() ) {
         QFileInfo finfo( str );
         QListWidgetItem *item = new QListWidgetItem( ui->list );
         item->setText( QString( "%1 [%2]" ).arg( finfo.fileName() ).arg( str ) );
         item->setData( Qt::EditRole, str );
     }
-*/
 }
 
 

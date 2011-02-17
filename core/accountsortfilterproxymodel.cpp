@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2008-2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,6 +19,8 @@
 #include "backend/money.h"
 #include "backend/account.h"
 #include "backend/posting.h"
+
+#include "preferences.h"
 
 #include <QDate>
 #include <QTimer>
@@ -82,11 +84,11 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
             Q_ASSERT( model );
 
             Money m = data( idx, Qt::EditRole ).value<Money>();
-            if( m >= 0.0 && model->positiveAmountForegroundColor().isValid() ) {
-                return model->positiveAmountForegroundColor();
+            if( m >= 0.0 && Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() && Knipptasch::Preferences::self()->positiveAmountForegroundColor().isValid() ) {
+                return Knipptasch::Preferences::self()->positiveAmountForegroundColor();
             }
-            else if( m < 0.0 && model->negativeAmountForegroundColor().isValid() ) {
-                return model->negativeAmountForegroundColor();
+            else if( m < 0.0 && Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && Knipptasch::Preferences::self()->negativeAmountForegroundColor().isValid() ) {
+                return Knipptasch::Preferences::self()->negativeAmountForegroundColor();
             }
         }
         else if( role == Qt::EditRole ) {
@@ -115,18 +117,6 @@ bool AccountSortFilterProxyModel::setData(const QModelIndex &idx, const QVariant
     }
 
     return true;
-}
-
-
-AccountSortFilterProxyModel::PostingSortOrder AccountSortFilterProxyModel::postingSortOrder() const
-{
-    return m_postingSortOrder;
-}
-
-
-void AccountSortFilterProxyModel::setPostingSortOrder(AccountSortFilterProxyModel::PostingSortOrder order)
-{
-    m_postingSortOrder = order;
 }
 
 
@@ -237,7 +227,7 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
 
     QDate l_primary, r_primary, l_secondary, r_secondary;
 
-    switch( postingSortOrder() ) {
+    switch( Knipptasch::Preferences::self()->postingSortOrder() ) {
         case AccountSortFilterProxyModel::Maturity:
             l_primary = l_maturity;
             r_primary = r_maturity;
@@ -252,7 +242,7 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
             r_secondary = r_maturity;
 
         default:
-            Q_ASSERT_X( false, Q_FUNC_INFO, "Unhandled 'AbstractPreferences::PostingSortOrder' configuration value" );
+            Q_ASSERT_X( false, Q_FUNC_INFO, "Unhandled 'postingSortOrder' configuration value in AccountSortFilterProxyModel" );
     }
 
     if( l_primary.isValid() && !r_primary.isValid() ) {

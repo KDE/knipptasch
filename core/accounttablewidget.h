@@ -26,43 +26,53 @@ class AccountSortFilterProxyModel;
 class AccountModel;
 class QAbstractItemView;
 
-namespace Knipptasch
-{
-    class Preferences;
-}
-
-
 /**
- * @class AccountTableWidget
- * @brief
+ * @namespace Knipptasch
+ * @brief Default namespace for Knipptasch
  *
  * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class KNIPPTASCH_CORE_EXPORT AccountTableWidget : public QWidget
+namespace Knipptasch
 {
-    Q_OBJECT
     
-    public:
-        explicit AccountTableWidget(Knipptasch::Preferences *pref, QWidget *parent = 0);
-        ~AccountTableWidget();
-        
-        QAbstractItemView* view();
-        const QAbstractItemView* view() const;
-        
-        AccountModel* model();
-        const AccountModel* model() const;
-        
-        AccountSortFilterProxyModel* proxy();
-        const AccountSortFilterProxyModel* proxy() const;
+    class Preferences;
 
-    private slots:
-        void slotCurrentRowChanged();
-    
-    private:
-        class Private;
-        Private* const d;
-};
 
+    /**
+    * @class AccountTableWidget
+    * @brief
+    *
+    * @author Stefan Böhmann <kde@hilefoks.org>
+    */
+    class KNIPPTASCH_CORE_EXPORT AccountTableWidget : public QWidget
+    {
+        Q_OBJECT
+        
+        public:
+            explicit AccountTableWidget(Knipptasch::Preferences *pref, QWidget *parent = 0);
+            virtual ~AccountTableWidget();
+            
+            QAbstractItemView* view();
+            const QAbstractItemView* view() const;
+            
+            AccountModel* model();
+            const AccountModel* model() const;
+            
+            AccountSortFilterProxyModel* proxy();
+            const AccountSortFilterProxyModel* proxy() const;
+
+            Knipptasch::Preferences* preferences();
+            const Knipptasch::Preferences* preferences() const;
+
+        private slots:
+            void slotCurrentRowChanged();
+        
+        private:
+            class Private;
+            Private* const d;
+    };
+
+} // EndNamspace Knipptasch
 
 #endif
 

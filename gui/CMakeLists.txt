@@ -9,7 +9,7 @@ set(knipptasch_SOURCES
     quickreportpopup.cpp
     quickreportwidget.cpp
     passworddialog.cpp
-    guipreferences.cpp
+   
     main.cpp
 
     config/configdialog.cpp
@@ -38,7 +38,6 @@ set( knipptasch_HEADERS
     quickreportpopup.h
     quickreportwidget.h
     passworddialog.h
-    guipreferences.h
 
     config/configdialog.h
     config/configwidget.h

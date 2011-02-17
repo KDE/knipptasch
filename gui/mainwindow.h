@@ -28,7 +28,6 @@
 
 #include <KAction>
 
-class GuiPreferences;
 class QUrl;
 class QMenu;
 class AccountWidget;
@@ -70,9 +69,6 @@ class MainWindow :
     public:
         explicit MainWindow(QWidget* parent = 0);
         ~MainWindow();
-
-        Knipptasch::Preferences* preferences();
-        const Knipptasch::Preferences* preferences() const;
         
 #if defined(HAVE_KDE)
         KActionCollection* mainWindowActionCollection() { return actionCollection(); }
@@ -144,8 +140,6 @@ class MainWindow :
 
     private:
         Ui::MainWindow *ui;
-        
-        GuiPreferences *m_preferences;
         
         ActionCollection *m_ActionCollection;
         RecentFileMenu *m_recentFileMenu;

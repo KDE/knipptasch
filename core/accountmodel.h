@@ -94,26 +94,6 @@ class KNIPPTASCH_CORE_EXPORT AccountModel : public QAbstractTableModel
 
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-        QString dateFormat() const;
-        void setDateFormat(const QString &str);
-
-        QColor positiveAmountForegroundColor() const;
-        void setPositiveAmountForegroundColor(const QColor &color);
-        QColor negativeAmountForegroundColor() const;
-        void setNegativeAmountForegroundColor(const QColor &color);
-        QColor availableWarrantyForegroundColor() const;
-        void setAvailableWarrantyForegroundColor(const QColor &color);
-        QColor expiredWarrantyForegroundColor() const;
-        void setExpiredWarrantyForegroundColor(const QColor &color);
-        QColor currentPostingBackgroundColor() const;
-        void setCurrentPostingBackgroundColor(const QColor &color);
-        QColor futurePostingBackgroundColor() const;
-        void setFuturePostingBackgroundColor(const QColor &color);
-        QColor incompletePostingBackgroundColor() const;
-        void setIncompletePostingBackgroundColor(const QColor &color);
-        QColor defaultPostingBackgroundColor() const;
-        void setDefaultPostingBackgroundColor(const QColor &color);
-
     private:
         QVariant backgroundRoleData(const QModelIndex &index) const;
         QVariant foregroundRoleData(const QModelIndex &index) const;

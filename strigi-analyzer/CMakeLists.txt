@@ -13,5 +13,5 @@ if( STRIGI_FOUND AND JSON-C_FOUND )
     target_link_libraries( ea_knipptasch ${STRIGI_STREAMANALYZER_LIBRARY} ${STRIGI_STREAMS_LIBRARY} ${JSON-C_LIBRARIES})
     set_target_properties( ea_knipptasch PROPERTIES PREFIX strigi )
 
-    install( TARGETS ea_knipptasch LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi )
+    install( TARGETS ea_knipptasch LIBRARY DESTINATION ${KNIPPTASCH_LIB_INSTALL_DIR}/strigi )
 endif( STRIGI_FOUND AND JSON-C_FOUND )

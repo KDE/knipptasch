@@ -34,6 +34,9 @@
 #include <delegate/datedelegate.h>
 
 
+namespace Knipptasch
+{
+
 
 struct AccountTableWidget::Private
 {
@@ -134,6 +137,18 @@ const AccountSortFilterProxyModel* AccountTableWidget::proxy() const
 }
 
 
+Knipptasch::Preferences* AccountTableWidget::preferences()
+{
+    return d->preferences;
+}
+
+
+const Knipptasch::Preferences* AccountTableWidget::preferences() const
+{
+    return d->preferences;    
+}
+
+
 void AccountTableWidget::slotCurrentRowChanged()
 {
     if( d->preferences->resetCurrentIndexWhenCurrentRowChanged() ) {
@@ -141,6 +156,10 @@ void AccountTableWidget::slotCurrentRowChanged()
     }
 }
     
+
+
+} // EndNamspace Knipptasch
+
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

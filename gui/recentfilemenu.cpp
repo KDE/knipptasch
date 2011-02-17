@@ -15,29 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "recentfilemenu.h"
-#include "mainwindow.h"
 
 #include <Knipptasch/Preferences>
 #include <QFileInfo>
 
 
-
-RecentFileMenu::RecentFileMenu(MainWindow *parent)
-  : QMenu( parent ),
-    m_mainWindow( parent )
+RecentFileMenu::RecentFileMenu(QWidget *parent)
+  : QMenu( parent )
 {
-    m_fileList = m_mainWindow->preferences()->recentFilesList();
+    m_fileList = Knipptasch::Preferences::self()->recentFilesList();
     connect(this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuActions( QAction* ) ) );
 
     updateActions();
 }
 
 
-RecentFileMenu::RecentFileMenu(const QString &title, MainWindow *parent)
-  : QMenu( title, parent ),
-    m_mainWindow( parent )
+RecentFileMenu::RecentFileMenu(const QString &title, QWidget *parent)
+  : QMenu( title, parent )
 {
-    m_fileList = m_mainWindow->preferences()->recentFilesList();
+    m_fileList = Knipptasch::Preferences::self()->recentFilesList();
     connect( this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuAction( QAction* ) ) );
 
     updateActions();
@@ -46,7 +42,7 @@ RecentFileMenu::RecentFileMenu(const QString &title, MainWindow *parent)
 
 QStringList RecentFileMenu::files() const
 {
-    const int max = m_mainWindow->preferences()->recentFilesListMaximumCount();
+    const int max = Knipptasch::Preferences::self()->recentFilesListMaximumCount();
     if( m_fileList.size() <= max ) {
         return m_fileList;
     }
@@ -91,7 +87,7 @@ void RecentFileMenu::clearMenu()
 void RecentFileMenu::updateActions()
 {
     QStringList fileList = files();
-    m_mainWindow->preferences()->setRecentFilesList( fileList );
+    Knipptasch::Preferences::self()->setRecentFilesList( fileList );
 
     clear();
 

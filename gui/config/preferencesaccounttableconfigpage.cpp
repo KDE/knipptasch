@@ -70,7 +70,7 @@ PreferencesAccountTableConfigPage::~PreferencesAccountTableConfigPage()
 bool PreferencesAccountTableConfigPage::isModified() const
 {
     int sortPostingBy = ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt();
-    if( sortPostingBy != m_preferences->sortPostingsBy() ) {
+    if( sortPostingBy != m_preferences->postingSortOrder() ) {
         return true;
     }
 
@@ -104,7 +104,10 @@ bool PreferencesAccountTableConfigPage::isModified() const
 
 bool PreferencesAccountTableConfigPage::commit()
 {
-    m_preferences->setSortPostingsBy( ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt() );
+    m_preferences->setPostingSortOrder( static_cast<Knipptasch::Preferences::PostingSortOrder>( 
+                                                ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt() 
+                                            ) 
+                                      );
     m_preferences->setDefaultLengthOfWarrantyInMonth( ui->defaultWarrantyPeriod->value() );
     m_preferences->setMovableColumns( ui->movableColumns->isChecked() );
     m_preferences->setCascadingSectionResize( ui->cascadingSectionResize->isChecked() );
@@ -122,7 +125,7 @@ void PreferencesAccountTableConfigPage::revert()
 {
     bool block = blockSignals( true );
 
-    ui->sortPostingsBy->setCurrentIndex( ui->sortPostingsBy->findData( m_preferences->sortPostingsBy() ) );
+    ui->sortPostingsBy->setCurrentIndex( ui->sortPostingsBy->findData( m_preferences->postingSortOrder() ) );
     ui->defaultWarrantyPeriod->setValue( m_preferences->defaultLengthOfWarrantyInMonth() );
     ui->movableColumns->setChecked( m_preferences->movableColumns() );
     ui->cascadingSectionResize->setChecked( m_preferences->cascadingSectionResize() );

@@ -23,6 +23,8 @@
 
 #include "compat/utils.h"
 
+#include "preferences.h"
+
 #include <QVariant>
 #include <QBrush>
 #include <QStringList>
@@ -51,16 +53,6 @@ struct AccountModel::Private
 
     Account *account;
     Posting *posting;
-
-    QString dateFormat;
-    QColor positiveAmountForegroundColor;
-    QColor negativeAmountForegroundColor;
-    QColor availableWarrantyForegroundColor;
-    QColor expiredWarrantyForegroundColor;
-    QColor currentPostingBackgroundColor;
-    QColor futurePostingBackgroundColor;
-    QColor incompletePostingBackgroundColor;
-    QColor defaultPostingBackgroundColor;
 };
 
 
@@ -238,8 +230,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !dateFormat().isEmpty() ) {
-                return dt.toString( dateFormat() );
+            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -264,8 +256,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !dateFormat().isEmpty() ) {
-                return dt.toString( dateFormat() );
+            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -297,8 +289,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             if( role == Qt::EditRole ) {
                 return dt;
             }
-            if( !dateFormat().isEmpty() ) {
-                return dt.toString( dateFormat() );
+            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
             }
             return formatShortDate( dt );
         }
@@ -522,113 +514,6 @@ bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 
-QString AccountModel::dateFormat() const
-{
-    return d->dateFormat;
-}
-
-
-void AccountModel::setDateFormat(const QString &str)
-{
-    d->dateFormat = str;
-}
-
-
-QColor AccountModel::positiveAmountForegroundColor() const
-{
-    return d->positiveAmountForegroundColor;
-}
-
-
-void AccountModel::setPositiveAmountForegroundColor(const QColor &color)
-{
-    d->positiveAmountForegroundColor = color;
-}
-
-
-QColor AccountModel::negativeAmountForegroundColor() const
-{
-    return d->negativeAmountForegroundColor;
-}
-
-
-void AccountModel::setNegativeAmountForegroundColor(const QColor &color)
-{
-    d->negativeAmountForegroundColor = color;
-}
-
-QColor AccountModel::availableWarrantyForegroundColor() const
-{
-    return d->availableWarrantyForegroundColor;
-}
-
-
-void AccountModel::setAvailableWarrantyForegroundColor(const QColor &color)
-{
-    d->availableWarrantyForegroundColor = color;
-}
-
-
-QColor AccountModel::expiredWarrantyForegroundColor() const
-{
-    return d->expiredWarrantyForegroundColor;
-}
-
-
-void AccountModel::setExpiredWarrantyForegroundColor(const QColor &color)
-{
-    d->expiredWarrantyForegroundColor = color;
-}
-
-
-QColor AccountModel::currentPostingBackgroundColor() const
-{
-    return d->currentPostingBackgroundColor;
-}
-
-
-void AccountModel::setCurrentPostingBackgroundColor(const QColor &color)
-{
-    d->currentPostingBackgroundColor = color;
-}
-
-
-QColor AccountModel::futurePostingBackgroundColor() const
-{
-    return d->futurePostingBackgroundColor;
-}
-
-
-void AccountModel::setFuturePostingBackgroundColor(const QColor &color)
-{
-    d->futurePostingBackgroundColor = color;
-}
-
-
-QColor AccountModel::incompletePostingBackgroundColor() const
-{
-    return d->incompletePostingBackgroundColor;
-}
-
-
-void AccountModel::setIncompletePostingBackgroundColor(const QColor &color)
-{
-    d->incompletePostingBackgroundColor = color;
-}
-
-
-QColor AccountModel::defaultPostingBackgroundColor() const
-{
-    return d->defaultPostingBackgroundColor;
-}
-
-
-void AccountModel::setDefaultPostingBackgroundColor(const QColor &color)
-{
-    d->defaultPostingBackgroundColor = color;
-}
-
-
 AccountModel::PostingTypeFlags AccountModel::postingType(const Posting *ptr) const
 {
     Q_ASSERT( d->posting );
@@ -680,17 +565,17 @@ QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
 {
     AccountModel::PostingTypeFlags type = postingType( index.row() );
 
-    if( type & AccountModel::Current && currentPostingBackgroundColor().isValid() ) {
-        return currentPostingBackgroundColor();
+    if( type & AccountModel::Current && Knipptasch::Preferences::self()->currentPostingBackgroundEnabled() && Knipptasch::Preferences::self()->currentPostingBackgroundColor().isValid() ) {
+        return Knipptasch::Preferences::self()->currentPostingBackgroundColor();
     }
-    else if( type & AccountModel::Future && futurePostingBackgroundColor().isValid() ) {
-        return futurePostingBackgroundColor();
+    else if( type & AccountModel::Future && Knipptasch::Preferences::self()->futurePostingBackgroundEnabled() && Knipptasch::Preferences::self()->futurePostingBackgroundColor().isValid() ) {
+        return Knipptasch::Preferences::self()->futurePostingBackgroundColor();
     }
-    else if( type & AccountModel::Incomplete && incompletePostingBackgroundColor().isValid() ) {
-        return incompletePostingBackgroundColor();
+    else if( type & AccountModel::Incomplete && Knipptasch::Preferences::self()->incompletePostingBackgroundEnabled() && Knipptasch::Preferences::self()->incompletePostingBackgroundColor().isValid() ) {
+        return Knipptasch::Preferences::self()->incompletePostingBackgroundColor();
     }
-    else if( defaultPostingBackgroundColor().isValid() ) {
-        return defaultPostingBackgroundColor();
+    else if( Knipptasch::Preferences::self()->defaultPostingBackgroundEnabled() && Knipptasch::Preferences::self()->defaultPostingBackgroundColor().isValid() ) {
+        return Knipptasch::Preferences::self()->defaultPostingBackgroundColor();
     }
 
     return QVariant();
@@ -703,15 +588,25 @@ QVariant AccountModel::foregroundRoleData(const QModelIndex &index) const
 
     switch( index.column() ) {
         case AccountModel::AMOUNT:
-            c = data( index, Qt::EditRole ).value<Money>() >= 0.0
-                 ? positiveAmountForegroundColor()
-                 : negativeAmountForegroundColor();
+            if( data( index, Qt::EditRole ).value<Money>() >= 0.0 ) {
+                if( Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() ) {
+                    c = Knipptasch::Preferences::self()->positiveAmountForegroundColor();
+                }
+            }
+            else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() ) {
+                 c = Knipptasch::Preferences::self()->negativeAmountForegroundColor();
+            }                 
         break;
 
         case AccountModel::WARRANTY:
-            c = data( index, Qt::EditRole ).value<QDate>() < QDate::currentDate()
-                 ? availableWarrantyForegroundColor()
-                 : expiredWarrantyForegroundColor();
+            if( data( index, Qt::EditRole ).value<QDate>() < QDate::currentDate() ) {
+                if( Knipptasch::Preferences::self()->availableWarrantyForegroundEnabled() ) {
+                    c = Knipptasch::Preferences::self()->availableWarrantyForegroundColor();
+                }
+            }
+            else if( Knipptasch::Preferences::self()->expiredWarrantyForegroundEnabled() ) {
+                 c = Knipptasch::Preferences::self()->expiredWarrantyForegroundColor();
+            }
         break;
 
         default:

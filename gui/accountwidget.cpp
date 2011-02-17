@@ -103,13 +103,13 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->view->setModel( m_proxy );
 
-    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( m_mainWindow->preferences(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( m_mainWindow->preferences(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( Knipptasch::Preferences::self(), this ) );
 
     ui->view->resizeColumnsToContents();
     ui->view->verticalHeader()->hide();
@@ -284,7 +284,7 @@ QList<const Posting*> AccountWidget::selectedPostings() const
 
 void AccountWidget::loadConfig()
 {
-    Knipptasch::Preferences *p = m_mainWindow->preferences();
+    Knipptasch::Preferences *p = Knipptasch::Preferences::self();
 
     QByteArray arr = QByteArray::fromBase64( p->horizontalHeaderState().toAscii() );
 
@@ -303,57 +303,6 @@ void AccountWidget::loadConfig()
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
-    m_proxy->setPostingSortOrder( static_cast<AccountSortFilterProxyModel::PostingSortOrder>( p->sortPostingsBy() ) );
-
-
-    m_model->setPositiveAmountForegroundColor(
-                        p->positiveAmountForegroundEnabled()
-                            ? p->positiveAmountForegroundColor()
-                            : QColor()
-    );
-
-    m_model->setNegativeAmountForegroundColor(
-                        p->negativeAmountForegroundEnabled()
-                            ? p->negativeAmountForegroundColor()
-                            : QColor()
-    );
-
-    m_model->setAvailableWarrantyForegroundColor(
-                        p->availableWarrantyForegroundEnabled()
-                            ? p->availableWarrantyForegroundColor()
-                            : QColor()
-    );
-
-    m_model->setExpiredWarrantyForegroundColor(
-                        p->expiredWarrantyForegroundEnabled()
-                            ? p->expiredWarrantyForegroundColor()
-                            : QColor()
-    );
-
-    m_model->setCurrentPostingBackgroundColor(
-                        p->currentPostingBackgroundEnabled()
-                            ? p->currentPostingBackgroundColor()
-                            : QColor()
-    );
-
-    m_model->setFuturePostingBackgroundColor(
-                        p->futurePostingBackgroundEnabled()
-                            ? p->futurePostingBackgroundColor()
-                            : QColor()
-    );
-
-    m_model->setIncompletePostingBackgroundColor(
-                        p->incompletePostingBackgroundEnabled()
-                            ? p->incompletePostingBackgroundColor()
-                            : QColor()
-    );
-
-    m_model->setDefaultPostingBackgroundColor(
-                        p->defaultPostingBackgroundEnabled()
-                            ? p->defaultPostingBackgroundColor()
-                            : QColor()
-    );
-
     QHeaderView *h = ui->view->horizontalHeader();
     h->setMovable( p->movableColumns() );
     h->setCascadingSectionResizes( p->cascadingSectionResize() );
@@ -364,7 +313,7 @@ void AccountWidget::loadConfig()
 
 void AccountWidget::saveConfig()
 {
-    m_mainWindow->preferences()->setHorizontalHeaderState(
+    Knipptasch::Preferences::self()->setHorizontalHeaderState(
                         ui->view->horizontalHeader()->saveState().toBase64()
     );
 }
@@ -522,7 +471,7 @@ void AccountWidget::onConfigureAccount()
 
 void AccountWidget::onResizeColumnToContents(int index)
 {
-    if( m_mainWindow->preferences()->doubleClickResizeColumnToCountent() ) {
+    if( Knipptasch::Preferences::self()->doubleClickResizeColumnToCountent() ) {
         ui->view->resizeColumnToContents( index );
         saveConfig();
     }
@@ -552,13 +501,13 @@ void AccountWidget::slotUpdateAccountInfo()
     const Money value = m_proxy->data( index, Qt::EditRole ).value<Money>();
 
     QString stylesheet;
-    if( m_mainWindow->preferences()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
+    if( Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
         stylesheet = QString::fromLatin1("color: %1;").arg(
-                 m_mainWindow->preferences()->positiveAmountForegroundColor().name() );
+                 Knipptasch::Preferences::self()->positiveAmountForegroundColor().name() );
     }
-    else if( m_mainWindow->preferences()->negativeAmountForegroundEnabled() && value < 0.0 ) {
+    else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && value < 0.0 ) {
         stylesheet = QString::fromLatin1("color: %1;").arg(
-                 m_mainWindow->preferences()->negativeAmountForegroundColor().name() );
+                 Knipptasch::Preferences::self()->negativeAmountForegroundColor().name() );
     }
 
     ui->balance->setStyleSheet( stylesheet );
@@ -575,7 +524,7 @@ void AccountWidget::slotCurrentRowChanged()
         w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
     }
 
-    if( m_mainWindow->preferences()->resetCurrentIndexWhenCurrentRowChanged() ) {
+    if( Knipptasch::Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
         ui->view->setCurrentIndex( ui->view->model()->index( ui->view->currentIndex().row(), 0 ) );
     }
 }

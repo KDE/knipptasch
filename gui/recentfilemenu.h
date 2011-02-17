@@ -20,7 +20,6 @@
 #include <QMenu>
 #include <QStringList>
 
-class MainWindow;
 
 /**
  * @class RecentFileMenu
@@ -33,8 +32,8 @@ class RecentFileMenu : public QMenu
     Q_OBJECT
 
     public:
-        explicit RecentFileMenu(MainWindow *parent);
-        explicit RecentFileMenu(const QString &title, MainWindow *parent);
+        explicit RecentFileMenu(QWidget *parent);
+        explicit RecentFileMenu(const QString &title, QWidget *parent);
 
     public slots:
         QStringList files() const;
@@ -51,7 +50,6 @@ class RecentFileMenu : public QMenu
 
     private:
         QStringList m_fileList;
-        MainWindow *m_mainWindow;
 };
 
 
