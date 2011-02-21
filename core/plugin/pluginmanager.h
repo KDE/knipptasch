@@ -18,6 +18,8 @@
 #ifndef KNIPPTASCH_CORE_PLUGINMANAGER_H
 #define KNIPPTASCH_CORE_PLUGINMANAGER_H
 
+#include "knipptasch_core_export.h"
+
 #include <QObject>
 
 
@@ -36,7 +38,7 @@ namespace Knipptasch
     class Plugin;
 
         
-    class PluginManager : public QObject
+    class KNIPPTASCH_CORE_EXPORT PluginManager : public QObject
     {
         Q_OBJECT
 
