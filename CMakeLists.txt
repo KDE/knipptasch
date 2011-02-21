@@ -145,7 +145,7 @@ add_subdirectory( data )
 add_subdirectory( compat )
 add_subdirectory( core )
 add_subdirectory( gui )
-#add_subdirectory( plugins )
+add_subdirectory( plugins )
 
 macro_display_feature_log()
 
