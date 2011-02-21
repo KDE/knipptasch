@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -62,20 +62,43 @@ DemoImportPlugin::DemoImportPlugin(QObject *parent)
 }
 
 
-QByteArray DemoImportPlugin::pluginIdentifier() const
+bool DemoImportPlugin::isEnabledByDefault() const
+{
+    return true;
+}
+
+
+QByteArray DemoImportPlugin::identifier() const
 {
     return "demo_import_plugin";
 }
 
 
-QString DemoImportPlugin::pluginName() const
+QString DemoImportPlugin::shortName() const
 {
-    return tr( "Demo Import Plugin" );
-    
+    return tr( "Demo" );    
 }
 
 
-QByteArray DemoImportPlugin::pluginVersion() const
+QString DemoImportPlugin::name() const
+{
+    return tr( "Demo Import Plugin" );    
+}
+
+
+QString DemoImportPlugin::description() const
+{
+    return tr( "A plugin to generate sample data." );
+}
+
+
+QString DemoImportPlugin::author() const
+{
+    return tr( "Stefan Böhmann" );
+}
+
+
+QByteArray DemoImportPlugin::version() const
 {
     return "0.0.1";
 }
@@ -237,6 +260,18 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
     return 0;
 }
 
+
+bool DemoImportPlugin::enable()
+{
+    return true;    
+}
+
+
+bool DemoImportPlugin::disable()
+{
+    return true;
+}
+            
 
 Q_EXPORT_PLUGIN2( "DemoImportPlugin", DemoImportPlugin );
 
