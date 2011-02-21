@@ -16,9 +16,13 @@
  */
 #include "preferences.h"
 
+#include <QCoreApplication>
+#include <QDesktopServices>
 #include <QStringList>
 #include <QColor>
 #include <QSize>
+#include <stdlib.h>
+#include <QDir>
 
 
 #define POSITIVE_AMOUNT_FOREGROUND_COLOR QColor( 0, 140, 0 )
@@ -49,6 +53,48 @@ Preferences::Preferences(QObject *parent)
 {
 }
 
+
+QStringList Preferences::pluginDirectories() const
+{
+    QStringList l;
+
+    l.append( value( "General/PluginDirectories" ).toStringList() );
+    l.append( QDir::homePath() + "/.knipptasch/plugins"  );
+
+#if defined(Q_WS_X11)
+    QDir dir( qApp->applicationDirPath() + "/../share/knipptasch/plugins" );
+    l.append( dir.absolutePath() );
+#elif defined(Q_WS_WIN)
+    l.append( qApp->applicationDirPath() + "/plugins" );
+#elif defined(Q_WS_MAC)
+    l.append( qApp->applicationDirPath() + "/plugins" );
+#endif
+
+    // Try the environment override first
+    char *envdatadir = getenv( "KNIPPTASCH_PLUGIN_DIR" ); // krazy:exclude=syscalls
+    if( envdatadir ) {
+        l.append( envdatadir );
+    }
+
+qDebug( "pluginDirectories:" );
+foreach(const QString &s, l) {
+    qDebug( "  %s", s.toAscii().data() );
+}
+
+    return l;
+}
+
+
+QStringList Preferences::pluginNamePrefixes() const
+{
+    QStringList l;
+    l << "knipptasch_";
+    
+    return l;
+}
+
+
+// == General ==
 
 Preferences::EnumOnStartupAction Preferences::onStartupAction() const
 {

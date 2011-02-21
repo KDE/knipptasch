@@ -50,6 +50,11 @@ namespace Knipptasch
 
             explicit Preferences(QObject *parent = 0);
             
+            
+            QStringList pluginDirectories() const;
+            
+            QStringList pluginNamePrefixes() const;
+
             // == General ==
 
             EnumOnStartupAction onStartupAction() const;

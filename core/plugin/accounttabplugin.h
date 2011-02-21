@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNIPPTASCH_CORE_ABSTRACT_ACCOUNT_TAB_WIDGET_PLUGIN_H
-#define KNIPPTASCH_CORE_ABSTRACT_ACCOUNT_TAB_WIDGET_PLUGIN_H
+#ifndef KNIPPTASCH_CORE_ACCOUNT_TAB_PLUGIN_H
+#define KNIPPTASCH_CORE_ACCOUNT_TAB_PLUGIN_H
 
 #include "plugin.h"
 
@@ -32,24 +32,24 @@ namespace Knipptasch
 {
 
     /**
-     * @class AbstractAccountTabWidgetPlugin
+     * @class AccountTabPlugin
      * @brief
      *
      * @author Stefan Böhmann <kde@hilefoks.org>
      */
-    class KNIPPTASCH_CORE_EXPORT AbstractAccountTabWidgetPlugin : public Plugin
+    class KNIPPTASCH_CORE_EXPORT AccountTabPlugin : public Plugin
     {
         public:
             virtual AbstractAccountTabWidget* widget() = 0;
 
         protected:
-            virtual ~AbstractAccountTabWidgetPlugin();
+            virtual ~AccountTabPlugin();
     };
 
 } // EndNamspace Knipptasch
 
 
-Q_DECLARE_INTERFACE( Knipptasch::AbstractAccountTabWidgetPlugin, "org.kde.Knipptasch.AbstractAccountTabWidgetPlugin/0.1" );
+Q_DECLARE_INTERFACE( Knipptasch::AccountTabPlugin, "org.kde.Knipptasch.AccountTabPlugin/0.1" );
 
 #endif
 

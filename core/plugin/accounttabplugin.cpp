@@ -14,51 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KNIPPTASCH_CORE_PLUGIN_INTERFACE_H
-#define KNIPPTASCH_CORE_PLUGIN_INTERFACE_H
-
-#include "knipptasch_core_export.h"
-
-#include <QtCore/QtPlugin>
-#include <QtCore/QPointer>
-#include <QtCore/QString>
+#include "accounttabplugin.h"
 
 
-
-/**
- * @namespace Knipptasch
- * @brief Default namespace for Knipptasch
- *
- * @author Stefan Böhmann <kde@hilefoks.org>
- */
 namespace Knipptasch
 {
-    
-    /**
-     * @class XmlReader
-     * @brief
-     *
-     * @author Stefan Böhmann <kde@hilefoks.org>
-     */
-    class KNIPPTASCH_CORE_EXPORT Plugin
+
+
+    AccountTabPlugin::~AccountTabPlugin()
     {
-        public:
-            /**
-            * Default Destructor
-            */
-            virtual ~Plugin();
-
-            virtual QByteArray pluginIdentifier() const = 0;
-            virtual QString pluginName() const = 0;
-            virtual QByteArray pluginVersion() const = 0;
-    };
-    
-} // EndNamspace Knipptasch
+    }
 
 
-Q_DECLARE_INTERFACE( Knipptasch::Plugin, "org.kde.Knipptasch.Plugin/0.1" );
+} //EndNamespace Knipptasch
 
-#endif
 
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:

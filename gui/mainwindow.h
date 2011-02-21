@@ -134,9 +134,8 @@ class MainWindow :
         void onHelp();
 #endif
 
-    private:
-        void loadExportPlugins();
-        void loadImportPlugins();
+        void loadPlugins();
+        void unloadPlugins();
 
     private:
         Ui::MainWindow *ui;

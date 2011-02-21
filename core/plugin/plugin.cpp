@@ -15,16 +15,65 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "plugin.h"
+#include <QUrl>
 
 
 namespace Knipptasch
 {
 
+    Plugin::Plugin()
+      : m_enabled( false )
+    {
+    }
+    
     Plugin::~Plugin()
     {
     }
 
+    bool Plugin::isEnabled() const
+    {
+        return m_enabled;
+    }
+    
 
+    bool Plugin::isEnabledByDefault() const
+    {
+        return false;
+    }
+
+
+    bool Plugin::setEnabled()
+    {
+        if( !isEnabled() ) {
+            m_enabled = enable();
+        }
+        
+        return isEnabled();
+    }
+    
+    
+    bool Plugin::setDisabled()
+    {
+        if( isEnabled() ) {
+            m_enabled = !disable();
+        }
+        
+        return isEnabled() == false;
+    }
+
+    
+    QUrl Plugin::homepage() const
+    {
+        return QUrl();
+    }
+    
+    
+    QWidget* Plugin::options() const
+    {
+        return 0;
+    }
+    
+    
 } //EndNamespace Knipptasch
 
 

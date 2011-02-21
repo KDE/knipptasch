@@ -13,11 +13,6 @@ include( ${QT_USE_FILE} )
 add_definitions( "-DMAKE_KNIPPTASCH_CORE_LIBRARY" )
 
 set( knipptasch_core_SOURCES
-    plugin.cpp
-    exportplugin.cpp
-    importplugin.cpp
-    abstractaccounttabwidgetplugin.cpp
-
     abstractaccounttabwidget.cpp
 
     accountmodel.cpp
@@ -31,6 +26,12 @@ set( knipptasch_core_SOURCES
     accounttablewidget.cpp
 
     preferences.cpp
+
+    plugin/plugin.cpp
+    plugin/exportplugin.cpp
+    plugin/importplugin.cpp
+    plugin/accounttabplugin.cpp
+    plugin/pluginmanager.cpp
 
     backend/object.cpp
     backend/category.cpp
@@ -50,11 +51,6 @@ set( knipptasch_core_SOURCES
 
 
 set( knipptasch_core_HEADERS
-    plugin.h
-    exportplugin.h
-    importplugin.h
-    abstractaccounttabwidgetplugin.h
-
     abstractaccounttabwidget.h
 
     accountmodel.h
@@ -68,6 +64,12 @@ set( knipptasch_core_HEADERS
     accounttablewidget.h
 
     preferences.h
+
+    plugin/plugin.h
+    plugin/exportplugin.h
+    plugin/importplugin.h
+    plugin/accounttabplugin.h
+    plugin/pluginmanager.h
 
     backend/object.h
     backend/category.h

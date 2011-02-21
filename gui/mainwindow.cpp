@@ -68,6 +68,7 @@
 #include "passworddialog.h"
 #include "compat/utils.h"
 #include <QTimer>
+#include <plugin/pluginmanager.h>
 
 
 
@@ -107,11 +108,17 @@ MainWindow::MainWindow(QWidget* parent) :
 
     ui->tabWidget->clear();
 
-    loadExportPlugins();
-    loadImportPlugins();
-
     onLoadConfig();
 
+    Knipptasch::PluginManager *manager = Knipptasch::PluginManager::self();
+    
+    loadPlugins();
+
+    connect( manager, SIGNAL( pluginLoaded(QByteArray) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginUnloaded(QByteArray) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginDisabled(QByteArray) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginEnabled(QByteArray) ), this, SLOT( loadPlugins() ) );
+    
     connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ),
              this, SLOT( onNewFile() ) );
     connect( ui->welcomeWidget, SIGNAL( openFileClicked() ),
@@ -907,66 +914,69 @@ void MainWindow::onHelp()
 #endif
 
 
-void MainWindow::loadExportPlugins()
+void MainWindow::loadPlugins()
 {
-/* FIXME MODULARIZE
+    unloadPlugins();
+    
+    QSet<QByteArray> plugins = Knipptasch::PluginManager::self()->enabledPluginIdentifiers();
 
-    qDeleteAll( m_exportPlugins.begin(), m_exportPlugins.end() );
-    m_exportPlugins.clear();
+    QList<QAction*> importActions;
+    QList<QAction*> exportActions;
+    
+    foreach(const QByteArray &pluginName, plugins) {
+        Q_ASSERT( Knipptasch::PluginManager::self()->containsPlugin( pluginName ) );
+        Knipptasch::Plugin* plugin = Knipptasch::PluginManager::self()->plugin( pluginName );
+        Q_ASSERT( plugin );
+        Q_ASSERT( plugin->isEnabled() );
 
-    m_exportPlugins.append( new CsvExportPlugin );
-    m_exportPlugins.append( new XmlExportPlugin );
-
-    QList<QAction*> actions;
-    for(int i = 0; i < m_exportPlugins.size(); ++i ) {
-        const ExportPlugin *plugin = m_exportPlugins.at( i );
-        KAction *action = new KAction( KIcon( plugin->exportActionIcon() ), plugin->exportActionName(), this );
-        action->setData( i );
-
-        actions.append( action );
-        m_exportPluginActionGroup->addAction( action );
+        Knipptasch::ImportPlugin *importPlugin = dynamic_cast<Knipptasch::ImportPlugin*>( plugin );
+        if( importPlugin ) {
+            m_importPlugins.append( importPlugin );
+            
+            KAction *action = new KAction( KIcon( importPlugin->importActionIcon() ), importPlugin->importActionName(), this );
+            action->setData( m_importPlugins.size() - 1 );
+            
+            importActions.append( action );
+            m_importPluginActionGroup->addAction( action );
+        }
+        
+        Knipptasch::ExportPlugin *exportPlugin = dynamic_cast<Knipptasch::ExportPlugin*>( plugin );        
+        if( exportPlugin ) {
+            m_exportPlugins.append( exportPlugin );
+            
+            KAction *action = new KAction( KIcon( exportPlugin->exportActionIcon() ), exportPlugin->exportActionName(), this );
+            action->setData( m_exportPlugins.size() - 1 );
+            
+            exportActions.append( action );
+            m_exportPluginActionGroup->addAction( action );
+        }
     }
 
 #if defined(HAVE_KDE)
-    unplugActionList( "file_export_actionlist" );
-    plugActionList( "file_export_actionlist", actions );
+    plugActionList( "file_import_actionlist", importActions );
+    plugActionList( "file_export_actionlist", exportActions );
 #else
-    m_exportMenu->clear();
-    m_exportMenu->addActions( actions );
+    m_importMenu->addActions( importActions );
+    m_exportMenu->addActions( exportActions );
 #endif
-*/
 }
 
 
-void MainWindow::loadImportPlugins()
+void MainWindow::unloadPlugins()
 {
-/* FIXME MODULARIZE
+    qDeleteAll( m_exportPlugins.begin(), m_exportPlugins.end() );
+    m_exportPlugins.clear();
 
     qDeleteAll( m_importPlugins.begin(), m_importPlugins.end() );
     m_importPlugins.clear();
-
-    m_importPlugins.append( new DemoImportPlugin );
-    m_importPlugins.append( new CsvImportPlugin );
-    m_importPlugins.append( new XmlImportPlugin );
-
-    QList<QAction*> actions;
-    for(int i = 0; i < m_importPlugins.size(); ++i ) {
-        const ImportPlugin *plugin = m_importPlugins.at( i );
-        KAction *action = new KAction( KIcon( plugin->importActionIcon() ), plugin->importActionName(), this );
-        action->setData( i );
-
-        actions.append( action );
-        m_importPluginActionGroup->addAction( action );
-    }
-
+    
 #if defined(HAVE_KDE)
     unplugActionList( "file_import_actionlist" );
-    plugActionList( "file_import_actionlist", actions );
+    unplugActionList( "file_export_actionlist" );
 #else
     m_importMenu->clear();
-    m_importMenu->addActions( actions );
+    m_exportMenu->clear();
 #endif
-*/
 }
 
 
