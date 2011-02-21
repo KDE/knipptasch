@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -42,20 +42,43 @@ XmlImportPlugin::XmlImportPlugin(QObject *parent)
 }
 
 
-QByteArray XmlImportPlugin::pluginIdentifier() const
+bool XmlImportPlugin::isEnabledByDefault() const
+{
+    return true;
+}
+
+
+QByteArray XmlImportPlugin::identifier() const
 {
     return "xml_import_plugin";
 }
 
 
-QString XmlImportPlugin::pluginName() const
+QString XmlImportPlugin::shortName() const
 {
-    return tr( "XML Import Plugin" );
-
+    return tr( "XML Import" );
 }
 
 
-QByteArray XmlImportPlugin::pluginVersion() const
+QString XmlImportPlugin::name() const
+{
+    return tr( "XML Import Plugin" );
+}
+
+
+QString XmlImportPlugin::description() const
+{
+    return tr( "TODO" );
+}
+
+
+QString XmlImportPlugin::author() const
+{
+    return tr( "Stefan Böhmann" );
+}
+
+
+QByteArray XmlImportPlugin::version() const
 {
     return "0.0.1";
 }
@@ -97,6 +120,18 @@ Account* XmlImportPlugin::importAccount(QWidget *parent) const
     reader.read( acc, filename );
 
     return acc;
+}
+
+
+bool XmlImportPlugin::enable()
+{
+    return true;
+}
+
+
+bool XmlImportPlugin::disable()
+{
+    return true;
 }
 
 

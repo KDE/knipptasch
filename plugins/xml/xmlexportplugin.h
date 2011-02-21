@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,14 +35,23 @@ class XmlExportPlugin : public QObject, public Knipptasch::ExportPlugin
     public:
         XmlExportPlugin(QObject *parent = 0);
 
-        QByteArray pluginIdentifier() const;
-        QString pluginName() const;
-        QByteArray pluginVersion() const;
+        bool isEnabledByDefault() const;
+            
+        QByteArray identifier() const;
+        QString shortName() const;
+        QString name() const;
+        QString description() const;
+        QString author() const;
+        QByteArray version() const;
 
         QString exportActionName() const;
         QPixmap exportActionIcon() const;
 
         void exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0) const;
+        
+    protected:
+        bool enable();
+        bool disable();
 };
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,20 +35,43 @@ XmlExportPlugin::XmlExportPlugin(QObject *parent)
 }
 
 
-QByteArray XmlExportPlugin::pluginIdentifier() const
+bool XmlExportPlugin::isEnabledByDefault() const
+{
+    return true;
+}
+
+
+QByteArray XmlExportPlugin::identifier() const
 {
     return "xml_export_plugin";
 }
 
 
-QString XmlExportPlugin::pluginName() const
+QString XmlExportPlugin::shortName() const
 {
-    return tr( "XML Export Plugin" );
-
+    return tr( "XML Export" );
 }
 
 
-QByteArray XmlExportPlugin::pluginVersion() const
+QString XmlExportPlugin::name() const
+{
+    return tr( "XML Export Plugin" );
+}
+
+
+QString XmlExportPlugin::description() const
+{
+    return tr( "TODO" );
+}
+
+
+QString XmlExportPlugin::author() const
+{
+    return tr( "Stefan Böhmann" );
+}
+
+
+QByteArray XmlExportPlugin::version() const
 {
     return "0.0.1";
 }
@@ -84,6 +107,18 @@ void XmlExportPlugin::exportAccount(const Account *account, const QList<const Po
     //TODO try... catch
     XmlWriter writer;
     writer.write( account, filename );
+}
+
+
+bool XmlExportPlugin::enable()
+{
+    return true;
+}
+
+
+bool XmlExportPlugin::disable()
+{
+    return true;
 }
 
 
