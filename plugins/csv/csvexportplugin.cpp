@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -28,20 +28,43 @@ CsvExportPlugin::CsvExportPlugin(QObject *parent)
 }
 
 
-QByteArray CsvExportPlugin::pluginIdentifier() const
+bool CsvExportPlugin::isEnabledByDefault() const
+{
+    return true;
+}
+
+
+QByteArray CsvExportPlugin::identifier() const
 {
     return "csv_export_plugin";
 }
 
 
-QString CsvExportPlugin::pluginName() const
+QString CsvExportPlugin::shortName() const
 {
-    return tr( "CSV Export Plugin" );
-
+    return tr( "CSV Export" );
 }
 
 
-QByteArray CsvExportPlugin::pluginVersion() const
+QString CsvExportPlugin::name() const
+{
+    return tr( "CSV Export Plugin" );
+}
+
+
+QString CsvExportPlugin::description() const
+{
+    return tr( "TODO" );
+}
+
+
+QString CsvExportPlugin::author() const
+{
+    return tr( "Stefan Böhmann" );
+}
+
+
+QByteArray CsvExportPlugin::version() const
 {
     return "0.0.1";
 }
@@ -66,6 +89,18 @@ void CsvExportPlugin::exportAccount(const Account *account, const QList<const Po
     dialog->exec();
 
     delete dialog;
+}
+
+
+bool CsvExportPlugin::enable()
+{
+    return true;
+}
+
+
+bool CsvExportPlugin::disable()
+{
+    return true;
 }
 
 

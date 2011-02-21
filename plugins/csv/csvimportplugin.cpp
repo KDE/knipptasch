@@ -31,20 +31,43 @@ CsvImportPlugin::CsvImportPlugin(QObject *parent)
 }
 
 
-QByteArray CsvImportPlugin::pluginIdentifier() const
+bool CsvImportPlugin::isEnabledByDefault() const
+{
+    return true;
+}
+
+
+QByteArray CsvImportPlugin::identifier() const
 {
     return "csv_import_plugin";
 }
 
 
-QString CsvImportPlugin::pluginName() const
+QString CsvImportPlugin::shortName() const
 {
-    return tr( "CSV Import Plugin" );
-
+    return tr( "CSV Import" );
 }
 
 
-QByteArray CsvImportPlugin::pluginVersion() const
+QString CsvImportPlugin::name() const
+{
+    return tr( "CSV Import Plugin" );
+}
+
+
+QString CsvImportPlugin::description() const
+{
+    return tr( "TODO" );
+}
+
+
+QString CsvImportPlugin::author() const
+{
+    return tr( "Stefan Böhmann" );
+}
+
+
+QByteArray CsvImportPlugin::version() const
 {
     return "0.0.1";
 }
@@ -76,6 +99,18 @@ Account* CsvImportPlugin::importAccount(QWidget *parent) const
     delete dialog;
 
     return account;
+}
+
+
+bool CsvImportPlugin::enable()
+{
+    return true;
+}
+
+
+bool CsvImportPlugin::disable()
+{
+    return true;    
 }
 
 
