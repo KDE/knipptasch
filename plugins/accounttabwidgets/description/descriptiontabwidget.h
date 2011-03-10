@@ -17,7 +17,7 @@
 #ifndef DESCRIPTIONTABWIDGET_H
 #define DESCRIPTIONTABWIDGET_H
 
-#include "interface/abstractaccounttabwidget.h"
+#include <Knipptasch/AbstractAccountTabWidget>
 
 class QDataWidgetMapper;
 class QPlainTextEdit;
