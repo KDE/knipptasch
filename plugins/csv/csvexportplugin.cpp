@@ -52,6 +52,12 @@ QString CsvExportPlugin::name() const
 }
 
 
+QPixmap CsvExportPlugin::icon() const
+{
+    return exportActionIcon();
+}
+
+
 QString CsvExportPlugin::description() const
 {
     return tr( "TODO" );
@@ -89,18 +95,6 @@ void CsvExportPlugin::exportAccount(const Account *account, const QList<const Po
     dialog->exec();
 
     delete dialog;
-}
-
-
-bool CsvExportPlugin::enable()
-{
-    return true;
-}
-
-
-bool CsvExportPlugin::disable()
-{
-    return true;
 }
 
 

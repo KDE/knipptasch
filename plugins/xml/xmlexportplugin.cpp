@@ -59,6 +59,12 @@ QString XmlExportPlugin::name() const
 }
 
 
+QPixmap XmlExportPlugin::icon() const
+{
+    return exportActionIcon();
+}
+
+
 QString XmlExportPlugin::description() const
 {
     return tr( "TODO" );
@@ -107,18 +113,6 @@ void XmlExportPlugin::exportAccount(const Account *account, const QList<const Po
     //TODO try... catch
     XmlWriter writer;
     writer.write( account, filename );
-}
-
-
-bool XmlExportPlugin::enable()
-{
-    return true;
-}
-
-
-bool XmlExportPlugin::disable()
-{
-    return true;
 }
 
 

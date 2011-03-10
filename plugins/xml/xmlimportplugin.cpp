@@ -66,6 +66,12 @@ QString XmlImportPlugin::name() const
 }
 
 
+QPixmap XmlImportPlugin::icon() const
+{
+    return importActionIcon();
+}
+
+
 QString XmlImportPlugin::description() const
 {
     return tr( "TODO" );
@@ -122,17 +128,6 @@ Account* XmlImportPlugin::importAccount(QWidget *parent) const
     return acc;
 }
 
-
-bool XmlImportPlugin::enable()
-{
-    return true;
-}
-
-
-bool XmlImportPlugin::disable()
-{
-    return true;
-}
 
 
 Q_EXPORT_PLUGIN2( "XmlImportPlugin", XmlImportPlugin );

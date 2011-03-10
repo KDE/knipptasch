@@ -161,7 +161,7 @@ namespace Knipptasch
              * @return true if the plugin could be enabled else false or when @p identifier 
              * 
              */
-            bool enablePlugin(const QByteArray &identifier);
+            bool enablePlugin(const QByteArray &identifier, bool enable = true);
             
             
             /**
@@ -172,6 +172,13 @@ namespace Knipptasch
              */
             bool disablePlugin(const QByteArray &identifier);
 
+
+            /**
+             * unload all plugins and disable directory watcher
+             * to redo this call loadPlugins()
+             */
+            void aboutToQuit();
+            
         signals:
             /**
              * @brief emitted when a plugin was loaded
@@ -199,7 +206,6 @@ namespace Knipptasch
             
         private:
             void loadPlugin(QPluginLoader *loader);
-            bool enablePlugin(const QByteArray &identifier, bool enabled);
 
         private:
             class Private;

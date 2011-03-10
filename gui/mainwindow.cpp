@@ -173,6 +173,8 @@ MainWindow::MainWindow(QWidget* parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    
+    Knipptasch::PluginManager::self()->aboutToQuit();
 }
 
 

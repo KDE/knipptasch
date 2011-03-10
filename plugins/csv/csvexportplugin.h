@@ -40,6 +40,7 @@ class CsvExportPlugin : public QObject, public Knipptasch::ExportPlugin
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
+        QPixmap icon() const;
         QString description() const;
         QString author() const;
         QByteArray version() const;
@@ -48,10 +49,6 @@ class CsvExportPlugin : public QObject, public Knipptasch::ExportPlugin
         QPixmap exportActionIcon() const;
 
         void exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0) const;
-
-    protected:
-        bool enable();
-        bool disable();
 };
 
 

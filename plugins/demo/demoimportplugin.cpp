@@ -86,6 +86,12 @@ QString DemoImportPlugin::name() const
 }
 
 
+QPixmap DemoImportPlugin::icon() const
+{
+    return importActionIcon();
+}
+
+
 QString DemoImportPlugin::description() const
 {
     return tr( "A plugin to generate sample data." );
@@ -260,18 +266,6 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
     return 0;
 }
 
-
-bool DemoImportPlugin::enable()
-{
-    return true;    
-}
-
-
-bool DemoImportPlugin::disable()
-{
-    return true;
-}
-            
 
 Q_EXPORT_PLUGIN2( "DemoImportPlugin", DemoImportPlugin );
 

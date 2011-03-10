@@ -40,6 +40,7 @@ class CsvImportPlugin : public QObject, public Knipptasch::ImportPlugin
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
+        QPixmap icon() const;
         QString description() const;
         QString author() const;
         QByteArray version() const;
@@ -48,10 +49,6 @@ class CsvImportPlugin : public QObject, public Knipptasch::ImportPlugin
         QPixmap importActionIcon() const;
 
         Account* importAccount(QWidget *parent = 0) const;
-        
-    protected:
-        bool enable();
-        bool disable();
 };
 
 

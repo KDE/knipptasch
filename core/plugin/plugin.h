@@ -23,6 +23,7 @@
 #include <QtCore/QPointer>
 #include <QtCore/QString>
 
+class QPixmap;
 class QUrl;
 
 
@@ -64,13 +65,17 @@ namespace Knipptasch
             /**
              * @brief Enable plugin
              * 
+             * @see PluginManager::setEnabled
+             * 
              * @return true if plugin was successfully enabled
              */
-            bool setEnabled();
+            bool setEnabled(bool enable = true);
             
 
             /**
              * @brief Disable plugin
+             * 
+             * @see PluginManager::setDisabled
              * 
              * @return true if plugin was successfully disabled
              */
@@ -101,6 +106,14 @@ namespace Knipptasch
              * The full name of the plugin.
              */
             virtual QString name() const = 0;
+
+            
+            /**
+             * @brief Plugin Icon
+             * 
+             * The icon of the plugin.
+             */
+            virtual QPixmap icon() const = 0;
 
             
             /**
@@ -162,13 +175,13 @@ namespace Knipptasch
             /**
              * @see setEnabled
              */
-            virtual bool enable() = 0;
+            virtual bool enable();
             
             
             /**
              * @see setDisabled
              */
-            virtual bool disable() = 0;
+            virtual bool disable();
             
         private:
             bool m_enabled;

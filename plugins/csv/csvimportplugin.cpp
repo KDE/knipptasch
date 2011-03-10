@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 by Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -55,6 +55,12 @@ QString CsvImportPlugin::name() const
 }
 
 
+QPixmap CsvImportPlugin::icon() const
+{
+    return importActionIcon();
+}
+
+
 QString CsvImportPlugin::description() const
 {
     return tr( "TODO" );
@@ -99,18 +105,6 @@ Account* CsvImportPlugin::importAccount(QWidget *parent) const
     delete dialog;
 
     return account;
-}
-
-
-bool CsvImportPlugin::enable()
-{
-    return true;
-}
-
-
-bool CsvImportPlugin::disable()
-{
-    return true;    
 }
 
 

@@ -42,8 +42,12 @@ namespace Knipptasch
     }
 
 
-    bool Plugin::setEnabled()
+    bool Plugin::setEnabled(bool b)
     {
+        if( !b ) {
+            return setDisabled();
+        }
+
         if( !isEnabled() ) {
             m_enabled = enable();
         }
@@ -58,7 +62,7 @@ namespace Knipptasch
             m_enabled = !disable();
         }
         
-        return isEnabled() == false;
+        return !isEnabled();
     }
 
     
@@ -73,6 +77,15 @@ namespace Knipptasch
         return 0;
     }
     
+    bool Plugin::enable()
+    {
+        return true;
+    }
+
+    bool Plugin::disable()
+    {
+        return true;
+    }
     
 } //EndNamespace Knipptasch
 

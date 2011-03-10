@@ -22,7 +22,8 @@ AbstractConfigPage::AbstractConfigPage(const QString &label, const QString &titl
   : QWidget( parent ),
     m_configWidget( parent ),
     m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage )
+    m_errorMessageType( ErrorMessage ),
+    m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 
@@ -36,7 +37,8 @@ AbstractConfigPage::AbstractConfigPage(const QString &label, const QIcon &icon, 
   : QWidget( parent ),
     m_configWidget( parent ),
     m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage )
+    m_errorMessageType( ErrorMessage ),
+    m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 
@@ -50,7 +52,8 @@ AbstractConfigPage::AbstractConfigPage(const QString &label, ConfigWidget *paren
   : QWidget( parent ),
     m_configWidget( parent ),
     m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage )
+    m_errorMessageType( ErrorMessage ),
+    m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 

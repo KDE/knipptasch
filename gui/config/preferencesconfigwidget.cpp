@@ -19,7 +19,7 @@
 #include "preferencesgeneralconfigpage.h"
 #include "preferencesappearanceconfigpage.h"
 #include "preferencesaccounttableconfigpage.h"
-
+#include "preferencespluginconfigpage.h"
 
 
 PreferencesConfigWidget::PreferencesConfigWidget(Knipptasch::Preferences *pref, QWidget* parent)
@@ -28,6 +28,7 @@ PreferencesConfigWidget::PreferencesConfigWidget(Knipptasch::Preferences *pref, 
     addPage( new PreferencesGeneralConfigPage( pref, this ) );
     addPage( new PreferencesAppearanceConfigPage( pref, this ) );
     addPage( new PreferencesAccountTableConfigPage( pref, this ) );
+    addPage( new PreferencesPluginConfigPage( pref, this ) );
 }
 
 

@@ -25,6 +25,7 @@ set(knipptasch_SOURCES
     config/preferencesgeneralconfigpage.cpp
     config/preferencesappearanceconfigpage.cpp
     config/preferencesaccounttableconfigpage.cpp
+    config/preferencespluginconfigpage.cpp
     config/appearancecolorchooserwidget.cpp
  )
 
@@ -52,6 +53,7 @@ set( knipptasch_HEADERS
     config/preferencesgeneralconfigpage.h
     config/preferencesappearanceconfigpage.h
     config/preferencesaccounttableconfigpage.h
+    config/preferencespluginconfigpage.h
     config/appearancecolorchooserwidget.h
  )
 

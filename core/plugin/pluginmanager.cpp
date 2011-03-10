@@ -66,16 +66,12 @@ PluginManager::PluginManager(QObject *parent)
   : QObject( parent ),
     d( new PluginManager::Private )
 {
-    d->watcher = new QFileSystemWatcher( Preferences::self()->pluginDirectories(), this );
-
     loadPlugins();
-    
-    connect( d->watcher, SIGNAL( directoryChanged(QString) ), this, SLOT( loadPlugins() ) );
 }
 
 
 PluginManager::~PluginManager()
-{
+{    
     delete d;
 }
 
@@ -147,7 +143,7 @@ Knipptasch::Plugin* PluginManager::plugin(const QByteArray &identifier)
 void PluginManager::loadPlugins()
 {
     unloadDisabledPlugins();
-       
+  
 /*
     foreach( QObject *plugin, QPluginLoader::staticInstances() ) {
         load(plugin)
@@ -178,11 +174,16 @@ void PluginManager::loadPlugins()
             }
         }
     }
+    
+    if( !d->watcher ) {
+        d->watcher = new QFileSystemWatcher( Preferences::self()->pluginDirectories(), this );
+        connect( d->watcher, SIGNAL( directoryChanged(QString) ), this, SLOT( loadPlugins() ) );
+    }
 }
 
 
 bool PluginManager::unloadPlugins()
-{
+{    
     QHash<QByteArray, QPluginLoader*>::iterator it;
 
     bool failed = unloadDisabledPlugins();
@@ -234,15 +235,64 @@ bool PluginManager::unloadDisabledPlugins()
 }
 
 
-bool PluginManager::enablePlugin(const QByteArray &identifier)
+bool PluginManager::enablePlugin(const QByteArray &identifier, bool enable)
 {
-    return enablePlugin( identifier, true ); 
+    if( !d->loader.contains( identifier ) ) {
+        qDebug() << "PluginManager::enablePlugin(): No plugin" << identifier << "found.";
+        return false;
+    }
+    
+    Knipptasch::Plugin *p = plugin( identifier );
+    Q_ASSERT( p );
+    
+    const QString key = QString( "Plugins/%1_enabled" ).arg( QString( p->identifier() ) );
+
+    Preferences::self()->setValue( key, enable );
+    Preferences::self()->sync();
+    
+    if( p->isEnabled() == enable ) {
+        qDebug() << "PluginManager::enablePlugin(): Plugin" << identifier << "is already enabled.";
+        return true;
+    }
+    
+    if( p->setEnabled( enable ) ) {
+        if( enable ) {
+            Q_ASSERT( p->isEnabled() );
+            emit pluginEnabled( p->identifier() );
+        }
+        else {
+            Q_ASSERT( !p->isEnabled() );
+            emit pluginDisabled( p->identifier() );
+        }
+    }
+    else {
+        qDebug() << "PluginManager::enablePlugin(): Error while"
+                 << ( enable ? "enable" : "disable" ) 
+                 << "plugin" << identifier;
+    }
+
+    Q_ASSERT( enable == p->isEnabled() );
+
+    return true;
 }
 
 
 bool PluginManager::disablePlugin(const QByteArray &identifier)
 {
     return enablePlugin( identifier, false );
+}
+
+
+void PluginManager::aboutToQuit()
+{
+    unloadPlugins();
+
+    if( d->watcher ) {
+        disconnect( d->watcher, 0, 0, 0 );
+        d->watcher->deleteLater();
+        
+        d->watcher = 0;
+    }
 }
 
 
@@ -289,42 +339,6 @@ void PluginManager::loadPlugin(QPluginLoader *loader)
     }
         
     emit pluginLoaded( plugin->identifier() );
-}
-
-
-bool PluginManager::enablePlugin(const QByteArray &identifier, bool enable)
-{
-    if( !d->loader.contains( identifier ) ) {
-        return false;
-    }
-    
-    Knipptasch::Plugin *p = plugin( identifier );
-    Q_ASSERT( p );
-    
-    const QString key = QString( "Plugins/%1_enabled" ).arg( QString( p->identifier() ) );
-    
-    if( enable ) {
-        if( !p->isEnabled() ) {
-            if( !p->setEnabled() ) {
-                return false;
-            }
-            
-            emit pluginEnabled( p->identifier() );
-        }
-    }
-    else {
-        if( p->isEnabled() ) {
-            if( !p->setDisabled() ) {
-                return false;
-            }
-            
-            emit pluginDisabled( p->identifier() );
-        }
-    }
-    
-    Preferences::self()->setValue( key, enable );
-
-    return true;
 }
 
 
