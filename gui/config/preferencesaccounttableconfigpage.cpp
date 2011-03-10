@@ -26,7 +26,7 @@
 
 
 PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon("table"), parent ),
+  : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon("view-form-table"), parent ),
     ui( new Ui::PreferencesAccountTableConfigPage ),
     m_preferences( pref )
 {
