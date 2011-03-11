@@ -40,7 +40,7 @@ namespace Knipptasch
     class KNIPPTASCH_CORE_EXPORT AccountTabPlugin : public Plugin
     {
         public:
-            virtual AbstractAccountTabWidget* widget() = 0;
+            virtual AbstractAccountTabWidget *widget() = 0;
 
         protected:
             virtual ~AccountTabPlugin();

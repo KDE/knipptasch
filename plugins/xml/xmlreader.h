@@ -48,42 +48,42 @@ class XmlReader
         XmlReader();
         ~XmlReader();
 
-        void read(Account *acc, const QString &filename);
+        void read( Account *acc, const QString &filename );
 
         bool isPasswordProtected() const;
         QByteArray password() const;
-        void setPassword(const QByteArray &password);
+        void setPassword( const QByteArray &password );
 
     private:
-        void readAccount(QXmlStreamReader &stream, Account *acc);
-        void finalizeAccount(Account *acc);
+        void readAccount( QXmlStreamReader &stream, Account *acc );
+        void finalizeAccount( Account *acc );
 
-        void readCategories(QXmlStreamReader &stream, Account *acc);
-        void readCategory(QXmlStreamReader &stream, Category *parent);
+        void readCategories( QXmlStreamReader &stream, Account *acc );
+        void readCategory( QXmlStreamReader &stream, Category *parent );
 
-        bool parseObject(QXmlStreamReader &stream, Object *object);
-        bool parseBasePosting(QXmlStreamReader &stream, BasePosting *posting);
+        bool parseObject( QXmlStreamReader &stream, Object *object );
+        bool parseBasePosting( QXmlStreamReader &stream, BasePosting *posting );
 
-        void readPostings(QXmlStreamReader &stream, Account *acc);
-        void readPosting(QXmlStreamReader &stream, Account *acc);
-        void readSubPosting(QXmlStreamReader &stream, Posting *parent);
+        void readPostings( QXmlStreamReader &stream, Account *acc );
+        void readPosting( QXmlStreamReader &stream, Account *acc );
+        void readSubPosting( QXmlStreamReader &stream, Posting *parent );
 
-        void readFlag(QXmlStreamReader &stream, Object *object);
-        void readAttribute(QXmlStreamReader &stream, Object *object);
+        void readFlag( QXmlStreamReader &stream, Object *object );
+        void readAttribute( QXmlStreamReader &stream, Object *object );
 
-        void readAttachment(QXmlStreamReader &stream, Object *object);
+        void readAttachment( QXmlStreamReader &stream, Object *object );
 
-        QVariant readVariant(QXmlStreamReader &stream);
-        QVariant readHash(QXmlStreamReader &stream);
-        QVariant readMap(QXmlStreamReader &stream);
-        QVariant readList(QXmlStreamReader &stream);
-        QVariant readStringList(QXmlStreamReader &stream);
+        QVariant readVariant( QXmlStreamReader &stream );
+        QVariant readHash( QXmlStreamReader &stream );
+        QVariant readMap( QXmlStreamReader &stream );
+        QVariant readList( QXmlStreamReader &stream );
+        QVariant readStringList( QXmlStreamReader &stream );
 
-        QColor readColor(QXmlStreamReader &stream) const;
+        QColor readColor( QXmlStreamReader &stream ) const;
 
-        QPair<QPair<bool,Money>, QPair<bool, Money> > readLimit(QXmlStreamReader &stream) const;
+        QPair<QPair<bool, Money>, QPair<bool, Money> > readLimit( QXmlStreamReader &stream ) const;
 
-        bool stringToBool(QXmlStreamReader &stream, const QString &str) const;
+        bool stringToBool( QXmlStreamReader &stream, const QString &str ) const;
 
     private:
         bool m_errorOnUnknownElements;

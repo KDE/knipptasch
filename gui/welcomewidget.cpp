@@ -37,9 +37,9 @@
 
 
 
-WelcomeWidget::WelcomeWidget(QWidget *parent)
-  : QFrame( parent ),
-    ui( new Ui::WelcomeWidget )
+WelcomeWidget::WelcomeWidget( QWidget *parent )
+    : QFrame( parent ),
+      ui( new Ui::WelcomeWidget )
 {
     ui->setupUi( this );
 
@@ -49,13 +49,13 @@ WelcomeWidget::WelcomeWidget(QWidget *parent)
     ui->appNameLabel->setText( QCoreApplication::applicationName() );
 #endif
 
-    ui->newButton->setIcon( BarIcon("document-new") );
-    ui->openButton->setIcon( BarIcon("document-open") );
+    ui->newButton->setIcon( BarIcon( "document-new" ) );
+    ui->openButton->setIcon( BarIcon( "document-open" ) );
 
     connect( ui->newButton, SIGNAL( clicked() ), this, SIGNAL( createFileClicked() ) );
     connect( ui->openButton, SIGNAL( clicked() ), this, SIGNAL( openFileClicked() ) );
 
-    connect( ui->list, SIGNAL( itemActivated(QListWidgetItem*) ), this, SLOT( slotRecentFileClicked(QListWidgetItem*) ) );
+    connect( ui->list, SIGNAL( itemActivated( QListWidgetItem * ) ), this, SLOT( slotRecentFileClicked( QListWidgetItem * ) ) );
     slotUpdateList();
 }
 
@@ -66,7 +66,7 @@ WelcomeWidget::~WelcomeWidget()
 }
 
 
-void WelcomeWidget::showEvent(QShowEvent *event)
+void WelcomeWidget::showEvent( QShowEvent *event )
 {
     slotUpdateList();
 
@@ -74,7 +74,7 @@ void WelcomeWidget::showEvent(QShowEvent *event)
 }
 
 
-void WelcomeWidget::paintEvent(QPaintEvent *event)
+void WelcomeWidget::paintEvent( QPaintEvent *event )
 {
     Q_UNUSED( event );
 
@@ -98,7 +98,7 @@ void WelcomeWidget::slotUpdateList()
 {
     ui->list->clear();
 
-    foreach(const QString &str, Knipptasch::Preferences::self()->recentFilesList() ) {
+    foreach( const QString & str, Knipptasch::Preferences::self()->recentFilesList() ) {
         QFileInfo finfo( str );
         QListWidgetItem *item = new QListWidgetItem( ui->list );
         item->setText( QString( "%1 [%2]" ).arg( finfo.fileName() ).arg( str ) );
@@ -107,7 +107,7 @@ void WelcomeWidget::slotUpdateList()
 }
 
 
-void WelcomeWidget::slotRecentFileClicked(QListWidgetItem *item)
+void WelcomeWidget::slotRecentFileClicked( QListWidgetItem *item )
 {
     if( item ) {
         emit openFileClicked( item->data( Qt::EditRole ).toString() );

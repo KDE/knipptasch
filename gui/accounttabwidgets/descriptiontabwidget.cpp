@@ -30,10 +30,10 @@
 
 
 
-DescriptionTabWidget::DescriptionTabWidget(QWidget *parent)
-  : AbstractAccountTabWidget( tr( "Description" ), parent ),
-    m_richttextwidget( new QPlainTextEdit( this ) ),
-    m_mapper( new QDataWidgetMapper( this ) )
+DescriptionTabWidget::DescriptionTabWidget( QWidget *parent )
+    : AbstractAccountTabWidget( tr( "Description" ), parent ),
+      m_richttextwidget( new QPlainTextEdit( this ) ),
+      m_mapper( new QDataWidgetMapper( this ) )
 {
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget( m_richttextwidget );
@@ -48,7 +48,7 @@ DescriptionTabWidget::DescriptionTabWidget(QWidget *parent)
 }
 
 
-void DescriptionTabWidget::accountModelChanged(AccountModel *model)
+void DescriptionTabWidget::accountModelChanged( AccountModel *model )
 {
     m_mapper->setModel( model );
     m_mapper->addMapping( m_richttextwidget, AccountModel::DESCRIPTION );
@@ -58,7 +58,7 @@ void DescriptionTabWidget::accountModelChanged(AccountModel *model)
 }
 
 
-void DescriptionTabWidget::currentSelectedIndexChanged(const QModelIndex &index)
+void DescriptionTabWidget::currentSelectedIndexChanged( const QModelIndex &index )
 {
     m_mapper->submit();
     m_mapper->setCurrentModelIndex( index );
@@ -84,14 +84,13 @@ void DescriptionTabWidget::slotUpdateState()
             }
 
             unsigned char *line;
-            for(int y = 0; y < img.height(); ++y) {
+            for( int y = 0; y < img.height(); ++y ) {
                 if( QSysInfo::ByteOrder == QSysInfo::BigEndian ) {
-                    line = img.scanLine(y);
+                    line = img.scanLine( y );
+                } else {
+                    line = img.scanLine( y ) + 3;
                 }
-                else {
-                    line = img.scanLine(y) + 3;
-                }
-                for(int x = 0; x < img.width(); ++x ) {
+                for( int x = 0; x < img.width(); ++x ) {
                     *line >>= 1;
                     line += 4;
                 }

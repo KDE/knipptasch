@@ -32,52 +32,52 @@ class QUrl;
  */
 class KNIPPTASCH_CORE_EXPORT Attachment : public Object
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        Attachment(QObject *parent = 0);
+        Attachment( QObject *parent = 0 );
         ~Attachment();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
         bool isEmpty() const;
 
         bool isInline() const;
-        void setInline(bool b);
+        void setInline( bool b );
 
         QString title() const;
-        void setTitle(const QString &str);
+        void setTitle( const QString &str );
 
         QString documentType() const;
-        void setDocumentType(const QString &str);
+        void setDocumentType( const QString &str );
 
         QString documentNumber() const;
-        void setDocumentNumber(const QString &str);
+        void setDocumentNumber( const QString &str );
 
         QString description() const;
-        void setDescription(const QString &str);
+        void setDescription( const QString &str );
 
         QUrl url() const;
-        void setUrl(const QUrl &url);
+        void setUrl( const QUrl &url );
 
         QString mimeType() const;
-        void setMimeType(const QString &mime);
+        void setMimeType( const QString &mime );
 
         bool hasData() const;
         QByteArray data() const;
-        void setData(const QByteArray &data);
+        void setData( const QByteArray &data );
         void clearData();
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 
     signals:
         void valueChanged();
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 

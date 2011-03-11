@@ -64,47 +64,47 @@ class Account;
  */
 class KNIPPTASCH_CORE_EXPORT Object : public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         virtual bool isModified() const;
-        virtual void setModified(bool b = true);
+        virtual void setModified( bool b = true );
 
         QByteArray hash() const;
 
         bool hasFlags() const;
         int countFlags() const;
-        bool containsFlag(const QByteArray &flag) const;
+        bool containsFlag( const QByteArray &flag ) const;
         QSet<QByteArray> flags() const;
-        void insertFlag(const QByteArray &flag);
-        void insertFlags(const QSet<QByteArray> &flags);
-        void setFlags(const QSet<QByteArray> &flags);
-        void removeFlag(const QByteArray &flag);
-        void removeFlags(const QSet<QByteArray> &flags);
+        void insertFlag( const QByteArray &flag );
+        void insertFlags( const QSet<QByteArray> &flags );
+        void setFlags( const QSet<QByteArray> &flags );
+        void removeFlag( const QByteArray &flag );
+        void removeFlags( const QSet<QByteArray> &flags );
         void clearFlags();
 
         bool hasAttributes() const;
         int countAttributes() const;
-        bool containsAttribute(const QByteArray &name) const;
+        bool containsAttribute( const QByteArray &name ) const;
         QSet<QByteArray> attributeNames() const;
         QHash<QByteArray, QVariant> attributes() const;
-        QVariant attribute(const QByteArray &name, const QVariant &defaultKey = QVariant()) const;
-        void insertAttribute(const QByteArray &name, const QVariant &value);
-        void setAttributes(const QHash<QByteArray, QVariant> &attributes);
-        void removeAttribute(const QByteArray &name);
+        QVariant attribute( const QByteArray &name, const QVariant &defaultKey = QVariant() ) const;
+        void insertAttribute( const QByteArray &name, const QVariant &value );
+        void setAttributes( const QHash<QByteArray, QVariant> &attributes );
+        void removeAttribute( const QByteArray &name );
         void clearAttributes();
 
         bool hasAttachments() const;
         int countAttachments() const;
-        Attachment* attachment(int index);
-        const Attachment* attachment(int index) const;
-        Attachment* takeAttachment(int index);
-        void insertAttachment(Attachment *attachment);
-        void removeAttachment(int index);
+        Attachment *attachment( int index );
+        const Attachment *attachment( int index ) const;
+        Attachment *takeAttachment( int index );
+        void insertAttachment( Attachment *attachment );
+        void removeAttachment( int index );
         void clearAttachments();
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 
     signals:
         void stateChanged();
@@ -113,14 +113,14 @@ class KNIPPTASCH_CORE_EXPORT Object : public QObject
         void attachmentsChanged();
 
     protected:
-        Object(QObject *parent = 0);
+        Object( QObject *parent = 0 );
         virtual ~Object();
 
     private:
         bool m_modified;
         QSet<QByteArray> m_flags;
         QHash<QByteArray, QVariant> m_attributes;
-        QList<Attachment*> m_attachments;
+        QList<Attachment *> m_attachments;
 };
 
 

@@ -74,13 +74,13 @@
 
 #define APPLICATION_WAIT_CURSOR                                                                    \
     struct _application_wait_cursor {                                                              \
-      _application_wait_cursor() { QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) ); } \
-      ~_application_wait_cursor() { QApplication::restoreOverrideCursor(); }                       \
+        _application_wait_cursor() { QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) ); } \
+        ~_application_wait_cursor() { QApplication::restoreOverrideCursor(); }                       \
     };                                                                                             \
     _application_wait_cursor _my_application_wait_cursor
 
 
-MainWindow::MainWindow(QWidget* parent) :
+MainWindow::MainWindow( QWidget *parent ) :
 #if defined(HAVE_KDE)
     KXmlGuiWindow( parent ),
 #else
@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget* parent) :
 #else
     restoreGeometry( QByteArray::fromBase64( Knipptasch::Preferences::self()->windowGeometry().toAscii() ) );
     restoreState( QByteArray::fromBase64( Knipptasch::Preferences::self()->windowState().toAscii() ) );
-    setWindowIcon( QIcon(":/oxygen/32x32/apps/knipptasch.png") );
+    setWindowIcon( QIcon( ":/oxygen/32x32/apps/knipptasch.png" ) );
 #endif
 
     ui->tabWidget->clear();
@@ -111,36 +111,36 @@ MainWindow::MainWindow(QWidget* parent) :
     onLoadConfig();
 
     Knipptasch::PluginManager *manager = Knipptasch::PluginManager::self();
-    
+
     loadPlugins();
 
-    connect( manager, SIGNAL( pluginLoaded(QByteArray) ), this, SLOT( loadPlugins() ) );
-    connect( manager, SIGNAL( pluginUnloaded(QByteArray) ), this, SLOT( loadPlugins() ) );
-    connect( manager, SIGNAL( pluginDisabled(QByteArray) ), this, SLOT( loadPlugins() ) );
-    connect( manager, SIGNAL( pluginEnabled(QByteArray) ), this, SLOT( loadPlugins() ) );
-    
-    connect( ui->welcomeWidget, SIGNAL( createFileClicked()  ),
+    connect( manager, SIGNAL( pluginLoaded( QByteArray ) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginUnloaded( QByteArray ) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginDisabled( QByteArray ) ), this, SLOT( loadPlugins() ) );
+    connect( manager, SIGNAL( pluginEnabled( QByteArray ) ), this, SLOT( loadPlugins() ) );
+
+    connect( ui->welcomeWidget, SIGNAL( createFileClicked() ),
              this, SLOT( onNewFile() ) );
     connect( ui->welcomeWidget, SIGNAL( openFileClicked() ),
              this, SLOT( onOpenFile() ) );
-    connect( ui->welcomeWidget, SIGNAL( openFileClicked(QString) ),
-             this, SLOT( onOpenFile(QString) ) );
-    connect( m_recentFileMenu, SIGNAL( openFile(QString) ),
-             this, SLOT( onOpenFile(QString) ) );
+    connect( ui->welcomeWidget, SIGNAL( openFileClicked( QString ) ),
+             this, SLOT( onOpenFile( QString ) ) );
+    connect( m_recentFileMenu, SIGNAL( openFile( QString ) ),
+             this, SLOT( onOpenFile( QString ) ) );
 
-    connect( ui->tabWidget, SIGNAL( currentChanged(int) ),
+    connect( ui->tabWidget, SIGNAL( currentChanged( int ) ),
              this, SLOT( checkActionStates() ) );
-    connect( ui->tabWidget, SIGNAL( tabCloseRequested(int) ),
-             this, SLOT( onTabCloseRequest(int) ) );
+    connect( ui->tabWidget, SIGNAL( tabCloseRequested( int ) ),
+             this, SLOT( onTabCloseRequest( int ) ) );
 
-    connect( m_exportPluginActionGroup, SIGNAL( triggered(QAction*) ),
-             this, SLOT( onExportPluginClicked(QAction*) ) );
-    connect( m_importPluginActionGroup, SIGNAL( triggered(QAction*) ),
-             this, SLOT( onImportPluginClicked(QAction*) ) );
+    connect( m_exportPluginActionGroup, SIGNAL( triggered( QAction * ) ),
+             this, SLOT( onExportPluginClicked( QAction * ) ) );
+    connect( m_importPluginActionGroup, SIGNAL( triggered( QAction * ) ),
+             this, SLOT( onImportPluginClicked( QAction * ) ) );
 
 #if defined(HAVE_KDE)
-    connect( ui->tabWidget, SIGNAL( contextMenu(QWidget*,const QPoint&) ),
-             this, SLOT( onTabContextMenuRequest(QWidget*,const QPoint&) ) );
+    connect( ui->tabWidget, SIGNAL( contextMenu( QWidget *, const QPoint & ) ),
+             this, SLOT( onTabContextMenuRequest( QWidget *, const QPoint & ) ) );
 #endif
 
     checkActionStates();
@@ -173,20 +173,20 @@ MainWindow::MainWindow(QWidget* parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    
+
     Knipptasch::PluginManager::self()->aboutToQuit();
 }
 
 
-void MainWindow::openFiles(const QList<QUrl> &urlList)
+void MainWindow::openFiles( const QList<QUrl> &urlList )
 {
-    foreach(const QUrl &url, urlList) {
+    foreach( const QUrl & url, urlList ) {
         onOpenFile( url );
     }
 }
 
 
-void MainWindow::closeEvent(QCloseEvent* event)
+void MainWindow::closeEvent( QCloseEvent *event )
 {
     if( !SaveModifiedDialog::queryClose( this, allAccountWidgets() ) ) {
         event->ignore();
@@ -211,7 +211,7 @@ void MainWindow::setupActions()
     StandardAction::open( this, SLOT( onOpenFile() ), actionCollection() );
     KAction *recentFileAction = actionCollection()->addAction( "file_recent_files" );
     recentFileAction->setText( tr( "Open &Recent" ) );
-    recentFileAction->setIcon( BarIcon("document-open-recent") );
+    recentFileAction->setIcon( BarIcon( "document-open-recent" ) );
     recentFileAction->setMenu( m_recentFileMenu );
 
     StandardAction::save( this, SLOT( onSaveFile() ), actionCollection() );
@@ -231,7 +231,7 @@ void MainWindow::setupActions()
     // Posting Actions
     KAction *postingDeleteAction = actionCollection()->addAction( "posting_delete", this, SLOT( onPostingDelete() ) );
     postingDeleteAction->setText( tr( "&Delete Posting" ) );
-    postingDeleteAction->setIcon( BarIcon("edit-delete") );
+    postingDeleteAction->setIcon( BarIcon( "edit-delete" ) );
 
     KAction *postingCloneAction = actionCollection()->addAction( "posting_clone", this, SLOT( onPostingClone() ) );
     postingCloneAction->setText( tr( "&Clone Posting" ) );
@@ -239,16 +239,16 @@ void MainWindow::setupActions()
 
     KAction *postingValueDateToTodayAction = actionCollection()->addAction( "posting_valuedate_to_today", this, SLOT( onPostingValueDateToToday() ) );
     postingValueDateToTodayAction->setText( tr( "Set Value Date to Today" ) );
-    postingValueDateToTodayAction->setIcon( BarIcon("view-calendar") );
+    postingValueDateToTodayAction->setIcon( BarIcon( "view-calendar" ) );
 
     KAction *postingValueDateToMaturityAction = actionCollection()->addAction( "posting_valuedate_to_maturity", this, SLOT( onPostingValueDateToMaturity() ) );
     postingValueDateToMaturityAction->setText( tr( "Set Value Date to Maturity" ) );
-    postingValueDateToMaturityAction->setIcon( BarIcon("view-calendar") );
+    postingValueDateToMaturityAction->setIcon( BarIcon( "view-calendar" ) );
 
     // Settings Actions
-    KAction* configureAccountAction = actionCollection()->addAction( "configure_account", this, SLOT( onConfigureAccount() ) );
+    KAction *configureAccountAction = actionCollection()->addAction( "configure_account", this, SLOT( onConfigureAccount() ) );
     configureAccountAction->setText( tr( "Configure &Account..." ) );
-    configureAccountAction->setIcon( BarIcon("view-bank-account") );
+    configureAccountAction->setIcon( BarIcon( "view-bank-account" ) );
 
     StandardAction::preferences( this, SLOT( onConfigure() ), actionCollection() );
 
@@ -262,8 +262,8 @@ void MainWindow::setupActions()
     ui->menuFile->addSeparator();
     ui->menuFile->addAction( actionCollection()->action( "file_print" ) );
     ui->menuFile->addSeparator();
-    m_exportMenu = ui->menuFile->addMenu( BarIcon("document-export"), tr( "Export..." ) );
-    m_importMenu = ui->menuFile->addMenu( BarIcon("document-import"), tr( "Import..." ) );
+    m_exportMenu = ui->menuFile->addMenu( BarIcon( "document-export" ), tr( "Export..." ) );
+    m_importMenu = ui->menuFile->addMenu( BarIcon( "document-import" ), tr( "Import..." ) );
     ui->menuFile->addSeparator();
     ui->menuFile->addAction( actionCollection()->action( "file_close" ) );
     ui->menuFile->addSeparator();
@@ -285,7 +285,7 @@ void MainWindow::setupActions()
     ui->menuPosting->addAction( actionCollection()->action( "posting_valuedate_to_today" ) );
     ui->menuPosting->addAction( actionCollection()->action( "posting_valuedate_to_maturity" ) );
 
-    KAction* showStatusbarAction = StandardAction::showStatusbar( this, SLOT( onShowStatusbar() ), actionCollection() );
+    KAction *showStatusbarAction = StandardAction::showStatusbar( this, SLOT( onShowStatusbar() ), actionCollection() );
     showStatusbarAction->setChecked( true );
 
     ui->menuSettings->addAction( actionCollection()->action( "configure_account" ) );
@@ -294,10 +294,10 @@ void MainWindow::setupActions()
     ui->menuSettings->addSeparator();
     ui->menuSettings->addAction( actionCollection()->action( "options_configure" ) );
 
-    KAction* helpAppAction = StandardAction::help( this, SLOT( onHelp() ), actionCollection() );
+    KAction *helpAppAction = StandardAction::help( this, SLOT( onHelp() ), actionCollection() );
     ui->menuHelp->addAction( helpAppAction );
 
-    KAction* aboutAppAction = StandardAction::aboutApp( this, SLOT( onAbout() ), actionCollection() );
+    KAction *aboutAppAction = StandardAction::aboutApp( this, SLOT( onAbout() ), actionCollection() );
     ui->menuHelp->addAction( aboutAppAction );
 
     QToolBar *mainToolBar = new QToolBar( tr( "Main Toolbar" ), this );
@@ -320,7 +320,7 @@ void MainWindow::setupActions()
 }
 
 
-void MainWindow::addAccountWidget(Account *acc, const QString &filename)
+void MainWindow::addAccountWidget( Account *acc, const QString &filename )
 {
     APPLICATION_WAIT_CURSOR;
 
@@ -332,8 +332,8 @@ void MainWindow::addAccountWidget(Account *acc, const QString &filename)
     widget->setFileName( filename );
 
     QString tabname = widget->fileName().isEmpty()
-                            ? tr( "Untitled %1" ).arg( ++counter )
-                            : widget->fileName();
+                      ? tr( "Untitled %1" ).arg( ++counter )
+                      : widget->fileName();
 
     int index = ui->tabWidget->addTab( widget, tabname );
     ui->tabWidget->setCurrentIndex( index );
@@ -347,21 +347,21 @@ void MainWindow::addAccountWidget(Account *acc, const QString &filename)
 }
 
 
-AccountWidget* MainWindow::currentAccountWidget()
+AccountWidget *MainWindow::currentAccountWidget()
 {
     Q_ASSERT( ui->stackedWidget->currentIndex() == 1 );
 
     QWidget *widget = ui->tabWidget->currentWidget();
     Q_ASSERT( widget );
 
-    AccountWidget *accountWidget = qobject_cast<AccountWidget*>( widget );
+    AccountWidget *accountWidget = qobject_cast<AccountWidget *>( widget );
     Q_ASSERT( accountWidget );
 
     return accountWidget;
 }
 
 
-AccountWidget* MainWindow::accountWidget(int index)
+AccountWidget *MainWindow::accountWidget( int index )
 {
     Q_ASSERT( ui->stackedWidget->currentIndex() == 1 );
     Q_ASSERT( index < ui->tabWidget->count() );
@@ -372,26 +372,26 @@ AccountWidget* MainWindow::accountWidget(int index)
     QWidget *widget = ui->tabWidget->widget( index );
     Q_ASSERT( widget );
 
-    AccountWidget *aWidget = qobject_cast<AccountWidget*>( widget );
+    AccountWidget *aWidget = qobject_cast<AccountWidget *>( widget );
     Q_ASSERT( aWidget );
 
     return aWidget;
 }
 
 
-QList<AccountWidget*> MainWindow::allAccountWidgets()
+QList<AccountWidget *> MainWindow::allAccountWidgets()
 {
-    QList<AccountWidget*> list;
+    QList<AccountWidget *> list;
 
     if( ui->stackedWidget->currentIndex() == 0 ) {
         return list;
     }
 
-    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+    for( int i = 0; i < ui->tabWidget->count(); ++i ) {
         QWidget *widget = ui->tabWidget->widget( i );
         Q_ASSERT( widget );
 
-        AccountWidget *accountWidget = qobject_cast<AccountWidget*>( widget );
+        AccountWidget *accountWidget = qobject_cast<AccountWidget *>( widget );
         Q_ASSERT( accountWidget );
 
         list.append( accountWidget );
@@ -405,14 +405,13 @@ void MainWindow::checkActionStates()
 {
     if( ui->tabWidget->count() <= 0 ) {
         ui->stackedWidget->setCurrentIndex( 0 );
-    }
-    else if( ui->stackedWidget->currentIndex() == 0 ) {
+    } else if( ui->stackedWidget->currentIndex() == 0 ) {
         ui->stackedWidget->setCurrentIndex( 1 );
     }
 
     if( ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
         ui->tabWidget->cornerWidget( Qt::TopRightCorner )
-            ->setEnabled( ui->stackedWidget->currentIndex() != 0 );
+        ->setEnabled( ui->stackedWidget->currentIndex() != 0 );
     }
 
     m_exportPluginActionGroup->setEnabled( ui->stackedWidget->currentIndex() != 0 );
@@ -423,10 +422,10 @@ void MainWindow::checkActionStates()
 #endif
 
     if( ui->stackedWidget->currentIndex() == 0 ) {
-        actionCollection()->action("file_save")->setEnabled( false );
-        actionCollection()->action("file_save_as")->setEnabled( false );
-        actionCollection()->action("file_print")->setEnabled( false );
-        actionCollection()->action("file_close")->setEnabled( false );
+        actionCollection()->action( "file_save" )->setEnabled( false );
+        actionCollection()->action( "file_save_as" )->setEnabled( false );
+        actionCollection()->action( "file_print" )->setEnabled( false );
+        actionCollection()->action( "file_close" )->setEnabled( false );
 
         actionCollection()->action( "edit_undo" )->setEnabled( false );
         actionCollection()->action( "edit_redo" )->setEnabled( false );
@@ -447,27 +446,24 @@ void MainWindow::checkActionStates()
 #else
         setWindowTitle( QCoreApplication::applicationName() );
 #endif
-    }
-    else {
-        for(int i = 0; i < ui->tabWidget->count(); ++i) {
+    } else {
+        for( int i = 0; i < ui->tabWidget->count(); ++i ) {
             QWidget *widget = ui->tabWidget->widget( i );
             Q_ASSERT( widget );
 
-            AccountWidget *acw = qobject_cast<AccountWidget*>( widget );
+            AccountWidget *acw = qobject_cast<AccountWidget *>( widget );
             Q_ASSERT( acw );
 
             if( acw->isModified() ) {
-                ui->tabWidget->setTabIcon( i, BarIcon("document-save") );
-            }
-            else {
+                ui->tabWidget->setTabIcon( i, BarIcon( "document-save" ) );
+            } else {
                 ui->tabWidget->setTabIcon( i, KIcon() );
             }
 
             QString filename = acw->fileName();
             if( filename.isEmpty() ) {
                 ui->tabWidget->setTabText( i, tr( "Untitled" ) );
-            }
-            else {
+            } else {
                 QFileInfo finfo( filename );
                 ui->tabWidget->setTabText( i, finfo.fileName() );
             }
@@ -484,8 +480,8 @@ void MainWindow::checkActionStates()
         currentAccountWidget()->checkActionState();
 
         QString caption = !currentAccountWidget()->fileName().isEmpty()
-                                    ? currentAccountWidget()->fileName()
-                                    : tr( "Untitled" );
+                          ? currentAccountWidget()->fileName()
+                          : tr( "Untitled" );
 
         if( currentAccountWidget()->isModified() ) {
             caption.append( QString( " [%1]" ).arg( tr( "modified" ) ) );
@@ -495,15 +491,15 @@ void MainWindow::checkActionStates()
         setCaption( caption );
 #else
         setWindowTitle( QString( "%1 - %2" )
-                            .arg( caption )
-                            .arg( QCoreApplication::applicationName() )
-        );
+                        .arg( caption )
+                        .arg( QCoreApplication::applicationName() )
+                      );
 #endif
     }
 }
 
 
-void MainWindow::onTabCloseRequest(int index)
+void MainWindow::onTabCloseRequest( int index )
 {
     int i = index >= 0 ? index : ui->tabWidget->currentIndex();
 
@@ -519,8 +515,8 @@ void MainWindow::onTabCloseRequest(int index)
 
 void MainWindow::onLoadConfig()
 {
-    QList<AccountWidget*> list = allAccountWidgets();
-    foreach(AccountWidget *widget, list ) {
+    QList<AccountWidget *> list = allAccountWidgets();
+    foreach( AccountWidget * widget, list ) {
         widget->loadConfig();
     }
 
@@ -532,25 +528,23 @@ void MainWindow::onLoadConfig()
         if( !ui->tabWidget->cornerWidget( Qt::TopRightCorner ) ) {
             QToolButton *button = new QToolButton( ui->tabWidget );
             button->setToolTip( tr( "Close the current tab" ) );
-            button->setIcon( BarIcon("tab-close") );
+            button->setIcon( BarIcon( "tab-close" ) );
             button->setAutoRaise( true );
             button->setEnabled( ui->stackedWidget->currentIndex() != 0 );
 
-            connect( button, SIGNAL( clicked(bool) ), this, SLOT( onCloseFile() ) );
+            connect( button, SIGNAL( clicked( bool ) ), this, SLOT( onCloseFile() ) );
 
             ui->tabWidget->setCornerWidget( button, Qt::TopRightCorner );
-        }
-        else {
+        } else {
             ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( true );
         }
-    }
-    else {
+    } else {
         ui->tabWidget->cornerWidget( Qt::TopRightCorner )->setVisible( false );
     }
 
 #if !defined(HAVE_KDE)
     actionCollection()->action( "options_show_statusbar" )
-                      ->setChecked( Knipptasch::Preferences::self()->showStatusBar() );
+    ->setChecked( Knipptasch::Preferences::self()->showStatusBar() );
     onShowStatusbar();
 #endif
 }
@@ -564,7 +558,7 @@ void MainWindow::onNewFile()
 }
 
 
-void MainWindow::onOpenFile(const QString &str)
+void MainWindow::onOpenFile( const QString &str )
 {
     QString filename = str.trimmed();
     if( filename.isEmpty() ) {
@@ -585,8 +579,7 @@ void MainWindow::onOpenFile(const QString &str)
             m_recentFileMenu->addFile( filename );
             addAccountWidget( acc, filename );
             statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
-        }
-        catch(StoragePasswordException ex) {
+        } catch( StoragePasswordException ex ) {
             /// ask user for the password
             QScopedPointer<PasswordDialog> dialog( new PasswordDialog( filename, this ) );
 
@@ -601,8 +594,7 @@ void MainWindow::onOpenFile(const QString &str)
             addAccountWidget( acc, filename );
             statusBar()->showMessage( tr( "File '%1' loaded" ).arg( filename ) , 2000 );
         }
-    }
-    catch(StorageException ex) {
+    } catch( StorageException ex ) {
         delete acc;
 
 #if defined(HAVE_KDE)
@@ -610,9 +602,9 @@ void MainWindow::onOpenFile(const QString &str)
 #else
         QMessageBox::warning( this, // krazy:exclude=qclasses
                               QObject::tr( "Error - %1" )
-                                .arg( QCoreApplication::applicationName() ),
+                              .arg( QCoreApplication::applicationName() ),
                               ex.errorMessage()
-        );
+                            );
 #endif
     }
 
@@ -620,7 +612,7 @@ void MainWindow::onOpenFile(const QString &str)
 }
 
 
-void MainWindow::onOpenFile(const QUrl &url)
+void MainWindow::onOpenFile( const QUrl &url )
 {
     QString filename;
 
@@ -641,8 +633,7 @@ void MainWindow::onOpenFile(const QUrl &url)
 #if defined(HAVE_KDE)
                 KIO::NetAccess::removeTempFile( filename );
 #endif
-            }
-            catch(StoragePasswordException ex) {
+            } catch( StoragePasswordException ex ) {
                 /// ask user for the password
                 QScopedPointer<PasswordDialog> dialog( new PasswordDialog( filename, this ) );
 
@@ -662,18 +653,17 @@ void MainWindow::onOpenFile(const QUrl &url)
                 KIO::NetAccess::removeTempFile( filename );
 #endif
             }
-        }
-        catch(StorageException ex) {
+        } catch( StorageException ex ) {
             delete acc;
 
 #if defined(HAVE_KDE)
             KMessageBox::error( this, ex.errorMessage() );
 #else
             QMessageBox::warning( this, // krazy:exclude=qclasses
-                                QObject::tr( "Error - %1" )
-                                    .arg( QCoreApplication::applicationName() ),
-                                ex.errorMessage()
-            );
+                                  QObject::tr( "Error - %1" )
+                                  .arg( QCoreApplication::applicationName() ),
+                                  ex.errorMessage()
+                                );
 #endif
         }
     }
@@ -836,7 +826,7 @@ void MainWindow::onShowStatusbar()
 }
 
 
-void MainWindow::onExportPluginClicked(QAction *action)
+void MainWindow::onExportPluginClicked( QAction *action )
 {
     Q_ASSERT( action );
 
@@ -852,7 +842,7 @@ void MainWindow::onExportPluginClicked(QAction *action)
 }
 
 
-void MainWindow::onImportPluginClicked(QAction *action)
+void MainWindow::onImportPluginClicked( QAction *action )
 {
     Q_ASSERT( action );
 
@@ -866,14 +856,14 @@ void MainWindow::onImportPluginClicked(QAction *action)
     if( account ) {
         addAccountWidget( account );
         statusBar()->showMessage(
-                    tr( "Account with %1 postings successfully imported." )
-                                        .arg( account->countPostings() ), 2000
+            tr( "Account with %1 postings successfully imported." )
+            .arg( account->countPostings() ), 2000
         );
     }
 }
 
 
-void MainWindow::onTabContextMenuRequest(QWidget *widget, const QPoint &point)
+void MainWindow::onTabContextMenuRequest( QWidget *widget, const QPoint &point )
 {
     int index = ui->tabWidget->indexOf( widget );
 
@@ -894,7 +884,7 @@ void MainWindow::onAbout()
 {
     QDialog *dialog = 0; // krazy:exclude=qclasses
 
-    if( !( dialog = findChild<AboutDialog*>() ) ) {
+    if( !( dialog = findChild<AboutDialog *>() ) ) {
         dialog = new AboutDialog( this );
     }
 
@@ -919,36 +909,36 @@ void MainWindow::onHelp()
 void MainWindow::loadPlugins()
 {
     unloadPlugins();
-    
+
     QSet<QByteArray> plugins = Knipptasch::PluginManager::self()->enabledPluginIdentifiers();
 
-    QList<QAction*> importActions;
-    QList<QAction*> exportActions;
-    
-    foreach(const QByteArray &pluginName, plugins) {
+    QList<QAction *> importActions;
+    QList<QAction *> exportActions;
+
+    foreach( const QByteArray & pluginName, plugins ) {
         Q_ASSERT( Knipptasch::PluginManager::self()->containsPlugin( pluginName ) );
-        Knipptasch::Plugin* plugin = Knipptasch::PluginManager::self()->plugin( pluginName );
+        Knipptasch::Plugin *plugin = Knipptasch::PluginManager::self()->plugin( pluginName );
         Q_ASSERT( plugin );
         Q_ASSERT( plugin->isEnabled() );
 
-        Knipptasch::ImportPlugin *importPlugin = dynamic_cast<Knipptasch::ImportPlugin*>( plugin );
+        Knipptasch::ImportPlugin *importPlugin = dynamic_cast<Knipptasch::ImportPlugin *>( plugin );
         if( importPlugin ) {
             m_importPlugins.append( importPlugin );
-            
+
             KAction *action = new KAction( KIcon( importPlugin->importActionIcon() ), importPlugin->importActionName(), this );
             action->setData( m_importPlugins.size() - 1 );
-            
+
             importActions.append( action );
             m_importPluginActionGroup->addAction( action );
         }
-        
-        Knipptasch::ExportPlugin *exportPlugin = dynamic_cast<Knipptasch::ExportPlugin*>( plugin );        
+
+        Knipptasch::ExportPlugin *exportPlugin = dynamic_cast<Knipptasch::ExportPlugin *>( plugin );
         if( exportPlugin ) {
             m_exportPlugins.append( exportPlugin );
-            
+
             KAction *action = new KAction( KIcon( exportPlugin->exportActionIcon() ), exportPlugin->exportActionName(), this );
             action->setData( m_exportPlugins.size() - 1 );
-            
+
             exportActions.append( action );
             m_exportPluginActionGroup->addAction( action );
         }
@@ -971,7 +961,7 @@ void MainWindow::unloadPlugins()
 
     qDeleteAll( m_importPlugins.begin(), m_importPlugins.end() );
     m_importPlugins.clear();
-    
+
 #if defined(HAVE_KDE)
     unplugActionList( "file_import_actionlist" );
     unplugActionList( "file_export_actionlist" );

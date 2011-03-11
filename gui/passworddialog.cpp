@@ -23,9 +23,9 @@
 #include <QPushButton>
 
 
-PasswordDialog::PasswordDialog(const QString &filename, QWidget *parent)
-  : QDialog( parent ),
-    ui( new Ui::PasswordDialog )
+PasswordDialog::PasswordDialog( const QString &filename, QWidget *parent )
+    : QDialog( parent ),
+      ui( new Ui::PasswordDialog )
 {
     ui->setupUi( this );
 
@@ -36,9 +36,9 @@ PasswordDialog::PasswordDialog(const QString &filename, QWidget *parent)
     }
 
     setWindowTitle( tr( "Password - %1" ).arg( QCoreApplication::applicationName() ) );
-    ui->iconLabel->setPixmap( DesktopIcon("dialog-password") );
+    ui->iconLabel->setPixmap( DesktopIcon( "dialog-password" ) );
 
-    connect( ui->password, SIGNAL( textChanged(QString) ), this, SLOT( checkState() ) );
+    connect( ui->password, SIGNAL( textChanged( QString ) ), this, SLOT( checkState() ) );
 
     checkState();
 }
@@ -52,7 +52,7 @@ QByteArray PasswordDialog::password() const
 void PasswordDialog::checkState()
 {
     ui->buttonBox->button( QDialogButtonBox::Ok )
-                                ->setEnabled( !ui->password->text().isEmpty() );
+    ->setEnabled( !ui->password->text().isEmpty() );
 }
 
 

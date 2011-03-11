@@ -28,15 +28,15 @@
  */
 class CsvImportPlugin : public QObject, public Knipptasch::ImportPlugin
 {
-    Q_OBJECT
-    Q_INTERFACES( Knipptasch::Plugin )
-    Q_INTERFACES( Knipptasch::ImportPlugin )
-    
+        Q_OBJECT
+        Q_INTERFACES( Knipptasch::Plugin )
+        Q_INTERFACES( Knipptasch::ImportPlugin )
+
     public:
-        CsvImportPlugin(QObject *parent = 0);
+        CsvImportPlugin( QObject *parent = 0 );
 
         bool isEnabledByDefault() const;
-            
+
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
@@ -44,11 +44,11 @@ class CsvImportPlugin : public QObject, public Knipptasch::ImportPlugin
         QString description() const;
         QString author() const;
         QByteArray version() const;
-        
+
         QString importActionName() const;
         QPixmap importActionIcon() const;
 
-        Account* importAccount(QWidget *parent = 0) const;
+        Account *importAccount( QWidget *parent = 0 ) const;
 };
 
 

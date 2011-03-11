@@ -29,19 +29,19 @@
 #endif
 
 
-AccountPasswordConfigPage::AccountPasswordConfigPage(Account *account, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Password" ), tr( "Password Options" ), DesktopIcon("preferences-desktop-cryptography"), parent ),
-    ui( new Ui::AccountPasswordConfigPage ),
-    m_account( account )
+AccountPasswordConfigPage::AccountPasswordConfigPage( Account *account, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "Password" ), tr( "Password Options" ), DesktopIcon( "preferences-desktop-cryptography" ), parent ),
+      ui( new Ui::AccountPasswordConfigPage ),
+      m_account( account )
 {
     ui->setupUi( this );
 
-    ui->iconLabel->setPixmap( DesktopIcon("dialog-password") );
-    ui->messageIcon->setPixmap( DesktopIcon("dialog-warning") );
+    ui->iconLabel->setPixmap( DesktopIcon( "dialog-password" ) );
+    ui->messageIcon->setPixmap( DesktopIcon( "dialog-warning" ) );
 
-    connect( ui->usePassword, SIGNAL( toggled(bool) ), this, SLOT( onValueChanged() ) );
-    connect( ui->pw1, SIGNAL( textChanged(QString) ), this, SLOT( onValueChanged() ) );
-    connect( ui->pw2, SIGNAL( textChanged(QString) ), this, SLOT( onValueChanged() ) );
+    connect( ui->usePassword, SIGNAL( toggled( bool ) ), this, SLOT( onValueChanged() ) );
+    connect( ui->pw1, SIGNAL( textChanged( QString ) ), this, SLOT( onValueChanged() ) );
+    connect( ui->pw2, SIGNAL( textChanged( QString ) ), this, SLOT( onValueChanged() ) );
 
 #if defined( WITH_QCA2 )
     ui->usePassword->setEnabled( QCA::isSupported( "aes256-cbc-pkcs7" ) );
@@ -126,8 +126,7 @@ void AccountPasswordConfigPage::onValueChanged()
         if( ui->pw1->text().isEmpty() ) {
             ui->messageLabel->setText( tr( "The required field Password is empty!" ) );
             ui->messageWidget->setVisible( true );
-        }
-        else if( ui->pw2->text().isEmpty() || ui->pw1->text() != ui->pw2->text() ) {
+        } else if( ui->pw2->text().isEmpty() || ui->pw1->text() != ui->pw2->text() ) {
             ui->messageLabel->setText( tr( "The passwords you entered do not match." ) );
             ui->messageWidget->setVisible( true );
         }

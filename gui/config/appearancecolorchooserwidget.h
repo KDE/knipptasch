@@ -36,14 +36,14 @@ class QColor;
  */
 class AppearanceColorChooserWidget : public QWidget
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AppearanceColorChooserWidget)
+        Q_OBJECT
+        Q_DISABLE_COPY( AppearanceColorChooserWidget )
 
     public:
         /**
          * Constructs a new AppearanceColorChooserWidget
          */
-        explicit AppearanceColorChooserWidget(QWidget *parent = 0);
+        explicit AppearanceColorChooserWidget( QWidget *parent = 0 );
 
         /**
          * Destructs the config page.
@@ -60,11 +60,11 @@ class AppearanceColorChooserWidget : public QWidget
         QSize sizeHint() const;
 
     public slots:
-        void setColor(const QColor &color);
-        void setEditable(bool b);
+        void setColor( const QColor &color );
+        void setEditable( bool b );
 
     signals:
-        void colorChanged(const QColor &color);
+        void colorChanged( const QColor &color );
 
     private slots:
         void onColorButtonValueChanged();

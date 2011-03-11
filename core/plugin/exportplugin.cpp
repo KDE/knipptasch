@@ -19,7 +19,7 @@
 
 namespace Knipptasch
 {
-    
+
     ExportPlugin::~ExportPlugin()
     {
     }
@@ -29,7 +29,7 @@ namespace Knipptasch
     {
         return QString();
     }
-    
+
 
 } //EndNamespace Knipptasch
 

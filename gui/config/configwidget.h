@@ -44,19 +44,19 @@ namespace Ui
  */
 class ConfigWidget : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
-    Q_DISABLE_COPY( ConfigWidget )
+        Q_DISABLE_COPY( ConfigWidget )
 
-    Q_PROPERTY(int countPages READ countPages)
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex)
-    Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+        Q_PROPERTY( int countPages READ countPages )
+        Q_PROPERTY( int currentIndex READ currentIndex WRITE setCurrentIndex )
+        Q_PROPERTY( QSize iconSize READ iconSize WRITE setIconSize )
 
     public:
         /**
          * Constructs a new ConfigWidget
          */
-        explicit ConfigWidget(QWidget* parent = 0);
+        explicit ConfigWidget( QWidget *parent = 0 );
 
 
         /**
@@ -87,7 +87,7 @@ class ConfigWidget : public QWidget
         /**
          *
          */
-        void setIconSize(const QSize& size);
+        void setIconSize( const QSize &size );
 
 
         /**
@@ -98,7 +98,7 @@ class ConfigWidget : public QWidget
          * @see insertPage()
          * @see takePage()
          */
-        int addPage(AbstractConfigPage *page);
+        int addPage( AbstractConfigPage *page );
 
 
         /**
@@ -109,7 +109,7 @@ class ConfigWidget : public QWidget
          * @see addPage()
          * @see takePage()
          */
-        int insertPage(int index, AbstractConfigPage *page);
+        int insertPage( int index, AbstractConfigPage *page );
 
 
         /**
@@ -122,7 +122,7 @@ class ConfigWidget : public QWidget
          *
          * @note Does not delete the page widget.
          */
-        AbstractConfigPage* takePage(int index);
+        AbstractConfigPage *takePage( int index );
 
 
         /**
@@ -156,7 +156,7 @@ class ConfigWidget : public QWidget
          *
          * @return the current page
          */
-        AbstractConfigPage* currentPage() const;
+        AbstractConfigPage *currentPage() const;
 
 
         /**
@@ -164,7 +164,7 @@ class ConfigWidget : public QWidget
          *
          * @return the index of the @param page
          */
-        int indexOf(AbstractConfigPage *page) const;
+        int indexOf( AbstractConfigPage *page ) const;
 
 
         /**
@@ -172,13 +172,13 @@ class ConfigWidget : public QWidget
          *
          * @return the page at  @param index
          */
-        AbstractConfigPage* page(int index) const;
+        AbstractConfigPage *page( int index ) const;
 
     public slots:
         /**
          *
          */
-        void setCurrentIndex(int index);
+        void setCurrentIndex( int index );
 
 
         /**
@@ -187,7 +187,7 @@ class ConfigWidget : public QWidget
         * @see currentPage()
         * @see currentIndex()
         */
-        void setCurrentPage(AbstractConfigPage *page);
+        void setCurrentPage( AbstractConfigPage *page );
 
 
         /**
@@ -206,13 +206,13 @@ class ConfigWidget : public QWidget
         /**
          *
          */
-        void currentIndexChanged(int index);
+        void currentIndexChanged( int index );
 
 
         /**
          * A page in the widget was modified.
          */
-        void pageModified(AbstractConfigPage *page);
+        void pageModified( AbstractConfigPage *page );
 
 
         /**
@@ -232,7 +232,7 @@ class ConfigWidget : public QWidget
          *
          * @see splitter() stackedWidget()
          */
-        QListWidget* listWidget() const;
+        QListWidget *listWidget() const;
 
 
         /**
@@ -241,7 +241,7 @@ class ConfigWidget : public QWidget
          * @see splitter()
          * @see tableWidget()
          */
-        QStackedWidget* stackedWidget() const;
+        QStackedWidget *stackedWidget() const;
 
     private slots:
         /**

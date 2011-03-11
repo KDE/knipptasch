@@ -37,20 +37,18 @@
 class ListWidgetDelegate : public QStyledItemDelegate
 {
     public:
-        ListWidgetDelegate(ConfigWidget *parent)
-          : QStyledItemDelegate( parent ),
-            m_configWidget( parent )
-        {
+        ListWidgetDelegate( ConfigWidget *parent )
+            : QStyledItemDelegate( parent ),
+              m_configWidget( parent ) {
         }
 
 
-        void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
+        void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const {
             if( !index.isValid() || !index.internalPointer() ) {
                 return;
             }
 
-            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4*>( &option ) );
+            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4 *>( &option ) );
             opt.decorationPosition = QStyleOptionViewItem::Top;
             opt.decorationSize = m_configWidget->iconSize();
             opt.textElideMode = Qt::ElideNone;
@@ -59,13 +57,12 @@ class ListWidgetDelegate : public QStyledItemDelegate
         }
 
 
-        QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
+        QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const {
             if( !index.isValid() || !index.internalPointer() ) {
                 return QSize();
             }
 
-            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4*>( &option ) );
+            QStyleOptionViewItemV4 opt( *static_cast<const QStyleOptionViewItemV4 *>( &option ) );
             opt.decorationPosition = QStyleOptionViewItem::Top;
             opt.decorationSize = m_configWidget->iconSize();
             opt.textElideMode = Qt::ElideNone;
@@ -79,9 +76,9 @@ class ListWidgetDelegate : public QStyledItemDelegate
 
 
 
-ConfigWidget::ConfigWidget(QWidget* parent)
-  : QWidget( parent ),
-    ui( new Ui::ConfigWidget )
+ConfigWidget::ConfigWidget( QWidget *parent )
+    : QWidget( parent ),
+      ui( new Ui::ConfigWidget )
 {
     ui->setupUi( this );
 
@@ -97,8 +94,8 @@ ConfigWidget::ConfigWidget(QWidget* parent)
     ui->errorWidget->setVisible( false );
 
 
-    connect( ui->view, SIGNAL( currentRowChanged(int) ), this, SLOT( setCurrentIndex(int) ) );
-    connect( ui->stackedWidget, SIGNAL( currentChanged(int) ), this, SIGNAL( currentIndexChanged(int) ) );
+    connect( ui->view, SIGNAL( currentRowChanged( int ) ), this, SLOT( setCurrentIndex( int ) ) );
+    connect( ui->stackedWidget, SIGNAL( currentChanged( int ) ), this, SIGNAL( currentIndexChanged( int ) ) );
 }
 
 
@@ -109,7 +106,7 @@ ConfigWidget::~ConfigWidget()
 
 bool ConfigWidget::isModified() const
 {
-    for(int i = 0; i < countPages(); ++i) {
+    for( int i = 0; i < countPages(); ++i ) {
         if( page( i )->isModified() ) {
             return true;
         }
@@ -121,7 +118,7 @@ bool ConfigWidget::isModified() const
 
 bool ConfigWidget::isValid() const
 {
-    for(int i = 0; i < countPages(); ++i) {
+    for( int i = 0; i < countPages(); ++i ) {
         if( !page( i )->isValid() ) {
             return false;
         }
@@ -137,19 +134,19 @@ QSize ConfigWidget::iconSize() const
 }
 
 
-void ConfigWidget::setIconSize(const QSize& size)
+void ConfigWidget::setIconSize( const QSize &size )
 {
     ui->view->setIconSize( size );
 }
 
 
-int ConfigWidget::addPage(AbstractConfigPage *page)
+int ConfigWidget::addPage( AbstractConfigPage *page )
 {
     return insertPage( -1, page );
 }
 
 
-int ConfigWidget::insertPage(int index, AbstractConfigPage *page)
+int ConfigWidget::insertPage( int index, AbstractConfigPage *page )
 {
     if( !page ) {
         qWarning() << "ConfigWidget::insertPage(): Attempt to insert null page";
@@ -178,12 +175,12 @@ int ConfigWidget::insertPage(int index, AbstractConfigPage *page)
 }
 
 
-AbstractConfigPage* ConfigWidget::takePage(int index)
+AbstractConfigPage *ConfigWidget::takePage( int index )
 {
     QWidget *p = ui->stackedWidget->widget( index );
 
     if( p ) {
-        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( p );
+        AbstractConfigPage *page = qobject_cast<AbstractConfigPage *>( p );
         Q_ASSERT( page );
 
         disconnect( page, 0, this, 0 );
@@ -213,25 +210,25 @@ int ConfigWidget::currentIndex() const
 }
 
 
-AbstractConfigPage* ConfigWidget::currentPage() const
+AbstractConfigPage *ConfigWidget::currentPage() const
 {
-    return qobject_cast<AbstractConfigPage*>( ui->stackedWidget->currentWidget() );
+    return qobject_cast<AbstractConfigPage *>( ui->stackedWidget->currentWidget() );
 }
 
 
-int ConfigWidget::indexOf(AbstractConfigPage* page) const
+int ConfigWidget::indexOf( AbstractConfigPage *page ) const
 {
     return ui->stackedWidget->indexOf( page );
 }
 
 
-AbstractConfigPage* ConfigWidget::page(int index) const
+AbstractConfigPage *ConfigWidget::page( int index ) const
 {
-    return qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( index ) );
+    return qobject_cast<AbstractConfigPage *>( ui->stackedWidget->widget( index ) );
 }
 
 
-void ConfigWidget::setCurrentIndex(int index)
+void ConfigWidget::setCurrentIndex( int index )
 {
     AbstractConfigPage *p = page( index );
 
@@ -247,7 +244,7 @@ void ConfigWidget::setCurrentIndex(int index)
 }
 
 
-void ConfigWidget::setCurrentPage(AbstractConfigPage *page)
+void ConfigWidget::setCurrentPage( AbstractConfigPage *page )
 {
     setCurrentIndex( ui->stackedWidget->indexOf( page ) );
 }
@@ -258,9 +255,9 @@ bool ConfigWidget::commit()
     bool b = false;
 
     Q_ASSERT( ui->stackedWidget );
-    for(int i = 0; i < ui->stackedWidget->count(); ++i) {
+    for( int i = 0; i < ui->stackedWidget->count(); ++i ) {
         Q_ASSERT( ui->stackedWidget->widget( i ) );
-        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( i ) );
+        AbstractConfigPage *page = qobject_cast<AbstractConfigPage *>( ui->stackedWidget->widget( i ) );
         Q_ASSERT( page );
 
         b = page->commit() || b;
@@ -275,9 +272,9 @@ bool ConfigWidget::commit()
 void ConfigWidget::revert()
 {
     Q_ASSERT( ui->stackedWidget );
-    for(int i = 0; i < ui->stackedWidget->count(); ++i) {
+    for( int i = 0; i < ui->stackedWidget->count(); ++i ) {
         Q_ASSERT( ui->stackedWidget->widget( i ) );
-        AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( ui->stackedWidget->widget( i ) );
+        AbstractConfigPage *page = qobject_cast<AbstractConfigPage *>( ui->stackedWidget->widget( i ) );
         Q_ASSERT( page );
 
         page->revert();
@@ -287,13 +284,13 @@ void ConfigWidget::revert()
 }
 
 
-QListWidget* ConfigWidget::listWidget() const
+QListWidget *ConfigWidget::listWidget() const
 {
     return ui->view;
 }
 
 
-QStackedWidget* ConfigWidget::stackedWidget() const
+QStackedWidget *ConfigWidget::stackedWidget() const
 {
     return ui->stackedWidget;
 }
@@ -301,7 +298,7 @@ QStackedWidget* ConfigWidget::stackedWidget() const
 
 void ConfigWidget::onPageModified()
 {
-    AbstractConfigPage *page = qobject_cast<AbstractConfigPage*>( sender() );
+    AbstractConfigPage *page = qobject_cast<AbstractConfigPage *>( sender() );
     Q_ASSERT( page );
 
     emit pageModified( page );
@@ -316,15 +313,15 @@ void ConfigWidget::onErrorMessageChanged()
     ui->errorText->setText( p->errorMessageDescription() );
     switch( p->errorMessageType() ) {
         case AbstractConfigPage::InfoMessage:
-            ui->errorIcon->setPixmap( DesktopIcon("dialog-information") );
+            ui->errorIcon->setPixmap( DesktopIcon( "dialog-information" ) );
             break;
 
         case AbstractConfigPage::WarningMessage:
-            ui->errorIcon->setPixmap( DesktopIcon("dialog-warning") );
+            ui->errorIcon->setPixmap( DesktopIcon( "dialog-warning" ) );
             break;
 
         case AbstractConfigPage::ErrorMessage:
-            ui->errorIcon->setPixmap( DesktopIcon("dialog-error") );
+            ui->errorIcon->setPixmap( DesktopIcon( "dialog-error" ) );
             break;
     }
 

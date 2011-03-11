@@ -70,8 +70,8 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public KComboBox
 class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
 #endif
 {
-    Q_OBJECT
-    Q_PROPERTY(QDate date READ date WRITE setDate USER true)
+        Q_OBJECT
+        Q_PROPERTY( QDate date READ date WRITE setDate USER true )
 
     public:
         /**
@@ -79,7 +79,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * @param parent The parent widget.
          */
-        explicit DateEdit(QWidget *parent = 0);
+        explicit DateEdit( QWidget *parent = 0 );
 
         /**
          * Creates a new date edit.
@@ -87,7 +87,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          * @param dateFormat own date format string
          * @param parent The parent widget.
          */
-        explicit DateEdit(const QString &dateFormat, QWidget *parent = 0);
+        explicit DateEdit( const QString &dateFormat, QWidget *parent = 0 );
 
         /**
          * Destroys the date edit.
@@ -111,7 +111,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * @see setDateRange()
          */
-        void setMinimumDate(const QDate &date, const QString &errorMsg = QString());
+        void setMinimumDate( const QDate &date, const QString &errorMsg = QString() );
 
         /**
          * Returns the earliest date which can be entered.
@@ -129,7 +129,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * @see setDateRange()
          */
-        void setMaximumDate(const QDate& date, const QString& errorMsg = QString());
+        void setMaximumDate( const QDate &date, const QString &errorMsg = QString() );
 
         /**
          * Returns the latest date which can be entered.
@@ -151,9 +151,9 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * @see setMinimumDate(), setMaximumDate()
          */
-        void setDateRange(const QDate &earliest, const QDate &latest,
-                            const QString &earlyErrorMsg = QString(),
-                            const QString &lateErrorMsg = QString());
+        void setDateRange( const QDate &earliest, const QDate &latest,
+                           const QString &earlyErrorMsg = QString(),
+                           const QString &lateErrorMsg = QString() );
 
         /**
          * Sets whether the widget is read-only for the user. If read-only, the
@@ -161,7 +161,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * @param readOnly True to set the widget read-only, false to set it read-write.
          */
-        void setReadOnly(bool readOnly);
+        void setReadOnly( bool readOnly );
 
         /**
          * Returns whether the widget is read-only.
@@ -180,7 +180,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          * the signal is not emitted until focus leaves the line edit field.
          * The passed date can be invalid.
          */
-        void dateEntered(const QDate &date);
+        void dateEntered( const QDate &date );
 
         /**
          * This signal is emitted whenever date is changed.
@@ -189,7 +189,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * The passed date can be invalid.
          */
-        void dateChanged(const QDate &date);
+        void dateChanged( const QDate &date );
 
         /**
          * This signal is emitted whenever the date is edited by the user.
@@ -198,7 +198,7 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          *
          * The passed date can be invalid.
          */
-        void dateEdited(const QDate &date);
+        void dateEdited( const QDate &date );
 
     public Q_SLOTS:
         /**
@@ -207,13 +207,13 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          * @param date The new date to display. This date must be valid or
          *             it will not be set
          */
-        void setDate(const QDate &date);
+        void setDate( const QDate &date );
 
     protected:
-        virtual bool eventFilter(QObject *obj, QEvent *ev);
-        virtual void mousePressEvent(QMouseEvent *ev);
-        virtual void focusOutEvent(QFocusEvent *ev);
-        virtual void keyPressEvent(QKeyEvent *ev);
+        virtual bool eventFilter( QObject *obj, QEvent *ev );
+        virtual void mousePressEvent( QMouseEvent *ev );
+        virtual void focusOutEvent( QFocusEvent *ev );
+        virtual void keyPressEvent( QKeyEvent *ev );
 
         /**
          * Sets the date, without altering the display.
@@ -226,17 +226,17 @@ class KNIPPTASCH_CORE_EXPORT DateEdit : public QComboBox
          * @return True if the date was set, false if it was considered invalid
          *         and remains unchanged.
          */
-        virtual bool assignDate(const QDate &date);
+        virtual bool assignDate( const QDate &date );
 
     private slots:
         void lineEnterPressed();
-        void slotTextChanged(const QString &str);
-        void dateSelected(const QDate &dt);
+        void slotTextChanged( const QString &str );
+        void dateSelected( const QDate &dt );
 
     private:
         //@cond PRIVATE
         class Private;
-        Private* const d;
+        Private *const d;
         //@endcond
 };
 

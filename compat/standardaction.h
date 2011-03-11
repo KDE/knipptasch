@@ -24,27 +24,27 @@
 
 namespace StandardAction
 {
-    KAction* open(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* openNew(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* save(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* saveAs(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* print(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* close(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* quit(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* selectAll(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* preferences(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* showStatusbar(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* aboutApp(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* help(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* undo(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* redo(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* cut(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* copy(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* paste(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* find(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* findNext(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* findPrev(const QObject* recvr, const char* slot, QObject* parent);
-    KAction* showMenubar(const QObject* recvr, const char* slot, QObject* parent);
+    KAction *open( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *openNew( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *save( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *saveAs( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *print( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *close( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *quit( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *selectAll( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *preferences( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *showStatusbar( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *aboutApp( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *help( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *undo( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *redo( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *cut( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *copy( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *paste( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *find( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *findNext( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *findPrev( const QObject *recvr, const char *slot, QObject *parent );
+    KAction *showMenubar( const QObject *recvr, const char *slot, QObject *parent );
 }
 
 #endif

@@ -36,8 +36,8 @@ class RecentFileMenu;
 class Account;
 
 
-namespace Knipptasch 
-{        
+namespace Knipptasch
+{
     class Preferences;
     class ImportPlugin;
     class ExportPlugin;
@@ -63,45 +63,51 @@ class MainWindow :
     public QMainWindow
 #endif
 {
-    Q_OBJECT
-    Q_DISABLE_COPY( MainWindow )
+        Q_OBJECT
+        Q_DISABLE_COPY( MainWindow )
 
     public:
-        explicit MainWindow(QWidget* parent = 0);
+        explicit MainWindow( QWidget *parent = 0 );
         ~MainWindow();
-        
+
 #if defined(HAVE_KDE)
-        KActionCollection* mainWindowActionCollection() { return actionCollection(); }
+        KActionCollection *mainWindowActionCollection() {
+            return actionCollection();
+        }
 #else
-        ActionCollection* mainWindowActionCollection() { return actionCollection(); }
+        ActionCollection *mainWindowActionCollection() {
+            return actionCollection();
+        }
 #endif
 
-        void openFiles(const QList<QUrl> &urlList);
+        void openFiles( const QList<QUrl> &urlList );
 
     protected:
-        void closeEvent(QCloseEvent* event);
+        void closeEvent( QCloseEvent *event );
 
         void setupActions();
 
-        void addAccountWidget(Account *acc, const QString &filename = QString() );
+        void addAccountWidget( Account *acc, const QString &filename = QString() );
 
-        AccountWidget* currentAccountWidget();
-        AccountWidget* accountWidget(int index);
-        QList<AccountWidget*> allAccountWidgets();
+        AccountWidget *currentAccountWidget();
+        AccountWidget *accountWidget( int index );
+        QList<AccountWidget *> allAccountWidgets();
 
 #if !defined(HAVE_KDE)
-        ActionCollection* actionCollection() { return m_ActionCollection; }
+        ActionCollection *actionCollection() {
+            return m_ActionCollection;
+        }
 #endif
 
     protected slots:
         void checkActionStates();
-        void onTabCloseRequest(int index);
+        void onTabCloseRequest( int index );
 
         void onLoadConfig();
 
         void onNewFile();
-        void onOpenFile(const QString &str = QString());
-        void onOpenFile(const QUrl &url);
+        void onOpenFile( const QString &str = QString() );
+        void onOpenFile( const QUrl &url );
         void onSaveFile();
         void onSaveAsFile();
         void onPrintFile();
@@ -124,10 +130,10 @@ class MainWindow :
 
         void onShowStatusbar();
 
-        void onExportPluginClicked(QAction *action);
-        void onImportPluginClicked(QAction *action);
+        void onExportPluginClicked( QAction *action );
+        void onImportPluginClicked( QAction *action );
 
-        void onTabContextMenuRequest(QWidget*,const QPoint&);
+        void onTabContextMenuRequest( QWidget *, const QPoint & );
 
 #if !defined(HAVE_KDE)
         void onAbout();
@@ -139,14 +145,14 @@ class MainWindow :
 
     private:
         Ui::MainWindow *ui;
-        
+
         ActionCollection *m_ActionCollection;
         RecentFileMenu *m_recentFileMenu;
 
-        QList<Knipptasch::ExportPlugin*> m_exportPlugins;
+        QList<Knipptasch::ExportPlugin *> m_exportPlugins;
         QActionGroup *m_exportPluginActionGroup;
 
-        QList<Knipptasch::ImportPlugin*> m_importPlugins;
+        QList<Knipptasch::ImportPlugin *> m_importPlugins;
         QActionGroup *m_importPluginActionGroup;
 
 #if !defined(HAVE_KDE)

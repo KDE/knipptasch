@@ -33,14 +33,14 @@ class Account;
  */
 class AccountConfigDialog : public ConfigDialog
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountConfigDialog)
+        Q_OBJECT
+        Q_DISABLE_COPY( AccountConfigDialog )
 
     public:
         /**
          * Constructs a new AccountConfigDialog
          */
-        explicit AccountConfigDialog(Account *account, QWidget *parent = 0);
+        explicit AccountConfigDialog( Account *account, QWidget *parent = 0 );
 
         /**
          * Destructs the config dialog.

@@ -33,7 +33,7 @@ class QPixmap;
  */
 namespace Knipptasch
 {
-    
+
     /**
     * @class ImportPlugin
     * @brief Abstract base class that provides an interface for import plugins.
@@ -67,9 +67,9 @@ namespace Knipptasch
             virtual QString importActionToolTip() const;
 
             /**
-             * 
+             *
              */
-            virtual Account* importAccount(QWidget *parent = 0) const = 0;
+            virtual Account *importAccount( QWidget *parent = 0 ) const = 0;
     };
 
 

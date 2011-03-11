@@ -31,16 +31,16 @@
  */
 class KNIPPTASCH_CORE_EXPORT DateValidator : public QValidator
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit DateValidator(QWidget *parent = 0);
-        explicit DateValidator(const QString &dateFormat, QWidget *parent = 0);
-        DateValidator(const QString &dateFormat, const QStringList &keywords, QWidget *parent = 0);
+        explicit DateValidator( QWidget *parent = 0 );
+        explicit DateValidator( const QString &dateFormat, QWidget *parent = 0 );
+        DateValidator( const QString &dateFormat, const QStringList &keywords, QWidget *parent = 0 );
 
         ~DateValidator();
 
-        State validate(QString &str, int &value) const;
+        State validate( QString &str, int &value ) const;
 
         QStringList keywordList() const;
         QString dateFormat() const;
@@ -48,9 +48,9 @@ class KNIPPTASCH_CORE_EXPORT DateValidator : public QValidator
         bool statusTipEnabled() const;
 
     public slots:
-        void setKeywordList(const QStringList &list);
-        void setDateFormat(const QString &dateFormat);
-        void setStatusTipEnabled(bool enabled);
+        void setKeywordList( const QStringList &list );
+        void setDateFormat( const QString &dateFormat );
+        void setStatusTipEnabled( bool enabled );
 
     private:
         QStringList m_keywords;

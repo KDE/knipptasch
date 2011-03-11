@@ -28,13 +28,13 @@
 #include <QDebug>
 
 
-void Storage::writeAccount(Account *acc, const QString &filename)
+void Storage::writeAccount( Account *acc, const QString &filename )
 {
     Storage().write( acc, filename );
 }
 
 
-void Storage::readAccount(Account *acc, const QString &filename, const QByteArray &password)
+void Storage::readAccount( Account *acc, const QString &filename, const QByteArray &password )
 {
     Storage().read( acc, filename, password );
 }
@@ -62,7 +62,7 @@ Storage::~Storage()
 }
 
 
-void Storage::write(Account *acc, const QString &filename)
+void Storage::write( Account *acc, const QString &filename )
 {
     Q_ASSERT( acc );
 
@@ -70,9 +70,9 @@ void Storage::write(Account *acc, const QString &filename)
         qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be written; check "
-                              "whether it exists or is writeable for the "
-                              "current user." ) );
+            QObject::tr( "The file given could not be written; check "
+                         "whether it exists or is writeable for the "
+                         "current user." ) );
     }
 
     QFile file( filename );
@@ -81,9 +81,9 @@ void Storage::write(Account *acc, const QString &filename)
                  << " - File" << filename << "could not be opened.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be written; check "
-                              "whether it exists or is writeable for the "
-                              "current user." ) );
+            QObject::tr( "The file given could not be written; check "
+                         "whether it exists or is writeable for the "
+                         "current user." ) );
     }
 
     QByteArray byteArray;
@@ -118,9 +118,9 @@ void Storage::write(Account *acc, const QString &filename)
                  << size << "out of" << byteArray.size() << ").";
 
         throw StorageFileException( QObject::tr( "The file given could not be "
-                                      "written; check whether it exists or is "
-                                      "writeable for the current user." )
-        );
+                                    "written; check whether it exists or is "
+                                    "writeable for the current user." )
+                                  );
     }
 
     file.close();
@@ -129,7 +129,7 @@ void Storage::write(Account *acc, const QString &filename)
 }
 
 
-void Storage::read(Account *acc, const QString &filename, const QByteArray &password)
+void Storage::read( Account *acc, const QString &filename, const QByteArray &password )
 {
     Q_ASSERT( acc );
 
@@ -137,9 +137,9 @@ void Storage::read(Account *acc, const QString &filename, const QByteArray &pass
         qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be read; check "
-                              "whether it exists or is readable for the "
-                              "current user." ) );
+            QObject::tr( "The file given could not be read; check "
+                         "whether it exists or is readable for the "
+                         "current user." ) );
     }
 
     QFile file( filename );
@@ -148,9 +148,9 @@ void Storage::read(Account *acc, const QString &filename, const QByteArray &pass
                  << " - File" << filename << "could not be opened.";
 
         throw StorageFileException(
-                QObject::tr( "The file given could not be read; check "
-                              "whether it exists or is readable for the "
-                              "current user." ) );
+            QObject::tr( "The file given could not be read; check "
+                         "whether it exists or is readable for the "
+                         "current user." ) );
     }
 
     QDataStream in( &file );
@@ -174,15 +174,15 @@ void Storage::read(Account *acc, const QString &filename, const QByteArray &pass
         throw StorageFileException( QObject::tr( "Unknown file version." ) );
     }
 
-    { // skip metadata...
+    {
+        // skip metadata...
         if( version == 0x002 ) {
             int32_t size;
             in >> size;
             if( in.skipRawData( size ) < 0 ) {
                 throw StorageFileException( QObject::tr( "etadata error." ) );
             }
-        }
-        else {
+        } else {
             Q_ASSERT( version == 0x100 );
             QByteArray metaData;
             in >> metaData;
@@ -197,43 +197,43 @@ void Storage::read(Account *acc, const QString &filename, const QByteArray &pass
 }
 
 
-QByteArray Storage::metaData(const Account *acc) const
+QByteArray Storage::metaData( const Account *acc ) const
 {
     bool passwordProtected = acc->isPasswordEnabled();
     Account::SecurityLevel level = passwordProtected
-                                    ? acc->securityLevel() : Account::Low;
+                                   ? acc->securityLevel() : Account::Low;
 
     QString headerData( "{\n" );
 
     headerData.append( "  \"passwordProtected\": " );
     headerData.append( passwordProtected ? "true" : "false" );
-    headerData.append( ",\n");
+    headerData.append( ",\n" );
 
     switch( level ) {
         case Account::Low:
-            headerData.append( "  \"description\": \"");
+            headerData.append( "  \"description\": \"" );
             headerData.append( acc->description() );
-            headerData.append( "\",\n");
+            headerData.append( "\",\n" );
         case Account::Average:
-            headerData.append( "  \"name\": \"");
+            headerData.append( "  \"name\": \"" );
             headerData.append( acc->name() );
-            headerData.append( "\",\n  \"number\": \"");
+            headerData.append( "\",\n  \"number\": \"" );
             headerData.append( acc->number() );
-            headerData.append( "\",\n  \"openingDate\": \"");
+            headerData.append( "\",\n  \"openingDate\": \"" );
             headerData.append( acc->openingDate().toString( Qt::ISODate ) );
-            headerData.append( "\",\n  \"openingBalance\": ");
+            headerData.append( "\",\n  \"openingBalance\": " );
             headerData.append( QString::number( acc->openingBalance() ) );
-            headerData.append( ",\n  \"iban\": \"");
+            headerData.append( ",\n  \"iban\": \"" );
             headerData.append( acc->iban() );
-            headerData.append( "\",\n  \"owner\": \"");
+            headerData.append( "\",\n  \"owner\": \"" );
             headerData.append( acc->owner() );
-            headerData.append( "\",\n  \"institution\": \"");
+            headerData.append( "\",\n  \"institution\": \"" );
             headerData.append( acc->institution() );
-            headerData.append( "\",\n  \"bic\": \"");
+            headerData.append( "\",\n  \"bic\": \"" );
             headerData.append( acc->bic() );
-            headerData.append( "\",\n");
+            headerData.append( "\",\n" );
         case Account::High:
-            headerData.append( "  \"count\": ");
+            headerData.append( "  \"count\": " );
             headerData.append( QString::number( acc->countPostings() ) );
     }
     headerData.append( "\n}\n" );
@@ -242,7 +242,7 @@ QByteArray Storage::metaData(const Account *acc) const
 }
 
 
-QByteArray Storage::encodeData(const Account *acc) const
+QByteArray Storage::encodeData( const Account *acc ) const
 {
     QByteArray byteArray;
     QBuffer buffer( &byteArray );
@@ -271,7 +271,7 @@ QByteArray Storage::encodeData(const Account *acc) const
 }
 
 
-void Storage::decodeData(const QByteArray &data, Account *acc, const QByteArray &password) const
+void Storage::decodeData( const QByteArray &data, Account *acc, const QByteArray &password ) const
 {
     Q_UNUSED( password );
 
@@ -288,19 +288,18 @@ void Storage::decodeData(const QByteArray &data, Account *acc, const QByteArray 
 
     if( sec == 0 ) {
         dataIn >> *acc;
-    }
-    else {
+    } else {
         Q_ASSERT( sec == 1 );
 
         throw StorageException(
-                QObject::tr( "This %1 version was build without support to read encrypted files." )
-                    .arg( QCoreApplication::applicationName() ) );
+            QObject::tr( "This %1 version was build without support to read encrypted files." )
+            .arg( QCoreApplication::applicationName() ) );
     }
 
     if( dataIn.status() != QDataStream::Ok ) {
         qDebug() << Q_FUNC_INFO << ':' << __LINE__
-            << " - An unknown error occurred (stream status error"
-            << dataIn.status() << ").";
+                 << " - An unknown error occurred (stream status error"
+                 << dataIn.status() << ").";
 
         throw StorageException( QObject::tr( "An unknown error occurred." ) );
     }

@@ -36,11 +36,10 @@ class QColor;
  */
 class KNIPPTASCH_CORE_EXPORT AccountModel : public QAbstractTableModel
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        enum Column
-        {
+        enum Column {
             MATURITY = 0,
             POSTINGTEXT,
             AMOUNT,
@@ -56,8 +55,7 @@ class KNIPPTASCH_CORE_EXPORT AccountModel : public QAbstractTableModel
             ENTRYCOUNT
         };
 
-        enum PostingTypeFlag
-        {
+        enum PostingTypeFlag {
             Scheduled = 1,
             SplitPosting = 2,
             WithAttachments = 4,
@@ -67,47 +65,47 @@ class KNIPPTASCH_CORE_EXPORT AccountModel : public QAbstractTableModel
             Future = 64
         };
 
-        Q_DECLARE_FLAGS(PostingTypeFlags, PostingTypeFlag)
+        Q_DECLARE_FLAGS( PostingTypeFlags, PostingTypeFlag )
 
-        explicit AccountModel(QObject *parent = 0);
+        explicit AccountModel( QObject *parent = 0 );
         ~AccountModel();
 
-        Account* account();
-        const Account* account() const;
-        void setAccount(Account *account);
+        Account *account();
+        const Account *account() const;
+        void setAccount( Account *account );
 
-        const Posting* posting(const QModelIndex &index) const;
-        const Posting* posting(int row) const;
-        Posting* posting(const QModelIndex &index);
-        Posting* posting(int row);
+        const Posting *posting( const QModelIndex &index ) const;
+        const Posting *posting( int row ) const;
+        Posting *posting( const QModelIndex &index );
+        Posting *posting( int row );
 
-        PostingTypeFlags postingType(int row) const;
+        PostingTypeFlags postingType( int row ) const;
 
-        int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        int columnCount(const QModelIndex &parent = QModelIndex()) const;
+        int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+        int columnCount( const QModelIndex &parent = QModelIndex() ) const;
 
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+        QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DisplayRole);
-        Qt::ItemFlags flags(const QModelIndex &index) const;
+        bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::DisplayRole );
+        Qt::ItemFlags flags( const QModelIndex &index ) const;
 
-        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+        bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
 
     private:
-        QVariant backgroundRoleData(const QModelIndex &index) const;
-        QVariant foregroundRoleData(const QModelIndex &index) const;
-        QVariant textAlignmentRoleData(const QModelIndex &index) const;
-        QVariant decorationRoleData(const QModelIndex &index) const;
+        QVariant backgroundRoleData( const QModelIndex &index ) const;
+        QVariant foregroundRoleData( const QModelIndex &index ) const;
+        QVariant textAlignmentRoleData( const QModelIndex &index ) const;
+        QVariant decorationRoleData( const QModelIndex &index ) const;
 
-        void initDemoAccountAddPosting(const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true);
+        void initDemoAccountAddPosting( const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true );
 
-        PostingTypeFlags postingType(const Posting *p) const;
-        static bool postingIsValid(const Posting *p);
+        PostingTypeFlags postingType( const Posting *p ) const;
+        static bool postingIsValid( const Posting *p );
 
     private:
         class Private;
-        Private* const d;
+        Private *const d;
 };
 
 

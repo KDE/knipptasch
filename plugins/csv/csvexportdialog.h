@@ -38,10 +38,10 @@ namespace Ui
  */
 class CsvExportDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        CsvExportDialog(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0);
+        CsvExportDialog( const Account *account, const QList<const Posting *> &selected, QWidget *parent = 0 );
         ~CsvExportDialog();
 
     private slots:
@@ -50,17 +50,17 @@ class CsvExportDialog : public QDialog
 
         void onSave();
 
-        void onDelimiterComboBoxIndexChanged(int);
+        void onDelimiterComboBoxIndexChanged( int );
         void onDelimiterComboBoxTextChanged();
 
-        void onDateFormatComboBoxIndexChanged(int index);
+        void onDateFormatComboBoxIndexChanged( int index );
         void onDateFormatComboBoxTextChanged();
 
     private:
         Ui::CsvExportDialog *ui;
 
         const Account *m_account;
-        QList<const Posting*> m_selectedPostings;
+        QList<const Posting *> m_selectedPostings;
 
         QString m_delimiter;
         QString m_dateFormat;

@@ -38,124 +38,122 @@ namespace Knipptasch
 {
 
 
-struct AccountTableWidget::Private
-{
-    Private(Knipptasch::Preferences *pref, QWidget *parent)
-      : preferences( pref ),
-        model( new AccountModel( parent ) ),
-        proxy( new AccountSortFilterProxyModel( parent ) ),
-        view( new QTableView( parent ) )
-    {        
-        new ModelTest( model, parent );
-        new ModelTest( proxy, parent );
+    struct AccountTableWidget::Private {
+        Private( Knipptasch::Preferences *pref, QWidget *parent )
+            : preferences( pref ),
+              model( new AccountModel( parent ) ),
+              proxy( new AccountSortFilterProxyModel( parent ) ),
+              view( new QTableView( parent ) ) {
+            new ModelTest( model, parent );
+            new ModelTest( proxy, parent );
+        }
+
+
+        Knipptasch::Preferences *preferences;
+
+        AccountModel *model;
+        AccountSortFilterProxyModel *proxy;
+        QTableView *view;
+    };
+
+
+
+    AccountTableWidget::AccountTableWidget( Knipptasch::Preferences *pref, QWidget *parent )
+        : QWidget( parent ),
+          d( new AccountTableWidget::Private( pref, this ) )
+    {
+        d->proxy->setSourceModel( d->model );
+        d->proxy->sort( AccountModel::MATURITY, Qt::AscendingOrder );
+        d->proxy->setDynamicSortFilter( true );
+        d->proxy->setFilterKeyColumn( -1 );
+        d->proxy->setFilterCaseSensitivity( Qt::CaseInsensitive );
+
+        d->view->setModel( d->proxy );
+
+        d->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
+        d->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
+
+        d->view->resizeColumnsToContents();
+        d->view->verticalHeader()->hide();
+        d->view->setSelectionBehavior( QAbstractItemView::SelectRows );
+        d->view->horizontalHeader()->setResizeMode( AccountModel::POSTINGTEXT, QHeaderView::Stretch );
+
+        connect( d->view->selectionModel(), SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ), this, SLOT( slotCurrentRowChanged() ) );
+
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->setContentsMargins( 0, 0, 0, 0 );
+        layout->addWidget( d->view );
+        setLayout( layout );
     }
 
 
-    Knipptasch::Preferences *preferences;
-    
-    AccountModel *model;
-    AccountSortFilterProxyModel *proxy;
-    QTableView *view;
-};
 
-
-
-AccountTableWidget::AccountTableWidget(Knipptasch::Preferences *pref, QWidget *parent)
-  : QWidget( parent ),
-    d( new AccountTableWidget::Private( pref, this ) )
-{
-    d->proxy->setSourceModel( d->model );
-    d->proxy->sort( AccountModel::MATURITY, Qt::AscendingOrder );
-    d->proxy->setDynamicSortFilter( true );
-    d->proxy->setFilterKeyColumn( -1 );
-    d->proxy->setFilterCaseSensitivity( Qt::CaseInsensitive );
-    
-    d->view->setModel( d->proxy );
-
-    d->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
-    d->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
-
-    d->view->resizeColumnsToContents();
-    d->view->verticalHeader()->hide();
-    d->view->setSelectionBehavior( QAbstractItemView::SelectRows );
-    d->view->horizontalHeader()->setResizeMode( AccountModel::POSTINGTEXT, QHeaderView::Stretch );
-  
-    connect( d->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
-    
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setContentsMargins( 0, 0, 0, 0 );
-    layout->addWidget( d->view );
-    setLayout( layout );
-}
-
-
-
-AccountTableWidget::~AccountTableWidget()
-{
-    delete d;
-}
-
-
-QAbstractItemView* AccountTableWidget::view()
-{
-    return d->view;
-}
-
-
-const QAbstractItemView* AccountTableWidget::view() const
-{
-    return d->view;    
-}
-
-
-AccountModel* AccountTableWidget::model()
-{
-    return d->model;
-}
-
-
-const AccountModel* AccountTableWidget::model() const
-{
-    return d->model;    
-}
-
-
-AccountSortFilterProxyModel* AccountTableWidget::proxy()
-{
-    return d->proxy;
-}
-
-
-const AccountSortFilterProxyModel* AccountTableWidget::proxy() const
-{
-    return d->proxy;
-}
-
-
-Knipptasch::Preferences* AccountTableWidget::preferences()
-{
-    return d->preferences;
-}
-
-
-const Knipptasch::Preferences* AccountTableWidget::preferences() const
-{
-    return d->preferences;    
-}
-
-
-void AccountTableWidget::slotCurrentRowChanged()
-{
-    if( d->preferences->resetCurrentIndexWhenCurrentRowChanged() ) {
-        d->view->setCurrentIndex( d->view->model()->index( d->view->currentIndex().row(), 0 ) );
+    AccountTableWidget::~AccountTableWidget()
+    {
+        delete d;
     }
-}
-    
+
+
+    QAbstractItemView *AccountTableWidget::view()
+    {
+        return d->view;
+    }
+
+
+    const QAbstractItemView *AccountTableWidget::view() const
+    {
+        return d->view;
+    }
+
+
+    AccountModel *AccountTableWidget::model()
+    {
+        return d->model;
+    }
+
+
+    const AccountModel *AccountTableWidget::model() const
+    {
+        return d->model;
+    }
+
+
+    AccountSortFilterProxyModel *AccountTableWidget::proxy()
+    {
+        return d->proxy;
+    }
+
+
+    const AccountSortFilterProxyModel *AccountTableWidget::proxy() const
+    {
+        return d->proxy;
+    }
+
+
+    Knipptasch::Preferences *AccountTableWidget::preferences()
+    {
+        return d->preferences;
+    }
+
+
+    const Knipptasch::Preferences *AccountTableWidget::preferences() const
+    {
+        return d->preferences;
+    }
+
+
+    void AccountTableWidget::slotCurrentRowChanged()
+    {
+        if( d->preferences->resetCurrentIndexWhenCurrentRowChanged() ) {
+            d->view->setCurrentIndex( d->view->model()->index( d->view->currentIndex().row(), 0 ) );
+        }
+    }
+
 
 
 } // EndNamspace Knipptasch

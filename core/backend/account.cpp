@@ -26,13 +26,13 @@
 
 
 
-const Category* doFindCategoryParent(const Category *current, const Category *target)
+const Category *doFindCategoryParent( const Category *current, const Category *target )
 {
     Q_ASSERT( current );
     Q_ASSERT( target );
     Q_ASSERT( current != target );
 
-    for(int i = 0; i < current->countCategories(); ++i) {
+    for( int i = 0; i < current->countCategories(); ++i ) {
         const Category *c = current->category( i );
         Q_ASSERT( c );
 
@@ -51,13 +51,13 @@ const Category* doFindCategoryParent(const Category *current, const Category *ta
 
 
 
-Category* doFindCategoryParent(Category *current, const Category *target)
+Category *doFindCategoryParent( Category *current, const Category *target )
 {
     Q_ASSERT( current );
     Q_ASSERT( target );
     Q_ASSERT( current != target );
 
-    for(int i = 0; i < current->countCategories(); ++i) {
+    for( int i = 0; i < current->countCategories(); ++i ) {
         Category *c = current->category( i );
         Q_ASSERT( c );
 
@@ -77,21 +77,18 @@ Category* doFindCategoryParent(Category *current, const Category *target)
 
 
 
-struct Account::Private
-{
+struct Account::Private {
     Private()
-      : openingdate( QDate( QDate::currentDate().year(), 1, 1 ) ),
-        minbalanceenabled( false ),
-        maxbalanceenabled( false ),
-        usePassword( false ),
-        level( Average ),
-        category( new Category ),
-        modified( false )
-    {
+        : openingdate( QDate( QDate::currentDate().year(), 1, 1 ) ),
+          minbalanceenabled( false ),
+          maxbalanceenabled( false ),
+          usePassword( false ),
+          level( Average ),
+          category( new Category ),
+          modified( false ) {
     }
 
-    ~Private()
-    {
+    ~Private() {
         qDeleteAll( postings );
         delete category;
     }
@@ -114,7 +111,7 @@ struct Account::Private
     QByteArray password;
     SecurityLevel level;
 
-    QList<Posting*> postings;
+    QList<Posting *> postings;
     Category *category;
 
     mutable QVector<QPointer<Object> > objects;
@@ -124,9 +121,9 @@ struct Account::Private
 
 
 
-Account::Account(QObject *parent)
-  : Object( parent ),
-    d( new Account::Private )
+Account::Account( QObject *parent )
+    : Object( parent ),
+      d( new Account::Private )
 {
     connect( d->category, SIGNAL( valueChanged() ), this, SIGNAL( categoryChanged() ) );
     connect( d->category, SIGNAL( categoryChanged() ), this, SIGNAL( categoryChanged() ) );
@@ -145,7 +142,7 @@ bool Account::isModified() const
         return true;
     }
 
-    foreach(const Posting *p, d->postings) {
+    foreach( const Posting * p, d->postings ) {
         Q_ASSERT( p );
         if( p->isModified() ) {
             d->modified = true;
@@ -157,10 +154,10 @@ bool Account::isModified() const
 }
 
 
-void Account::setModified(bool state)
+void Account::setModified( bool state )
 {
     if( !state ) {
-        foreach(Posting *p, d->postings) {
+        foreach( Posting * p, d->postings ) {
             p->setModified( false );
         }
     }
@@ -176,7 +173,7 @@ bool Account::isPasswordEnabled() const
 }
 
 
-void Account::setPasswordEnabled(bool state)
+void Account::setPasswordEnabled( bool state )
 {
     if( state != d->usePassword ) {
         d->usePassword = state;
@@ -193,7 +190,7 @@ QByteArray Account::password() const
 }
 
 
-void  Account::setPassword(const QByteArray &pw)
+void  Account::setPassword( const QByteArray &pw )
 {
     if( pw != d->password ) {
         d->password = pw;
@@ -210,7 +207,7 @@ Account::SecurityLevel Account::securityLevel() const
 }
 
 
-void Account::setSecurityLevel(Account::SecurityLevel level)
+void Account::setSecurityLevel( Account::SecurityLevel level )
 {
     if( level != d->level ) {
         d->level = level;
@@ -227,7 +224,7 @@ QString Account::name() const
 }
 
 
-void Account::setName(const QString &name)
+void Account::setName( const QString &name )
 {
     if( name != d->name ) {
         d->name = name;
@@ -244,7 +241,7 @@ QString Account::number() const
 }
 
 
-void Account::setNumber(const QString &number)
+void Account::setNumber( const QString &number )
 {
     if( number != d->number ) {
         d->number = number;
@@ -261,7 +258,7 @@ QString Account::description() const
 }
 
 
-void Account::setDescription(const QString &desc)
+void Account::setDescription( const QString &desc )
 {
     if( desc != d->description ) {
         d->description = desc;
@@ -278,7 +275,7 @@ QDate Account::openingDate() const
 }
 
 
-void Account::setOpeningDate(const QDate &date)
+void Account::setOpeningDate( const QDate &date )
 {
     if( date != d->openingdate ) {
         d->openingdate = date;
@@ -295,7 +292,7 @@ Money Account::openingBalance() const
 }
 
 
-void Account::setOpeningBalance(Money money)
+void Account::setOpeningBalance( Money money )
 {
     if( money.cents() != d->openingbalance.cents() ) {
         d->openingbalance = money;
@@ -313,7 +310,7 @@ bool Account::minimumBalanceEnabled() const
 }
 
 
-void Account::setMinimumBalanceEnabled(bool b)
+void Account::setMinimumBalanceEnabled( bool b )
 {
     if( b != d->minbalanceenabled ) {
         d->minbalanceenabled = b;
@@ -330,7 +327,7 @@ Money Account::minimumBalance() const
 }
 
 
-void Account::setMinimumBalance(Money money)
+void Account::setMinimumBalance( Money money )
 {
     if( money.cents() != d->minbalance.cents() ) {
         d->minbalance = money;
@@ -347,7 +344,7 @@ bool Account::maximumBalanceEnabled() const
 }
 
 
-void Account::setMaximumBalanceEnabled(bool b)
+void Account::setMaximumBalanceEnabled( bool b )
 {
     if( b != d->maxbalanceenabled ) {
         d->maxbalanceenabled = b;
@@ -364,7 +361,7 @@ Money Account::maximumBalance() const
 }
 
 
-void Account::setMaximumBalance(Money money)
+void Account::setMaximumBalance( Money money )
 {
     if( money.cents() != d->maxbalance.cents() ) {
         d->maxbalance = money;
@@ -381,7 +378,7 @@ QString Account::iban() const
 }
 
 
-void Account::setIban(const QString &iban)
+void Account::setIban( const QString &iban )
 {
     if( iban != d->iban ) {
         d->iban = iban;
@@ -398,7 +395,7 @@ QString Account::owner() const
 }
 
 
-void Account::setOwner(const QString &owner)
+void Account::setOwner( const QString &owner )
 {
     if( owner != d->owner ) {
         d->owner = owner;
@@ -415,7 +412,7 @@ QString Account::institution() const
 }
 
 
-void Account::setInstitution(const QString &institution)
+void Account::setInstitution( const QString &institution )
 {
     if( institution != d->institution ) {
         d->institution = institution;
@@ -432,7 +429,7 @@ QString Account::bic() const
 }
 
 
-void Account::setBic(const QString &bic)
+void Account::setBic( const QString &bic )
 {
     if( bic != d->bic ) {
         d->bic = bic;
@@ -449,7 +446,7 @@ int Account::countPostings() const
 }
 
 
-void Account::addPosting(Posting *ptr)
+void Account::addPosting( Posting *ptr )
 {
     Q_ASSERT( ptr );
 
@@ -461,7 +458,7 @@ void Account::addPosting(Posting *ptr)
 }
 
 
-Posting* Account::posting(int index)
+Posting *Account::posting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -470,7 +467,7 @@ Posting* Account::posting(int index)
 }
 
 
-const Posting* Account::posting(int index) const
+const Posting *Account::posting( int index ) const
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -479,10 +476,10 @@ const Posting* Account::posting(int index) const
 }
 
 
-QList<const Posting*> Account::postings() const
+QList<const Posting *> Account::postings() const
 {
-    QList<const Posting*> list;
-    foreach(Posting *p, d->postings) {
+    QList<const Posting *> list;
+    foreach( Posting * p, d->postings ) {
         Q_ASSERT( p );
         list.append( p );
     }
@@ -491,7 +488,7 @@ QList<const Posting*> Account::postings() const
 }
 
 
-Posting* Account::takePosting(int index)
+Posting *Account::takePosting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -506,7 +503,7 @@ Posting* Account::takePosting(int index)
 }
 
 
-void Account::removePosting(int index)
+void Account::removePosting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -519,13 +516,13 @@ void Account::removePosting(int index)
 }
 
 
-void Account::deletePosting(int index)
+void Account::deletePosting( int index )
 {
     delete takePosting( index );
 }
 
 
-Category* Account::rootCategory()
+Category *Account::rootCategory()
 {
     Q_ASSERT( d );
     Q_ASSERT( d->category );
@@ -534,7 +531,7 @@ Category* Account::rootCategory()
 }
 
 
-const Category* Account::rootCategory() const
+const Category *Account::rootCategory() const
 {
     Q_ASSERT( d );
     Q_ASSERT( d->category );
@@ -543,7 +540,7 @@ const Category* Account::rootCategory() const
 }
 
 
-Category* Account::findCategoryParent(const Category *child)
+Category *Account::findCategoryParent( const Category *child )
 {
     if( !child ) {
         return 0;
@@ -557,7 +554,7 @@ Category* Account::findCategoryParent(const Category *child)
 }
 
 
-const Category* Account::findCategoryParent(const Category *child) const
+const Category *Account::findCategoryParent( const Category *child ) const
 {
     if( !child ) {
         return 0;
@@ -571,13 +568,13 @@ const Category* Account::findCategoryParent(const Category *child) const
 }
 
 
-int Account::identifierByObject(const Object *object) const
+int Account::identifierByObject( const Object *object ) const
 {
     if( !object ) {
         return -1;
     }
 
-    Object *obj = const_cast<Object*>( object );
+    Object *obj = const_cast<Object *>( object );
 
     if( !d->objects.contains( obj ) ) {
         d->objects.append( obj );
@@ -588,7 +585,7 @@ int Account::identifierByObject(const Object *object) const
 }
 
 
-Object* Account::objectByIdentifier(int id) const
+Object *Account::objectByIdentifier( int id ) const
 {
     return d->objects.value( id );
 }
@@ -600,7 +597,7 @@ void Account::clearObjectIdentifier()
 }
 
 
-QDataStream& Account::serialize(QDataStream &stream) const
+QDataStream &Account::serialize( QDataStream &stream ) const
 {
     Object::serialize( stream );
 
@@ -620,7 +617,7 @@ QDataStream& Account::serialize(QDataStream &stream) const
     d->category->serialize( stream );
 
     stream << static_cast<quint32>( d->postings.size() );
-    foreach(const Posting *p, d->postings) {
+    foreach( const Posting * p, d->postings ) {
         p->serialize( stream );
     }
 
@@ -628,7 +625,7 @@ QDataStream& Account::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Account::deserialize(const Account *account, QDataStream &stream)
+QDataStream &Account::deserialize( const Account *account, QDataStream &stream )
 {
     Object::deserialize( account, stream );
 
@@ -649,7 +646,7 @@ QDataStream& Account::deserialize(const Account *account, QDataStream &stream)
 
     quint32 count;
     stream >> count;
-    for(quint32 i = 0; i < count; ++i) {
+    for( quint32 i = 0; i < count; ++i ) {
         Posting *p = new Posting;
         p->deserialize( account, stream );
         addPosting( p );
@@ -659,13 +656,13 @@ QDataStream& Account::deserialize(const Account *account, QDataStream &stream)
 }
 
 
-QDataStream& operator<<(QDataStream &stream, const Account &acc)
+QDataStream &operator<<( QDataStream &stream, const Account &acc )
 {
     return acc.serialize( stream );
 }
 
 
-QDataStream& operator>>(QDataStream &stream, Account &acc)
+QDataStream &operator>>( QDataStream &stream, Account &acc )
 {
     return acc.deserialize( &acc, stream );
 }

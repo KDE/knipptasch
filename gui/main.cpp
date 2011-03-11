@@ -41,12 +41,12 @@
 
 
 
-int main(int argc, char* argv[])
+int main( int argc, char *argv[] )
 {
     QList<QUrl> files;
 
 #if defined(HAVE_KDE)
-    KAboutData* aboutData = new KAboutData(
+    KAboutData *aboutData = new KAboutData(
         "knipptasch",
         NULL,
         ki18n( "Knipptasch" ),
@@ -57,12 +57,12 @@ int main(int argc, char* argv[])
     );
 
     aboutData->addAuthor(
-            ki18n( "Stefan Böhmann" ),
-            ki18n( "Maintainer" ),
-            "kde@hilefoks.org",
-            "http://www.hilefoks.org"
+        ki18n( "Stefan Böhmann" ),
+        ki18n( "Maintainer" ),
+        "kde@hilefoks.org",
+        "http://www.hilefoks.org"
 #if KDE_IS_VERSION(4,5,76)
-          , "hilefoks"
+        , "hilefoks"
 #endif
     );
 
@@ -78,13 +78,13 @@ int main(int argc, char* argv[])
     KGlobal::locale()->insertCatalog( "knipptasch_qt" );
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    for(int i = 0; i < args->count(); i++) {
+    for( int i = 0; i < args->count(); i++ ) {
         files.append( args->url( i ) );
     }
     args->clear();
 
 #else
-    QApplication app(argc, argv);
+    QApplication app( argc, argv );
 
     QTranslator t1;
     const QString locale = QLocale::system().name();
@@ -92,8 +92,7 @@ int main(int argc, char* argv[])
 
     if( t1.load( qtLocaleName, QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
         qApp->installTranslator( &t1 );
-    }
-    else {
+    } else {
         qDebug() << "loading Qt translations for locale "
                  << qtLocaleName
                  << " from dir "
@@ -104,7 +103,7 @@ int main(int argc, char* argv[])
     QTranslator t2;
     QString translationDir;
     QStringList dataDirs = findDataDirPaths();
-    foreach(const QString& dir, dataDirs) {
+    foreach( const QString & dir, dataDirs ) {
         translationDir = dir + QDir::separator() + "translations" + QDir::separator();
         if( QFile::exists( translationDir ) ) {
             break;
@@ -113,8 +112,7 @@ int main(int argc, char* argv[])
 
     if( t2.load( locale, translationDir ) ) {
         qApp->installTranslator( &t2 );
-    }
-    else {
+    } else {
         qDebug() << "loading app translations for locale "
                  << locale
                  << " from dir "
@@ -136,7 +134,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationName( QCoreApplication::tr( "Knipptasch" ) );
     QCoreApplication::setApplicationVersion( KNIPPTASCH_VERSION );
 
-    MainWindow* mainWindow = new MainWindow;
+    MainWindow *mainWindow = new MainWindow;
     mainWindow->show();
 
     QApplication::processEvents();

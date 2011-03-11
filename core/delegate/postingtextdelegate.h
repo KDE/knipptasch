@@ -30,15 +30,15 @@
  */
 class KNIPPTASCH_CORE_EXPORT PostingTextDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        PostingTextDelegate(QObject *parent = 0);
+        PostingTextDelegate( QObject *parent = 0 );
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
-        void setEditorData(QWidget *editor, const QModelIndex &index) const;
-        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+        void setEditorData( QWidget *editor, const QModelIndex &index ) const;
+        void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const;
 };
 
 #endif

@@ -42,14 +42,14 @@ namespace Ui
  */
 class AccountCategoryConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountCategoryConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( AccountCategoryConfigPage )
 
     public:
         /**
          * Constructs a new AccountCategoryConfigPage
          */
-        explicit AccountCategoryConfigPage(Account *account, ConfigWidget *parent);
+        explicit AccountCategoryConfigPage( Account *account, ConfigWidget *parent );
 
         /**
          * Destructs the config page.
@@ -82,10 +82,10 @@ class AccountCategoryConfigPage : public AbstractConfigPage
         void exportCategoryClicked();
         void removeCategoryClicked();
 
-        void selectNewCategory(const QModelIndex&, int);
+        void selectNewCategory( const QModelIndex &, int );
 
     private:
-        void addCategory(bool belowOfCurrent);
+        void addCategory( bool belowOfCurrent );
 
     private:
         Ui::AccountCategoryConfigPage *ui;

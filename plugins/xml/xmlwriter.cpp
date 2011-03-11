@@ -38,16 +38,15 @@
 
 
 
-struct XmlWriter::Private
-{
-    QVector<const Category*> categories;
-    QVector<const Posting*> postings;
+struct XmlWriter::Private {
+    QVector<const Category *> categories;
+    QVector<const Posting *> postings;
 };
 
 
 
 XmlWriter::XmlWriter()
-  : d( 0 )
+    : d( 0 )
 {
 }
 
@@ -58,7 +57,7 @@ XmlWriter::~XmlWriter()
 }
 
 
-void XmlWriter::write(const Account *acc, const QString &filename)
+void XmlWriter::write( const Account *acc, const QString &filename )
 {
     Q_ASSERT( acc );
 
@@ -66,8 +65,8 @@ void XmlWriter::write(const Account *acc, const QString &filename)
         qDebug() << Q_FUNC_INFO << ':' << __LINE__ << " - Filename is empty.";
 
         throw StorageFileException(
-              QT_TR_NOOP( "The file given could not be written; check whether "
-                          "it exists or is writeable for the current user." ) );
+            QT_TR_NOOP( "The file given could not be written; check whether "
+                        "it exists or is writeable for the current user." ) );
     }
 
     QFile file( filename );
@@ -76,8 +75,8 @@ void XmlWriter::write(const Account *acc, const QString &filename)
                  << " - File" << filename << "could not be opened.";
 
         throw StorageFileException(
-              QT_TR_NOOP( "The file given could not be written; check whether "
-                          "it exists or is writeable for the current user." ) );
+            QT_TR_NOOP( "The file given could not be written; check whether "
+                        "it exists or is writeable for the current user." ) );
     }
 
     delete d;
@@ -92,7 +91,7 @@ void XmlWriter::write(const Account *acc, const QString &filename)
     stream.setAutoFormattingIndent( 4 );
     stream.writeStartDocument( "1.0" );
 
-    stream.writeStartElement("knipptasch");
+    stream.writeStartElement( "knipptasch" );
     stream.writeAttribute( "version", "1.2" );
     stream.writeAttribute( "href", "http://projects.kde.org/knipptasch" );
 
@@ -111,15 +110,15 @@ void XmlWriter::write(const Account *acc, const QString &filename)
                  << size << "out of" << byteArray.size() << ").";
 
         throw StorageFileException(
-              QT_TR_NOOP( "The file given could not be written; check whether "
-                          "it exists or is writeable for the current user." ) );
+            QT_TR_NOOP( "The file given could not be written; check whether "
+                        "it exists or is writeable for the current user." ) );
     }
 
     file.close();
 }
 
 
-void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
+void XmlWriter::writeAccount( QXmlStreamWriter &stream, const Account *acc )
 {
     stream.writeStartElement( "account" );
 
@@ -141,8 +140,8 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
     }
 
     stream.writeStartElement( "opening" );
-        stream.writeAttribute( "date", acc->openingDate().toString( Qt::ISODate ) );
-        stream.writeCharacters( QString::number( acc->openingBalance().cents() ) );
+    stream.writeAttribute( "date", acc->openingDate().toString( Qt::ISODate ) );
+    stream.writeCharacters( QString::number( acc->openingBalance().cents() ) );
     stream.writeEndElement(); //opening
 
     writeLimit( stream, acc->minimumBalanceEnabled(), acc->minimumBalance(),
@@ -155,8 +154,7 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
     if( !acc->bic().isEmpty() || !acc->institution().isEmpty() ) {
         if( acc->institution().isEmpty() ) {
             stream.writeEmptyElement( "institution" );
-        }
-        else {
+        } else {
             stream.writeStartElement( "institution" );
         }
 
@@ -175,10 +173,9 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
     // write categories...
     if( acc->rootCategory()->countCategories() <= 0 ) {
         stream.writeEmptyElement( "categories" );
-    }
-    else {
+    } else {
         stream.writeStartElement( "categories" );
-        for(int i = 0; i < acc->rootCategory()->countCategories(); ++i) {
+        for( int i = 0; i < acc->rootCategory()->countCategories(); ++i ) {
             writeCategory( stream, acc->rootCategory()->category( i ) );
         }
         stream.writeEndElement();
@@ -187,10 +184,9 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
     // write postings...
     if( acc->countPostings() <= 0 ) {
         stream.writeEmptyElement( "postings" );
-    }
-    else {
+    } else {
         stream.writeStartElement( "postings" );
-        for(int i = 0; i < acc->countPostings(); ++i) {
+        for( int i = 0; i < acc->countPostings(); ++i ) {
             writePosting( stream, acc->posting( i ) );
         }
         stream.writeEndElement();
@@ -200,7 +196,7 @@ void XmlWriter::writeAccount(QXmlStreamWriter &stream, const Account *acc)
 }
 
 
-void XmlWriter::writeCategory(QXmlStreamWriter &stream, const Category *category)
+void XmlWriter::writeCategory( QXmlStreamWriter &stream, const Category *category )
 {
     Q_ASSERT( category );
 
@@ -215,7 +211,7 @@ void XmlWriter::writeCategory(QXmlStreamWriter &stream, const Category *category
 
     writeObjectData( stream, category );
 
-    for(int i = 0; i < category->countCategories(); ++i ) {
+    for( int i = 0; i < category->countCategories(); ++i ) {
         writeCategory( stream, category->category( i ) );
     }
 
@@ -223,7 +219,7 @@ void XmlWriter::writeCategory(QXmlStreamWriter &stream, const Category *category
 }
 
 
-void XmlWriter::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *posting)
+void XmlWriter::writeBasePosting( QXmlStreamWriter &stream, const BasePosting *posting )
 {
     Q_ASSERT( posting );
 
@@ -268,7 +264,7 @@ void XmlWriter::writeBasePosting(QXmlStreamWriter &stream, const BasePosting *po
 }
 
 
-void XmlWriter::writePosting(QXmlStreamWriter &stream, const Posting *posting)
+void XmlWriter::writePosting( QXmlStreamWriter &stream, const Posting *posting )
 {
     Q_ASSERT( posting );
 
@@ -277,14 +273,14 @@ void XmlWriter::writePosting(QXmlStreamWriter &stream, const Posting *posting)
 
     writeBasePosting( stream, posting );
 
-    for(int i = 0; i < posting->countSubPostings(); ++i ) {
+    for( int i = 0; i < posting->countSubPostings(); ++i ) {
         writeSubPosting( stream, posting->subPosting( i ) );
     }
     stream.writeEndElement(); // posting
 }
 
 
-void XmlWriter::writeSubPosting(QXmlStreamWriter &stream, const SubPosting *posting)
+void XmlWriter::writeSubPosting( QXmlStreamWriter &stream, const SubPosting *posting )
 {
     Q_ASSERT( posting );
 
@@ -294,19 +290,19 @@ void XmlWriter::writeSubPosting(QXmlStreamWriter &stream, const SubPosting *post
 }
 
 
-void XmlWriter::writeObjectData(QXmlStreamWriter &stream, const Object *object)
+void XmlWriter::writeObjectData( QXmlStreamWriter &stream, const Object *object )
 {
     Q_ASSERT( object );
 
     // Flags
     const QSet<QByteArray> flags = object->flags();
-    for(QSet<QByteArray>::const_iterator it = flags.constBegin(); it != flags.constEnd(); ++it) {
-        stream.writeTextElement( "flag", (*it) );
+    for( QSet<QByteArray>::const_iterator it = flags.constBegin(); it != flags.constEnd(); ++it ) {
+        stream.writeTextElement( "flag", ( *it ) );
     }
 
     // Attributes
     const QHash<QByteArray, QVariant> attributes = object->attributes();
-    for(QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it) {
+    for( QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it ) {
         stream.writeStartElement( "attribute" );
         stream.writeTextElement( "key", it.key() );
         stream.writeStartElement( "value" );
@@ -316,13 +312,13 @@ void XmlWriter::writeObjectData(QXmlStreamWriter &stream, const Object *object)
     }
 
     // Attachments
-    for(int i = 0; i < object->countAttachments(); ++i ) {
+    for( int i = 0; i < object->countAttachments(); ++i ) {
         writeAttachment( stream, object->attachment( i ) );
     }
 }
 
 
-void XmlWriter::writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment)
+void XmlWriter::writeAttachment( QXmlStreamWriter &stream, const Attachment *attachment )
 {
     Q_ASSERT( attachment );
 
@@ -343,32 +339,25 @@ void XmlWriter::writeAttachment(QXmlStreamWriter &stream, const Attachment *atta
 }
 
 
-void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
+void XmlWriter::writeVariant( QXmlStreamWriter &stream, const QVariant &value )
 {
     ASSERT_LIMITED_VARIANT( value );
 
     if( value.isNull() || value.type() == QVariant::Invalid ) {
         stream.writeEmptyElement( "nil" );
-    }
-    else if( value.type() == QVariant::Bool ) {
+    } else if( value.type() == QVariant::Bool ) {
         stream.writeTextElement( "boolean", value.toBool() ? "true" : "false" );
-    }
-    else if( value.type() == QVariant::ByteArray ) {
+    } else if( value.type() == QVariant::ByteArray ) {
         stream.writeTextElement( "base64", value.toByteArray().toBase64() );
-    }
-    else if( value.type() == QVariant::Color ) {
+    } else if( value.type() == QVariant::Color ) {
         writeColor( stream, value.value<QColor>() );
-    }
-    else if( value.type() == QVariant::Date ) {
+    } else if( value.type() == QVariant::Date ) {
         stream.writeTextElement( "date", value.toDate().toString( Qt::ISODate ) );
-    }
-    else if( value.type() == QVariant::DateTime ) {
+    } else if( value.type() == QVariant::DateTime ) {
         stream.writeTextElement( "datetime", value.toDateTime().toString( Qt::ISODate ) );
-    }
-    else if( value.type() == QVariant::Double ) {
+    } else if( value.type() == QVariant::Double ) {
         stream.writeTextElement( "double", QString::number( value.toDouble() ) );
-    }
-    else if( value.type() == QVariant::Hash ) {
+    } else if( value.type() == QVariant::Hash ) {
         QHash<QString, QVariant> hash = value.toHash();
         QHashIterator<QString, QVariant> it( hash );
 
@@ -384,8 +373,7 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
             stream.writeEndElement(); // item
         }
         stream.writeEndElement();
-    }
-    else if( value.type() == QVariant::Image ) {
+    } else if( value.type() == QVariant::Image ) {
         QByteArray ba;
         QBuffer buffer( &ba );
         buffer.open( QIODevice::WriteOnly );
@@ -393,22 +381,18 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
         buffer.close();
 
         stream.writeTextElement( "image", ba.toBase64() );
-    }
-    else if( value.type() == QVariant::Int ) {
+    } else if( value.type() == QVariant::Int ) {
         stream.writeTextElement( "int", QString::number( value.toInt() ) );
-    }
-    else if( value.type() == QVariant::List ) {
+    } else if( value.type() == QVariant::List ) {
         stream.writeStartElement( "list" );
         const QVariantList list = value.toList();
-        foreach(const QVariant &var, list) {
+        foreach( const QVariant & var, list ) {
             writeVariant( stream, var );
         }
         stream.writeEndElement();
-    }
-    else if( value.type() == QVariant::LongLong ) {
+    } else if( value.type() == QVariant::LongLong ) {
         stream.writeTextElement( "long", QString::number( value.toLongLong() ) );
-    }
-    else if( value.type() == QVariant::Map ) {
+    } else if( value.type() == QVariant::Map ) {
         QMap<QString, QVariant> map = value.toMap();
         QMapIterator<QString, QVariant> it( map );
 
@@ -423,8 +407,7 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
             stream.writeEndElement(); // item
         }
         stream.writeEndElement();
-    }
-    else if( value.type() == QVariant::Pixmap ) {
+    } else if( value.type() == QVariant::Pixmap ) {
         QByteArray ba;
         QBuffer buffer( &ba );
         buffer.open( QIODevice::WriteOnly );
@@ -435,30 +418,29 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
         stream.writeAttribute( "type", "pixmap" );
         stream.writeCharacters( ba.toBase64() );
         stream.writeEndElement();
-    }
-    else if( value.type() == QVariant::RegExp ) {
+    } else if( value.type() == QVariant::RegExp ) {
         const QRegExp exp = value.toRegExp();
 
         stream.writeStartElement( "regexp" );
         switch( exp.patternSyntax() ) {
-        case QRegExp::RegExp:
-            //stream.writeAttribute( "syntax", "regex" );
-            break;
-        case QRegExp::RegExp2:
-            stream.writeAttribute( "syntax", "regex2" );
-            break;
-        case QRegExp::Wildcard:
-            stream.writeAttribute( "syntax", "wildcard" );
-            break;
-        case QRegExp::WildcardUnix:
-            stream.writeAttribute( "syntax", "wildcardUnix" );
-            break;
-        case QRegExp::FixedString:
-            stream.writeAttribute( "syntax", "fixed" );
-            break;
-        case QRegExp::W3CXmlSchema11:
-            stream.writeAttribute( "syntax", "W3C_XML_Schema" );
-            break;
+            case QRegExp::RegExp:
+                //stream.writeAttribute( "syntax", "regex" );
+                break;
+            case QRegExp::RegExp2:
+                stream.writeAttribute( "syntax", "regex2" );
+                break;
+            case QRegExp::Wildcard:
+                stream.writeAttribute( "syntax", "wildcard" );
+                break;
+            case QRegExp::WildcardUnix:
+                stream.writeAttribute( "syntax", "wildcardUnix" );
+                break;
+            case QRegExp::FixedString:
+                stream.writeAttribute( "syntax", "fixed" );
+                break;
+            case QRegExp::W3CXmlSchema11:
+                stream.writeAttribute( "syntax", "W3C_XML_Schema" );
+                break;
         }
 
         if( exp.caseSensitivity() == Qt::CaseInsensitive ) {
@@ -471,36 +453,30 @@ void XmlWriter::writeVariant(QXmlStreamWriter &stream, const QVariant &value)
 
         stream.writeCharacters( exp.pattern() );
         stream.writeEndElement();
-    }
-    else if( value.type() == QVariant::String ) {
+    } else if( value.type() == QVariant::String ) {
         stream.writeTextElement( "string", value.toString() );
-    }
-    else if( value.type() == QVariant::StringList ) {
+    } else if( value.type() == QVariant::StringList ) {
         const QStringList list = value.toStringList();
 
         stream.writeStartElement( "list" );
         stream.writeAttribute( "type", "stringlist" );
-        foreach(const QString &str, list) {
+        foreach( const QString & str, list ) {
             stream.writeTextElement( "string", str );
         }
         stream.writeEndElement(); // list
-    }
-    else if( value.type() == QVariant::Time ) {
+    } else if( value.type() == QVariant::Time ) {
         stream.writeTextElement( "time", value.toTime().toString( Qt::ISODate ) );
-    }
-    else if( value.type() == QVariant::UInt ) {
+    } else if( value.type() == QVariant::UInt ) {
         stream.writeTextElement( "uint", QString::number( value.toUInt() ) );
-    }
-    else if( value.type() == QVariant::ULongLong ) {
+    } else if( value.type() == QVariant::ULongLong ) {
         stream.writeTextElement( "ulong", QString::number( value.toULongLong() ) );
-    }
-    else if( value.type() == QVariant::Url ) {
+    } else if( value.type() == QVariant::Url ) {
         stream.writeTextElement( "url", value.toUrl().toString() );
     }
 }
 
 
-void XmlWriter::writeColor(QXmlStreamWriter &stream, const QColor &color) const
+void XmlWriter::writeColor( QXmlStreamWriter &stream, const QColor &color ) const
 {
     if( !color.isValid() ) {
         return;
@@ -519,8 +495,8 @@ void XmlWriter::writeColor(QXmlStreamWriter &stream, const QColor &color) const
 }
 
 
-void XmlWriter::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
-                    const Money &min, bool maxEnabled, const Money &max) const
+void XmlWriter::writeLimit( QXmlStreamWriter &stream, bool minEnabled,
+                            const Money &min, bool maxEnabled, const Money &max ) const
 {
     if( !minEnabled && !maxEnabled && min.cents() == 0 && max.cents() == 0 ) {
         return;
@@ -544,7 +520,7 @@ void XmlWriter::writeLimit(QXmlStreamWriter &stream, bool minEnabled,
 }
 
 
-quint32 XmlWriter::categoryIdentifier(const Category *category)
+quint32 XmlWriter::categoryIdentifier( const Category *category )
 {
     Q_ASSERT( category );
 
@@ -557,7 +533,7 @@ quint32 XmlWriter::categoryIdentifier(const Category *category)
 }
 
 
-quint32 XmlWriter::postingIdentifier(const Posting *posting)
+quint32 XmlWriter::postingIdentifier( const Posting *posting )
 {
     Q_ASSERT( posting );
 

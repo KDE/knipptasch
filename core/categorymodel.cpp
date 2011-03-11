@@ -22,35 +22,35 @@
 #include <qmimedata.h>
 
 
-CategoryModel::CategoryModel(QObject *parent)
-  : QAbstractItemModel( parent ),
-    m_account( 0 )
+CategoryModel::CategoryModel( QObject *parent )
+    : QAbstractItemModel( parent ),
+      m_account( 0 )
 {
 }
 
 
 
-CategoryModel::CategoryModel(Account *account, QObject *parent)
-  : QAbstractItemModel( parent ),
-    m_account( 0 )
+CategoryModel::CategoryModel( Account *account, QObject *parent )
+    : QAbstractItemModel( parent ),
+      m_account( 0 )
 {
     setAccount( account );
 }
 
 
-Account* CategoryModel::account()
+Account *CategoryModel::account()
 {
     return m_account;
 }
 
 
-const Account* CategoryModel::account() const
+const Account *CategoryModel::account() const
 {
     return m_account;
 }
 
 
-void CategoryModel::setAccount(Account *account)
+void CategoryModel::setAccount( Account *account )
 {
 #if QT_VERSION >= 0x040600
     beginResetModel();
@@ -66,33 +66,33 @@ void CategoryModel::setAccount(Account *account)
 }
 
 
-const Category* CategoryModel::category(const QModelIndex &index) const
+const Category *CategoryModel::category( const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return 0;
     }
 
-    return static_cast<Category*>( index.internalPointer() );
+    return static_cast<Category *>( index.internalPointer() );
 }
 
 
-Category* CategoryModel::category(const QModelIndex &index)
+Category *CategoryModel::category( const QModelIndex &index )
 {
     if( !index.isValid() ) {
         return m_account->rootCategory();
     }
 
-    return static_cast<Category*>( index.internalPointer() );
+    return static_cast<Category *>( index.internalPointer() );
 }
 
 
-QModelIndex CategoryModel::categoryIndex(const Category *category) const
+QModelIndex CategoryModel::categoryIndex( const Category *category ) const
 {
     if( !category ) {
         return QModelIndex();
     }
 
-    for(int i = 0; i < rowCount(); ++i) {
+    for( int i = 0; i < rowCount(); ++i ) {
         QModelIndex idx = findCategoryIndex( index( i, 0 ), category );
         if( idx.isValid() ) {
             return idx;
@@ -103,7 +103,7 @@ QModelIndex CategoryModel::categoryIndex(const Category *category) const
 }
 
 
-int CategoryModel::rowCount(const QModelIndex &parent) const
+int CategoryModel::rowCount( const QModelIndex &parent ) const
 {
     if( !m_account ) {
         return 0;
@@ -116,16 +116,15 @@ int CategoryModel::rowCount(const QModelIndex &parent) const
     Category *parentCategory = 0;
     if( !parent.isValid() ) {
         parentCategory = m_account->rootCategory();
-    }
-    else {
-        parentCategory = static_cast<Category*>( parent.internalPointer() );
+    } else {
+        parentCategory = static_cast<Category *>( parent.internalPointer() );
     }
 
     return parentCategory->countCategories();
 }
 
 
-int CategoryModel::columnCount(const QModelIndex &parent) const
+int CategoryModel::columnCount( const QModelIndex &parent ) const
 {
     Q_UNUSED( parent );
 
@@ -137,7 +136,7 @@ int CategoryModel::columnCount(const QModelIndex &parent) const
 }
 
 
-QVariant CategoryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CategoryModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
     if( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
         switch( section ) {
@@ -160,7 +159,7 @@ QVariant CategoryModel::headerData(int section, Qt::Orientation orientation, int
 }
 
 
-QVariant CategoryModel::data(const QModelIndex &index, int role) const
+QVariant CategoryModel::data( const QModelIndex &index, int role ) const
 {
     if( !m_account ) {
         return QVariant();
@@ -170,11 +169,11 @@ QVariant CategoryModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if( !(role == Qt::EditRole || role == Qt::DisplayRole) ) {
+    if( !( role == Qt::EditRole || role == Qt::DisplayRole ) ) {
         return QVariant();
     }
 
-    Category *category = static_cast<Category*>( index.internalPointer() );
+    Category *category = static_cast<Category *>( index.internalPointer() );
     Q_ASSERT( category );
 
     switch( index.column() ) {
@@ -195,7 +194,7 @@ QVariant CategoryModel::data(const QModelIndex &index, int role) const
 }
 
 
-bool CategoryModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool CategoryModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
     if( !m_account ) {
         return false;
@@ -205,20 +204,19 @@ bool CategoryModel::setData(const QModelIndex &index, const QVariant &value, int
         return false;
     }
 
-    if( !(role == Qt::EditRole || role == Qt::DisplayRole) ) {
+    if( !( role == Qt::EditRole || role == Qt::DisplayRole ) ) {
         return false;
     }
 
-    Category *category = static_cast<Category*>( index.internalPointer() );
+    Category *category = static_cast<Category *>( index.internalPointer() );
     Q_ASSERT( category );
 
     switch( index.column() ) {
-        case CATEGORY_NAME:
-        {
-            QString str = value.toString().trimmed();
-            category->setName( str.isEmpty() ? tr( "Unnamed Category" ) : str );
-            break;
-        }
+        case CATEGORY_NAME: {
+                QString str = value.toString().trimmed();
+                category->setName( str.isEmpty() ? tr( "Unnamed Category" ) : str );
+                break;
+            }
 
         case CATEGORY_COLOR:
             category->setColor( value.value<QColor>() );
@@ -233,23 +231,22 @@ bool CategoryModel::setData(const QModelIndex &index, const QVariant &value, int
 }
 
 
-bool CategoryModel::insertRows(int position, int rows, const QModelIndex &parent)
+bool CategoryModel::insertRows( int position, int rows, const QModelIndex &parent )
 {
     Q_UNUSED( position );
 
     Category *parentCategory = 0;
     if( !parent.isValid() ) {
         parentCategory = m_account->rootCategory();
-    }
-    else {
-        parentCategory = static_cast<Category*>( parent.internalPointer() );
+    } else {
+        parentCategory = static_cast<Category *>( parent.internalPointer() );
     }
     Q_ASSERT( parentCategory );
 
     beginInsertRows( parent, parentCategory->countCategories(),
-                             parentCategory->countCategories() + rows - 1 );
+                     parentCategory->countCategories() + rows - 1 );
 
-    for(int row = 0; row < rows; row++) {
+    for( int row = 0; row < rows; row++ ) {
         parentCategory->addCategory( new Category( tr( "Unnamed Category" ), m_account ) );
     }
 
@@ -259,23 +256,22 @@ bool CategoryModel::insertRows(int position, int rows, const QModelIndex &parent
 }
 
 
-bool CategoryModel::removeRows(int position, int rows, const QModelIndex &parent)
+bool CategoryModel::removeRows( int position, int rows, const QModelIndex &parent )
 {
     Category *parentCategory = 0;
     if( !parent.isValid() ) {
         parentCategory = m_account->rootCategory();
-    }
-    else {
-        parentCategory = static_cast<Category*>( parent.internalPointer() );
+    } else {
+        parentCategory = static_cast<Category *>( parent.internalPointer() );
     }
     Q_ASSERT( parentCategory );
-    Q_ASSERT( ( position + rows - 1 ) < parentCategory->countCategories() );
+    Q_ASSERT(( position + rows - 1 ) < parentCategory->countCategories() );
 
     beginRemoveRows( parent, position, position + rows - 1 );
 
-    for(int row = 0; row < rows; ++row) {
+    for( int row = 0; row < rows; ++row ) {
         delete parentCategory->takeCategory( position );
-     }
+    }
 
     endRemoveRows();
 
@@ -283,7 +279,7 @@ bool CategoryModel::removeRows(int position, int rows, const QModelIndex &parent
 }
 
 
-Qt::ItemFlags CategoryModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CategoryModel::flags( const QModelIndex &index ) const
 {
     if( !m_account ) {
         return 0;
@@ -295,15 +291,15 @@ Qt::ItemFlags CategoryModel::flags(const QModelIndex &index) const
     }
 
     return QAbstractItemModel::flags( index )
-            | Qt::ItemIsEditable
-            | Qt::ItemIsDragEnabled
-            /* | Qt::ItemIsDropEnabled */;  //<< TODO implement Drag & Drop
+           | Qt::ItemIsEditable
+           | Qt::ItemIsDragEnabled
+           /* | Qt::ItemIsDropEnabled */;  //<< TODO implement Drag & Drop
 }
 
 
 Qt::DropActions CategoryModel::supportedDropActions() const
 {
-     return Qt::CopyAction | Qt::MoveAction;
+    return Qt::CopyAction | Qt::MoveAction;
 }
 
 
@@ -317,7 +313,7 @@ QStringList CategoryModel::mimeTypes() const
 }
 
 
-QMimeData* CategoryModel::mimeData(const QModelIndexList &indexes) const
+QMimeData *CategoryModel::mimeData( const QModelIndexList &indexes ) const
 {
     QMimeData *mimeData = QAbstractItemModel::mimeData( indexes );
 
@@ -327,14 +323,14 @@ QMimeData* CategoryModel::mimeData(const QModelIndexList &indexes) const
 }
 
 
-bool CategoryModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+bool CategoryModel::dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent )
 {
     //TODO implement Drag & Drop
     return QAbstractItemModel::dropMimeData( data, action, row, column, parent );
 }
 
 
-QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex CategoryModel::index( int row, int column, const QModelIndex &parent ) const
 {
     if( !m_account ) {
         return QModelIndex();
@@ -348,9 +344,8 @@ QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent)
 
     if( !parent.isValid() ) {
         parentCategory =  m_account->rootCategory();
-    }
-    else {
-        parentCategory = static_cast<Category*>( parent.internalPointer() );
+    } else {
+        parentCategory = static_cast<Category *>( parent.internalPointer() );
     }
 
 
@@ -359,14 +354,13 @@ QModelIndex CategoryModel::index(int row, int column, const QModelIndex &parent)
         Q_ASSERT( childCategory );
 
         return createIndex( row, column, childCategory );
-    }
-    else {
+    } else {
         return QModelIndex();
     }
 }
 
 
-QModelIndex CategoryModel::parent(const QModelIndex &index) const
+QModelIndex CategoryModel::parent( const QModelIndex &index ) const
 {
     if( !m_account ) {
         return QModelIndex();
@@ -376,7 +370,7 @@ QModelIndex CategoryModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    Category *childCategory = static_cast<Category*>( index.internalPointer() );
+    Category *childCategory = static_cast<Category *>( index.internalPointer() );
     Category *parentCategory = m_account->findCategoryParent( childCategory );
 
     if( parentCategory == m_account->rootCategory() ) {
@@ -387,7 +381,7 @@ QModelIndex CategoryModel::parent(const QModelIndex &index) const
     Q_ASSERT( grandparents );
 
     int row = 0;
-    for(int i = 0; i < grandparents->countCategories(); ++i) {
+    for( int i = 0; i < grandparents->countCategories(); ++i ) {
         if( grandparents->category( i ) == parentCategory ) {
             row = i;
             break;
@@ -398,17 +392,17 @@ QModelIndex CategoryModel::parent(const QModelIndex &index) const
 }
 
 
-QModelIndex CategoryModel::findCategoryIndex(const QModelIndex &parent, const Category *category) const
+QModelIndex CategoryModel::findCategoryIndex( const QModelIndex &parent, const Category *category ) const
 {
     if( !parent.isValid() ) {
         return QModelIndex();
     }
 
-    if( static_cast<Category*>( parent.internalPointer() ) == category ) {
+    if( static_cast<Category *>( parent.internalPointer() ) == category ) {
         return parent;
     }
 
-    for(int i = 0; i < rowCount( parent ); ++i) {
+    for( int i = 0; i < rowCount( parent ); ++i ) {
         QModelIndex idx = findCategoryIndex( parent.child( i, parent.column() ), category );
         if( idx.isValid() ) {
             return idx;

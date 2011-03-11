@@ -48,20 +48,20 @@ class MainWindow;
  */
 class AccountWidget : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit AccountWidget(MainWindow *mainWindow);
+        explicit AccountWidget( MainWindow *mainWindow );
         ~AccountWidget();
 
         bool isModified() const;
 
         QString fileName() const;
-        void setFileName(const QString &name);
+        void setFileName( const QString &name );
 
-        Account* account();
-        const Account* account() const;
-        void setAccount(Account *acc);
+        Account *account();
+        const Account *account() const;
+        void setAccount( Account *acc );
 
         void checkActionState();
 
@@ -71,7 +71,7 @@ class AccountWidget : public QWidget
         bool hasSeveralSelectedRows() const;
         int countSelectedRows() const;
 
-        QList<const Posting*> selectedPostings() const;
+        QList<const Posting *> selectedPostings() const;
 
     public slots:
         void loadConfig();
@@ -81,7 +81,7 @@ class AccountWidget : public QWidget
 
     public slots:
         bool onSaveFile();
-        bool onSaveAsFile(const QString &str = QString());
+        bool onSaveAsFile( const QString &str = QString() );
         void onPrintFile();
 
         void onRedo();
@@ -98,32 +98,32 @@ class AccountWidget : public QWidget
 
         void onConfigureAccount();
 
-        void onResizeColumnToContents(int);
+        void onResizeColumnToContents( int );
 
     signals:
         void changed();
 
     protected:
-        bool eventFilter(QObject *obj, QEvent *event);
+        bool eventFilter( QObject *obj, QEvent *event );
 
     private slots:
         void slotSetIndexToCurrentInput();
         void slotUpdateAccountInfo();
         void slotCurrentRowChanged();
 
-        void slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget);
+        void slotUpdateAccountTabWidget( AbstractAccountTabWidget *widget );
 
         void closeSearchWidget();
 
     private:
 #if defined(HAVE_KDE)
-        KActionCollection* mainWindowActionCollection();
+        KActionCollection *mainWindowActionCollection();
 #else
-        ActionCollection* mainWindowActionCollection();
+        ActionCollection *mainWindowActionCollection();
 #endif
 
-        void showHeaderMenu(QContextMenuEvent *e, const QModelIndex &index);
-        void showTableMenu(QContextMenuEvent *e, const QModelIndex &index);
+        void showHeaderMenu( QContextMenuEvent *e, const QModelIndex &index );
+        void showTableMenu( QContextMenuEvent *e, const QModelIndex &index );
 
     private:
         void loadAccountTabWidgetPlugins();
@@ -136,7 +136,7 @@ class AccountWidget : public QWidget
 
         QString m_filename;
 
-        QList<AbstractAccountTabWidget*> m_tabwidgets;
+        QList<AbstractAccountTabWidget *> m_tabwidgets;
 };
 
 

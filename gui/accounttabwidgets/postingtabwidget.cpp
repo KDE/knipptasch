@@ -27,10 +27,10 @@
 
 
 
-PostingTabWidget::PostingTabWidget(QWidget *parent)
-  : AbstractAccountTabWidget( tr( "Posting" ), BarIcon( "knipptasch" ), parent ),
-    ui( new Ui::PostingTabWidget ),
-    m_mapper( new QDataWidgetMapper( this ) )
+PostingTabWidget::PostingTabWidget( QWidget *parent )
+    : AbstractAccountTabWidget( tr( "Posting" ), BarIcon( "knipptasch" ), parent ),
+      ui( new Ui::PostingTabWidget ),
+      m_mapper( new QDataWidgetMapper( this ) )
 {
     ui->setupUi( this );
 
@@ -39,7 +39,7 @@ PostingTabWidget::PostingTabWidget(QWidget *parent)
 }
 
 
-void PostingTabWidget::accountModelChanged(AccountModel *model)
+void PostingTabWidget::accountModelChanged( AccountModel *model )
 {
     m_mapper->setModel( model );
 
@@ -58,7 +58,7 @@ void PostingTabWidget::accountModelChanged(AccountModel *model)
 }
 
 
-void PostingTabWidget::currentSelectedIndexChanged(const QModelIndex &index)
+void PostingTabWidget::currentSelectedIndexChanged( const QModelIndex &index )
 {
     m_mapper->submit();
     m_mapper->setCurrentModelIndex( index );

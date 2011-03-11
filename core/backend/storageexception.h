@@ -34,7 +34,7 @@ class QXmlStreamReader;
 class KNIPPTASCH_CORE_EXPORT StorageException : public std::runtime_error
 {
     public:
-        StorageException(const QString &s);
+        StorageException( const QString &s );
         ~StorageException() throw();
 
         QString errorMessage() const;
@@ -53,7 +53,7 @@ class KNIPPTASCH_CORE_EXPORT StorageException : public std::runtime_error
 class KNIPPTASCH_CORE_EXPORT StorageFileException : public StorageException
 {
     public:
-        StorageFileException(const QString &s);
+        StorageFileException( const QString &s );
         ~StorageFileException() throw();
 };
 
@@ -67,7 +67,7 @@ class KNIPPTASCH_CORE_EXPORT StorageFileException : public StorageException
 class KNIPPTASCH_CORE_EXPORT StorageFileVersionException : public StorageFileException
 {
     public:
-        StorageFileVersionException(const QString &s);
+        StorageFileVersionException( const QString &s );
         ~StorageFileVersionException() throw();
 };
 
@@ -81,8 +81,8 @@ class KNIPPTASCH_CORE_EXPORT StorageFileVersionException : public StorageFileExc
 class KNIPPTASCH_CORE_EXPORT StorageParserException : public StorageException
 {
     public:
-        StorageParserException(const QString &s, const QString element, int line = -1, int column = -1, int characterOffset = -1);
-        StorageParserException(const QString &s, const QXmlStreamReader &xml);
+        StorageParserException( const QString &s, const QString element, int line = -1, int column = -1, int characterOffset = -1 );
+        StorageParserException( const QString &s, const QXmlStreamReader &xml );
         ~StorageParserException() throw();
 
         QString element() const;
@@ -107,8 +107,8 @@ class KNIPPTASCH_CORE_EXPORT StorageParserException : public StorageException
 class KNIPPTASCH_CORE_EXPORT StorageParserAttributeException : public StorageParserException
 {
     public:
-        StorageParserAttributeException(const QString &s, const QString attribute, const QString element, int line = -1, int column = -1, int characterOffset = -1);
-        StorageParserAttributeException(const QString &s, const QString attribute, const QXmlStreamReader &xml);
+        StorageParserAttributeException( const QString &s, const QString attribute, const QString element, int line = -1, int column = -1, int characterOffset = -1 );
+        StorageParserAttributeException( const QString &s, const QString attribute, const QXmlStreamReader &xml );
         ~StorageParserAttributeException() throw();
 
         QString attribute() const;
@@ -126,7 +126,7 @@ class KNIPPTASCH_CORE_EXPORT StorageParserAttributeException : public StoragePar
 class KNIPPTASCH_CORE_EXPORT StoragePasswordException : public StorageException
 {
     public:
-        StoragePasswordException(const QString &s);
+        StoragePasswordException( const QString &s );
         ~StoragePasswordException() throw();
 };
 

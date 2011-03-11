@@ -49,100 +49,100 @@ namespace Knipptasch
              */
             virtual ~Plugin();
 
-            
+
             /**
-             * 
+             *
              */
             bool isEnabled() const;
-            
-            
+
+
             /**
-             * 
+             *
              */
-            virtual bool isEnabledByDefault() const;            
+            virtual bool isEnabledByDefault() const;
 
 
             /**
              * @brief Enable plugin
-             * 
+             *
              * @see PluginManager::setEnabled
-             * 
+             *
              * @return true if plugin was successfully enabled
              */
-            bool setEnabled(bool enable = true);
-            
+            bool setEnabled( bool enable = true );
+
 
             /**
              * @brief Disable plugin
-             * 
+             *
              * @see PluginManager::setDisabled
-             * 
+             *
              * @return true if plugin was successfully disabled
              */
             bool setDisabled();
-            
-           
-            
+
+
+
             /**
              * @brief Plugin Identifier
              */
             virtual QByteArray identifier() const = 0;
-            
-            
+
+
             /**
              * @brief Short name for the plugin
-             * 
-             * This is the short name of the plugin, used for options structures. 
+             *
+             * This is the short name of the plugin, used for options structures.
              * It must consist of only alphanumerics (no spaces or punctuation).
-             * 
+             *
              * @return Short plugin name
              */
             virtual QString shortName() const = 0;
-    
-            
+
+
             /**
              * @brief Plugin Name
-             * 
+             *
              * The full name of the plugin.
              */
             virtual QString name() const = 0;
 
-            
+
             /**
              * @brief Plugin Icon
-             * 
+             *
              * The icon of the plugin.
              */
             virtual QPixmap icon() const = 0;
 
-            
+
             /**
              * @brief Plugin Description
-             * 
+             *
              * The description of the plugin.
              */
             virtual QString description() const = 0;
 
-            
+
             /**
              * @brief Plugin Decription
-             * 
+             *
              * The description of the plugin.
              */
             virtual QString author() const = 0;
 
-            
+
             /**
              * @brief Plugin Decription
-             * 
+             *
              * The description of the plugin.
              */
             virtual QUrl homepage() const;
-            
-            
+
+
             /**
              * @brief Plugin version
-             * 
+             *
              * Free-form string of the plugin version. Human readable
              */
             virtual QByteArray version() const = 0;
@@ -150,43 +150,43 @@ namespace Knipptasch
 
             /**
              * @brief Plugin options widget
-             * 
+             *
              * This method is called by the Knipptasch options system to retrieve
              * a widget containing the options for this plugin.
-             * 
+             *
              * This will then be embedded in the options dialog, so this
-             * should be considered when designing the widget. 
-             * 
-             * Should return NULL when there are no user-configurable options. 
+             * should be considered when designing the widget.
+             *
+             * Should return NULL when there are no user-configurable options.
              * The calling method is responsible for deleting the options.
-             * 
+             *
              * TODO: replace QWidget by AbstractConfigPage
              */
-            virtual QWidget* options() const;
+            virtual QWidget *options() const;
 
 
-        protected:            
+        protected:
             /**
              * Default Constructor
              */
             Plugin();
-            
-            
+
+
             /**
              * @see setEnabled
              */
             virtual bool enable();
-            
-            
+
+
             /**
              * @see setDisabled
              */
             virtual bool disable();
-            
+
         private:
             bool m_enabled;
     };
-    
+
 } // EndNamspace Knipptasch
 
 

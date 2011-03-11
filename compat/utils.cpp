@@ -42,7 +42,7 @@
 
 
 
-QString getOpenFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options)
+QString getOpenFileName( QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options )
 {
     QString cap = caption.isEmpty() ? QObject::tr( "Open File" ) : caption;
 
@@ -55,7 +55,7 @@ QString getOpenFileName(QWidget *parent, const QString &caption, const QString &
 }
 
 
-QString getSaveFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options)
+QString getSaveFileName( QWidget *parent, const QString &caption, const QString &dir, const QString &filterQt, const QString &filterKDE, QString *selectedFilter, QFileDialog::Options options )
 {
     QString cap = caption.isEmpty() ? QObject::tr( "Save File" ) : caption;
 
@@ -68,10 +68,10 @@ QString getSaveFileName(QWidget *parent, const QString &caption, const QString &
 }
 
 
-bool copyFile(QWidget* parent, const QString& src, const QString& dest)
+bool copyFile( QWidget *parent, const QString &src, const QString &dest )
 {
 #if defined(HAVE_KDE)
-    KIO::CopyJob* job = KIO::copy( src, dest, KIO::HideProgressInfo );
+    KIO::CopyJob *job = KIO::copy( src, dest, KIO::HideProgressInfo );
     job->setDefaultPermissions( true );
 
     KIO::NetAccess::synchronousRun( job, parent );
@@ -85,10 +85,10 @@ bool copyFile(QWidget* parent, const QString& src, const QString& dest)
         QFile::remove( dest );
     }
 
-    if ( !QFile::copy( src, dest ) ) {
+    if( !QFile::copy( src, dest ) ) {
         QMessageBox::information( // krazy:exclude=qclasses
             parent,
-            QObject::tr("Could not copy file '%1' to '%2'.").arg( src ).arg( dest ),
+            QObject::tr( "Could not copy file '%1' to '%2'." ).arg( src ).arg( dest ),
             QObject::tr( "Error Copying File" )
         );
 
@@ -106,45 +106,47 @@ QString defaultDataWriteDir()
     QString rval;
 
 #if defined(Q_OS_WIN32)
-    rval = QString(qgetenv("APPDATA")) + QDir::separator() + QCoreApplication::organizationName() + QDir::separator() + QCoreApplication::applicationName() + QDir::separator();
+    rval = QString( qgetenv( "APPDATA" ) ) + QDir::separator() + QCoreApplication::organizationName() + QDir::separator() + QCoreApplication::applicationName() + QDir::separator();
 #elif defined(Q_OS_MAC)
     rval = QDir::homePath() + "/Library/Application Support/" + QCoreApplication::applicationName() + QDir::separator();
 #else // UNIX
-    QStringList dataDirPaths = QString(qgetenv("XDG_DATA_HOME")).split(':', QString::SkipEmptyParts);
+    QStringList dataDirPaths = QString( qgetenv( "XDG_DATA_HOME" ) ).split( ':', QString::SkipEmptyParts );
 
-    if (dataDirPaths.isEmpty())
+    if( dataDirPaths.isEmpty() ) {
         dataDirPaths << QDir::homePath() + QDir::separator() + ".local/share/apps/";
+    }
 
     rval = dataDirPaths[0] + QDir::separator() + QCoreApplication::applicationName().toLower() + QDir::separator();
 #endif
 
-    return QDir::cleanPath(rval);
+    return QDir::cleanPath( rval );
 }
 #endif
 
 
-QString findFilePath(const QString& fileName)
+QString findFilePath( const QString &fileName )
 {
 #if defined(HAVE_KDE)
-    const QString dir = KStandardDirs::locateLocal("data", QString(), true);
+    const QString dir = KStandardDirs::locateLocal( "data", QString(), true );
     return dir + QDir::separator() + QCoreApplication::applicationName().toLower() + QDir::separator() + fileName;
 #else
     QStringList dataDirs = findDataDirPaths();
 
-    foreach (const QString& dir, dataDirs)
-        if (QFile::exists(dir + QDir::separator() + fileName))
-            return dir + QDir::separator() + fileName;
+    foreach( const QString & dir, dataDirs )
+    if( QFile::exists( dir + QDir::separator() + fileName ) ) {
+        return dir + QDir::separator() + fileName;
+    }
 
     return defaultDataWriteDir() + QDir::separator() + fileName;
 #endif
 }
 
 
-QString findExistingFilePath(const QString& fileName)
+QString findExistingFilePath( const QString &fileName )
 {
     QStringList dirs = findDataDirPaths();
-    foreach(const QString& s, dirs) {
-        if (QFile::exists(s + QDir::separator() + fileName)) {
+    foreach( const QString & s, dirs ) {
+        if( QFile::exists( s + QDir::separator() + fileName ) ) {
             return s + QDir::separator() + fileName;
         }
     }
@@ -157,7 +159,7 @@ QStringList findDataDirPaths()
 #if defined(HAVE_KDE)
     QStringList rval = KGlobal::dirs()->resourceDirs( "data" );
 
-    for(int i = 0; i < rval.size(); i++) {
+    for( int i = 0; i < rval.size(); i++ ) {
         rval[ i ].append( QDir::separator() + QCoreApplication::applicationName().toLower() + QDir::separator() );
     }
 
@@ -165,31 +167,32 @@ QStringList findDataDirPaths()
 
 #else
 
-    QStringList dataDirPaths = QString(qgetenv("XDG_DATA_HOME")).split(':', QString::SkipEmptyParts);
+    QStringList dataDirPaths = QString( qgetenv( "XDG_DATA_HOME" ) ).split( ':', QString::SkipEmptyParts );
 
-    if (dataDirPaths.isEmpty())
+    if( dataDirPaths.isEmpty() ) {
         dataDirPaths << QDir::homePath() + QDir::separator() + ".local/share/apps/";
+    }
 
-    dataDirPaths << QString(qgetenv("XDG_DATA_DIRS")).split(':', QString::SkipEmptyParts);
+    dataDirPaths << QString( qgetenv( "XDG_DATA_DIRS" ) ).split( ':', QString::SkipEmptyParts );
 
 #if defined(Q_OS_WIN32)
     dataDirPaths
-        << QString(qgetenv("APPDATA")) + QDir::separator() + QCoreApplication::organizationName() + QDir::separator() + QCoreApplication::applicationName()
-        << QCoreApplication::applicationDirPath();
+            << QString( qgetenv( "APPDATA" ) ) + QDir::separator() + QCoreApplication::organizationName() + QDir::separator() + QCoreApplication::applicationName()
+            << QCoreApplication::applicationDirPath();
 #elif defined(Q_OS_MAC)
     dataDirPaths
-        << QDir::homePath() + "/Library/Application Support/" + QCoreApplication::applicationName() + QDir::separator()
-        << QCoreApplication::applicationDirPath();
+            << QDir::homePath() + "/Library/Application Support/" + QCoreApplication::applicationName() + QDir::separator()
+            << QCoreApplication::applicationDirPath();
 #else // UNIX
-    dataDirPaths << QString("/usr/share/apps/") + QCoreApplication::applicationName().toLower() + QDir::separator();
+    dataDirPaths << QString( "/usr/share/apps/" ) + QCoreApplication::applicationName().toLower() + QDir::separator();
 #endif
 
     QString appDir = QCoreApplication::applicationDirPath();
-    int binpos = appDir.lastIndexOf("/bin");
+    int binpos = appDir.lastIndexOf( "/bin" );
 
-    if (binpos >= 0) {
-        appDir.replace(binpos, 4, "/share/apps/");
-        appDir.append(QCoreApplication::applicationName().toLower() + QDir::separator());
+    if( binpos >= 0 ) {
+        appDir.replace( binpos, 4, "/share/apps/" );
+        appDir.append( QCoreApplication::applicationName().toLower() + QDir::separator() );
         dataDirPaths << appDir;
     }
 
@@ -199,17 +202,18 @@ QStringList findDataDirPaths()
     // clean up
     QStringList::Iterator i = dataDirPaths.begin();
 
-    while (i != dataDirPaths.end()) {
-        *i = QDir::cleanPath(*i);
+    while( i != dataDirPaths.end() ) {
+        *i = QDir::cleanPath( *i );
 
-        if (!i->endsWith(QDir::separator()) && !i->endsWith('/'))
-            i->append(QDir::separator());
+        if( !i->endsWith( QDir::separator() ) && !i->endsWith( '/' ) ) {
+            i->append( QDir::separator() );
+        }
 
         if( !QFile::exists( *i ) ) {
-            i = dataDirPaths.erase(i);
-        }
-        else
+            i = dataDirPaths.erase( i );
+        } else {
             i++;
+        }
     }
 
     dataDirPaths.removeDuplicates();
@@ -224,32 +228,32 @@ Qt::DayOfWeek configuredWeekStartDay()
 #if defined(HAVE_KDE)
     return static_cast<Qt::DayOfWeek>( KGlobal::locale()->weekStartDay() );
 #else
-    return static_cast<Qt::DayOfWeek>(1);
+    return static_cast<Qt::DayOfWeek>( 1 );
 #endif
 }
 
 
-QString formatNumber(qint32 i)
+QString formatNumber( qint32 i )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatNumber(i);
+    return KGlobal::locale()->formatNumber( i );
 #else
-    return QLocale().toString(i);
+    return QLocale().toString( i );
 #endif
 }
 
 
-QString formatNumber(double num, int precision)
+QString formatNumber( double num, int precision )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatNumber(num, precision);
+    return KGlobal::locale()->formatNumber( num, precision );
 #else
-    return QLocale().toString(num, 'f', precision >= 0 ? precision : 2 );
+    return QLocale().toString( num, 'f', precision >= 0 ? precision : 2 );
 #endif
 }
 
 
-QString formatMoney(double num, int precision)
+QString formatMoney( double num, int precision )
 {
 #if defined(HAVE_KDE)
     return KGlobal::locale()->formatMoney( num, QString(), precision );
@@ -269,32 +273,28 @@ QString decimalSymbol()
 }
 
 
-QDateTime parseDateTimeByPattern(const QString &dateStr, const QString &pattern)
+QDateTime parseDateTimeByPattern( const QString &dateStr, const QString &pattern )
 {
     int year, month, day, hour, minute, second;
     year = month = day = hour = minute = second = 0;
 
     int currPos = 0;
-    for(int i = 0; i < pattern.length(); ++i) {
+    for( int i = 0; i < pattern.length(); ++i ) {
         if( pattern[ i ] == 'y' ) { // 19YY
             if( currPos + 1 < dateStr.length() ) {
                 year = 1900 + dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'Y' ) { // YYYY
-            if ( currPos + 3 < dateStr.length() ) {
+        } else if( pattern[ i ] == 'Y' ) { // YYYY
+            if( currPos + 3 < dateStr.length() ) {
                 year = dateStr.mid( currPos, 4 ).toInt();
                 currPos += 4;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'm' ) { // M or MM
+        } else if( pattern[ i ] == 'm' ) { // M or MM
             if( currPos + 1 < dateStr.length() ) {
                 if( dateStr[ currPos ].isDigit() ) {
                     if( dateStr[ currPos + 1 ].isDigit() ) {
@@ -307,24 +307,21 @@ QDateTime parseDateTimeByPattern(const QString &dateStr, const QString &pattern)
 
             if( currPos < dateStr.length() ) {
                 if( dateStr[ currPos ].isDigit() ) {
-                month = dateStr.mid( currPos, 1 ).toInt();
-                currPos++;
-                continue;
+                    month = dateStr.mid( currPos, 1 ).toInt();
+                    currPos++;
+                    continue;
                 }
             }
 
             return QDateTime();
-        }
-        else if( pattern[ i ] == 'M' ) { // 0M or MM
+        } else if( pattern[ i ] == 'M' ) { // 0M or MM
             if( currPos + 1 < dateStr.length() ) {
                 month = dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'd' ) { // D or DD
+        } else if( pattern[ i ] == 'd' ) { // D or DD
             if( currPos + 1 < dateStr.length() ) {
                 if( dateStr[ currPos ].isDigit() ) {
                     if( dateStr[ currPos + 1 ].isDigit() ) {
@@ -344,44 +341,35 @@ QDateTime parseDateTimeByPattern(const QString &dateStr, const QString &pattern)
             }
 
             return QDateTime();
-        }
-        else if( pattern[ i ] == 'D' ) { // 0D or DD
+        } else if( pattern[ i ] == 'D' ) { // 0D or DD
             if( currPos + 1 < dateStr.length() ) {
                 day = dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'H' ) { // 0H or HH
+        } else if( pattern[ i ] == 'H' ) { // 0H or HH
             if( currPos + 1 < dateStr.length() ) {
                 hour = dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'I' ) { // 0I or II
+        } else if( pattern[ i ] == 'I' ) { // 0I or II
             if( currPos + 1 < dateStr.length() ) {
                 minute = dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else if( pattern[ i ] == 'S' ) { // 0S or SS
+        } else if( pattern[ i ] == 'S' ) { // 0S or SS
             if( currPos + 1 < dateStr.length() ) {
                 second = dateStr.mid( currPos, 2 ).toInt();
                 currPos += 2;
-            }
-            else {
+            } else {
                 return QDateTime();
             }
-        }
-        else {
+        } else {
             currPos++;
         }
     }
@@ -390,47 +378,47 @@ QDateTime parseDateTimeByPattern(const QString &dateStr, const QString &pattern)
 }
 
 
-QString formatDateTime(const QDateTime& d)
+QString formatDateTime( const QDateTime &d )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatDateTime(d);
+    return KGlobal::locale()->formatDateTime( d );
 #else
-    return QLocale().toString(d, QLocale::ShortFormat);
+    return QLocale().toString( d, QLocale::ShortFormat );
 #endif
 }
 
 
-QString formatShortDate(const QDate& d)
+QString formatShortDate( const QDate &d )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatDate(d, KLocale::ShortDate);
+    return KGlobal::locale()->formatDate( d, KLocale::ShortDate );
 #else
-    return QLocale().toString(d, QLocale::ShortFormat);
+    return QLocale().toString( d, QLocale::ShortFormat );
 #endif
 }
 
 
-QString formatLongDate(const QDate& d)
+QString formatLongDate( const QDate &d )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatDate(d);
+    return KGlobal::locale()->formatDate( d );
 #else
-    return QLocale().toString(d, QLocale::LongFormat);
+    return QLocale().toString( d, QLocale::LongFormat );
 #endif
 }
 
 
-QString formatTime(const QTime& t)
+QString formatTime( const QTime &t )
 {
 #if defined(HAVE_KDE)
-    return KGlobal::locale()->formatTime(t);
+    return KGlobal::locale()->formatTime( t );
 #endif
-    return QLocale().toString(t);
+    return QLocale().toString( t );
 }
 
 
 
-QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *ok)
+QDate readDate( const QString &str, const QString &userDefinedDateFormat, bool *ok )
 {
     bool valid = false;
     QDate date;
@@ -491,10 +479,9 @@ QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *o
                 while( !fmt.isEmpty() && !fmt.startsWith( '%' ) ) {
                     fmt.remove( 0, 1 );
                 }
-            }
-            else {
+            } else {
                 fmt.remove( pos, 2 );
-                while(pos > 0 && fmt[pos - 1] != '%') {
+                while( pos > 0 && fmt[pos - 1] != '%' ) {
                     fmt.remove( pos, 1 );
                     --pos;
                 }
@@ -503,20 +490,20 @@ QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *o
 
         date = KGlobal::locale()->calendar()->readDate( str, fmt, &valid );
 #else
-       /*
-        * Qt version (the format variables are different between KDE and Qt)
-        *
-        *  d     The day as a number without a leading zero (1 to 31)
-        *  dd    The day as a number with a leading zero (01 to 31)
-        *  ddd   The abbreviated localized day name (e.g. 'Mon' to 'Sun')
-        *  dddd  The long localized day name (e.g. 'Monday' to 'Sunday')
-        *  M     The month as a number without a leading zero (1 to 12)
-        *  MM    The month as a number with a leading zero (01 to 12)
-        *  MMM   The abbreviated localized month name (e.g. 'Jan' to 'Dec')
-        *  MMMM  The long localized month name (e.g. 'January' to 'December')
-        *  yy    The year as two digit number (00 to 99)
-        *  yyyy  The year as four digit number. If the year is negative, a minus sign is prepended in addition.
-        */
+        /*
+         * Qt version (the format variables are different between KDE and Qt)
+         *
+         *  d     The day as a number without a leading zero (1 to 31)
+         *  dd    The day as a number with a leading zero (01 to 31)
+         *  ddd   The abbreviated localized day name (e.g. 'Mon' to 'Sun')
+         *  dddd  The long localized day name (e.g. 'Monday' to 'Sunday')
+         *  M     The month as a number without a leading zero (1 to 12)
+         *  MM    The month as a number with a leading zero (01 to 12)
+         *  MMM   The abbreviated localized month name (e.g. 'Jan' to 'Dec')
+         *  MMMM  The long localized month name (e.g. 'January' to 'December')
+         *  yy    The year as two digit number (00 to 99)
+         *  yyyy  The year as four digit number. If the year is negative, a minus sign is prepended in addition.
+         */
         QString fmt = QLocale().dateFormat( QLocale::ShortFormat );
 
         fmt.replace( "yyyy", "yy" );
@@ -529,11 +516,10 @@ QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *o
                 while( !fmt.isEmpty() && !fmt.startsWith( 'd' ) && !fmt.startsWith( 'M' ) ) {
                     fmt.remove( 0, 1 );
                 }
-            }
-            else {
+            } else {
                 fmt.remove( pos, 2 );
 
-                while(pos > 0 && !fmt.isEmpty() && fmt[pos - 1] != 'd' && fmt[pos - 1] != 'M') {
+                while( pos > 0 && !fmt.isEmpty() && fmt[pos - 1] != 'd' && fmt[pos - 1] != 'M' ) {
                     fmt.remove( pos, 1 );
                     --pos;
                 }
@@ -569,10 +555,9 @@ QDate readDate(const QString &str, const QString &userDefinedDateFormat, bool *o
          * Unlike KDE, Qt interprets two digit years as is, i.e., years 0 - 99.
          * For a finance application, this is an unexpected behaviour.
          */
-        if( ( date.year() < 30 ) ) {
+        if(( date.year() < 30 ) ) {
             date = date.addYears( 2000 );
-        }
-        else if( date.year() < 100 ) {
+        } else if( date.year() < 100 ) {
             date = date.addYears( 1900 );
         }
 

@@ -29,23 +29,23 @@
  */
 class RecentFileMenu : public QMenu
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit RecentFileMenu(QWidget *parent);
-        explicit RecentFileMenu(const QString &title, QWidget *parent);
+        explicit RecentFileMenu( QWidget *parent );
+        explicit RecentFileMenu( const QString &title, QWidget *parent );
 
     public slots:
         QStringList files() const;
-        void addFile(const QString &fileName);
-        void removeFile(const QString &fileName);
+        void addFile( const QString &fileName );
+        void removeFile( const QString &fileName );
         void clearMenu();
 
     signals:
-        void openFile(const QString &fileName);
+        void openFile( const QString &fileName );
 
     private slots:
-        void slotMenuAction(QAction *action);
+        void slotMenuAction( QAction *action );
         void updateActions();
 
     private:

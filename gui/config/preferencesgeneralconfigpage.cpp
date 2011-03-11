@@ -38,14 +38,12 @@
 class FileSystemModel : public QFileSystemModel
 {
     public:
-        FileSystemModel(QObject *parent = 0)
-          : QFileSystemModel(parent)
-        {
+        FileSystemModel( QObject *parent = 0 )
+            : QFileSystemModel( parent ) {
 
         }
 
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
-        {
+        QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const {
             if( role == Qt::DisplayRole && index.column() == 0 ) {
                 QString path  = QDir::toNativeSeparators( filePath( index ) );
                 if( path.endsWith( QDir::separator() ) ) {
@@ -60,10 +58,10 @@ class FileSystemModel : public QFileSystemModel
 };
 
 
-PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon("go-home"), parent ),
-    ui( new Ui::PreferencesGeneralConfigPage ),
-    m_preferences( pref )
+PreferencesGeneralConfigPage::PreferencesGeneralConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon( "go-home" ), parent ),
+      ui( new Ui::PreferencesGeneralConfigPage ),
+      m_preferences( pref )
 {
     ui->setupUi( this );
 
@@ -83,7 +81,7 @@ PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Knipptasch::Preferenc
     ui->startupCombo->addItem( tr( "Open Last-Used File" ), Knipptasch::Preferences::LastFile );
     ui->startupCombo->addItem( tr( "Open My Default Account File" ), Knipptasch::Preferences::DefaultFile );
 
-    ui->defaultAccountFileRequesterButton->setIcon( BarIcon("document-open") );
+    ui->defaultAccountFileRequesterButton->setIcon( BarIcon( "document-open" ) );
 
     FileSystemModel *model = new FileSystemModel( this );
     model->setRootPath( "" );
@@ -94,15 +92,15 @@ PreferencesGeneralConfigPage::PreferencesGeneralConfigPage(Knipptasch::Preferenc
 
     ui->defaultAccountFileRequesterLineEdit->setCompleter( completer );
 
-    connect( ui->startupCombo, SIGNAL( currentIndexChanged(int) ), this, SLOT( onStartupComboIndexChanged() ) );
-    connect( ui->defaultAccountFileRequesterLineEdit, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->defaultAccountFileRequesterButton, SIGNAL( clicked(bool) ), this, SLOT( onFileChooserButtonClicked() ) );
-    connect( ui->splashScreen, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->hideTabBarIfEmpty, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->showCloseButtonOnTabs, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->showCornerCloseButton, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->middleClickCloseTab, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->movableTabs, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
+    connect( ui->startupCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onStartupComboIndexChanged() ) );
+    connect( ui->defaultAccountFileRequesterLineEdit, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->defaultAccountFileRequesterButton, SIGNAL( clicked( bool ) ), this, SLOT( onFileChooserButtonClicked() ) );
+    connect( ui->splashScreen, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->hideTabBarIfEmpty, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->showCloseButtonOnTabs, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->showCornerCloseButton, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->middleClickCloseTab, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->movableTabs, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
 
     revert();
 }
@@ -116,12 +114,12 @@ PreferencesGeneralConfigPage::~PreferencesGeneralConfigPage()
 
 bool PreferencesGeneralConfigPage::isValid() const
 {
-    PreferencesGeneralConfigPage *self = const_cast<PreferencesGeneralConfigPage*>( this );
+    PreferencesGeneralConfigPage *self = const_cast<PreferencesGeneralConfigPage *>( this );
     self->setErrorMessageEnabled( false );
     self->setErrorMessageType( AbstractConfigPage::ErrorMessage );
 
     int onStartupActionValue = ui->startupCombo->itemData(
-                                    ui->startupCombo->currentIndex() ).toInt();
+                                   ui->startupCombo->currentIndex() ).toInt();
 
     if( onStartupActionValue != Knipptasch::Preferences::DefaultFile ) {
         return true;
@@ -173,7 +171,7 @@ bool PreferencesGeneralConfigPage::isValid() const
 bool PreferencesGeneralConfigPage::isModified() const
 {
     int onStartupActionValue = ui->startupCombo->itemData(
-                                    ui->startupCombo->currentIndex() ).toInt();
+                                   ui->startupCombo->currentIndex() ).toInt();
 
     if( onStartupActionValue != m_preferences->onStartupAction() ) {
         return true;
@@ -266,9 +264,9 @@ void PreferencesGeneralConfigPage::onStartupComboIndexChanged()
 void PreferencesGeneralConfigPage::onFileChooserButtonClicked()
 {
     QString str = getOpenFileName( this, QString(),
-                                ui->defaultAccountFileRequesterLineEdit->text(),
-                                Storage::filterStringQt(),
-                                Storage::filterStringKDE() );
+                                   ui->defaultAccountFileRequesterLineEdit->text(),
+                                   Storage::filterStringQt(),
+                                   Storage::filterStringKDE() );
 
     if( !str.isEmpty() ) {
         ui->defaultAccountFileRequesterLineEdit->setText( str );

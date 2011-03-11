@@ -31,16 +31,16 @@
 #include <QSet>
 
 
-PostingTextDelegate::PostingTextDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+PostingTextDelegate::PostingTextDelegate( QObject *parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *PostingTextDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     const AccountSortFilterProxyModel *model =
-            qobject_cast<const AccountSortFilterProxyModel*>( index.model() );
+        qobject_cast<const AccountSortFilterProxyModel *>( index.model() );
 
     if( !model ) {
         return QStyledItemDelegate::createEditor( parent, option, index );
@@ -51,8 +51,8 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
 
     if( Knipptasch::Preferences::self()->autoCompletionEnabled() ) {
         QSet<QString> set;
-        const QList<const Posting*> list = model->account()->postings();
-        foreach(const Posting *p, list) {
+        const QList<const Posting *> list = model->account()->postings();
+        foreach( const Posting * p, list ) {
             set.insert( p->postingText() );
         }
 
@@ -69,32 +69,30 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
 }
 
 
-void PostingTextDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void PostingTextDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
+    KLineEdit *input = qobject_cast<KLineEdit *>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
-    }
-    else {
-        input->setText( model->data(index, Qt::EditRole).toString() );
+    } else {
+        input->setText( model->data( index, Qt::EditRole ).toString() );
     }
 }
 
 
-void PostingTextDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void PostingTextDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    KLineEdit *input = qobject_cast<KLineEdit*>( editor );
+    KLineEdit *input = qobject_cast<KLineEdit *>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
-    }
-    else {
+    } else {
         model->setData( index, input->text(), Qt::EditRole );
     }
 }

@@ -36,12 +36,11 @@ class QDialogButtonBox;
  */
 class AbstractConfigPage : public QWidget
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AbstractConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( AbstractConfigPage )
 
     public:
-        enum ErrorMessageType
-        {
+        enum ErrorMessageType {
             InfoMessage,
             WarningMessage,
             ErrorMessage
@@ -51,17 +50,17 @@ class AbstractConfigPage : public QWidget
         /**
          * Constructs a new AbstractConfigPage
          */
-        explicit AbstractConfigPage(const QString &label, const QString &title, const QIcon &icon, ConfigWidget *parent);
+        explicit AbstractConfigPage( const QString &label, const QString &title, const QIcon &icon, ConfigWidget *parent );
 
         /**
          * Constructs a new AbstractConfigPage
          */
-        explicit AbstractConfigPage(const QString &label, const QIcon &icon, ConfigWidget *parent);
+        explicit AbstractConfigPage( const QString &label, const QIcon &icon, ConfigWidget *parent );
 
         /**
          * Constructs a new AbstractConfigPage
          */
-        explicit AbstractConfigPage(const QString &label, ConfigWidget *parent);
+        explicit AbstractConfigPage( const QString &label, ConfigWidget *parent );
 
     public:
         /**
@@ -103,7 +102,7 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setErrorMessageEnabled(bool b);
+        void setErrorMessageEnabled( bool b );
 
 
         /**
@@ -119,7 +118,7 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setErrorMessageType(ErrorMessageType type);
+        void setErrorMessageType( ErrorMessageType type );
 
 
         /**
@@ -135,7 +134,7 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setErrorMessageTitle(const QString &str);
+        void setErrorMessageTitle( const QString &str );
 
 
         /**
@@ -151,19 +150,19 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setErrorMessageDescription(const QString &str);
+        void setErrorMessageDescription( const QString &str );
 
 
         /**
          *
          */
-        ConfigWidget* configWidget() const;
+        ConfigWidget *configWidget() const;
 
 
         /**
          *
          */
-        void setConfigWidget(ConfigWidget *widget);
+        void setConfigWidget( ConfigWidget *widget );
 
 
         /**
@@ -174,7 +173,7 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setPageLabel(const QString &str);
+        void setPageLabel( const QString &str );
 
 
         /**
@@ -190,7 +189,7 @@ class AbstractConfigPage : public QWidget
          *
          * @see pageTitle()
          */
-        void setPageTitle(const QString &str);
+        void setPageTitle( const QString &str );
 
 
         /**
@@ -202,7 +201,7 @@ class AbstractConfigPage : public QWidget
         /**
          *
          */
-        void setPageDescription(const QString &str);
+        void setPageDescription( const QString &str );
 
 
         /**
@@ -218,7 +217,7 @@ class AbstractConfigPage : public QWidget
          *
          * @see pageIcon()
          */
-        void setPageIcon(const QIcon &icon);
+        void setPageIcon( const QIcon &icon );
 
 
         /**
@@ -234,7 +233,7 @@ class AbstractConfigPage : public QWidget
          *
          * @see pageToolTip()
          */
-        void setPageToolTip(const QString &str);
+        void setPageToolTip( const QString &str );
 
 
         /**
@@ -250,7 +249,7 @@ class AbstractConfigPage : public QWidget
          *
          * @see pageWhatsThis()
          */
-        void setPageWhatsThis(const QString &str);
+        void setPageWhatsThis( const QString &str );
 
 
     public slots:

@@ -30,15 +30,15 @@
  */
 class KNIPPTASCH_CORE_EXPORT CategoryDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        CategoryDelegate(QObject *parent = 0);
+        CategoryDelegate( QObject *parent = 0 );
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &opt, const QModelIndex &index) const;
+        QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &opt, const QModelIndex &index ) const;
 
-        void setEditorData(QWidget *editor, const QModelIndex &index) const;
-        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+        void setEditorData( QWidget *editor, const QModelIndex &index ) const;
+        void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const;
 };
 
 #endif

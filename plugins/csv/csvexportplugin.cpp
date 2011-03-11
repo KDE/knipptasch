@@ -22,8 +22,8 @@
 #include <QPointer>
 
 
-CsvExportPlugin::CsvExportPlugin(QObject *parent)
-  : QObject( parent )
+CsvExportPlugin::CsvExportPlugin( QObject *parent )
+    : QObject( parent )
 {
 }
 
@@ -84,11 +84,11 @@ QString CsvExportPlugin::exportActionName() const
 
 QPixmap CsvExportPlugin::exportActionIcon() const
 {
-    return BarIcon("text-csv");
+    return BarIcon( "text-csv" );
 }
 
 
-void CsvExportPlugin::exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent) const
+void CsvExportPlugin::exportAccount( const Account *account, const QList<const Posting *> &selected, QWidget *parent ) const
 {
     QPointer<CsvExportDialog> dialog = new CsvExportDialog( account, selected, parent );
 

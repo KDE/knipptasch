@@ -38,14 +38,14 @@ namespace Knipptasch
  */
 class PreferencesPluginConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(PreferencesPluginConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( PreferencesPluginConfigPage )
 
     public:
         /**
          * Constructs a new PreferencesPluginConfigPage
          */
-        explicit PreferencesPluginConfigPage(Knipptasch::Preferences *pref, ConfigWidget *parent);
+        explicit PreferencesPluginConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent );
 
 
         /**
@@ -78,7 +78,7 @@ class PreferencesPluginConfigPage : public AbstractConfigPage
          * Revert all changes and reload the initial data.
          */
         virtual void revert();
-        
+
     private:
         QListWidget *m_view;
 };

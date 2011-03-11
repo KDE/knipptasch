@@ -22,13 +22,13 @@
 #include <QAction>
 
 
-ActionCollection::ActionCollection(QObject* parent)
-  : QObject( parent )
+ActionCollection::ActionCollection( QObject *parent )
+    : QObject( parent )
 {
 }
 
 
-QAction* ActionCollection::addAction(const QString& name, QAction* a)
+QAction *ActionCollection::addAction( const QString &name, QAction *a )
 {
     if( !a ) {
         return 0;
@@ -42,26 +42,26 @@ QAction* ActionCollection::addAction(const QString& name, QAction* a)
 }
 
 
-QAction* ActionCollection::addAction(const QString& name)
+QAction *ActionCollection::addAction( const QString &name )
 {
-    QAction* action = new KAction( QString(), this );
+    QAction *action = new KAction( QString(), this );
     return addAction( name, action );
 }
 
 
-QAction* ActionCollection::addAction(const QString& name, const QObject* recv, const char* slot)
+QAction *ActionCollection::addAction( const QString &name, const QObject *recv, const char *slot )
 {
-    QAction* action = new KAction(QString(), this);
+    QAction *action = new KAction( QString(), this );
 
     if( recv && slot ) {
-        connect(action, SIGNAL( triggered() ), recv, slot);
+        connect( action, SIGNAL( triggered() ), recv, slot );
     }
 
     return addAction( name, action );
 }
 
 
-QAction* ActionCollection::action(const QString& name)
+QAction *ActionCollection::action( const QString &name )
 {
     if( m_ActionsByName.find( name ) != m_ActionsByName.end() ) {
         return m_ActionsByName[ name ];

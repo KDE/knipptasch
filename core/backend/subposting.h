@@ -28,17 +28,17 @@
  */
 class KNIPPTASCH_CORE_EXPORT SubPosting : public BasePosting
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        SubPosting(QObject *parent = 0);
+        SubPosting( QObject *parent = 0 );
         ~SubPosting();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 };
 
 #endif

@@ -37,10 +37,10 @@ namespace Ui
  */
 class QuickReportWidget : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget *parent = 0);
+        explicit QuickReportWidget( AccountSortFilterProxyModel *proxy, QWidget *parent = 0 );
         ~QuickReportWidget();
 
         QSize sizeHint() const;
@@ -48,18 +48,18 @@ class QuickReportWidget : public QWidget
         bool closeButtonEnabled() const;
 
         QDate currentDate() const;
-        void setCurrentDate(const QDate &date);
+        void setCurrentDate( const QDate &date );
 
     public slots:
         void updateView();
-        void setCloseButtonEnabled(bool state = true);
+        void setCloseButtonEnabled( bool state = true );
 
     signals:
         void closeRequested();
 
     protected:
-        void showEvent(QShowEvent *event);
-        bool eventFilter(QObject *obj, QEvent *event);
+        void showEvent( QShowEvent *event );
+        bool eventFilter( QObject *obj, QEvent *event );
 
     private slots:
         void slotNextMonth();
@@ -67,7 +67,7 @@ class QuickReportWidget : public QWidget
 
     private:
         void init();
-        QString formatMonth(const QDate &date);
+        QString formatMonth( const QDate &date );
 
     private:
         Ui::QuickReportWidget *ui;

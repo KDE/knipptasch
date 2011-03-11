@@ -33,14 +33,14 @@ class Account;
  */
 class AccountConfigWidget : public ConfigWidget
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountConfigWidget)
+        Q_OBJECT
+        Q_DISABLE_COPY( AccountConfigWidget )
 
     public:
         /**
          * Constructs a new AccountConfigWidget
          */
-        explicit AccountConfigWidget(Account *account, QWidget *parent = 0);
+        explicit AccountConfigWidget( Account *account, QWidget *parent = 0 );
 
         /**
          * Destructs the config widget.

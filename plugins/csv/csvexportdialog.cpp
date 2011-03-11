@@ -49,34 +49,33 @@
 
 
 
-CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Posting*> &selected, QWidget *parent)
-  : QDialog( parent ),
-    ui( new Ui::CsvExportDialog ),
-    m_account( account ),
-    m_selectedPostings( selected ),
-    m_updateTimer( new QTimer( this ) )
+CsvExportDialog::CsvExportDialog( const Account *account, const QList<const Posting *> &selected, QWidget *parent )
+    : QDialog( parent ),
+      ui( new Ui::CsvExportDialog ),
+      m_account( account ),
+      m_selectedPostings( selected ),
+      m_updateTimer( new QTimer( this ) )
 {
     Q_ASSERT( m_account );
 
     ui->setupUi( this );
 
     setWindowTitle( tr( "CSV Export - %1" ).arg( QCoreApplication::applicationName() ) );
-    ui->iconLabel->setPixmap( DesktopIcon("text-csv") );
+    ui->iconLabel->setPixmap( DesktopIcon( "text-csv" ) );
 
     m_updateTimer->setInterval( 300 );
 
     ui->allInYearEdit->setDate( QDate::currentDate() );
     ui->allBetweenDateStart->setDate( account->openingDate().isValid()
-                                        ? account->openingDate()
-                                        : QDate( 1, 1, QDate::currentDate().year() )
+                                      ? account->openingDate()
+                                      : QDate( 1, 1, QDate::currentDate().year() )
                                     );
     ui->allBetweenDateEnd->setDate( QDate::currentDate() );
 
     if( !m_selectedPostings.isEmpty() ) {
         ui->selected->setEnabled( true );
         ui->selected->setChecked( true );
-    }
-    else {
+    } else {
         ui->selected->setEnabled( false );
         ui->all->setChecked( true );
     }
@@ -117,31 +116,31 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Posti
     ui->delimiter->setCurrentIndex( 3 );
 
     QString df = tr(
-        "<p>These expressions may be used for the date format:</p>"
-        "<table>"
-        "<tr><th>Expression</th><th>Output</th></tr>"
-        "<tr><td>d</td><td>The day as a number without a leading zero (1 to 31)</td></tr>"
-        "<tr><td>dd</td><td>The day as a number with a leading zero (01 to 31)</td></tr>"
-        "<tr><td>ddd</td><td>The abbreviated localized day name (e.g. 'Mon' to 'Sun')</td></tr>"
-        "<tr><td>dddd</td><td>The long localized day name (e.g. 'Monday' to 'Sunday')</td></tr>"
-        "<tr><td>M</td><td>The month as a number without a leading zero (1 to 12)</td></tr>"
-        "<tr><td>MM</td><td>The month as a number with a leading zero (01 to 12)</td></tr>"
-        "<tr><td>MMM</td><td>The abbreviated localized month name (e.g. 'Jan' to 'Dec')</td></tr>"
-        "<tr><td>MMMM</td><td>The long localized month name (e.g. 'January' to 'December')</td></tr>"
-        "<tr><td>yy</td><td>The year as two digit number (00 to 99)</td></tr>"
-        "<tr><td>yyyy</td><td>The year as four digit number</td></tr>"
-        "</table>"
-        "<table>"
-        "<tr><th>Expression</th><th>Output</th></tr>"
-        "<tr><td>Text Date</td><td>%1</td></tr>"
-        "<tr><td>ISO Date</td><td>%2</td></tr>"
-        "<tr><td>Short Date</td><td>%3</td></tr>"
-        "<tr><td>Long Date</td><td>%4</td></tr>"
-    )
-        .arg( "ddd MMM d yyyy" )
-        .arg( "yyyy-MM-dd" )
-        .arg( l.dateFormat( QLocale::ShortFormat ) )
-        .arg( l.dateFormat( QLocale::LongFormat ) );
+                     "<p>These expressions may be used for the date format:</p>"
+                     "<table>"
+                     "<tr><th>Expression</th><th>Output</th></tr>"
+                     "<tr><td>d</td><td>The day as a number without a leading zero (1 to 31)</td></tr>"
+                     "<tr><td>dd</td><td>The day as a number with a leading zero (01 to 31)</td></tr>"
+                     "<tr><td>ddd</td><td>The abbreviated localized day name (e.g. 'Mon' to 'Sun')</td></tr>"
+                     "<tr><td>dddd</td><td>The long localized day name (e.g. 'Monday' to 'Sunday')</td></tr>"
+                     "<tr><td>M</td><td>The month as a number without a leading zero (1 to 12)</td></tr>"
+                     "<tr><td>MM</td><td>The month as a number with a leading zero (01 to 12)</td></tr>"
+                     "<tr><td>MMM</td><td>The abbreviated localized month name (e.g. 'Jan' to 'Dec')</td></tr>"
+                     "<tr><td>MMMM</td><td>The long localized month name (e.g. 'January' to 'December')</td></tr>"
+                     "<tr><td>yy</td><td>The year as two digit number (00 to 99)</td></tr>"
+                     "<tr><td>yyyy</td><td>The year as four digit number</td></tr>"
+                     "</table>"
+                     "<table>"
+                     "<tr><th>Expression</th><th>Output</th></tr>"
+                     "<tr><td>Text Date</td><td>%1</td></tr>"
+                     "<tr><td>ISO Date</td><td>%2</td></tr>"
+                     "<tr><td>Short Date</td><td>%3</td></tr>"
+                     "<tr><td>Long Date</td><td>%4</td></tr>"
+                 )
+                 .arg( "ddd MMM d yyyy" )
+                 .arg( "yyyy-MM-dd" )
+                 .arg( l.dateFormat( QLocale::ShortFormat ) )
+                 .arg( l.dateFormat( QLocale::LongFormat ) );
 
     ui->dateFormat->setToolTip( df );
     ui->dateFormat->setWhatsThis( df );
@@ -155,11 +154,11 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Posti
     ui->dateFormat->setCurrentIndex( 2 );
 
     ui->encoding->clear();
-    foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
+    foreach( const QByteArray & name, QTextCodec::availableCodecs() ) {
         ui->encoding->addItem( name, name );
     }
     ui->encoding->setCurrentIndex( ui->encoding->findData(
-                                    QTextCodec::codecForLocale()->name() ) );
+                                       QTextCodec::codecForLocale()->name() ) );
 
     ui->endOfLine->clear();
     ui->endOfLine->addItem( tr( "Unix" ), "\n" );
@@ -176,39 +175,39 @@ CsvExportDialog::CsvExportDialog(const Account *account, const QList<const Posti
 
     ui->buttonBox->button( QDialogButtonBox::Save )->setEnabled( false );
 
-    connect( ui->delimiter, SIGNAL( activated(int) ),
-             this, SLOT( onDelimiterComboBoxIndexChanged(int) ) );
-    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited(QString) ),
+    connect( ui->delimiter, SIGNAL( activated( int ) ),
+             this, SLOT( onDelimiterComboBoxIndexChanged( int ) ) );
+    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited( QString ) ),
              this, SLOT( onDelimiterComboBoxTextChanged() ) );
 
-    connect( ui->dateFormat, SIGNAL( activated(int) ),
-             this, SLOT( onDateFormatComboBoxIndexChanged(int) ) );
-    connect( ui->dateFormat->lineEdit(), SIGNAL( textEdited(QString) ),
+    connect( ui->dateFormat, SIGNAL( activated( int ) ),
+             this, SLOT( onDateFormatComboBoxIndexChanged( int ) ) );
+    connect( ui->dateFormat->lineEdit(), SIGNAL( textEdited( QString ) ),
              this, SLOT( onDateFormatComboBoxTextChanged() ) );
 
-    connect( ui->all, SIGNAL( toggled(bool) ),
+    connect( ui->all, SIGNAL( toggled( bool ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->selected, SIGNAL( toggled(bool) ),
+    connect( ui->selected, SIGNAL( toggled( bool ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->allInYear, SIGNAL( toggled(bool) ),
+    connect( ui->allInYear, SIGNAL( toggled( bool ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->allBetween, SIGNAL( toggled(bool) ),
+    connect( ui->allBetween, SIGNAL( toggled( bool ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->allInYearEdit, SIGNAL( dateChanged(QDate) ),
+    connect( ui->allInYearEdit, SIGNAL( dateChanged( QDate ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->allBetweenDateStart, SIGNAL( dateChanged(QDate) ),
+    connect( ui->allBetweenDateStart, SIGNAL( dateChanged( QDate ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->allBetweenDateEnd, SIGNAL( dateChanged(QDate) ),
+    connect( ui->allBetweenDateEnd, SIGNAL( dateChanged( QDate ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->textquote, SIGNAL( editTextChanged(QString) ),
+    connect( ui->textquote, SIGNAL( editTextChanged( QString ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->decimalSymbol, SIGNAL( editTextChanged(QString) ),
+    connect( ui->decimalSymbol, SIGNAL( editTextChanged( QString ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->thousandsSeparator, SIGNAL( editTextChanged(QString) ),
+    connect( ui->thousandsSeparator, SIGNAL( editTextChanged( QString ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->encoding, SIGNAL( activated(int) ),
+    connect( ui->encoding, SIGNAL( activated( int ) ),
              this, SLOT( onStartUpdateTimer() ) );
-    connect( ui->endOfLine, SIGNAL( activated(int) ),
+    connect( ui->endOfLine, SIGNAL( activated( int ) ),
              this, SLOT( onStartUpdateTimer() ) );
 
     connect( ui->buttonBox->button( QDialogButtonBox::Save ), SIGNAL( clicked() ),
@@ -247,27 +246,24 @@ void CsvExportDialog::onUpdatePreview()
 
     m_result.clear();
 
-    QList<const Posting*> postings;
+    QList<const Posting *> postings;
 
     if( ui->all->isChecked() ) {
         postings = m_account->postings();
-    }
-    else if( ui->selected->isChecked() ) {
+    } else if( ui->selected->isChecked() ) {
         postings = m_selectedPostings;
-    }
-    else if( ui->allInYear->isChecked() ) {
-        QList<const Posting*> plist = m_account->postings();
+    } else if( ui->allInYear->isChecked() ) {
+        QList<const Posting *> plist = m_account->postings();
         int year = ui->allInYearEdit->date().year();
 
-        foreach(const Posting *p, plist) {
-            if( ( p->maturity().isValid() && p->maturity().year() == year ) ||
-                ( p->valueDate().isValid() && p->valueDate().year() == year ) ) {
-                     postings.append( p );
-                }
+        foreach( const Posting * p, plist ) {
+            if(( p->maturity().isValid() && p->maturity().year() == year ) ||
+                    ( p->valueDate().isValid() && p->valueDate().year() == year ) ) {
+                postings.append( p );
+            }
         }
-    }
-    else if( ui->allBetween->isChecked() ) {
-        QList<const Posting*> plist = m_account->postings();
+    } else if( ui->allBetween->isChecked() ) {
+        QList<const Posting *> plist = m_account->postings();
 
         QDate start = ui->allBetweenDateStart->date();
         QDate end = ui->allBetweenDateEnd->date() > start
@@ -277,14 +273,13 @@ void CsvExportDialog::onUpdatePreview()
         Q_ASSERT( start.isValid() );
         Q_ASSERT( end.isValid() );
 
-        foreach(const Posting *p, plist) {
-            if( ( p->maturity().isValid() && p->maturity() >= start && p->maturity() <= end ) ||
-                ( p->valueDate().isValid() && p->valueDate() >= start && p->valueDate() <= end ) ) {
-                     postings.append( p );
-                }
+        foreach( const Posting * p, plist ) {
+            if(( p->maturity().isValid() && p->maturity() >= start && p->maturity() <= end ) ||
+                    ( p->valueDate().isValid() && p->valueDate() >= start && p->valueDate() <= end ) ) {
+                postings.append( p );
+            }
         }
-    }
-    else {
+    } else {
         Q_ASSERT( false );
     }
 
@@ -296,11 +291,11 @@ void CsvExportDialog::onUpdatePreview()
 
     QTextStream out( &buffer );
     out.setCodec( QTextCodec::codecForName(
-                    ui->encoding->itemData( ui->encoding->currentIndex() )
-                        .toByteArray()
-                ) );
+                      ui->encoding->itemData( ui->encoding->currentIndex() )
+                      .toByteArray()
+                  ) );
 
-    for(int i = 0; i < postings.size(); ++i) {
+    for( int i = 0; i < postings.size(); ++i ) {
         const Posting *p = postings[ i ];
 
         out << tq << p->valueDate().toString( m_dateFormat ) << tq << m_delimiter;
@@ -320,7 +315,7 @@ void CsvExportDialog::onUpdatePreview()
 
     Q_ASSERT( ui->buttonBox->button( QDialogButtonBox::Save ) );
     ui->buttonBox->button( QDialogButtonBox::Save )
-                        ->setEnabled( !m_result.isEmpty() );
+    ->setEnabled( !m_result.isEmpty() );
 }
 
 void CsvExportDialog::onSave()
@@ -333,9 +328,9 @@ void CsvExportDialog::onSave()
     filename = KFileDialog::getSaveFileName( KUrl(), "*.csv|" + tr( "All Supported Files" ), this );
 #else
     filename = QFileDialog::getSaveFileName( this, // krazy:exclude=qclasses
-                     tr( "Export File - %1" ).arg( QCoreApplication::applicationName() ),
-                     QString(), tr( "All Supported Files" ) + " (*.csv)"
-                   );
+               tr( "Export File - %1" ).arg( QCoreApplication::applicationName() ),
+               QString(), tr( "All Supported Files" ) + " (*.csv)"
+                                           );
 #endif
 
     if( filename.isEmpty() ) {
@@ -353,7 +348,7 @@ void CsvExportDialog::onSave()
 #else
         QMessageBox::warning( parentWidget(),        // krazy:exclude=qclasses
                               tr( "Error - %1" )
-                               .arg( QCoreApplication::applicationName() ),
+                              .arg( QCoreApplication::applicationName() ),
                               message );
 #endif
         reject();
@@ -367,7 +362,7 @@ void CsvExportDialog::onSave()
 }
 
 
-void CsvExportDialog::onDelimiterComboBoxIndexChanged(int index)
+void CsvExportDialog::onDelimiterComboBoxIndexChanged( int index )
 {
     m_delimiter = ui->delimiter->itemData( index ).toString();
     onStartUpdateTimer();
@@ -381,7 +376,7 @@ void CsvExportDialog::onDelimiterComboBoxTextChanged()
 }
 
 
-void CsvExportDialog::onDateFormatComboBoxIndexChanged(int index)
+void CsvExportDialog::onDateFormatComboBoxIndexChanged( int index )
 {
     m_dateFormat = ui->dateFormat->itemData( index ).toString();
     onStartUpdateTimer();

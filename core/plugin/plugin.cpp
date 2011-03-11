@@ -22,10 +22,10 @@ namespace Knipptasch
 {
 
     Plugin::Plugin()
-      : m_enabled( false )
+        : m_enabled( false )
     {
     }
-    
+
     Plugin::~Plugin()
     {
     }
@@ -34,7 +34,7 @@ namespace Knipptasch
     {
         return m_enabled;
     }
-    
+
 
     bool Plugin::isEnabledByDefault() const
     {
@@ -42,7 +42,7 @@ namespace Knipptasch
     }
 
 
-    bool Plugin::setEnabled(bool b)
+    bool Plugin::setEnabled( bool b )
     {
         if( !b ) {
             return setDisabled();
@@ -51,32 +51,32 @@ namespace Knipptasch
         if( !isEnabled() ) {
             m_enabled = enable();
         }
-        
+
         return isEnabled();
     }
-    
-    
+
+
     bool Plugin::setDisabled()
     {
         if( isEnabled() ) {
             m_enabled = !disable();
         }
-        
+
         return !isEnabled();
     }
 
-    
+
     QUrl Plugin::homepage() const
     {
         return QUrl();
     }
-    
-    
-    QWidget* Plugin::options() const
+
+
+    QWidget *Plugin::options() const
     {
         return 0;
     }
-    
+
     bool Plugin::enable()
     {
         return true;
@@ -86,7 +86,7 @@ namespace Knipptasch
     {
         return true;
     }
-    
+
 } //EndNamespace Knipptasch
 
 

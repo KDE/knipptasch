@@ -54,24 +54,23 @@
 class DateEdit::Private
 {
     public:
-        Private(DateEdit *qq)
-          : q( qq ),
-            mPopup( 0 ),
-            mReadOnly( false ),
-            mDiscardNextMousePress( false )
-        {
+        Private( DateEdit *qq )
+            : q( qq ),
+              mPopup( 0 ),
+              mReadOnly( false ),
+              mDiscardNextMousePress( false ) {
         }
 
-        QDate parseDate(bool *replaced = 0) const;
+        QDate parseDate( bool *replaced = 0 ) const;
         void updateView();
         void setupKeywords();
-        bool newDateEntered(const QDate &newDate);
+        bool newDateEntered( const QDate &newDate );
 
     public:
         // slots
         void lineEnterPressed();
-        void slotTextChanged(const QString &str);
-        void dateSelected(const QDate &dt);
+        void slotTextChanged( const QString &str );
+        void dateSelected( const QDate &dt );
 
         DateEdit *q;
         DatePickerPopup *mPopup;
@@ -89,23 +88,22 @@ class DateEdit::Private
 };
 
 
-QDate DateEdit::Private::parseDate(bool *replaced) const
+QDate DateEdit::Private::parseDate( bool *replaced ) const
 {
     const QString text = q->currentText();
 
     if( replaced ) {
-        (*replaced) = false;
+        ( *replaced ) = false;
     }
 
     QDate result;
     if( text.isEmpty() ) {
         result = QDate();
-    }
-    else if( mKeywordMap.contains( text.toLower() ) ) {
+    } else if( mKeywordMap.contains( text.toLower() ) ) {
         const QDate today = QDate::currentDate();
-        int i = mKeywordMap[ text.toLower() ];
+        int i = mKeywordMap[ text.toLower()];
 
-        if ( i >= 100 ) {
+        if( i >= 100 ) {
             /* A day name has been entered. Convert to offset from today.
              * This uses some math tricks to figure out the offset in days
              * to the next date the given day of the week occurs. There
@@ -119,18 +117,16 @@ QDate DateEdit::Private::parseDate(bool *replaced) const
             const int currentDay = today.dayOfWeek();
             if( i >= currentDay ) {
                 i -= currentDay;
-            }
-            else {
+            } else {
                 i += 7 - currentDay;
             }
         }
 
         result = today.addDays( i );
         if( replaced ) {
-            (*replaced) = true;
+            ( *replaced ) = true;
         }
-    }
-    else {
+    } else {
         result = readDate( text );
     }
 
@@ -164,7 +160,7 @@ void DateEdit::Private::setupKeywords()
     mKeywordMap.insert( tr( "yesterday" ), -1 );
 
     QString dayName;
-    for ( int i = 1; i <= 7; ++i ) {
+    for( int i = 1; i <= 7; ++i ) {
 #if defined(HAVE_KDE)
         dayName = KGlobal::locale()->calendar()->weekDayName( i ).toLower();
 #else
@@ -176,7 +172,7 @@ void DateEdit::Private::setupKeywords()
 
 
 // Check a new date against any minimum or maximum date.
-bool DateEdit::Private::newDateEntered(const QDate &newDate)
+bool DateEdit::Private::newDateEntered( const QDate &newDate )
 {
     QDate date = newDate;
     if( newDate.isValid() ) {
@@ -184,18 +180,17 @@ bool DateEdit::Private::newDateEntered(const QDate &newDate)
         QString message;
         if( mMinDate.isValid()  &&  newDate < mMinDate ) {
             message = tr( "Date cannot be earlier than %1" )
-                            .arg( mMinDate == QDate::currentDate()
-                                    ? tr( "today" )
-                                    : formatShortDate( mMinDate ) );
+                      .arg( mMinDate == QDate::currentDate()
+                            ? tr( "today" )
+                            : formatShortDate( mMinDate ) );
 
             errString = mMinDateErrString;
             date = mMinDate;
-        }
-        else if( mMaxDate.isValid()  &&  newDate > mMaxDate ) {
+        } else if( mMaxDate.isValid()  &&  newDate > mMaxDate ) {
             message = tr( "Date cannot be later than %1" )
-                            .arg( mMinDate == QDate::currentDate()
-                                    ? tr( "today" )
-                                    : formatShortDate( mMinDate ) );
+                      .arg( mMinDate == QDate::currentDate()
+                            ? tr( "today" )
+                            : formatShortDate( mMinDate ) );
 
             errString = mMaxDateErrString;
             date = mMaxDate;
@@ -236,7 +231,7 @@ void DateEdit::Private::lineEnterPressed()
 }
 
 
-void DateEdit::Private::slotTextChanged(const QString &str)
+void DateEdit::Private::slotTextChanged( const QString &str )
 {
     Q_UNUSED( str );
     const QDate date = parseDate();
@@ -250,7 +245,7 @@ void DateEdit::Private::slotTextChanged(const QString &str)
 }
 
 
-void DateEdit::Private::dateSelected(const QDate &date)
+void DateEdit::Private::dateSelected( const QDate &date )
 {
     if( q->assignDate( date ) ) {
         updateView();
@@ -261,13 +256,13 @@ void DateEdit::Private::dateSelected(const QDate &date)
 }
 
 
-DateEdit::DateEdit(QWidget *parent)
+DateEdit::DateEdit( QWidget *parent )
 #if defined( HAVE_KDE )
-  : KComboBox( parent ),
+    : KComboBox( parent ),
 #else
-  : QComboBox( parent ),
+    : QComboBox( parent ),
 #endif
-    d( new Private( this ) )
+      d( new Private( this ) )
 {
     // need at least one entry for popup to work
     setMaxCount( 1 );
@@ -279,20 +274,20 @@ DateEdit::DateEdit(QWidget *parent)
     setCurrentIndex( 0 );
 
     connect( lineEdit(), SIGNAL( returnPressed() ),
-            this, SLOT( lineEnterPressed() ) );
-    connect( this, SIGNAL( editTextChanged( const QString& ) ),
-             this, SLOT( slotTextChanged( const QString& ) ) );
+             this, SLOT( lineEnterPressed() ) );
+    connect( this, SIGNAL( editTextChanged( const QString & ) ),
+             this, SLOT( slotTextChanged( const QString & ) ) );
 
     d->mPopup = new DatePickerPopup(
-                            DatePickerPopup::NoDate
-                          | DatePickerPopup::DatePicker
-                          | DatePickerPopup::Words,
-                        QDate::currentDate(), this );
+        DatePickerPopup::NoDate
+        | DatePickerPopup::DatePicker
+        | DatePickerPopup::Words,
+        QDate::currentDate(), this );
 
     d->mPopup->hide();
     d->mPopup->installEventFilter( this );
 
-    connect( d->mPopup, SIGNAL( dateChanged(const QDate&) ), this, SLOT( dateSelected(const QDate&) ) );
+    connect( d->mPopup, SIGNAL( dateChanged( const QDate & ) ), this, SLOT( dateSelected( const QDate & ) ) );
 
     // handle keyword entry
     d->setupKeywords();
@@ -304,13 +299,13 @@ DateEdit::DateEdit(QWidget *parent)
 }
 
 
-DateEdit::DateEdit(const QString &dateFormat, QWidget *parent)
+DateEdit::DateEdit( const QString &dateFormat, QWidget *parent )
 #if defined( HAVE_KDE )
-  : KComboBox( parent ),
+    : KComboBox( parent ),
 #else
-  : QComboBox( parent ),
+    : QComboBox( parent ),
 #endif
-    d( new Private( this ) )
+      d( new Private( this ) )
 {
     // need at least one entry for popup to work
     setMaxCount( 1 );
@@ -322,20 +317,20 @@ DateEdit::DateEdit(const QString &dateFormat, QWidget *parent)
     setCurrentIndex( 0 );
 
     connect( lineEdit(), SIGNAL( returnPressed() ),
-            this, SLOT( lineEnterPressed() ) );
-    connect( this, SIGNAL( editTextChanged( const QString& ) ),
-             this, SLOT( slotTextChanged( const QString& ) ) );
+             this, SLOT( lineEnterPressed() ) );
+    connect( this, SIGNAL( editTextChanged( const QString & ) ),
+             this, SLOT( slotTextChanged( const QString & ) ) );
 
     d->mPopup = new DatePickerPopup(
-                            DatePickerPopup::NoDate
-                          | DatePickerPopup::DatePicker
-                          | DatePickerPopup::Words,
-                        QDate::currentDate(), this );
+        DatePickerPopup::NoDate
+        | DatePickerPopup::DatePicker
+        | DatePickerPopup::Words,
+        QDate::currentDate(), this );
 
     d->mPopup->hide();
     d->mPopup->installEventFilter( this );
 
-    connect( d->mPopup, SIGNAL( dateChanged(const QDate&) ), this, SLOT( dateSelected(const QDate&) ) );
+    connect( d->mPopup, SIGNAL( dateChanged( const QDate & ) ), this, SLOT( dateSelected( const QDate & ) ) );
 
     // handle keyword entry
     d->setupKeywords();
@@ -353,7 +348,7 @@ DateEdit::~DateEdit()
 }
 
 
-void DateEdit::setDate(const QDate &date)
+void DateEdit::setDate( const QDate &date )
 {
     assignDate( date );
     d->updateView();
@@ -370,7 +365,7 @@ QDate DateEdit::date() const
 }
 
 
-void DateEdit::setMinimumDate(const QDate &minDate, const QString &errorMsg)
+void DateEdit::setMinimumDate( const QDate &minDate, const QString &errorMsg )
 {
     d->mMinDate = minDate;
 
@@ -388,7 +383,7 @@ QDate DateEdit::minimumDate() const
 }
 
 
-void DateEdit::setMaximumDate(const QDate& maxDate, const QString& errorMsg)
+void DateEdit::setMaximumDate( const QDate &maxDate, const QString &errorMsg )
 {
     d->mMaxDate = maxDate;
 
@@ -406,15 +401,15 @@ QDate DateEdit::maximumDate() const
 }
 
 
-void DateEdit::setDateRange(const QDate& earliest, const QDate& latest,
-                            const QString& earlyErrorMsg, const QString& lateErrorMsg)
+void DateEdit::setDateRange( const QDate &earliest, const QDate &latest,
+                             const QString &earlyErrorMsg, const QString &lateErrorMsg )
 {
     setMinimumDate( earliest, earlyErrorMsg );
     setMaximumDate( latest, lateErrorMsg );
 }
 
 
-void DateEdit::setReadOnly(bool readOnly)
+void DateEdit::setReadOnly( bool readOnly )
 {
     d->mReadOnly = readOnly;
     lineEdit()->setReadOnly( readOnly );
@@ -435,9 +430,9 @@ void DateEdit::showPopup()
 
     const QRect desk =
 #if defined(HAVE_KDE)
-            KGlobalSettings::desktopGeometry( this );
+        KGlobalSettings::desktopGeometry( this );
 #else
-            QApplication::desktop()->screenGeometry( this );
+        QApplication::desktop()->screenGeometry( this );
 #endif
 
     QPoint popupPoint = mapToGlobal( QPoint( 0, 0 ) );
@@ -446,8 +441,7 @@ void DateEdit::showPopup()
 
     if( popupPoint.y() + height() + dateFrameHeight > desk.bottom() ) {
         popupPoint.setY( popupPoint.y() - dateFrameHeight );
-    }
-    else {
+    } else {
         popupPoint.setY( popupPoint.y() + height() );
     }
 
@@ -466,8 +460,7 @@ void DateEdit::showPopup()
 
     if( d->mDate.isValid() ) {
         d->mPopup->setDate( d->mDate );
-    }
-    else {
+    } else {
         d->mPopup->setDate( QDate::currentDate() );
     }
 
@@ -490,7 +483,7 @@ void DateEdit::showPopup()
 }
 
 
-void DateEdit::focusOutEvent(QFocusEvent *event)
+void DateEdit::focusOutEvent( QFocusEvent *event )
 {
     if( d->mTextChanged ) {
         d->lineEnterPressed();
@@ -501,14 +494,13 @@ void DateEdit::focusOutEvent(QFocusEvent *event)
 }
 
 
-void DateEdit::keyPressEvent(QKeyEvent *event)
+void DateEdit::keyPressEvent( QKeyEvent *event )
 {
     int step = 0;
 
     if( event->key() == Qt::Key_Up ) {
         step = 1;
-    }
-    else if( event->key() == Qt::Key_Down ) {
+    } else if( event->key() == Qt::Key_Down ) {
         step = -1;
     }
 
@@ -527,42 +519,39 @@ void DateEdit::keyPressEvent(QKeyEvent *event)
 }
 
 
-bool DateEdit::eventFilter(QObject *object, QEvent *event)
+bool DateEdit::eventFilter( QObject *object, QEvent *event )
 {
     if( object == lineEdit() ) {
         // We only process the focus out event if the text has changed
         // since we got focus
-        if( (event->type() == QEvent::FocusOut) && d->mTextChanged ) {
+        if(( event->type() == QEvent::FocusOut ) && d->mTextChanged ) {
             d->lineEnterPressed();
             d->mTextChanged = false;
-        }
-        else if ( event->type() == QEvent::KeyPress ) {
+        } else if( event->type() == QEvent::KeyPress ) {
             // Up and down arrow keys step the date
-            QKeyEvent *keyEvent = (QKeyEvent *)event;
+            QKeyEvent *keyEvent = ( QKeyEvent * )event;
 
             if( keyEvent->key() == Qt::Key_Return ) {
                 d->lineEnterPressed();
                 return true;
             }
         }
-    }
-    else {
+    } else {
         // It's a date picker event
         switch( event->type() ) {
             case QEvent::MouseButtonDblClick:
-            case QEvent::MouseButtonPress:
-            {
-                QMouseEvent *mouseEvent = (QMouseEvent*)event;
-                if( !d->mPopup->rect().contains( mouseEvent->pos() ) ) {
-                    const QPoint globalPos = d->mPopup->mapToGlobal( mouseEvent->pos() );
+            case QEvent::MouseButtonPress: {
+                    QMouseEvent *mouseEvent = ( QMouseEvent * )event;
+                    if( !d->mPopup->rect().contains( mouseEvent->pos() ) ) {
+                        const QPoint globalPos = d->mPopup->mapToGlobal( mouseEvent->pos() );
 
-                    if( QApplication::widgetAt( globalPos ) == this ) {
-                        // The date picker is being closed by a click on the
-                        // DateEdit widget. Avoid popping it up again immediately.
-                        d->mDiscardNextMousePress = true;
+                        if( QApplication::widgetAt( globalPos ) == this ) {
+                            // The date picker is being closed by a click on the
+                            // DateEdit widget. Avoid popping it up again immediately.
+                            d->mDiscardNextMousePress = true;
+                        }
                     }
                 }
-            }
             default:
                 break;
         }
@@ -572,7 +561,7 @@ bool DateEdit::eventFilter(QObject *object, QEvent *event)
 }
 
 
-void DateEdit::mousePressEvent(QMouseEvent *event)
+void DateEdit::mousePressEvent( QMouseEvent *event )
 {
     if( event->button() == Qt::LeftButton && d->mDiscardNextMousePress ) {
         d->mDiscardNextMousePress = false;
@@ -583,7 +572,7 @@ void DateEdit::mousePressEvent(QMouseEvent *event)
 }
 
 
-bool DateEdit::assignDate(const QDate &date)
+bool DateEdit::assignDate( const QDate &date )
 {
     d->mDate = date;
     d->mTextChanged = false;
@@ -598,13 +587,13 @@ void DateEdit::lineEnterPressed()
 }
 
 
-void DateEdit::slotTextChanged(const QString &str)
+void DateEdit::slotTextChanged( const QString &str )
 {
     d->slotTextChanged( str );
 }
 
 
-void DateEdit::dateSelected(const QDate &dt)
+void DateEdit::dateSelected( const QDate &dt )
 {
     d->dateSelected( dt );
 }

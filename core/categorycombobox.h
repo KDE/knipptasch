@@ -40,31 +40,31 @@ class Account;
  */
 class KNIPPTASCH_CORE_EXPORT CategoryComboBox : public KComboBox
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        CategoryComboBox(const Account *account, QWidget *parent = 0);
+        CategoryComboBox( const Account *account, QWidget *parent = 0 );
 
-        const Account* account() const;
-        void setAccount(const Account *account);
+        const Account *account() const;
+        void setAccount( const Account *account );
 
-        const Category* selectedCategory() const;
-        Category* selectedCategory();
-        void setSelectedCategory(const Category *category);
+        const Category *selectedCategory() const;
+        Category *selectedCategory();
+        void setSelectedCategory( const Category *category );
 
-        bool eventFilter(QObject *object, QEvent *event);
+        bool eventFilter( QObject *object, QEvent *event );
 
         void showPopup();
         void hidePopup();
 
     private:
-        void addCategory(QStandardItem *parent, const Category *category);
-        QIcon renderCategoryIcon(const Category *category);
+        void addCategory( QStandardItem *parent, const Category *category );
+        QIcon renderCategoryIcon( const Category *category );
 
     private:
         QTreeView *m_view;
         QStandardItemModel *m_model;
-        QSet<QStandardItem*> m_items;
+        QSet<QStandardItem *> m_items;
         const Account *m_account;
         bool m_skipNextHide;
         int m_selectedCategory;

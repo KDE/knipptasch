@@ -32,13 +32,13 @@
 #include <QDebug>
 
 
-DateDelegate::DateDelegate(QObject *parent)
-  : QStyledItemDelegate( parent )
+DateDelegate::DateDelegate( QObject *parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *DateDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     const QAbstractItemModel *model = index.model();
     if( !model ) {
@@ -54,18 +54,17 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 }
 
 
-void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void DateDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    DateEdit *input = qobject_cast<DateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit *>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
-    }
-    else {
+    } else {
         QDate dt;
         if( index.isValid() ) {
-            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>( model );
+            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel *>( model );
             QModelIndex idx = index;
 
             if( proxy ) {
@@ -79,18 +78,16 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
             if( !dt.isValid() ) {
                 if( idx.column() == AccountModel::MATURITY ) {
                     dt = QDate::currentDate();
-                }
-                else if( idx.column() == AccountModel::VALUEDATE ) {
+                } else if( idx.column() == AccountModel::VALUEDATE ) {
                     dt = model->data(
-                            model->index( idx.row(), AccountModel::MATURITY ),
-                            Qt::EditRole
-                        ).toDate();
-                }
-                else if( idx.column() == AccountModel::WARRANTY ) {
+                             model->index( idx.row(), AccountModel::MATURITY ),
+                             Qt::EditRole
+                         ).toDate();
+                } else if( idx.column() == AccountModel::WARRANTY ) {
                     dt = model->data(
-                            model->index( idx.row(), AccountModel::VALUEDATE ),
-                            Qt::EditRole
-                        ).toDate();
+                             model->index( idx.row(), AccountModel::VALUEDATE ),
+                             Qt::EditRole
+                         ).toDate();
 
                     if( dt.isValid() ) {
                         dt = dt.addMonths( Knipptasch::Preferences::self()->defaultLengthOfWarrantyInMonth() );
@@ -105,40 +102,39 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
 }
 
 
-void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void DateDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    DateEdit *input = qobject_cast<DateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit *>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
-    }
-    else {
+    } else {
         qDebug() << "set model data:" << input->date();
         model->setData( index, input->date(), Qt::EditRole );
     }
 }
 
 
-QSize DateDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize DateDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     static int fix = 0;
 
     if( fix <= 0 ) {
         fix = qApp->fontMetrics()
-                        .size(
-                                Qt::TextSingleLine,
-                                formatShortDate( QDate::currentDate() )
-                         ).width();
+              .size(
+                  Qt::TextSingleLine,
+                  formatShortDate( QDate::currentDate() )
+              ).width();
 
         fix += 40;
     }
 
     const QSize size = QStyledItemDelegate::sizeHint( option, index )
-                        + QSize( 25, 0 );
+                       + QSize( 25, 0 );
 
     if( size.width() >= fix ) {
         return size;

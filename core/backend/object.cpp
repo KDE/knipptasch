@@ -25,9 +25,9 @@
 
 
 
-Object::Object(QObject *parent)
-  : QObject( parent ),
-    m_modified( false )
+Object::Object( QObject *parent )
+    : QObject( parent ),
+      m_modified( false )
 {
 }
 
@@ -47,7 +47,7 @@ bool Object::isModified() const
 }
 
 
-void Object::setModified(bool state)
+void Object::setModified( bool state )
 {
     if( m_modified != state ) {
         m_modified = state;
@@ -87,7 +87,7 @@ int Object::countFlags() const
 }
 
 
-bool Object::containsFlag(const QByteArray &flag) const
+bool Object::containsFlag( const QByteArray &flag ) const
 {
     return m_flags.contains( flag );
 }
@@ -99,7 +99,7 @@ QSet<QByteArray> Object::flags() const
 }
 
 
-void Object::insertFlag(const QByteArray &flag)
+void Object::insertFlag( const QByteArray &flag )
 {
     if( !m_flags.contains( flag ) ) {
         m_flags.insert( flag );
@@ -110,7 +110,7 @@ void Object::insertFlag(const QByteArray &flag)
 }
 
 
-void Object::insertFlags(const QSet<QByteArray> &flags)
+void Object::insertFlags( const QSet<QByteArray> &flags )
 {
     if( !m_flags.contains( flags ) ) {
         m_flags.unite( flags );
@@ -121,7 +121,7 @@ void Object::insertFlags(const QSet<QByteArray> &flags)
 }
 
 
-void Object::setFlags(const QSet<QByteArray> &flags)
+void Object::setFlags( const QSet<QByteArray> &flags )
 {
     if( m_flags != flags ) {
         m_flags = flags;
@@ -134,7 +134,7 @@ void Object::setFlags(const QSet<QByteArray> &flags)
 }
 
 
-void Object::removeFlag(const QByteArray &flag)
+void Object::removeFlag( const QByteArray &flag )
 {
     if( m_flags.remove( flag ) ) {
         setModified();
@@ -143,7 +143,7 @@ void Object::removeFlag(const QByteArray &flag)
 }
 
 
-void Object::removeFlags(const QSet<QByteArray> &flags)
+void Object::removeFlags( const QSet<QByteArray> &flags )
 {
     const int s = m_flags.size();
 
@@ -177,7 +177,7 @@ int Object::countAttributes() const
 }
 
 
-bool Object::containsAttribute(const QByteArray &name) const
+bool Object::containsAttribute( const QByteArray &name ) const
 {
     return m_attributes.contains( name );
 }
@@ -195,7 +195,7 @@ QHash<QByteArray, QVariant> Object::attributes() const
 }
 
 
-QVariant Object::attribute(const QByteArray &name, const QVariant &defaultKey) const
+QVariant Object::attribute( const QByteArray &name, const QVariant &defaultKey ) const
 {
     ASSERT_LIMITED_VARIANT( defaultKey );
 
@@ -203,7 +203,7 @@ QVariant Object::attribute(const QByteArray &name, const QVariant &defaultKey) c
 }
 
 
-void Object::insertAttribute(const QByteArray &name, const QVariant &value)
+void Object::insertAttribute( const QByteArray &name, const QVariant &value )
 {
     ASSERT_LIMITED_VARIANT( value );
 
@@ -215,9 +215,9 @@ void Object::insertAttribute(const QByteArray &name, const QVariant &value)
 }
 
 
-void Object::setAttributes(const QHash<QByteArray, QVariant> &attributes)
+void Object::setAttributes( const QHash<QByteArray, QVariant> &attributes )
 {
-    for(QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it) {
+    for( QHash<QByteArray, QVariant>::const_iterator it = attributes.constBegin(); it != attributes.constEnd(); ++it ) {
         ASSERT_LIMITED_VARIANT( it.value() );
     }
 
@@ -231,7 +231,7 @@ void Object::setAttributes(const QHash<QByteArray, QVariant> &attributes)
 }
 
 
-void Object::removeAttribute(const QByteArray &name)
+void Object::removeAttribute( const QByteArray &name )
 {
     if( m_attributes.remove( name ) >= 1 ) {
         setModified();
@@ -262,7 +262,7 @@ int Object::countAttachments() const
 }
 
 
-Attachment* Object::attachment(int index)
+Attachment *Object::attachment( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
@@ -271,7 +271,7 @@ Attachment* Object::attachment(int index)
 }
 
 
-const Attachment* Object::attachment(int index) const
+const Attachment *Object::attachment( int index ) const
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
@@ -280,7 +280,7 @@ const Attachment* Object::attachment(int index) const
 }
 
 
-Attachment* Object::takeAttachment(int index)
+Attachment *Object::takeAttachment( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
@@ -295,7 +295,7 @@ Attachment* Object::takeAttachment(int index)
 }
 
 
-void Object::insertAttachment(Attachment *attachment)
+void Object::insertAttachment( Attachment *attachment )
 {
     Q_ASSERT( attachment );
 
@@ -306,7 +306,7 @@ void Object::insertAttachment(Attachment *attachment)
 }
 
 
-void Object::removeAttachment(int index)
+void Object::removeAttachment( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < m_attachments.size() );
@@ -332,7 +332,7 @@ void Object::clearAttachments()
 }
 
 
-QDataStream& Object::serialize(QDataStream &stream) const
+QDataStream &Object::serialize( QDataStream &stream ) const
 {
     stream << m_flags;
     stream << m_attributes;
@@ -341,7 +341,7 @@ QDataStream& Object::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Object::deserialize(const Account *account, QDataStream &stream)
+QDataStream &Object::deserialize( const Account *account, QDataStream &stream )
 {
     Q_UNUSED( account );
     Q_ASSERT( account );

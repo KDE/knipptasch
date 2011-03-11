@@ -40,571 +40,571 @@ Q_GLOBAL_STATIC( Knipptasch::Preferences, private_knipptasch_preferences )
 
 namespace Knipptasch
 {
-    
-
-Preferences* Preferences::self()
-{
-    return private_knipptasch_preferences();
-}
 
 
-Preferences::Preferences(QObject *parent)
-  : QSettings( QSettings::UserScope, "kde.org", "knipptasch", parent )
-{
-}
-
-
-QStringList Preferences::pluginDirectories() const
-{
-    QStringList l;
-
-    l.append( value( "General/PluginDirectories" ).toStringList() );
-    l.append( QDir::homePath() + "/.knipptasch/plugins"  );
-
-#if defined(Q_WS_X11)
-    QDir dir( qApp->applicationDirPath() + "/../share/knipptasch/plugins" );
-    l.append( dir.absolutePath() );
-#elif defined(Q_WS_WIN)
-    l.append( qApp->applicationDirPath() + "/plugins" );
-#elif defined(Q_WS_MAC)
-    l.append( qApp->applicationDirPath() + "/plugins" );
-#endif
-
-    // Try the environment override first
-    char *envdatadir = getenv( "KNIPPTASCH_PLUGIN_DIR" ); // krazy:exclude=syscalls
-    if( envdatadir ) {
-        l.append( envdatadir );
+    Preferences *Preferences::self()
+    {
+        return private_knipptasch_preferences();
     }
 
-qDebug( "pluginDirectories:" );
-foreach(const QString &s, l) {
-    qDebug( "  %s", s.toAscii().data() );
-}
 
-    return l;
-}
+    Preferences::Preferences( QObject *parent )
+        : QSettings( QSettings::UserScope, "kde.org", "knipptasch", parent )
+    {
+    }
 
 
-QStringList Preferences::pluginNamePrefixes() const
-{
-    QStringList l;
-    l << "knipptasch_";
-    
-    return l;
-}
+    QStringList Preferences::pluginDirectories() const
+    {
+        QStringList l;
+
+        l.append( value( "General/PluginDirectories" ).toStringList() );
+        l.append( QDir::homePath() + "/.knipptasch/plugins" );
+
+#if defined(Q_WS_X11)
+        QDir dir( qApp->applicationDirPath() + "/../share/knipptasch/plugins" );
+        l.append( dir.absolutePath() );
+#elif defined(Q_WS_WIN)
+        l.append( qApp->applicationDirPath() + "/plugins" );
+#elif defined(Q_WS_MAC)
+        l.append( qApp->applicationDirPath() + "/plugins" );
+#endif
+
+        // Try the environment override first
+        char *envdatadir = getenv( "KNIPPTASCH_PLUGIN_DIR" ); // krazy:exclude=syscalls
+        if( envdatadir ) {
+            l.append( envdatadir );
+        }
+
+        qDebug( "pluginDirectories:" );
+        foreach( const QString & s, l ) {
+            qDebug( "  %s", s.toAscii().data() );
+        }
+
+        return l;
+    }
+
+
+    QStringList Preferences::pluginNamePrefixes() const
+    {
+        QStringList l;
+        l << "knipptasch_";
+
+        return l;
+    }
 
 
 // == General ==
 
-Preferences::EnumOnStartupAction Preferences::onStartupAction() const
-{
-    return static_cast<EnumOnStartupAction>( value( "General/OnStartupAction", static_cast<int>( WelcomePage ) ).toInt() );
-}
+    Preferences::EnumOnStartupAction Preferences::onStartupAction() const
+    {
+        return static_cast<EnumOnStartupAction>( value( "General/OnStartupAction", static_cast<int>( WelcomePage ) ).toInt() );
+    }
 
 
-void Preferences::setOnStartupAction(Preferences::EnumOnStartupAction value)
-{
-    setValue( "General/OnStartupAction", static_cast<int>( value ) );
-    sync();
-}
+    void Preferences::setOnStartupAction( Preferences::EnumOnStartupAction value )
+    {
+        setValue( "General/OnStartupAction", static_cast<int>( value ) );
+        sync();
+    }
 
 
-QString Preferences::onStartupActionDefaultFile() const
-{
-    return value( "General/OnStartupActionDefaultFile" ).toString();
-}
+    QString Preferences::onStartupActionDefaultFile() const
+    {
+        return value( "General/OnStartupActionDefaultFile" ).toString();
+    }
 
 
-void Preferences::setOnStartupActionDefaultFile(const QString &fileName)
-{
-    setValue( "General/OnStartupActionDefaultFile", fileName );
-    sync();
-}
+    void Preferences::setOnStartupActionDefaultFile( const QString &fileName )
+    {
+        setValue( "General/OnStartupActionDefaultFile", fileName );
+        sync();
+    }
 
 
-bool Preferences::showStatusBar() const
-{
-    return value( "General/ShowStatusBar", true ).toBool();
-}
+    bool Preferences::showStatusBar() const
+    {
+        return value( "General/ShowStatusBar", true ).toBool();
+    }
 
 
-void Preferences::setShowStatusBar(bool state)
-{
-    setValue( "General/ShowStatusBar", state );
-    sync();
-}
+    void Preferences::setShowStatusBar( bool state )
+    {
+        setValue( "General/ShowStatusBar", state );
+        sync();
+    }
 
 
-int Preferences::defaultLengthOfWarrantyInMonth() const
-{
-    return value( "General/DefaultLengthOfWarrantyInMonth", 24 ).toInt();
-}
+    int Preferences::defaultLengthOfWarrantyInMonth() const
+    {
+        return value( "General/DefaultLengthOfWarrantyInMonth", 24 ).toInt();
+    }
 
 
-void Preferences::setDefaultLengthOfWarrantyInMonth(int value)
-{
-    setValue( "General/DefaultLengthOfWarrantyInMonth", value );
-    sync();
-}
+    void Preferences::setDefaultLengthOfWarrantyInMonth( int value )
+    {
+        setValue( "General/DefaultLengthOfWarrantyInMonth", value );
+        sync();
+    }
 
 
-QStringList Preferences::recentFilesList() const
-{
-    return value( "General/RecentFilesList" ).toStringList();
-}
+    QStringList Preferences::recentFilesList() const
+    {
+        return value( "General/RecentFilesList" ).toStringList();
+    }
 
 
-void Preferences::setRecentFilesList(const QStringList &list)
-{
-    setValue( "General/RecentFilesList", list );
-    sync();
-}
+    void Preferences::setRecentFilesList( const QStringList &list )
+    {
+        setValue( "General/RecentFilesList", list );
+        sync();
+    }
 
 
-int Preferences::recentFilesListMaximumCount() const
-{
-    return value( "General/RecentFilesMaximumCount", 10 ).toInt();
-}
+    int Preferences::recentFilesListMaximumCount() const
+    {
+        return value( "General/RecentFilesMaximumCount", 10 ).toInt();
+    }
 
 
-void Preferences::setRecentFilesListMaximumCount(int v)
-{
-    setValue( "General/RecentFilesMaximumCount", v > 0 ? v : 0 );
-    sync();
-}
+    void Preferences::setRecentFilesListMaximumCount( int v )
+    {
+        setValue( "General/RecentFilesMaximumCount", v > 0 ? v : 0 );
+        sync();
+    }
 
 
-bool Preferences::splashScreenEnabled() const
-{
-    return value( "General/SplashScreenEnabled", true ).toBool();
-}
+    bool Preferences::splashScreenEnabled() const
+    {
+        return value( "General/SplashScreenEnabled", true ).toBool();
+    }
 
 
-void Preferences::setSplashScreenEnabled(bool b)
-{
-    setValue( "General/SplashScreenEnabled", b );
-    sync();
-}
+    void Preferences::setSplashScreenEnabled( bool b )
+    {
+        setValue( "General/SplashScreenEnabled", b );
+        sync();
+    }
 
 
-bool Preferences::hideEmptyTabBar() const
-{
-    return value( "General/HideEmptyTabBar", false ).toBool();
-}
+    bool Preferences::hideEmptyTabBar() const
+    {
+        return value( "General/HideEmptyTabBar", false ).toBool();
+    }
 
 
-void Preferences::setHideEmptyTabBar(bool b)
-{
-    setValue( "General/HideEmptyTabBar", b );
-    sync();
-}
+    void Preferences::setHideEmptyTabBar( bool b )
+    {
+        setValue( "General/HideEmptyTabBar", b );
+        sync();
+    }
 
 
-bool Preferences::middleClickCloseTab() const
-{
-    return value( "General/MiddleClickCloseTab", false ).toBool();
-}
+    bool Preferences::middleClickCloseTab() const
+    {
+        return value( "General/MiddleClickCloseTab", false ).toBool();
+    }
 
 
-void Preferences::setMiddleClickCloseTab(bool b)
-{
-    setValue( "General/MiddleClickCloseTab", b );
-    sync();
-}
+    void Preferences::setMiddleClickCloseTab( bool b )
+    {
+        setValue( "General/MiddleClickCloseTab", b );
+        sync();
+    }
 
 
-bool Preferences::movableTabs() const
-{
-    return value( "General/MovableTabs", true ).toBool();
-}
+    bool Preferences::movableTabs() const
+    {
+        return value( "General/MovableTabs", true ).toBool();
+    }
 
 
-void Preferences::setMovableTabs(bool b)
-{
-    setValue( "General/MovableTabs", b );
-    sync();
-}
+    void Preferences::setMovableTabs( bool b )
+    {
+        setValue( "General/MovableTabs", b );
+        sync();
+    }
 
 
-bool Preferences::closeButtonOnTabs() const
-{
-    return value( "General/CloseButtonOnTabs", true ).toBool();
-}
+    bool Preferences::closeButtonOnTabs() const
+    {
+        return value( "General/CloseButtonOnTabs", true ).toBool();
+    }
 
 
-void Preferences::setCloseButtonOnTabs(bool b)
-{
-    setValue( "General/CloseButtonOnTabs", b );
-    sync();
-}
+    void Preferences::setCloseButtonOnTabs( bool b )
+    {
+        setValue( "General/CloseButtonOnTabs", b );
+        sync();
+    }
 
 
-bool Preferences::tabCornerCloseButton() const
-{
-    return value( "General/TabCornerCloseButton", true ).toBool();
-}
+    bool Preferences::tabCornerCloseButton() const
+    {
+        return value( "General/TabCornerCloseButton", true ).toBool();
+    }
 
 
-void Preferences::setTabCornerCloseButton(bool b)
-{
-    setValue( "General/TabCornerCloseButton", b );
-    sync();
-}
+    void Preferences::setTabCornerCloseButton( bool b )
+    {
+        setValue( "General/TabCornerCloseButton", b );
+        sync();
+    }
 
 
 // == Appearance ==
 
-bool Preferences::positiveAmountForegroundEnabled() const
-{
-    return value( "Appearance/PositiveAmountForegroundEnabled", true ).toBool();
-}
+    bool Preferences::positiveAmountForegroundEnabled() const
+    {
+        return value( "Appearance/PositiveAmountForegroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setPositiveAmountForegroundEnabled(bool b)
-{
-    setValue( "Appearance/PositiveAmountForegroundEnabled", b );
-    sync();
-}
+    void Preferences::setPositiveAmountForegroundEnabled( bool b )
+    {
+        setValue( "Appearance/PositiveAmountForegroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::positiveAmountForegroundColor() const
-{
-    return value( "Appearance/PositiveAmountForegroundColor", POSITIVE_AMOUNT_FOREGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::positiveAmountForegroundColor() const
+    {
+        return value( "Appearance/PositiveAmountForegroundColor", POSITIVE_AMOUNT_FOREGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setPositiveAmountForegroundColor(const QColor &color)
-{
-    setValue( "Appearance/PositiveAmountForegroundColor", color );
-    sync();
-}
+    void Preferences::setPositiveAmountForegroundColor( const QColor &color )
+    {
+        setValue( "Appearance/PositiveAmountForegroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::negativeAmountForegroundEnabled() const
-{
-    return value( "Appearance/NegativeAmountForegroundEnabled", true ).toBool();
-}
+    bool Preferences::negativeAmountForegroundEnabled() const
+    {
+        return value( "Appearance/NegativeAmountForegroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setNegativeAmountForegroundEnabled(bool b)
-{
-    setValue( "Appearance/NegativeAmountForegroundEnabled", b );
-    sync();
-}
+    void Preferences::setNegativeAmountForegroundEnabled( bool b )
+    {
+        setValue( "Appearance/NegativeAmountForegroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::negativeAmountForegroundColor() const
-{
-    return value( "Appearance/NegativeAmountForegroundColor", NEGATIVE_AMOUNT_FOREGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::negativeAmountForegroundColor() const
+    {
+        return value( "Appearance/NegativeAmountForegroundColor", NEGATIVE_AMOUNT_FOREGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setNegativeAmountForegroundColor(const QColor &color)
-{
-    setValue( "Appearance/NegativeAmountForegroundColor", color );
-    sync();
-}
+    void Preferences::setNegativeAmountForegroundColor( const QColor &color )
+    {
+        setValue( "Appearance/NegativeAmountForegroundColor", color );
+        sync();
+    }
 
-bool Preferences::availableWarrantyForegroundEnabled() const
-{
-    return value( "Appearance/AvailableWarrantyForegroundEnabled", true ).toBool();
-}
-
-
-void Preferences::setAvailableWarrantyForegroundEnabled(bool b)
-{
-    setValue( "Appearance/AvailableWarrantyForegroundEnabled", b );
-    sync();
-}
+    bool Preferences::availableWarrantyForegroundEnabled() const
+    {
+        return value( "Appearance/AvailableWarrantyForegroundEnabled", true ).toBool();
+    }
 
 
-QColor Preferences::availableWarrantyForegroundColor() const
-{
+    void Preferences::setAvailableWarrantyForegroundEnabled( bool b )
+    {
+        setValue( "Appearance/AvailableWarrantyForegroundEnabled", b );
+        sync();
+    }
+
+
+    QColor Preferences::availableWarrantyForegroundColor() const
+    {
         return value( "Appearance/AvailableWarrantyForegroundColor", AVAILABLE_WARRANTY_FOREGROUND_COLOR ).value<QColor>();
-}
+    }
 
 
-void Preferences::setAvailableWarrantyForegroundColor(const QColor &color)
-{
-    setValue( "Appearance/AvailableWarrantyForegroundColor", color );
-    sync();
-}
+    void Preferences::setAvailableWarrantyForegroundColor( const QColor &color )
+    {
+        setValue( "Appearance/AvailableWarrantyForegroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::expiredWarrantyForegroundEnabled() const
-{
-    return value( "Appearance/ExpiredWarrantyForegroundEnabled", true ).toBool();
-}
+    bool Preferences::expiredWarrantyForegroundEnabled() const
+    {
+        return value( "Appearance/ExpiredWarrantyForegroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setExpiredWarrantyForegroundEnabled(bool b)
-{
-    setValue( "Appearance/ExpiredWarrantyForegroundEnabled", b );
-    sync();
-}
+    void Preferences::setExpiredWarrantyForegroundEnabled( bool b )
+    {
+        setValue( "Appearance/ExpiredWarrantyForegroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::expiredWarrantyForegroundColor() const
-{
-    return value( "Appearance/ExpiredWarrantyForegroundColor", EXPIRED_WARRANTY_FOREGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::expiredWarrantyForegroundColor() const
+    {
+        return value( "Appearance/ExpiredWarrantyForegroundColor", EXPIRED_WARRANTY_FOREGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setExpiredWarrantyForegroundColor(const QColor &color)
-{
-    setValue( "Appearance/ExpiredWarrantyForegroundColor", color );
-    sync();
-}
+    void Preferences::setExpiredWarrantyForegroundColor( const QColor &color )
+    {
+        setValue( "Appearance/ExpiredWarrantyForegroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::currentPostingBackgroundEnabled() const
-{
-    return value( "Appearance/CurrentPostingBackgroundEnabled", true ).toBool();
-}
+    bool Preferences::currentPostingBackgroundEnabled() const
+    {
+        return value( "Appearance/CurrentPostingBackgroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setCurrentPostingBackgroundEnabled(bool b)
-{
-    setValue( "Appearance/CurrentPostingBackgroundEnabled", b );
-    sync();
-}
+    void Preferences::setCurrentPostingBackgroundEnabled( bool b )
+    {
+        setValue( "Appearance/CurrentPostingBackgroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::currentPostingBackgroundColor() const
-{
-    return value( "Appearance/CurrentPostingBackgroundColor", CURRENT_POSTING_BACKGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::currentPostingBackgroundColor() const
+    {
+        return value( "Appearance/CurrentPostingBackgroundColor", CURRENT_POSTING_BACKGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setCurrentPostingBackgroundColor(const QColor &color)
-{
-    setValue( "Appearance/CurrentPostingBackgroundColor", color );
-    sync();
-}
+    void Preferences::setCurrentPostingBackgroundColor( const QColor &color )
+    {
+        setValue( "Appearance/CurrentPostingBackgroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::futurePostingBackgroundEnabled() const
-{
-    return value( "Appearance/FuturePostingBackgroundEnabled", true ).toBool();
-}
+    bool Preferences::futurePostingBackgroundEnabled() const
+    {
+        return value( "Appearance/FuturePostingBackgroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setFuturePostingBackgroundEnabled(bool b)
-{
-    setValue( "Appearance/FuturePostingBackgroundEnabled", b );
-    sync();
-}
+    void Preferences::setFuturePostingBackgroundEnabled( bool b )
+    {
+        setValue( "Appearance/FuturePostingBackgroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::futurePostingBackgroundColor() const
-{
-    return value( "Appearance/FuturePostingBackgroundColor", FUTURE_POSTING_BACKGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::futurePostingBackgroundColor() const
+    {
+        return value( "Appearance/FuturePostingBackgroundColor", FUTURE_POSTING_BACKGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setFuturePostingBackgroundColor(const QColor &color)
-{
-    setValue( "Appearance/FuturePostingBackgroundColor", color );
-    sync();
-}
+    void Preferences::setFuturePostingBackgroundColor( const QColor &color )
+    {
+        setValue( "Appearance/FuturePostingBackgroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::incompletePostingBackgroundEnabled() const
-{
-    return value( "Appearance/IncompletePostingBackgroundEnabled", true ).toBool();
-}
+    bool Preferences::incompletePostingBackgroundEnabled() const
+    {
+        return value( "Appearance/IncompletePostingBackgroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setIncompletePostingBackgroundEnabled(bool b)
-{
-    setValue( "Appearance/IncompletePostingBackgroundEnabled", b );
-    sync();
-}
+    void Preferences::setIncompletePostingBackgroundEnabled( bool b )
+    {
+        setValue( "Appearance/IncompletePostingBackgroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::incompletePostingBackgroundColor() const
-{
-    return value( "Appearance/IncompletePostingBackgroundColor", INCOMPLETE_POSTING_BACKGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::incompletePostingBackgroundColor() const
+    {
+        return value( "Appearance/IncompletePostingBackgroundColor", INCOMPLETE_POSTING_BACKGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setIncompletePostingBackgroundColor(const QColor &color)
-{
-    setValue( "Appearance/IncompletePostingBackgroundColor", color );
-    sync();
-}
+    void Preferences::setIncompletePostingBackgroundColor( const QColor &color )
+    {
+        setValue( "Appearance/IncompletePostingBackgroundColor", color );
+        sync();
+    }
 
 
-bool Preferences::defaultPostingBackgroundEnabled() const
-{
-    return value( "Appearance/DefaultPostingBackgroundEnabled", true ).toBool();
-}
+    bool Preferences::defaultPostingBackgroundEnabled() const
+    {
+        return value( "Appearance/DefaultPostingBackgroundEnabled", true ).toBool();
+    }
 
 
-void Preferences::setDefaultPostingBackgroundEnabled(bool b)
-{
-    setValue( "Appearance/DefaultPostingBackgroundEnabled", b );
-    sync();
-}
+    void Preferences::setDefaultPostingBackgroundEnabled( bool b )
+    {
+        setValue( "Appearance/DefaultPostingBackgroundEnabled", b );
+        sync();
+    }
 
 
-QColor Preferences::defaultPostingBackgroundColor() const
-{
-    return value( "Appearance/DefaultPostingBackgroundColor", DEFAULT_POSTING_BACKGROUND_COLOR ).value<QColor>();
-}
+    QColor Preferences::defaultPostingBackgroundColor() const
+    {
+        return value( "Appearance/DefaultPostingBackgroundColor", DEFAULT_POSTING_BACKGROUND_COLOR ).value<QColor>();
+    }
 
 
-void Preferences::setDefaultPostingBackgroundColor(const QColor &color)
-{
-    setValue( "Appearance/DefaultPostingBackgroundColor", color );
-    sync();
-}
+    void Preferences::setDefaultPostingBackgroundColor( const QColor &color )
+    {
+        setValue( "Appearance/DefaultPostingBackgroundColor", color );
+        sync();
+    }
 
 
-QSize Preferences::minimumCategoryComboBoxPopupSize() const
-{
-    return value( "Appearance/MinimumCategoryComboBoxPopupSize", QSize( 250, 300 ) ).value<QSize>();
-}
+    QSize Preferences::minimumCategoryComboBoxPopupSize() const
+    {
+        return value( "Appearance/MinimumCategoryComboBoxPopupSize", QSize( 250, 300 ) ).value<QSize>();
+    }
 
 
-void Preferences::setMinimumCategoryComboBoxPopupSize(const QSize &size)
-{
-    setValue( "Appearance/MinimumCategoryComboBoxPopupSize", size );
-    sync();
-}
+    void Preferences::setMinimumCategoryComboBoxPopupSize( const QSize &size )
+    {
+        setValue( "Appearance/MinimumCategoryComboBoxPopupSize", size );
+        sync();
+    }
 
 
 // == TableView ==
 
 
-Knipptasch::Preferences::PostingSortOrder Preferences::postingSortOrder() const
-{
-    return static_cast<PostingSortOrder>( value( "TableView/SortPostingsBy", static_cast<int>( Maturity ) ).toInt() );
-}
+    Knipptasch::Preferences::PostingSortOrder Preferences::postingSortOrder() const
+    {
+        return static_cast<PostingSortOrder>( value( "TableView/SortPostingsBy", static_cast<int>( Maturity ) ).toInt() );
+    }
 
 
-void Preferences::setPostingSortOrder(Knipptasch::Preferences::PostingSortOrder value)
-{
-    setValue( "TableView/SortPostingsBy", static_cast<int>( value ) );
-    sync();
-}
+    void Preferences::setPostingSortOrder( Knipptasch::Preferences::PostingSortOrder value )
+    {
+        setValue( "TableView/SortPostingsBy", static_cast<int>( value ) );
+        sync();
+    }
 
 
-QString Preferences::horizontalHeaderState() const
-{
-    return value( "TableView/HorizontalHeaderState" ).toByteArray();
-}
+    QString Preferences::horizontalHeaderState() const
+    {
+        return value( "TableView/HorizontalHeaderState" ).toByteArray();
+    }
 
 
-void Preferences::setHorizontalHeaderState(const QString &str)
-{
-    setValue( "TableView/HorizontalHeaderState", str );
-    sync();
-}
+    void Preferences::setHorizontalHeaderState( const QString &str )
+    {
+        setValue( "TableView/HorizontalHeaderState", str );
+        sync();
+    }
 
 
-bool Preferences::movableColumns() const
-{
-    return value( "TableView/MovableColumns", true ).toBool();
-}
+    bool Preferences::movableColumns() const
+    {
+        return value( "TableView/MovableColumns", true ).toBool();
+    }
 
 
-void Preferences::setMovableColumns(bool b)
-{
-    setValue( "TableView/MovableColumns", b );
-    sync();
-}
+    void Preferences::setMovableColumns( bool b )
+    {
+        setValue( "TableView/MovableColumns", b );
+        sync();
+    }
 
 
-bool Preferences::cascadingSectionResize() const
-{
-    return value( "TableView/CascadingSectionResize", false ).toBool();
-}
+    bool Preferences::cascadingSectionResize() const
+    {
+        return value( "TableView/CascadingSectionResize", false ).toBool();
+    }
 
 
-void Preferences::setCascadingSectionResize(bool b)
-{
-    setValue( "TableView/CascadingSectionResize", b );
-    sync();
-}
+    void Preferences::setCascadingSectionResize( bool b )
+    {
+        setValue( "TableView/CascadingSectionResize", b );
+        sync();
+    }
 
 
-bool Preferences::doubleClickResizeColumnToCountent() const
-{
-    return value( "TableView/DoubleClickResizeColumnToCountent", false ).toBool();
-}
+    bool Preferences::doubleClickResizeColumnToCountent() const
+    {
+        return value( "TableView/DoubleClickResizeColumnToCountent", false ).toBool();
+    }
 
 
-void Preferences::setDoubleClickResizeColumnToCountent(bool b)
-{
-    setValue( "TableView/DoubleClickResizeColumnToCountent", b );
-    sync();
-}
+    void Preferences::setDoubleClickResizeColumnToCountent( bool b )
+    {
+        setValue( "TableView/DoubleClickResizeColumnToCountent", b );
+        sync();
+    }
 
 
-bool Preferences::resetCurrentIndexWhenCurrentRowChanged()
-{
-    return value( "TableView/ResetCurrentIndexWhenCurrentRowChanged", true ).toBool();
-}
+    bool Preferences::resetCurrentIndexWhenCurrentRowChanged()
+    {
+        return value( "TableView/ResetCurrentIndexWhenCurrentRowChanged", true ).toBool();
+    }
 
 
-void Preferences::setResetCurrentIndexWhenCurrentRowChanged(bool b)
-{
-    setValue( "TableView/ResetCurrentIndexWhenCurrentRowChanged", b );
-    sync();
-}
+    void Preferences::setResetCurrentIndexWhenCurrentRowChanged( bool b )
+    {
+        setValue( "TableView/ResetCurrentIndexWhenCurrentRowChanged", b );
+        sync();
+    }
 
 
-QString Preferences::userDefinedDateFormat() const
-{
-    return value( "TableView/UserDefinedDateFormat" ).toString();
-}
+    QString Preferences::userDefinedDateFormat() const
+    {
+        return value( "TableView/UserDefinedDateFormat" ).toString();
+    }
 
 
-void Preferences::setUserDefinedDateFormat(const QString &str)
-{
-    setValue( "TableView/UserDefinedDateFormat", str );
-    sync();
-}
+    void Preferences::setUserDefinedDateFormat( const QString &str )
+    {
+        setValue( "TableView/UserDefinedDateFormat", str );
+        sync();
+    }
 
 
-bool Preferences::autoCompletionEnabled()
-{
-    return value( "TableView/AutoCompletionEnabled", true ).toBool();
-}
+    bool Preferences::autoCompletionEnabled()
+    {
+        return value( "TableView/AutoCompletionEnabled", true ).toBool();
+    }
 
 
-void Preferences::setAutoCompletionEnabled(bool b)
-{
-    setValue( "TableView/AutoCompletionEnabled", b );
-    sync();
-}
+    void Preferences::setAutoCompletionEnabled( bool b )
+    {
+        setValue( "TableView/AutoCompletionEnabled", b );
+        sync();
+    }
 
 
-QString Preferences::windowGeometry() const
-{
-    return value( "Window/WindowGeometry" ).toByteArray();
-}
+    QString Preferences::windowGeometry() const
+    {
+        return value( "Window/WindowGeometry" ).toByteArray();
+    }
 
 
-void Preferences::setWindowGeometry(const QString &str)
-{
-    setValue( "Window/WindowGeometry", str );
-    sync();
-}
+    void Preferences::setWindowGeometry( const QString &str )
+    {
+        setValue( "Window/WindowGeometry", str );
+        sync();
+    }
 
 
-QString Preferences::windowState() const
-{
-    return value( "Window/WindowState" ).toString();
-}
+    QString Preferences::windowState() const
+    {
+        return value( "Window/WindowState" ).toString();
+    }
 
 
-void Preferences::setWindowState(const QString &str)
-{
-    setValue( "Window/WindowState", str );
-    sync();
-}
+    void Preferences::setWindowState( const QString &str )
+    {
+        setValue( "Window/WindowState", str );
+        sync();
+    }
 
 
 } // EndNamspace Knipptasch

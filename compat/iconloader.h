@@ -35,8 +35,7 @@ class IconLoader : public KIconLoader
 class IconLoader : public QObject
 {
     public:
-        enum Group
-        {
+        enum Group {
             NoGroup = -1,   ///< No group
             Desktop = 0,    ///< Desktop icons
             Toolbar,        ///< Toolbar icons
@@ -48,8 +47,7 @@ class IconLoader : public QObject
         };
 
         /// Standard icon sizes
-        enum StdSizes
-        {
+        enum StdSizes {
             SizeSmall = 16,         ///< Small icons for menu entries
             SizeSmallMedium = 22,   ///< Slightly larger small icons for toolbars, panels, etc
             SizeMedium = 32,        ///< Medium-sized icons for the desktop
@@ -58,18 +56,20 @@ class IconLoader : public QObject
             SizeEnormous = 128      ///< Enormous icons for iconviews
         };
 
-        explicit IconLoader(QObject* parent = 0);
+        explicit IconLoader( QObject *parent = 0 );
 
-        static IconLoader* global();
+        static IconLoader *global();
 
         /// Load a pixmap for the given name and group
-        QPixmap loadIcon(const QString& name, Group group, int size = 0);
+        QPixmap loadIcon( const QString &name, Group group, int size = 0 );
 
-        QString theme() const { return m_Theme; }
-        void setTheme(const QString& name);
+        QString theme() const {
+            return m_Theme;
+        }
+        void setTheme( const QString &name );
 
     protected:
-        QString findIconPath(const QString& name, int size) const;
+        QString findIconPath( const QString &name, int size ) const;
 
     private:
         QString m_Theme;
@@ -78,10 +78,10 @@ class IconLoader : public QObject
 };
 
 
-QPixmap DesktopIcon(const QString& name, int size = 0);
-QPixmap BarIcon(const QString& name, int size = 0);
-QPixmap MainBarIcon(const QString& name, int size = 0);
-QPixmap SmallIcon(const QString& name, int size = 0);
+QPixmap DesktopIcon( const QString &name, int size = 0 );
+QPixmap BarIcon( const QString &name, int size = 0 );
+QPixmap MainBarIcon( const QString &name, int size = 0 );
+QPixmap SmallIcon( const QString &name, int size = 0 );
 
 
 #endif

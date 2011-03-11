@@ -22,8 +22,8 @@
 
 
 
-AccountConfigWidget::AccountConfigWidget(Account *account, QWidget* parent)
-  : ConfigWidget( parent )
+AccountConfigWidget::AccountConfigWidget( Account *account, QWidget *parent )
+    : ConfigWidget( parent )
 {
     addPage( new AccountGeneralConfigPage( account, this ) );
     addPage( new AccountCategoryConfigPage( account, this ) );

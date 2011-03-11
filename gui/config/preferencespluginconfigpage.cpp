@@ -30,18 +30,18 @@
 
 
 
-PreferencesPluginConfigPage::PreferencesPluginConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Plugin" ), tr( "Plugin Options" ), DesktopIcon("preferences-plugin"), parent ),
-    m_view( new QListWidget( this ) )
+PreferencesPluginConfigPage::PreferencesPluginConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "Plugin" ), tr( "Plugin Options" ), DesktopIcon( "preferences-plugin" ), parent ),
+      m_view( new QListWidget( this ) )
 {
     m_view->setIconSize( QSize( 32, 32 ) );
-    
+
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget( m_view );
     setLayout( layout );
-        
-    connect( m_view, SIGNAL( itemChanged( QListWidgetItem* ) ), this, SIGNAL( pageModified() ) );
-    
+
+    connect( m_view, SIGNAL( itemChanged( QListWidgetItem * ) ), this, SIGNAL( pageModified() ) );
+
     QTimer::singleShot( 100, this, SLOT( revert() ) );
 }
 
@@ -60,25 +60,25 @@ bool PreferencesPluginConfigPage::isValid() const
 bool PreferencesPluginConfigPage::isModified() const
 {
     Knipptasch::PluginManager *manager = Knipptasch::PluginManager::self();
-    
-    for(int i = 0; i < m_view->count(); ++i) {
+
+    for( int i = 0; i < m_view->count(); ++i ) {
         QListWidgetItem *item = m_view->item( i );
         Q_ASSERT( item );
-        
+
         const QByteArray identifier = item->data( Qt::UserRole ).toByteArray();
         if( !manager->containsPlugin( identifier ) ) {
             return true;
         }
-        
+
         Knipptasch::Plugin *plugin = manager->plugin( identifier );
         Q_ASSERT( plugin );
-        
-        bool checkState = item->checkState() == Qt::Checked;        
+
+        bool checkState = item->checkState() == Qt::Checked;
         if( checkState != plugin->isEnabled() ) {
-           return true;
+            return true;
         }
     }
-    
+
     return false;
 }
 
@@ -89,26 +89,26 @@ bool PreferencesPluginConfigPage::commit()
 
     Knipptasch::PluginManager *manager =  Knipptasch::PluginManager::self();
 
-    for(int i = 0; i < m_view->count(); ++i) {
+    for( int i = 0; i < m_view->count(); ++i ) {
         QListWidgetItem *item = m_view->item( i );
         Q_ASSERT( item );
-        
+
         const QByteArray identifier = item->data( Qt::UserRole ).toByteArray();
-        if( !manager->containsPlugin( identifier ) ) {            
-            // Perhaps the plugin was uninstalled in the meantime? 
+        if( !manager->containsPlugin( identifier ) ) {
+            // Perhaps the plugin was uninstalled in the meantime?
             qDebug() << "PreferencesPluginConfigPage::commit(): Plugin " << identifier
                      << "not found. Perhaps the plugin was uninstalled in the meantime?";
             continue;
         }
-        
-        Knipptasch::Plugin *plugin =manager->plugin( identifier );
+
+        Knipptasch::Plugin *plugin = manager->plugin( identifier );
         Q_ASSERT( plugin );
         Q_ASSERT( identifier == plugin->identifier() );
-        
+
         bool checkState = item->checkState() == Qt::Checked;
         if( !manager->enablePlugin( identifier, item->checkState() == Qt::Checked ) ) {
             qDebug() << "PreferencesPluginConfigPage::commit(): Failed to change state of plugin" << identifier;
-            
+
             setErrorMessageDescription( tr( "Failed to change state of plugin %1." ).arg( plugin->shortName() ) );
             setErrorMessageEnabled( true );
         }
@@ -123,26 +123,26 @@ bool PreferencesPluginConfigPage::commit()
 void PreferencesPluginConfigPage::revert()
 {
     m_view->clear();
-    
+
     Knipptasch::PluginManager *manager = Knipptasch::PluginManager::self();
-    
+
     QSet<QByteArray> set = manager->allPluginIdentifiers();
-    foreach(const QByteArray &it, set) {
+    foreach( const QByteArray & it, set ) {
         Knipptasch::Plugin *plugin = manager->plugin( it );
-        
+
         QPixmap icon = plugin->icon();
         if( icon.isNull() ) {
-            icon = BarIcon("preferences-plugin");
+            icon = BarIcon( "preferences-plugin" );
         }
-        
+
         QListWidgetItem *item = new QListWidgetItem( icon, plugin->name() );
         item->setData( Qt::UserRole, plugin->identifier() );
         item->setFlags( Qt::ItemIsEnabled | Qt::ItemIsUserCheckable );
         item->setCheckState( plugin->isEnabled() ? Qt::Checked : Qt::Unchecked );
-        
+
         m_view->addItem( item );
     }
-    
+
     pageModified();
 }
 

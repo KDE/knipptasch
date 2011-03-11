@@ -28,15 +28,15 @@
  */
 class XmlImportPlugin : public QObject, public Knipptasch::ImportPlugin
 {
-    Q_OBJECT
-    Q_INTERFACES( Knipptasch::Plugin )
-    Q_INTERFACES( Knipptasch::ImportPlugin )
+        Q_OBJECT
+        Q_INTERFACES( Knipptasch::Plugin )
+        Q_INTERFACES( Knipptasch::ImportPlugin )
 
     public:
-        XmlImportPlugin(QObject *parent = 0);
+        XmlImportPlugin( QObject *parent = 0 );
 
         bool isEnabledByDefault() const;
-            
+
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
@@ -48,7 +48,7 @@ class XmlImportPlugin : public QObject, public Knipptasch::ImportPlugin
         QString importActionName() const;
         QPixmap importActionIcon() const;
 
-        Account* importAccount(QWidget *parent = 0) const;
+        Account *importAccount( QWidget *parent = 0 ) const;
 };
 
 

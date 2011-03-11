@@ -45,20 +45,21 @@
 class AccountListItem : public QTreeWidgetItem
 {
     public:
-        enum AccountListItemState
-        {
+        enum AccountListItemState {
             InitialState,
             SaveOKState,
             SaveFailedState
         };
 
-        AccountListItem(QTreeWidget *parent, AccountWidget *account);
+        AccountListItem( QTreeWidget *parent, AccountWidget *account );
 
-        AccountListItemState state() const { return m_state; }
+        AccountListItemState state() const {
+            return m_state;
+        }
 
-        void setState(AccountListItemState state);
+        void setState( AccountListItemState state );
 
-        bool synchronousSave(QWidget *dialogParent);
+        bool synchronousSave( QWidget *dialogParent );
 
     private:
         AccountWidget *m_accountWidget;
@@ -66,18 +67,18 @@ class AccountListItem : public QTreeWidgetItem
 };
 
 
-AccountListItem::AccountListItem(QTreeWidget *parent, AccountWidget *account)
-  : QTreeWidgetItem( parent ),
-    m_accountWidget( account ),
-    m_state( InitialState )
+AccountListItem::AccountListItem( QTreeWidget *parent, AccountWidget *account )
+    : QTreeWidgetItem( parent ),
+      m_accountWidget( account ),
+      m_state( InitialState )
 {
     Q_ASSERT( m_accountWidget );
 
     setFlags( flags() | Qt::ItemIsUserCheckable );
 
     setText( 0, m_accountWidget->account()->name().isEmpty()
-                    ? QObject::tr( "Unnamed Account" )
-                    : m_accountWidget->account()->name()
+             ? QObject::tr( "Unnamed Account" )
+             : m_accountWidget->account()->name()
            );
     setText( 1, m_accountWidget->account()->number() );
     setText( 2, m_accountWidget->account()->owner() );
@@ -89,18 +90,18 @@ AccountListItem::AccountListItem(QTreeWidget *parent, AccountWidget *account)
 }
 
 
-void AccountListItem::setState(AccountListItemState state)
+void AccountListItem::setState( AccountListItemState state )
 {
     m_state = state;
 
     switch( m_state ) {
         case SaveOKState:
-            setIcon( 0, BarIcon("dialog-ok") );
-        break;
+            setIcon( 0, BarIcon( "dialog-ok" ) );
+            break;
 
         case SaveFailedState:
-            setIcon( 0, BarIcon("dialog-error") );
-        break;
+            setIcon( 0, BarIcon( "dialog-error" ) );
+            break;
 
         default:
             setIcon( 0, QIcon() );
@@ -108,7 +109,7 @@ void AccountListItem::setState(AccountListItemState state)
 }
 
 
-bool AccountListItem::synchronousSave(QWidget *dialogParent)
+bool AccountListItem::synchronousSave( QWidget *dialogParent )
 {
     if( m_accountWidget->fileName().isEmpty() ) {
         const QString caption = QObject::tr( "Save As (%1)" ).arg( m_accountWidget->account()->name() );
@@ -116,9 +117,9 @@ bool AccountListItem::synchronousSave(QWidget *dialogParent)
 
         QString result =
 #if defined(HAVE_KDE)
-        KFileDialog::getSaveFileName( KUrl(), filter, dialogParent, caption,  KFileDialog::ConfirmOverwrite );
+            KFileDialog::getSaveFileName( KUrl(), filter, dialogParent, caption,  KFileDialog::ConfirmOverwrite );
 #else
-        QFileDialog::getSaveFileName( dialogParent, caption, QString(), filter ); // krazy:exclude=qclasses
+            QFileDialog::getSaveFileName( dialogParent, caption, QString(), filter ); // krazy:exclude=qclasses
 #endif
 
         if( !result.isEmpty() ) {
@@ -127,26 +128,22 @@ bool AccountListItem::synchronousSave(QWidget *dialogParent)
                 setText( 1, m_accountWidget->fileName() );
 
                 return false;
-            }
-            else {
+            } else {
                 setState( SaveOKState );
-                setText(1, m_accountWidget->fileName() );
+                setText( 1, m_accountWidget->fileName() );
 
                 return true;
             }
-        }
-        else {
+        } else {
             setState( SaveFailedState );
             return false;
         }
-    }
-    else { //account has an exising location
+    } else { //account has an exising location
         if( !m_accountWidget->onSaveFile() ) {
             setState( SaveFailedState );
             setText( 1, m_accountWidget->fileName() );
             return false;
-        }
-        else {
+        } else {
             setText( 1, m_accountWidget->fileName() );
             setState( SaveOKState );
             return true;
@@ -159,13 +156,13 @@ bool AccountListItem::synchronousSave(QWidget *dialogParent)
 
 
 
-SaveModifiedDialog::SaveModifiedDialog(QWidget *parent, QList<AccountWidget*> account)
-  : QDialog( parent ),
-    ui( new Ui::SaveModifiedDialog ),
-    m_root( 0 ),
-    m_doNotSaveButton( 0 ),
-    m_doSaveSelectedButton( 0 ),
-    m_doNotCloseButton( 0 )
+SaveModifiedDialog::SaveModifiedDialog( QWidget *parent, QList<AccountWidget *> account )
+    : QDialog( parent ),
+      ui( new Ui::SaveModifiedDialog ),
+      m_root( 0 ),
+      m_doNotSaveButton( 0 ),
+      m_doSaveSelectedButton( 0 ),
+      m_doNotCloseButton( 0 )
 {
     ui->setupUi( this );
 
@@ -177,12 +174,12 @@ SaveModifiedDialog::SaveModifiedDialog(QWidget *parent, QList<AccountWidget*> ac
     }
     ui->iconLabel->setPixmap( windowIcon.pixmap( 64, 64 ) );
 
-    m_doNotSaveButton = new QPushButton( tr("&Do Not Save") );
-    m_doSaveSelectedButton = new QPushButton( tr("&Save Selected") );
+    m_doNotSaveButton = new QPushButton( tr( "&Do Not Save" ) );
+    m_doSaveSelectedButton = new QPushButton( tr( "&Save Selected" ) );
     m_doNotCloseButton = new QPushButton( tr( "Do &Not Close" ) );
 
-    m_doSaveSelectedButton->setIcon( BarIcon("document-save") );
-    m_doNotCloseButton->setIcon( BarIcon("dialog-cancel") );
+    m_doSaveSelectedButton->setIcon( BarIcon( "document-save" ) );
+    m_doNotCloseButton->setIcon( BarIcon( "dialog-cancel" ) );
 
     m_doNotCloseButton->setDefault( true );
     m_doNotCloseButton->setAutoDefault( true );
@@ -191,24 +188,24 @@ SaveModifiedDialog::SaveModifiedDialog(QWidget *parent, QList<AccountWidget*> ac
     ui->buttonBox->addButton( m_doSaveSelectedButton, QDialogButtonBox::ApplyRole );
     ui->buttonBox->addButton( m_doNotCloseButton, QDialogButtonBox::RejectRole );
 
-    connect( m_doSaveSelectedButton, SIGNAL( clicked(bool) ), this, SLOT( slotSaveSelected() ) );
-    connect( m_doNotSaveButton, SIGNAL( clicked(bool) ), this, SLOT( accept() ) );
-    connect( m_doNotCloseButton, SIGNAL( clicked(bool) ), this, SLOT( reject() ) );
+    connect( m_doSaveSelectedButton, SIGNAL( clicked( bool ) ), this, SLOT( slotSaveSelected() ) );
+    connect( m_doNotSaveButton, SIGNAL( clicked( bool ) ), this, SLOT( accept() ) );
+    connect( m_doNotCloseButton, SIGNAL( clicked( bool ) ), this, SLOT( reject() ) );
 
     ui->list->setColumnCount( 4 );
-    ui->list->setHeaderLabels( QStringList() << tr( "Account Name" ) << tr( "Account Number" ) << tr( "Owner" ) << tr( "Location" ));
+    ui->list->setHeaderLabels( QStringList() << tr( "Account Name" ) << tr( "Account Number" ) << tr( "Owner" ) << tr( "Location" ) );
     ui->list->setRootIsDecorated( false );
 
     Q_ASSERT( account.size() > 0 );
-    foreach(AccountWidget *acc, account) {
+    foreach( AccountWidget * acc, account ) {
         m_items.append( new AccountListItem( ui->list, acc ) );
     }
 
     ui->list->resizeColumnToContents( 0 );
 
-  connect( ui->list, SIGNAL( itemActivated(QTreeWidgetItem*, int) ), SLOT( slotItemActivated(QTreeWidgetItem*, int) ) );
-  connect( ui->list, SIGNAL( itemClicked(QTreeWidgetItem*, int) ), SLOT( slotItemActivated(QTreeWidgetItem*, int) ) );
-  connect( ui->list, SIGNAL( itemDoubleClicked(QTreeWidgetItem*, int) ), SLOT( slotItemActivated(QTreeWidgetItem*, int) ) );
+    connect( ui->list, SIGNAL( itemActivated( QTreeWidgetItem *, int ) ), SLOT( slotItemActivated( QTreeWidgetItem *, int ) ) );
+    connect( ui->list, SIGNAL( itemClicked( QTreeWidgetItem *, int ) ), SLOT( slotItemActivated( QTreeWidgetItem *, int ) ) );
+    connect( ui->list, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ), SLOT( slotItemActivated( QTreeWidgetItem *, int ) ) );
 }
 
 
@@ -218,9 +215,9 @@ SaveModifiedDialog::~SaveModifiedDialog()
 }
 
 
-void SaveModifiedDialog::slotItemActivated(QTreeWidgetItem*, int)
+void SaveModifiedDialog::slotItemActivated( QTreeWidgetItem *, int )
 {
-    foreach( AccountListItem *item, m_items ) {
+    foreach( AccountListItem * item, m_items ) {
         if( item->checkState( 0 ) == Qt::Checked ) {
             m_doSaveSelectedButton->setEnabled( true );
             return;
@@ -233,7 +230,7 @@ void SaveModifiedDialog::slotItemActivated(QTreeWidgetItem*, int)
 
 void SaveModifiedDialog::slotSaveSelected()
 {
-    foreach( AccountListItem *item, m_items ) {
+    foreach( AccountListItem * item, m_items ) {
         if( item->checkState( 0 ) == Qt::Checked && ( item->state() != AccountListItem::SaveOKState ) ) {
             if( !item->synchronousSave( this ) ) {
                 const QString msg = tr( "Data you requested to be saved could not be written. Please choose how you want to proceed." );
@@ -250,8 +247,7 @@ void SaveModifiedDialog::slotSaveSelected()
 #endif
                 return;
             }
-        }
-        else if( ( item->checkState( 0 ) != Qt::Checked ) && ( item->state() == AccountListItem::SaveFailedState ) ) {
+        } else if(( item->checkState( 0 ) != Qt::Checked ) && ( item->state() == AccountListItem::SaveFailedState ) ) {
             item->setState( AccountListItem::InitialState );
         }
     }
@@ -260,7 +256,7 @@ void SaveModifiedDialog::slotSaveSelected()
 }
 
 
-bool SaveModifiedDialog::queryClose(QWidget *parent, AccountWidget* account)
+bool SaveModifiedDialog::queryClose( QWidget *parent, AccountWidget *account )
 {
     Q_ASSERT( account );
 
@@ -275,34 +271,32 @@ bool SaveModifiedDialog::queryClose(QWidget *parent, AccountWidget* account)
 #if defined( HAVE_KDE )
     {
         int result = KMessageBox::questionYesNoCancel(
-                      parent, msg, tr( "Close File" ), KStandardGuiItem::save(),
-                      KStandardGuiItem::discard(), KStandardGuiItem::cancel() );
+                         parent, msg, tr( "Close File" ), KStandardGuiItem::save(),
+                         KStandardGuiItem::discard(), KStandardGuiItem::cancel() );
 
         if( result == KMessageBox::Yes ) {
             if( account->onSaveFile() ) {
                 return true;
             }
-        }
-        else if( result == KMessageBox::No ) {
+        } else if( result == KMessageBox::No ) {
             return true;
         }
     }
 #else
     {
-        QMessageBox::StandardButton result = QMessageBox::question ( // krazy:exclude=qclasses
-            parent,
-            tr( "Close File - %1" ).arg( QCoreApplication::applicationName() ),
-            msg,
-            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
-            QMessageBox::Save
-        );
+        QMessageBox::StandardButton result = QMessageBox::question(  // krazy:exclude=qclasses
+                parent,
+                tr( "Close File - %1" ).arg( QCoreApplication::applicationName() ),
+                msg,
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                QMessageBox::Save
+                                             );
 
         if( result == QMessageBox::Save ) {
             if( account->onSaveFile() ) {
                 return true;
             }
-        }
-        else if( result == QMessageBox::Discard ) {
+        } else if( result == QMessageBox::Discard ) {
             return true;
         }
     }
@@ -312,10 +306,10 @@ bool SaveModifiedDialog::queryClose(QWidget *parent, AccountWidget* account)
 }
 
 
-bool SaveModifiedDialog::queryClose(QWidget *parent, QList<AccountWidget*> accountWidgetList)
+bool SaveModifiedDialog::queryClose( QWidget *parent, QList<AccountWidget *> accountWidgetList )
 {
-    QList<AccountWidget*> modifiedList;
-    foreach(AccountWidget* widget, accountWidgetList) {
+    QList<AccountWidget *> modifiedList;
+    foreach( AccountWidget * widget, accountWidgetList ) {
         if( widget->isModified() ) {
             modifiedList.append( widget );
         }

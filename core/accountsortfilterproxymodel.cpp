@@ -33,39 +33,39 @@
 
 
 
-AccountSortFilterProxyModel::AccountSortFilterProxyModel(QObject *parent)
-  : QSortFilterProxyModel( parent )
+AccountSortFilterProxyModel::AccountSortFilterProxyModel( QObject *parent )
+    : QSortFilterProxyModel( parent )
 {
     connect( this, SIGNAL( modelReset() ), this, SLOT( updateCache() ) );
 
-    connect( this, SIGNAL( rowsInserted(const QModelIndex &, int, int) ),
+    connect( this, SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
              this, SLOT( updateCache() ) );
-    connect( this, SIGNAL( rowsRemoved(const QModelIndex &, int, int) ),
+    connect( this, SIGNAL( rowsRemoved( const QModelIndex &, int, int ) ),
              this, SLOT( updateCache() ) );
 
     QTimer::singleShot( 0, this, SLOT( updateCache() ) );
 }
 
 
-Account* AccountSortFilterProxyModel::account()
+Account *AccountSortFilterProxyModel::account()
 {
-    AccountModel *model = qobject_cast<AccountModel*>( sourceModel() );
+    AccountModel *model = qobject_cast<AccountModel *>( sourceModel() );
     Q_ASSERT( model );
 
     return model->account();
 }
 
 
-const Account* AccountSortFilterProxyModel::account() const
+const Account *AccountSortFilterProxyModel::account() const
 {
-    const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+    const AccountModel *model = qobject_cast<const AccountModel *>( sourceModel() );
     Q_ASSERT( model );
 
     return model->account();
 }
 
 
-QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) const
+QVariant AccountSortFilterProxyModel::data( const QModelIndex &idx, int role ) const
 {
     if( !idx.isValid() ) {
         return QSortFilterProxyModel::data( idx, role );
@@ -74,31 +74,27 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
     if( mapToSource( idx ).column() == AccountModel::BALANCE ) {
         if( role == Qt::TextAlignmentRole ) {
             return static_cast<int>( Qt::AlignRight | Qt::AlignVCenter );
-        }
-        else if( role == Qt::ForegroundRole ) {
+        } else if( role == Qt::ForegroundRole ) {
             if( !m_cache.contains( idx.row() ) ) { // Value not cached
                 return QVariant();
             }
 
-            const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+            const AccountModel *model = qobject_cast<const AccountModel *>( sourceModel() );
             Q_ASSERT( model );
 
             Money m = data( idx, Qt::EditRole ).value<Money>();
             if( m >= 0.0 && Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() && Knipptasch::Preferences::self()->positiveAmountForegroundColor().isValid() ) {
                 return Knipptasch::Preferences::self()->positiveAmountForegroundColor();
-            }
-            else if( m < 0.0 && Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && Knipptasch::Preferences::self()->negativeAmountForegroundColor().isValid() ) {
+            } else if( m < 0.0 && Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && Knipptasch::Preferences::self()->negativeAmountForegroundColor().isValid() ) {
                 return Knipptasch::Preferences::self()->negativeAmountForegroundColor();
             }
-        }
-        else if( role == Qt::EditRole ) {
+        } else if( role == Qt::EditRole ) {
             // Although this column is not editable, this value is still needed (!
             return QVariant::fromValue( m_cache.value( idx.row() ) );
-        }
-        else if( role == Qt::DisplayRole ) {
+        } else if( role == Qt::DisplayRole ) {
             return m_cache.contains( idx.row() )
-                      ? m_cache.value( idx.row() ).toString()
-                      : "-";
+                   ? m_cache.value( idx.row() ).toString()
+                   : "-";
         }
     }
 
@@ -106,7 +102,7 @@ QVariant AccountSortFilterProxyModel::data(const QModelIndex &idx, int role) con
 }
 
 
-bool AccountSortFilterProxyModel::setData(const QModelIndex &idx, const QVariant &value, int role)
+bool AccountSortFilterProxyModel::setData( const QModelIndex &idx, const QVariant &value, int role )
 {
     if( !QSortFilterProxyModel::setData( idx, value, role ) ) {
         return false;
@@ -120,7 +116,7 @@ bool AccountSortFilterProxyModel::setData(const QModelIndex &idx, const QVariant
 }
 
 
-void AccountSortFilterProxyModel::updateCache(int firstRow)
+void AccountSortFilterProxyModel::updateCache( int firstRow )
 {
     const int amountColumnView = mapFromSource( sourceModel()->index( 0, AccountModel::AMOUNT ) ).column();
     const int balanceColumnView = mapFromSource( sourceModel()->index( 0, AccountModel::BALANCE ) ).column();
@@ -129,13 +125,12 @@ void AccountSortFilterProxyModel::updateCache(int firstRow)
         m_cache.clear();
     }
 
-    for(int viewIndex = qMax( firstRow, 0 ); viewIndex < rowCount(); ++viewIndex) {
+    for( int viewIndex = qMax( firstRow, 0 ); viewIndex < rowCount(); ++viewIndex ) {
         Money money = data( index( viewIndex, amountColumnView ), Qt::EditRole ).value<Money>();
 
         if( viewIndex <= 0 ) {
             money += account()->openingBalance();
-        }
-        else {
+        } else {
             money += data( index( viewIndex - 1, balanceColumnView ), Qt::EditRole ).value<Money>();
         }
 
@@ -144,7 +139,7 @@ void AccountSortFilterProxyModel::updateCache(int firstRow)
 }
 
 
-bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+bool AccountSortFilterProxyModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
 {
     int result = lessThanByType( left, right );
 
@@ -158,29 +153,28 @@ bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModel
     }
 
     QString lstr = sourceModel()->data(
-        createIndex( left.row(), AccountModel::POSTINGTEXT ),
-        Qt::EditRole
-    ).toString().trimmed();
+                       createIndex( left.row(), AccountModel::POSTINGTEXT ),
+                       Qt::EditRole
+                   ).toString().trimmed();
 
     QString rstr = sourceModel()->data(
-        createIndex( right.row(), AccountModel::POSTINGTEXT ),
-        Qt::EditRole
-    ).toString().trimmed();
+                       createIndex( right.row(), AccountModel::POSTINGTEXT ),
+                       Qt::EditRole
+                   ).toString().trimmed();
 
     Money lamount = sourceModel()->data(
-        createIndex( left.row(), AccountModel::AMOUNT ),
-        Qt::EditRole
-    ).value<Money>();
+                        createIndex( left.row(), AccountModel::AMOUNT ),
+                        Qt::EditRole
+                    ).value<Money>();
 
     Money ramount = sourceModel()->data(
-        createIndex( right.row(), AccountModel::AMOUNT ),
-        Qt::EditRole
-    ).value<Money>();
+                        createIndex( right.row(), AccountModel::AMOUNT ),
+                        Qt::EditRole
+                    ).value<Money>();
 
     if( !( lstr.isEmpty() && rstr.isEmpty() ) ) {
         return lstr < rstr;
-    }
-    else if( lamount != ramount ) {
+    } else if( lamount != ramount ) {
         return lamount < ramount;
     }
 
@@ -188,9 +182,9 @@ bool AccountSortFilterProxyModel::lessThan(const QModelIndex &left, const QModel
 }
 
 
-int AccountSortFilterProxyModel::lessThanByType(const QModelIndex &left, const QModelIndex &right) const
+int AccountSortFilterProxyModel::lessThanByType( const QModelIndex &left, const QModelIndex &right ) const
 {
-    const AccountModel *model = qobject_cast<const AccountModel*>( sourceModel() );
+    const AccountModel *model = qobject_cast<const AccountModel *>( sourceModel() );
     Q_ASSERT( model );
 
     int l_type = model->postingType( left.row() );
@@ -198,8 +192,7 @@ int AccountSortFilterProxyModel::lessThanByType(const QModelIndex &left, const Q
 
     if( l_type < r_type ) {
         return TEST_LESS_THAN_RESULT_TRUE;
-    }
-    else if( l_type > r_type ) {
+    } else if( l_type > r_type ) {
         return TEST_LESS_THAN_RESULT_FALSE;
     }
 
@@ -207,23 +200,23 @@ int AccountSortFilterProxyModel::lessThanByType(const QModelIndex &left, const Q
 }
 
 
-int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const
+int AccountSortFilterProxyModel::lessThanDateBased( const QModelIndex &left, const QModelIndex &right ) const
 {
     const QDate l_maturity = sourceModel()->data(
-                    createIndex( left.row(), AccountModel::MATURITY ),
-                    Qt::EditRole ).value<QDate>();
+                                 createIndex( left.row(), AccountModel::MATURITY ),
+                                 Qt::EditRole ).value<QDate>();
 
     const QDate r_maturity = sourceModel()->data(
-                    createIndex( right.row(), AccountModel::MATURITY ),
-                    Qt::EditRole ).value<QDate>();
+                                 createIndex( right.row(), AccountModel::MATURITY ),
+                                 Qt::EditRole ).value<QDate>();
 
     const QDate l_valuedate = sourceModel()->data(
-                    createIndex( left.row(), AccountModel::VALUEDATE ),
-                    Qt::EditRole ).value<QDate>();
+                                  createIndex( left.row(), AccountModel::VALUEDATE ),
+                                  Qt::EditRole ).value<QDate>();
 
     const QDate r_valuedate = sourceModel()->data(
-                    createIndex( right.row(), AccountModel::VALUEDATE ),
-                    Qt::EditRole ).value<QDate>();
+                                  createIndex( right.row(), AccountModel::VALUEDATE ),
+                                  Qt::EditRole ).value<QDate>();
 
     QDate l_primary, r_primary, l_secondary, r_secondary;
 
@@ -247,37 +240,33 @@ int AccountSortFilterProxyModel::lessThanDateBased(const QModelIndex &left, cons
 
     if( l_primary.isValid() && !r_primary.isValid() ) {
         return TEST_LESS_THAN_RESULT_TRUE;
-    }
-    else if( !l_primary.isValid() && r_primary.isValid() ) {
+    } else if( !l_primary.isValid() && r_primary.isValid() ) {
         return TEST_LESS_THAN_RESULT_FALSE;
-    }
-    else if( l_primary.isValid() && r_primary.isValid() ) {
+    } else if( l_primary.isValid() && r_primary.isValid() ) {
         if( l_primary != r_primary ) {
             return l_primary < r_primary
-                        ? TEST_LESS_THAN_RESULT_TRUE
-                        : TEST_LESS_THAN_RESULT_FALSE;
+                   ? TEST_LESS_THAN_RESULT_TRUE
+                   : TEST_LESS_THAN_RESULT_FALSE;
         }
     }
 
-    Q_ASSERT( ( l_primary.isValid() && l_primary == r_primary )
-                || ( !l_primary.isValid() && !r_primary.isValid() ) );
+    Q_ASSERT(( l_primary.isValid() && l_primary == r_primary )
+             || ( !l_primary.isValid() && !r_primary.isValid() ) );
 
 
     if( l_secondary.isValid() && !r_secondary.isValid() ) {
         return TEST_LESS_THAN_RESULT_TRUE;
-    }
-    else if( !l_secondary.isValid() && r_secondary.isValid() ) {
+    } else if( !l_secondary.isValid() && r_secondary.isValid() ) {
         return TEST_LESS_THAN_RESULT_FALSE;
-    }
-    else if( l_secondary.isValid() && r_secondary.isValid() ) {
+    } else if( l_secondary.isValid() && r_secondary.isValid() ) {
         if( l_secondary != r_secondary ) {
             return l_secondary < r_secondary
-                        ? TEST_LESS_THAN_RESULT_TRUE
-                        : TEST_LESS_THAN_RESULT_FALSE;
+                   ? TEST_LESS_THAN_RESULT_TRUE
+                   : TEST_LESS_THAN_RESULT_FALSE;
         }
     }
-    Q_ASSERT( ( l_secondary.isValid() && l_secondary == r_secondary )
-                || ( !l_secondary.isValid() && !r_secondary.isValid() ) );
+    Q_ASSERT(( l_secondary.isValid() && l_secondary == r_secondary )
+             || ( !l_secondary.isValid() && !r_secondary.isValid() ) );
 
     return TEST_LESS_THAN_RESULT_UNKNOWN;
 }

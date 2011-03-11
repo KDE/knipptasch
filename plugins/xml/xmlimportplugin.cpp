@@ -35,8 +35,8 @@
 
 
 
-XmlImportPlugin::XmlImportPlugin(QObject *parent)
-  : QObject( parent )
+XmlImportPlugin::XmlImportPlugin( QObject *parent )
+    : QObject( parent )
 {
     qsrand( QTime::currentTime().msec() );
 }
@@ -98,11 +98,11 @@ QString XmlImportPlugin::importActionName() const
 
 QPixmap XmlImportPlugin::importActionIcon() const
 {
-    return BarIcon("text-xml");
+    return BarIcon( "text-xml" );
 }
 
 
-Account* XmlImportPlugin::importAccount(QWidget *parent) const
+Account *XmlImportPlugin::importAccount( QWidget *parent ) const
 {
     QString filename;
 
@@ -110,9 +110,9 @@ Account* XmlImportPlugin::importAccount(QWidget *parent) const
     filename = KFileDialog::getOpenFileName( KUrl(), "*.xml|" + QObject::tr( "XML File" ), parent );
 #else
     filename = QFileDialog::getOpenFileName( parent, // krazy:exclude=qclasses
-                     QObject::tr( "Import XML File - %1" ).arg( QCoreApplication::applicationName() ),
-                     QString(), QObject::tr( "XML File" ) + " (*.xml)"
-                   );
+               QObject::tr( "Import XML File - %1" ).arg( QCoreApplication::applicationName() ),
+               QString(), QObject::tr( "XML File" ) + " (*.xml)"
+                                           );
 #endif
 
     if( filename.isEmpty() ) {

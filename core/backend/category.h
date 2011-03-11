@@ -31,11 +31,10 @@ class Money;
  */
 class KNIPPTASCH_CORE_EXPORT Category : public Object
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        enum ForwardRule
-        {
+        enum ForwardRule {
             Daily = 0,      /**< */
             Weekly = 1,     /**< */
             Monthly = 2,    /**< */
@@ -43,48 +42,48 @@ class KNIPPTASCH_CORE_EXPORT Category : public Object
             Yearly = 4      /**< */
         };
 
-        Category(QObject *parent = 0);
-        Category(const QString &name, QObject *parent = 0);
+        Category( QObject *parent = 0 );
+        Category( const QString &name, QObject *parent = 0 );
         ~Category();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
         QString name() const;
-        void setName(const QString &name);
+        void setName( const QString &name );
 
         QColor color() const;
-        void setColor(const QColor &color = QColor());
+        void setColor( const QColor &color = QColor() );
 
         bool maximumLimitEnabled() const;
-        void setMaximumLimitEnabled(bool b);
+        void setMaximumLimitEnabled( bool b );
         Money maximumLimit() const;
-        void setMaximumLimit(const Money &m);
+        void setMaximumLimit( const Money &m );
         ForwardRule maximumUnit() const;
-        void setMaximumUnit(ForwardRule rule);
+        void setMaximumUnit( ForwardRule rule );
 
         bool minimumLimitEnabled() const;
-        void setMinimumLimitEnabled(bool b);
+        void setMinimumLimitEnabled( bool b );
         Money minimumLimit() const;
-        void setMinimumLimit(const Money &m);
+        void setMinimumLimit( const Money &m );
         ForwardRule minimumUnit() const;
-        void setMinimumUnit(ForwardRule rule);
+        void setMinimumUnit( ForwardRule rule );
 
         bool hasCategories() const;
         int countCategories() const;
-        const Category* category(int index) const;
-        Category* category(int index);
-        void addCategory(Category *p);
-        Category* addCategory(const QString &str);
-        Category* takeCategory(int index);
-        void removeCategory(int index);
+        const Category *category( int index ) const;
+        Category *category( int index );
+        void addCategory( Category *p );
+        Category *addCategory( const QString &str );
+        Category *takeCategory( int index );
+        void removeCategory( int index );
         void clearCategories();
 
-        Category* findCategoryByHash(const QByteArray &hash);
-        const Category* findCategoryByHash(const QByteArray &hash) const;
+        Category *findCategoryByHash( const QByteArray &hash );
+        const Category *findCategoryByHash( const QByteArray &hash ) const;
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 
     signals:
         void valueChanged();
@@ -92,7 +91,7 @@ class KNIPPTASCH_CORE_EXPORT Category : public Object
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 

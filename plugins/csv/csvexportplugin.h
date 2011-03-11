@@ -28,15 +28,15 @@
  */
 class CsvExportPlugin : public QObject, public Knipptasch::ExportPlugin
 {
-    Q_OBJECT
-    Q_INTERFACES( Knipptasch::Plugin )
-    Q_INTERFACES( Knipptasch::ExportPlugin )
-    
+        Q_OBJECT
+        Q_INTERFACES( Knipptasch::Plugin )
+        Q_INTERFACES( Knipptasch::ExportPlugin )
+
     public:
-        CsvExportPlugin(QObject *parent = 0);
+        CsvExportPlugin( QObject *parent = 0 );
 
         bool isEnabledByDefault() const;
-            
+
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
@@ -48,7 +48,7 @@ class CsvExportPlugin : public QObject, public Knipptasch::ExportPlugin
         QString exportActionName() const;
         QPixmap exportActionIcon() const;
 
-        void exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent = 0) const;
+        void exportAccount( const Account *account, const QList<const Posting *> &selected, QWidget *parent = 0 ) const;
 };
 
 
