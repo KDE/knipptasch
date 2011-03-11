@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -31,9 +31,8 @@
 #include <QSet>
 
 
-PostingTextDelegate::PostingTextDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+PostingTextDelegate::PostingTextDelegate(QObject *parent)
+  : QStyledItemDelegate( parent )
 {
 }
 
@@ -50,7 +49,7 @@ QWidget* PostingTextDelegate::createEditor(QWidget *parent, const QStyleOptionVi
     KLineEdit *input = new KLineEdit( parent );
     input->setFrame( false );
 
-    if( m_preferences->autoCompletionEnabled() ) {
+    if( Knipptasch::Preferences::self()->autoCompletionEnabled() ) {
         QSet<QString> set;
         const QList<const Posting*> list = model->account()->postings();
         foreach(const Posting *p, list) {

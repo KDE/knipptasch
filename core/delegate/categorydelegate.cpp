@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -33,9 +33,8 @@
 
 
 
-CategoryDelegate::CategoryDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+CategoryDelegate::CategoryDelegate(QObject *parent)
+  : QStyledItemDelegate( parent )
 {
 }
 
@@ -51,7 +50,7 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
     CategoryComboBox *input = new CategoryComboBox( model->account(), parent );
     input->setFrame( false );
-    input->view()->setMinimumSize( m_preferences->minimumCategoryComboBoxPopupSize() );
+    input->view()->setMinimumSize( Knipptasch::Preferences::self()->minimumCategoryComboBoxPopupSize() );
 
     return input;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,12 +22,6 @@
 #include <QStyledItemDelegate>
 
 
-namespace Knipptasch
-{
-    class Preferences;
-}
-
-
 
 /**
  * @class MoneyDelegate
@@ -40,7 +34,7 @@ class KNIPPTASCH_CORE_EXPORT MoneyDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
+        MoneyDelegate(QObject *parent = 0);
 
         QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
@@ -48,9 +42,6 @@ class KNIPPTASCH_CORE_EXPORT MoneyDelegate : public QStyledItemDelegate
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
         QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-        
-    private:
-        Knipptasch::Preferences *m_preferences;
 };
 
 #endif

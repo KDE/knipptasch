@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,9 +25,8 @@
 
 
 
-MoneyDelegate::MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+MoneyDelegate::MoneyDelegate(QObject *parent)
+  : QStyledItemDelegate( parent )
 {
 }
 

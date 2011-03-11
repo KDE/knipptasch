@@ -103,13 +103,13 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->view->setModel( m_proxy );
 
-    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
 
     ui->view->resizeColumnsToContents();
     ui->view->verticalHeader()->hide();

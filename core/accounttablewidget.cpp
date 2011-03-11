@@ -72,13 +72,13 @@ AccountTableWidget::AccountTableWidget(Knipptasch::Preferences *pref, QWidget *p
     
     d->view->setModel( d->proxy );
 
-    d->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( pref, this ) );
-    d->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( pref, this ) );
+    d->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
+    d->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
 
     d->view->resizeColumnsToContents();
     d->view->verticalHeader()->hide();
