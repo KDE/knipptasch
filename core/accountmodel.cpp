@@ -35,17 +35,14 @@
 
 
 
-struct AccountModel::Private
-{
+struct AccountModel::Private {
     Private()
-      : account( 0 ),
-        posting( new Posting )
-    {
+        : account( 0 ),
+          posting( new Posting ) {
     }
 
 
-    ~Private()
-    {
+    ~Private() {
         delete posting;
         delete account;
     }
@@ -57,9 +54,9 @@ struct AccountModel::Private
 
 
 
-AccountModel::AccountModel(QObject *parent)
-  : QAbstractTableModel( parent ),
-    d( new AccountModel::Private )
+AccountModel::AccountModel( QObject *parent )
+    : QAbstractTableModel( parent ),
+      d( new AccountModel::Private )
 {
 }
 
@@ -70,19 +67,19 @@ AccountModel::~AccountModel()
 }
 
 
-Account* AccountModel::account()
+Account *AccountModel::account()
 {
     return d->account;
 }
 
 
-const Account* AccountModel::account() const
+const Account *AccountModel::account() const
 {
     return d->account;
 }
 
 
-void AccountModel::setAccount(Account *account)
+void AccountModel::setAccount( Account *account )
 {
 #if QT_VERSION >= 0x040600
     beginResetModel();
@@ -100,7 +97,7 @@ void AccountModel::setAccount(Account *account)
 }
 
 
-const Posting* AccountModel::posting(const QModelIndex &index) const
+const Posting *AccountModel::posting( const QModelIndex &index ) const
 {
     if( index.isValid() ) {
         return posting( index.row() );
@@ -110,7 +107,7 @@ const Posting* AccountModel::posting(const QModelIndex &index) const
 }
 
 
-const Posting* AccountModel::posting(int row) const
+const Posting *AccountModel::posting( int row ) const
 {
     Q_ASSERT( row >= 0 );
 
@@ -122,7 +119,7 @@ const Posting* AccountModel::posting(int row) const
 }
 
 
-Posting* AccountModel::posting(const QModelIndex &index)
+Posting *AccountModel::posting( const QModelIndex &index )
 {
     if( index.isValid() ) {
         return posting( index.row() );
@@ -132,7 +129,7 @@ Posting* AccountModel::posting(const QModelIndex &index)
 }
 
 
-Posting* AccountModel::posting(int row)
+Posting *AccountModel::posting( int row )
 {
     Q_ASSERT( row >= 0 );
 
@@ -144,7 +141,7 @@ Posting* AccountModel::posting(int row)
 }
 
 
-AccountModel::PostingTypeFlags AccountModel::postingType(int row) const
+AccountModel::PostingTypeFlags AccountModel::postingType( int row ) const
 {
     if( row < d->account->countPostings() ) {
         return postingType( d->account->posting( row ) );
@@ -154,7 +151,7 @@ AccountModel::PostingTypeFlags AccountModel::postingType(int row) const
 }
 
 
-int AccountModel::rowCount(const QModelIndex &parent) const
+int AccountModel::rowCount( const QModelIndex &parent ) const
 {
     if( !d->account ) {
         return 0;
@@ -168,7 +165,7 @@ int AccountModel::rowCount(const QModelIndex &parent) const
 }
 
 
-int AccountModel::columnCount(const QModelIndex &parent) const
+int AccountModel::columnCount( const QModelIndex &parent ) const
 {
     if( parent.isValid() ) {
         return 0;
@@ -178,7 +175,7 @@ int AccountModel::columnCount(const QModelIndex &parent) const
 }
 
 
-QVariant AccountModel::data(const QModelIndex &index, int role) const
+QVariant AccountModel::data( const QModelIndex &index, int role ) const
 {
     if( !index.isValid() ) {
         return QVariant();
@@ -215,34 +212,30 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
     Posting *entry = 0;
     if( index.row() < d->account->countPostings() ) {
         entry = d->account->posting( index.row() );
-    }
-    else {
+    } else {
         entry = d->posting;
     }
 
     Q_ASSERT( entry );
 
-    switch( index.column() )
-    {
-        case MATURITY:
-        {
-            QDate dt = entry->maturity();
-            if( role == Qt::EditRole ) {
-                return dt;
+    switch( index.column() ) {
+        case MATURITY: {
+                QDate dt = entry->maturity();
+                if( role == Qt::EditRole ) {
+                    return dt;
+                }
+                if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                    return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
+                }
+                return formatShortDate( dt );
             }
-            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
-            }
-            return formatShortDate( dt );
-        }
         case POSTINGTEXT:
             return entry->postingText();
 
         case AMOUNT:
             if( role == Qt::EditRole ) {
                 return QVariant::fromValue( entry->amount() );
-            }
-            else if( entry->amount().cents() != 0 ) {
+            } else if( entry->amount().cents() != 0 ) {
                 return entry->amount().toString();
             }
             return QVariant();
@@ -250,22 +243,20 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         case BALANCE:
             break;
 
-        case VALUEDATE:
-        {
-            QDate dt = entry->valueDate();
-            if( role == Qt::EditRole ) {
-                return dt;
+        case VALUEDATE: {
+                QDate dt = entry->valueDate();
+                if( role == Qt::EditRole ) {
+                    return dt;
+                }
+                if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                    return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
+                }
+                return formatShortDate( dt );
             }
-            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
-            }
-            return formatShortDate( dt );
-        }
         case CATEGORY:
             if( role == Qt::EditRole ) {
                 return account()->identifierByObject( entry->category() );
-            }
-            else if( entry->category() ) {
+            } else if( entry->category() ) {
                 return entry->category()->name();
             }
 
@@ -283,17 +274,16 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         case VOUCHER:
             entry->voucher();
 
-        case WARRANTY:
-        {
-            QDate dt = entry->warranty();
-            if( role == Qt::EditRole ) {
-                return dt;
+        case WARRANTY: {
+                QDate dt = entry->warranty();
+                if( role == Qt::EditRole ) {
+                    return dt;
+                }
+                if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
+                    return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
+                }
+                return formatShortDate( dt );
             }
-            if( !Knipptasch::Preferences::self()->userDefinedDateFormat().isEmpty() ) {
-                return dt.toString( Knipptasch::Preferences::self()->userDefinedDateFormat() );
-            }
-            return formatShortDate( dt );
-        }
         case PAYMENT:
             return entry->methodOfPayment();
 
@@ -305,7 +295,7 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
 }
 
 
-QVariant AccountModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AccountModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
     if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section < AccountModel::ENTRYCOUNT ) {
         switch( section ) {
@@ -354,7 +344,7 @@ QVariant AccountModel::headerData(int section, Qt::Orientation orientation, int 
 }
 
 
-bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool AccountModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
     if( !index.isValid() ) {
         return false;
@@ -364,7 +354,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
         return false;
     }
 
-    if( !(role == Qt::EditRole || role == Qt::DisplayRole) ) {
+    if( !( role == Qt::EditRole || role == Qt::DisplayRole ) ) {
         return false;
     }
 
@@ -375,8 +365,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
     Posting *entry = 0;
     if( index.row() < d->account->countPostings() ) {
         entry = d->account->posting( index.row() );
-    }
-    else {
+    } else {
         Q_ASSERT( index.row() == d->account->countPostings() );
         entry = d->posting;
     }
@@ -392,14 +381,12 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             entry->setPostingText( value.toString().trimmed() );
             break;
 
-        case AMOUNT:
-            {
+        case AMOUNT: {
                 bool ok;
                 double amount = value.toDouble( &ok );
                 if( !ok ) {
                     qDebug() << "invalid amount value";
-                }
-                else {
+                } else {
                     entry->setAmount( amount );
                 }
             }
@@ -422,11 +409,11 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
                 Category *category = 0;
 
                 if( object ) {
-                    category = qobject_cast<Category*>( object );
+                    category = qobject_cast<Category *>( object );
                     Q_ASSERT( category );
                 }
 
-                 entry->setCategory( category );
+                entry->setCategory( category );
             }
             break;
 
@@ -454,11 +441,10 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             endInsertRows();
 
             d->posting = new Posting;
-            emit dataChanged( createIndex( rowCount()-1, 0 ),
+            emit dataChanged( createIndex( rowCount() - 1, 0 ),
                               createIndex( rowCount(), columnCount() ) );
         }
-    }
-    else {
+    } else {
         emit dataChanged( createIndex( index.row(), index.column() ),
                           createIndex( index.row(), index.column() ) );
     }
@@ -467,7 +453,7 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
 }
 
 
-Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
+Qt::ItemFlags AccountModel::flags( const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return 0;
@@ -485,7 +471,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
 }
 
 
-bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
+bool AccountModel::removeRows( int row, int count, const QModelIndex &parent )
 {
     if( !d->account ) {
         return false;
@@ -493,16 +479,16 @@ bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 
     bool re = false;
 
-    if( ( row + count - 1 ) == d->account->countPostings() ) {
+    if(( row + count - 1 ) == d->account->countPostings() ) {
         count -= 1;
         d->posting = new Posting;
         re = true;
     }
 
-    if( ( row + count - 1 ) < d->account->countPostings() ) {
+    if(( row + count - 1 ) < d->account->countPostings() ) {
         beginRemoveRows( parent, row, row + count - 1 );
 
-        for(int i = 0; i < count; ++i) {
+        for( int i = 0; i < count; ++i ) {
             d->account->removePosting( row );
         }
 
@@ -514,7 +500,7 @@ bool AccountModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 
-AccountModel::PostingTypeFlags AccountModel::postingType(const Posting *ptr) const
+AccountModel::PostingTypeFlags AccountModel::postingType( const Posting *ptr ) const
 {
     Q_ASSERT( d->posting );
     Q_ASSERT( ptr );
@@ -541,7 +527,7 @@ AccountModel::PostingTypeFlags AccountModel::postingType(const Posting *ptr) con
 }
 
 
-bool AccountModel::postingIsValid(const Posting *ptr)
+bool AccountModel::postingIsValid( const Posting *ptr )
 {
     Q_ASSERT( ptr );
 
@@ -561,20 +547,17 @@ bool AccountModel::postingIsValid(const Posting *ptr)
 }
 
 
-QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
+QVariant AccountModel::backgroundRoleData( const QModelIndex &index ) const
 {
     AccountModel::PostingTypeFlags type = postingType( index.row() );
 
     if( type & AccountModel::Current && Knipptasch::Preferences::self()->currentPostingBackgroundEnabled() && Knipptasch::Preferences::self()->currentPostingBackgroundColor().isValid() ) {
         return Knipptasch::Preferences::self()->currentPostingBackgroundColor();
-    }
-    else if( type & AccountModel::Future && Knipptasch::Preferences::self()->futurePostingBackgroundEnabled() && Knipptasch::Preferences::self()->futurePostingBackgroundColor().isValid() ) {
+    } else if( type & AccountModel::Future && Knipptasch::Preferences::self()->futurePostingBackgroundEnabled() && Knipptasch::Preferences::self()->futurePostingBackgroundColor().isValid() ) {
         return Knipptasch::Preferences::self()->futurePostingBackgroundColor();
-    }
-    else if( type & AccountModel::Incomplete && Knipptasch::Preferences::self()->incompletePostingBackgroundEnabled() && Knipptasch::Preferences::self()->incompletePostingBackgroundColor().isValid() ) {
+    } else if( type & AccountModel::Incomplete && Knipptasch::Preferences::self()->incompletePostingBackgroundEnabled() && Knipptasch::Preferences::self()->incompletePostingBackgroundColor().isValid() ) {
         return Knipptasch::Preferences::self()->incompletePostingBackgroundColor();
-    }
-    else if( Knipptasch::Preferences::self()->defaultPostingBackgroundEnabled() && Knipptasch::Preferences::self()->defaultPostingBackgroundColor().isValid() ) {
+    } else if( Knipptasch::Preferences::self()->defaultPostingBackgroundEnabled() && Knipptasch::Preferences::self()->defaultPostingBackgroundColor().isValid() ) {
         return Knipptasch::Preferences::self()->defaultPostingBackgroundColor();
     }
 
@@ -582,7 +565,7 @@ QVariant AccountModel::backgroundRoleData(const QModelIndex &index) const
 }
 
 
-QVariant AccountModel::foregroundRoleData(const QModelIndex &index) const
+QVariant AccountModel::foregroundRoleData( const QModelIndex &index ) const
 {
     QColor c;
 
@@ -592,22 +575,20 @@ QVariant AccountModel::foregroundRoleData(const QModelIndex &index) const
                 if( Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() ) {
                     c = Knipptasch::Preferences::self()->positiveAmountForegroundColor();
                 }
+            } else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() ) {
+                c = Knipptasch::Preferences::self()->negativeAmountForegroundColor();
             }
-            else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() ) {
-                 c = Knipptasch::Preferences::self()->negativeAmountForegroundColor();
-            }                 
-        break;
+            break;
 
         case AccountModel::WARRANTY:
             if( data( index, Qt::EditRole ).value<QDate>() < QDate::currentDate() ) {
                 if( Knipptasch::Preferences::self()->availableWarrantyForegroundEnabled() ) {
                     c = Knipptasch::Preferences::self()->availableWarrantyForegroundColor();
                 }
+            } else if( Knipptasch::Preferences::self()->expiredWarrantyForegroundEnabled() ) {
+                c = Knipptasch::Preferences::self()->expiredWarrantyForegroundColor();
             }
-            else if( Knipptasch::Preferences::self()->expiredWarrantyForegroundEnabled() ) {
-                 c = Knipptasch::Preferences::self()->expiredWarrantyForegroundColor();
-            }
-        break;
+            break;
 
         default:
             break;
@@ -617,7 +598,7 @@ QVariant AccountModel::foregroundRoleData(const QModelIndex &index) const
 }
 
 
-QVariant AccountModel::textAlignmentRoleData(const QModelIndex &index) const
+QVariant AccountModel::textAlignmentRoleData( const QModelIndex &index ) const
 {
     switch( index.column() ) {
         case AccountModel::VALUEDATE:
@@ -633,25 +614,23 @@ QVariant AccountModel::textAlignmentRoleData(const QModelIndex &index) const
 }
 
 
-QVariant AccountModel::decorationRoleData(const QModelIndex &index) const
+QVariant AccountModel::decorationRoleData( const QModelIndex &index ) const
 {
     switch( index.column() ) {
-        case AccountModel::CATEGORY:
-        {
-            Posting *entry = 0;
-            if( index.row() < d->account->countPostings() ) {
-                entry = d->account->posting( index.row() );
-            }
-            else {
-                entry = d->posting;
-            }
+        case AccountModel::CATEGORY: {
+                Posting *entry = 0;
+                if( index.row() < d->account->countPostings() ) {
+                    entry = d->account->posting( index.row() );
+                } else {
+                    entry = d->posting;
+                }
 
-            Q_ASSERT( entry );
+                Q_ASSERT( entry );
 
-            if( entry->category() && entry->category()->color().isValid() ) {
-                return entry->category()->color();
+                if( entry->category() && entry->category()->color().isValid() ) {
+                    return entry->category()->color();
+                }
             }
-        }
 
         default:
             break;

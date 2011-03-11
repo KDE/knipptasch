@@ -39,31 +39,31 @@ class KColorComboDelegate : public QAbstractItemDelegate
             FrameMargin = 3
         };
 
-        KColorComboDelegate(QObject *parent = 0);
+        KColorComboDelegate( QObject *parent = 0 );
         virtual ~KColorComboDelegate();
 
-        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-        virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+        virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
 
 
-static QBrush k_colorcombodelegate_brush(const QModelIndex &index, int role)
+static QBrush k_colorcombodelegate_brush( const QModelIndex &index, int role )
 {
     QBrush brush;
-    QVariant v = index.data(role);
-    if (v.type() == QVariant::Brush) {
+    QVariant v = index.data( role );
+    if( v.type() == QVariant::Brush ) {
         brush = v.value<QBrush>();
-    } else if (v.type() == QVariant::Color) {
-        brush = QBrush(v.value<QColor>());
+    } else if( v.type() == QVariant::Color ) {
+        brush = QBrush( v.value<QColor>() );
     }
     return brush;
 }
 
 
 
-KColorComboDelegate::KColorComboDelegate(QObject *parent)
-  : QAbstractItemDelegate(parent)
+KColorComboDelegate::KColorComboDelegate( QObject *parent )
+    : QAbstractItemDelegate( parent )
 {
 }
 
@@ -71,70 +71,70 @@ KColorComboDelegate::~KColorComboDelegate()
 {
 }
 
-void KColorComboDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void KColorComboDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     // background
-    QColor innercolor(Qt::white);
-    bool isSelected = (option.state & QStyle::State_Selected);
-    bool paletteBrush = (k_colorcombodelegate_brush(index, Qt::BackgroundRole).style() == Qt::NoBrush);
-    if (isSelected) {
-        innercolor = option.palette.color(QPalette::Highlight);
+    QColor innercolor( Qt::white );
+    bool isSelected = ( option.state & QStyle::State_Selected );
+    bool paletteBrush = ( k_colorcombodelegate_brush( index, Qt::BackgroundRole ).style() == Qt::NoBrush );
+    if( isSelected ) {
+        innercolor = option.palette.color( QPalette::Highlight );
     } else {
-        innercolor = option.palette.color(QPalette::Base);
+        innercolor = option.palette.color( QPalette::Base );
     }
     // highlight selected item
-    QStyleOptionViewItemV4 opt(option);
+    QStyleOptionViewItemV4 opt( option );
     opt.showDecorationSelected = true;
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
-    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
-    QRect innerrect = option.rect.adjusted(FrameMargin, FrameMargin, -FrameMargin, -FrameMargin);
+    style->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget );
+    QRect innerrect = option.rect.adjusted( FrameMargin, FrameMargin, -FrameMargin, -FrameMargin );
     // inner color
-    QVariant cv = index.data(ColorRole);
-    if (cv.type() == QVariant::Color) {
+    QVariant cv = index.data( ColorRole );
+    if( cv.type() == QVariant::Color ) {
         QColor tmpcolor = cv.value<QColor>();
-        if (tmpcolor.isValid()) {
+        if( tmpcolor.isValid() ) {
             innercolor = tmpcolor;
             paletteBrush = false;
-            painter->setPen(Qt::transparent);
-            painter->setBrush(innercolor);
+            painter->setPen( Qt::transparent );
+            painter->setBrush( innercolor );
             QPainter::RenderHints tmpHint = painter->renderHints();
-            painter->setRenderHint(QPainter::Antialiasing);
-            painter->drawRoundedRect(innerrect, 2, 2);
-            painter->setRenderHints(tmpHint);
-            painter->setBrush(Qt::NoBrush);
+            painter->setRenderHint( QPainter::Antialiasing );
+            painter->drawRoundedRect( innerrect, 2, 2 );
+            painter->setRenderHints( tmpHint );
+            painter->setBrush( Qt::NoBrush );
         }
     }
     // text
-    QVariant tv = index.data(Qt::DisplayRole);
-    if (tv.type() == QVariant::String) {
+    QVariant tv = index.data( Qt::DisplayRole );
+    if( tv.type() == QVariant::String ) {
         QString text = tv.toString();
         QColor textColor;
-        if (paletteBrush) {
-            if (isSelected) {
-                textColor = option.palette.color(QPalette::HighlightedText);
+        if( paletteBrush ) {
+            if( isSelected ) {
+                textColor = option.palette.color( QPalette::HighlightedText );
             } else {
-                textColor = option.palette.color(QPalette::Text);
+                textColor = option.palette.color( QPalette::Text );
             }
         } else {
             int unused, v;
-            innercolor.getHsv(&unused, &unused, &v);
-            if (v > 128) {
+            innercolor.getHsv( &unused, &unused, &v );
+            if( v > 128 ) {
                 textColor = Qt::black;
             } else {
                 textColor = Qt::white;
             }
         }
-        painter->setPen(textColor);
-        painter->drawText(innerrect.adjusted(1, 1, -1, -1), text);
+        painter->setPen( textColor );
+        painter->drawText( innerrect.adjusted( 1, 1, -1, -1 ), text );
     }
 }
 
-QSize KColorComboDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize KColorComboDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-    Q_UNUSED(index)
+    Q_UNUSED( index )
 
     // the width does not matter, as the view will always use the maximum width available
-    return QSize(100, option.fontMetrics.height() + 2 * FrameMargin);
+    return QSize( 100, option.fontMetrics.height() + 2 * FrameMargin );
 }
 
 
@@ -170,19 +170,17 @@ static const uchar standardPalette[][4] = {
 
 #define STANDARD_PALETTE_SIZE (int(sizeof(standardPalette) / sizeof(*standardPalette)))
 
-static inline QColor standardColor(int i)
+static inline QColor standardColor( int i )
 {
     const uchar *entry = standardPalette[i];
-    return QColor(entry[0], entry[1], entry[2]);
+    return QColor( entry[0], entry[1], entry[2] );
 }
 
 
 
-struct KColorComboPrivate
-{
+struct KColorComboPrivate {
     KColorComboPrivate()
-        : customColor( Qt::white )
-    {
+        : customColor( Qt::white ) {
     }
 
     QList<QColor> colorList;
@@ -193,27 +191,27 @@ struct KColorComboPrivate
 
 
 KColorCombo::KColorCombo( QWidget *parent )
-  : QComboBox(parent),
-    d( new KColorComboPrivate )
+    : QComboBox( parent ),
+      d( new KColorComboPrivate )
 {
-    setItemDelegate(new KColorComboDelegate(this));
+    setItemDelegate( new KColorComboDelegate( this ) );
 
     addColors();
 
-    connect( this, SIGNAL( activated(int) ), SLOT( slotActivated(int) ) );
-    connect( this, SIGNAL( highlighted(int) ), SLOT( slotHighlighted(int) ) );
+    connect( this, SIGNAL( activated( int ) ), SLOT( slotActivated( int ) ) );
+    connect( this, SIGNAL( highlighted( int ) ), SLOT( slotHighlighted( int ) ) );
 
     // select the white color
-    setCurrentIndex(1);
-    slotActivated(1);
+    setCurrentIndex( 1 );
+    slotActivated( 1 );
 
-    setMaxVisibleItems(13);
+    setMaxVisibleItems( 13 );
 }
 
 
 KColorCombo::~KColorCombo()
 {
-	delete d;
+    delete d;
 }
 
 void KColorCombo::setColors( const QList<QColor> &colors )
@@ -225,11 +223,11 @@ void KColorCombo::setColors( const QList<QColor> &colors )
 
 QList<QColor> KColorCombo::colors() const
 {
-    if (d->colorList.isEmpty()) {
+    if( d->colorList.isEmpty() ) {
         QList<QColor> list;
-        for (int i = 0; i < STANDARD_PALETTE_SIZE; ++i) {
-            list += standardColor(i);
-	}
+        for( int i = 0; i < STANDARD_PALETTE_SIZE; ++i ) {
+            list += standardColor( i );
+        }
         return list;
     } else {
         return d->colorList;
@@ -241,23 +239,24 @@ QList<QColor> KColorCombo::colors() const
  */
 void KColorCombo::setColor( const QColor &col )
 {
-    if (!col.isValid()) {
+    if( !col.isValid() ) {
         return;
     }
 
-    if (count() == 0) {
+    if( count() == 0 ) {
         addColors();
     }
 
-    setCustomColor(col, true);
+    setCustomColor( col, true );
 }
 
 
 /**
    Returns the currently selected color
  */
-QColor KColorCombo::color() const {
-  return d->internalcolor;
+QColor KColorCombo::color() const
+{
+    return d->internalcolor;
 }
 
 bool KColorCombo::isCustomColor() const
@@ -265,21 +264,21 @@ bool KColorCombo::isCustomColor() const
     return d->internalcolor == d->customColor;
 }
 
-void KColorCombo::paintEvent(QPaintEvent *event)
+void KColorCombo::paintEvent( QPaintEvent *event )
 {
-    Q_UNUSED(event)
-    QStylePainter painter(this);
-    painter.setPen(palette().color(QPalette::Text));
+    Q_UNUSED( event )
+    QStylePainter painter( this );
+    painter.setPen( palette().color( QPalette::Text ) );
 
     QStyleOptionComboBox opt;
-    initStyleOption(&opt);
-    painter.drawComplexControl(QStyle::CC_ComboBox, opt);
+    initStyleOption( &opt );
+    painter.drawComplexControl( QStyle::CC_ComboBox, opt );
 
-    QRect frame = style()->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(Qt::transparent);
-    painter.setBrush(QBrush(d->internalcolor));
-    painter.drawRoundedRect(frame.adjusted(1, 1, -1, -1), 2, 2);
+    QRect frame = style()->subControlRect( QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this );
+    painter.setRenderHint( QPainter::Antialiasing );
+    painter.setPen( Qt::transparent );
+    painter.setBrush( QBrush( d->internalcolor ) );
+    painter.drawRoundedRect( frame.adjusted( 1, 1, -1, -1 ), 2, 2 );
 }
 
 /**
@@ -291,22 +290,21 @@ void KColorCombo::showEmptyList()
 }
 
 
-void KColorCombo::setCustomColor(const QColor &color, bool lookupInPresets)
+void KColorCombo::setCustomColor( const QColor &color, bool lookupInPresets )
 {
     if( lookupInPresets ) {
         if( d->colorList.isEmpty() ) {
-            for(int i = 0; i < STANDARD_PALETTE_SIZE; ++i) {
+            for( int i = 0; i < STANDARD_PALETTE_SIZE; ++i ) {
                 if( standardColor( i ) == color ) {
                     setCurrentIndex( i + 1 );
                     d->internalcolor = color;
                     return;
                 }
             }
-        }
-        else {
+        } else {
             int i = d->colorList.indexOf( color );
             if( i >= 0 ) {
-                setCurrentIndex(i + 1);
+                setCurrentIndex( i + 1 );
                 d->internalcolor = color;
                 return;
             }
@@ -320,17 +318,15 @@ void KColorCombo::setCustomColor(const QColor &color, bool lookupInPresets)
 }
 
 
-void KColorCombo::slotActivated(int index)
+void KColorCombo::slotActivated( int index )
 {
     if( index == 0 ) {
-        if( QColorDialog::getColor( d->customColor, this) == QDialog::Accepted ) {
+        if( QColorDialog::getColor( d->customColor, this ) == QDialog::Accepted ) {
             setCustomColor( d->customColor, false );
         }
-    }
-    else if( d->colorList.isEmpty() ) {
+    } else if( d->colorList.isEmpty() ) {
         d->internalcolor = standardColor( index - 1 );
-    }
-    else {
+    } else {
         d->internalcolor = d->colorList[ index - 1 ];
     }
 
@@ -339,15 +335,13 @@ void KColorCombo::slotActivated(int index)
 
 
 
-void KColorCombo::slotHighlighted(int index)
+void KColorCombo::slotHighlighted( int index )
 {
     if( index == 0 ) {
         d->internalcolor = d->customColor;
-    }
-    else if( d->colorList.isEmpty() ) {
+    } else if( d->colorList.isEmpty() ) {
         d->internalcolor = standardColor( index - 1 );
-    }
-    else {
+    } else {
         d->internalcolor = d->colorList[ index - 1 ];
     }
 
@@ -360,13 +354,12 @@ void KColorCombo::addColors()
     addItem( tr( "Custom color", "Custom..." ) );
 
     if( d->colorList.isEmpty() ) {
-        for(int i = 0; i < STANDARD_PALETTE_SIZE; ++i) {
-            addItem(QString());
+        for( int i = 0; i < STANDARD_PALETTE_SIZE; ++i ) {
+            addItem( QString() );
             setItemData( i + 1, standardColor( i ), KColorComboDelegate::ColorRole );
         }
-    }
-    else {
-        for(int i = 0, count = d->colorList.count(); i < count; ++i) {
+    } else {
+        for( int i = 0, count = d->colorList.count(); i < count; ++i ) {
             addItem( QString() );
             setItemData( i + 1, d->colorList[ i ], KColorComboDelegate::ColorRole );
         }

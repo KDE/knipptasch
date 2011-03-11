@@ -35,16 +35,16 @@ namespace Ui
  */
 class CsvImportDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        CsvImportDialog(QWidget *parent = 0);
+        CsvImportDialog( QWidget *parent = 0 );
         ~CsvImportDialog();
 
-        Account* account() const;
+        Account *account() const;
 
     private slots:
-        void onDelimiterComboBoxIndexChanged(int);
+        void onDelimiterComboBoxIndexChanged( int );
         void onDelimiterComboBoxTextChanged();
 
     private:

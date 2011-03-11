@@ -26,7 +26,8 @@ class QTreeWidgetItem;
 class AccountWidget;
 class QPushButton;
 
-namespace Ui {
+namespace Ui
+{
     class SaveModifiedDialog;
 }
 
@@ -39,22 +40,22 @@ namespace Ui {
  */
 class SaveModifiedDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
     public:
-        SaveModifiedDialog(QWidget *parent, QList<AccountWidget*> accounts);
+        SaveModifiedDialog( QWidget *parent, QList<AccountWidget *> accounts );
         ~SaveModifiedDialog();
 
-        static bool queryClose(QWidget *parent, AccountWidget* account);
-        static bool queryClose(QWidget *parent, QList<AccountWidget*> accounts);
+        static bool queryClose( QWidget *parent, AccountWidget *account );
+        static bool queryClose( QWidget *parent, QList<AccountWidget *> accounts );
 
     private slots:
-        void slotItemActivated(QTreeWidgetItem*, int);
+        void slotItemActivated( QTreeWidgetItem *, int );
         void slotSaveSelected();
 
     private:
         Ui::SaveModifiedDialog *ui;
         QTreeWidgetItem *m_root;
-        QList<AccountListItem*> m_items;
+        QList<AccountListItem *> m_items;
 
         QPushButton *m_doNotSaveButton;
         QPushButton *m_doSaveSelectedButton;

@@ -29,8 +29,8 @@
 #include <QCoreApplication>
 
 
-XmlExportPlugin::XmlExportPlugin(QObject *parent)
-  : QObject( parent )
+XmlExportPlugin::XmlExportPlugin( QObject *parent )
+    : QObject( parent )
 {
 }
 
@@ -91,11 +91,11 @@ QString XmlExportPlugin::exportActionName() const
 
 QPixmap XmlExportPlugin::exportActionIcon() const
 {
-    return BarIcon("text-xml");
+    return BarIcon( "text-xml" );
 }
 
 
-void XmlExportPlugin::exportAccount(const Account *account, const QList<const Posting*> &selected, QWidget *parent) const
+void XmlExportPlugin::exportAccount( const Account *account, const QList<const Posting *> &selected, QWidget *parent ) const
 {
     Q_UNUSED( selected );
 
@@ -105,9 +105,9 @@ void XmlExportPlugin::exportAccount(const Account *account, const QList<const Po
     filename = KFileDialog::getSaveFileName( KUrl(), "*.xml|" + QObject::tr( "XML File" ), parent );
 #else
     filename = QFileDialog::getSaveFileName( parent, // krazy:exclude=qclasses
-                     QObject::tr( "Export XML File - %1" ).arg( QCoreApplication::applicationName() ),
-                     QString(), QObject::tr( "XML File" ) + " (*.xml)"
-                   );
+               QObject::tr( "Export XML File - %1" ).arg( QCoreApplication::applicationName() ),
+               QString(), QObject::tr( "XML File" ) + " (*.xml)"
+                                           );
 #endif
 
     //TODO try... catch

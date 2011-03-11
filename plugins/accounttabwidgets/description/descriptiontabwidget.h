@@ -31,14 +31,14 @@ class QPlainTextEdit;
  */
 class DescriptionTabWidget : public AbstractAccountTabWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit DescriptionTabWidget(QWidget *parent = 0);
+        explicit DescriptionTabWidget( QWidget *parent = 0 );
 
     protected:
-        void accountModelChanged(AccountModel *model);
-        void currentSelectedIndexChanged(const QModelIndex &index);
+        void accountModelChanged( AccountModel *model );
+        void currentSelectedIndexChanged( const QModelIndex &index );
 
     private slots:
         void slotUpdateState();

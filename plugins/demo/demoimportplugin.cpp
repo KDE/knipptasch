@@ -31,7 +31,7 @@
 
 
 
-Money initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true)
+Money initDemoAccountAddPosting( Account *acc, const QDate &date, const QString &postingText, const Money &amount, bool valueDate = true )
 {
     Q_ASSERT( acc );
 
@@ -46,7 +46,7 @@ Money initDemoAccountAddPosting(Account *acc, const QDate &date, const QString &
     return p->amount();
 }
 
-Money initRent(Account *acc, const QDate &date)
+Money initRent( Account *acc, const QDate &date )
 {
     return initDemoAccountAddPosting( acc, date.addDays( qrand() % 6 ),
                                       QObject::tr( "Rent" ) , -348.50,
@@ -55,8 +55,8 @@ Money initRent(Account *acc, const QDate &date)
 
 
 
-DemoImportPlugin::DemoImportPlugin(QObject *parent)
-  : QObject( parent )
+DemoImportPlugin::DemoImportPlugin( QObject *parent )
+    : QObject( parent )
 {
     qsrand( QTime::currentTime().msec() );
 }
@@ -76,13 +76,13 @@ QByteArray DemoImportPlugin::identifier() const
 
 QString DemoImportPlugin::shortName() const
 {
-    return tr( "Demo" );    
+    return tr( "Demo" );
 }
 
 
 QString DemoImportPlugin::name() const
 {
-    return tr( "Demo Import Plugin" );    
+    return tr( "Demo Import Plugin" );
 }
 
 
@@ -118,16 +118,16 @@ QString DemoImportPlugin::importActionName() const
 
 QPixmap DemoImportPlugin::importActionIcon() const
 {
-    return BarIcon("applications-education-miscellaneous");
+    return BarIcon( "applications-education-miscellaneous" );
 }
 
 
-Account* DemoImportPlugin::importAccount(QWidget *parent) const
+Account *DemoImportPlugin::importAccount( QWidget *parent ) const
 {
     bool ok;
     int count = QInputDialog::getInt( parent,  // krazy:exclude=qclasses
                                       QString(),
-                                      QObject::tr("Past month:"),
+                                      QObject::tr( "Past month:" ),
                                       15, 1, 120, 1, &ok );
     if( ok ) {
         QList<int> v;
@@ -197,62 +197,61 @@ Account* DemoImportPlugin::importAccount(QWidget *parent) const
 
             if( date < QDate::currentDate() ) {
                 month += initDemoAccountAddPosting(
-                    acc,
-                    date.addDays( qrand() % 6 ),
-                    QObject::tr( "Phone and Internet" ),
-                    -20 - ( ( qrand() % 5000 + 100 ) / 100.00 )
-                );
+                             acc,
+                             date.addDays( qrand() % 6 ),
+                             QObject::tr( "Phone and Internet" ),
+                             -20 - (( qrand() % 5000 + 100 ) / 100.00 )
+                         );
 
                 month += initDemoAccountAddPosting(
-                    acc,
-                    date.addDays( qrand() % 6 ),
-                    QObject::tr( "Salary" ),
-                    1000.00 + ( ( qrand() % 50000 + 100 ) / 100.00 )
-                );
+                             acc,
+                             date.addDays( qrand() % 6 ),
+                             QObject::tr( "Salary" ),
+                             1000.00 + (( qrand() % 50000 + 100 ) / 100.00 )
+                         );
 
                 if( total > 800.00 ) {
                     month += initDemoAccountAddPosting(
-                        acc,
-                        date.addDays( qrand() % date.daysInMonth() + 1 ),
-                        QObject::tr( "Travel" ),
-                        -1700.00 + ( ( qrand() % 50000 + 100 ) / 100.00 )
-                    );
+                                 acc,
+                                 date.addDays( qrand() % date.daysInMonth() + 1 ),
+                                 QObject::tr( "Travel" ),
+                                 -1700.00 + (( qrand() % 50000 + 100 ) / 100.00 )
+                             );
                 }
 
                 while( month > 200.0 ) {
                     month += initDemoAccountAddPosting(
-                        acc,
-                        date.addDays( qrand() % date.daysInMonth() + 1 ),
-                        cost.at( qrand() % cost.size() ),
-                        v[ qrand() % v.size() ]
-                    );
+                                 acc,
+                                 date.addDays( qrand() % date.daysInMonth() + 1 ),
+                                 cost.at( qrand() % cost.size() ),
+                                 v[ qrand() % v.size()]
+                             );
                 }
 
                 if( month < -50.0 ) {
                     month += initDemoAccountAddPosting(
-                        acc,
-                        date.addDays( qrand() % date.daysInMonth() + 1 ),
-                        QObject::tr( "Dividend" ),
-                        Money( v[ qrand() % v.size() ] ).abs()
-                    );
+                                 acc,
+                                 date.addDays( qrand() % date.daysInMonth() + 1 ),
+                                 QObject::tr( "Dividend" ),
+                                 Money( v[ qrand() % v.size()] ).abs()
+                             );
                 }
-            }
-            else {
+            } else {
                 month += initDemoAccountAddPosting(
-                    acc,
-                    date.addDays( qrand() % 6 ),
-                    QObject::tr( "Phone and Internet" ),
-                    Money(),
-                    false
-                );
+                             acc,
+                             date.addDays( qrand() % 6 ),
+                             QObject::tr( "Phone and Internet" ),
+                             Money(),
+                             false
+                         );
 
                 month += initDemoAccountAddPosting(
-                    acc,
-                    date.addDays( qrand() % 6 ),
-                    QObject::tr( "Salary" ),
-                    Money(),
-                    false
-                );
+                             acc,
+                             date.addDays( qrand() % 6 ),
+                             QObject::tr( "Salary" ),
+                             Money(),
+                             false
+                         );
             }
 
             total += month;

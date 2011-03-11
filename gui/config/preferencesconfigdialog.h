@@ -36,14 +36,14 @@ namespace Knipptasch
  */
 class PreferencesConfigDialog : public ConfigDialog
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(PreferencesConfigDialog)
+        Q_OBJECT
+        Q_DISABLE_COPY( PreferencesConfigDialog )
 
     public:
         /**
          * Constructs a new PreferencesConfigDialog
          */
-        explicit PreferencesConfigDialog(Knipptasch::Preferences *pref, QWidget *parent = 0);
+        explicit PreferencesConfigDialog( Knipptasch::Preferences *pref, QWidget *parent = 0 );
 
         /**
          * Destructs the config dialog.

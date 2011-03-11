@@ -30,13 +30,13 @@
 #include <QDebug>
 
 
-AppearanceColorChooserWidget::AppearanceColorChooserWidget(QWidget *parent)
-  : QWidget( parent ),
-    ui( new Ui::AppearanceColorChooserWidget )
+AppearanceColorChooserWidget::AppearanceColorChooserWidget( QWidget *parent )
+    : QWidget( parent ),
+      ui( new Ui::AppearanceColorChooserWidget )
 {
     ui->setupUi( this );
 
-    ui->detailsButton->setIcon( BarIcon("configure") );
+    ui->detailsButton->setIcon( BarIcon( "configure" ) );
     ui->detailsButton->setAutoRaise( true );
     ui->detailsButton->setCheckable( true );
     ui->detailsButton->setChecked( false );
@@ -47,11 +47,11 @@ AppearanceColorChooserWidget::AppearanceColorChooserWidget(QWidget *parent)
     ui->detailsButton->setVisible( false );
 #endif
 
-    connect( ui->colorButton, SIGNAL( changed(QColor) ), this, SLOT( onColorButtonValueChanged() ) );
-    connect( ui->spinBoxRed, SIGNAL( valueChanged(int) ), this, SLOT( onSpinBoxValueChanged() ) );
-    connect( ui->spinBoxBlue, SIGNAL( valueChanged(int) ), this, SLOT( onSpinBoxValueChanged() ) );
-    connect( ui->spinBoxGreen, SIGNAL( valueChanged(int) ), this, SLOT( onSpinBoxValueChanged() ) );
-    connect( ui->spinBoxAlpha, SIGNAL( valueChanged(int) ), this, SLOT( onSpinBoxValueChanged() ) );
+    connect( ui->colorButton, SIGNAL( changed( QColor ) ), this, SLOT( onColorButtonValueChanged() ) );
+    connect( ui->spinBoxRed, SIGNAL( valueChanged( int ) ), this, SLOT( onSpinBoxValueChanged() ) );
+    connect( ui->spinBoxBlue, SIGNAL( valueChanged( int ) ), this, SLOT( onSpinBoxValueChanged() ) );
+    connect( ui->spinBoxGreen, SIGNAL( valueChanged( int ) ), this, SLOT( onSpinBoxValueChanged() ) );
+    connect( ui->spinBoxAlpha, SIGNAL( valueChanged( int ) ), this, SLOT( onSpinBoxValueChanged() ) );
 
     setEditable( false );
 }
@@ -69,7 +69,7 @@ bool AppearanceColorChooserWidget::editable()
 }
 
 
-void AppearanceColorChooserWidget::setEditable(bool b)
+void AppearanceColorChooserWidget::setEditable( bool b )
 {
     ui->valueWidget->setVisible( false );
     ui->detailsButton->setEnabled( b );
@@ -83,7 +83,7 @@ QColor AppearanceColorChooserWidget::color() const
 }
 
 
-void AppearanceColorChooserWidget::setColor(const QColor &color)
+void AppearanceColorChooserWidget::setColor( const QColor &color )
 {
     m_color = color;
     updateColorWidgets();

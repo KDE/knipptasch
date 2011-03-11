@@ -25,23 +25,20 @@
 class QuickReportAction : public QWidgetAction
 {
     public:
-        QuickReportAction(QuickReportWidget *widget, QObject *parent)
-          : QWidgetAction( parent ),
-            m_report( widget ),
-            m_originalparent( widget->parentWidget() )
-        {
+        QuickReportAction( QuickReportWidget *widget, QObject *parent )
+            : QWidgetAction( parent ),
+              m_report( widget ),
+              m_originalparent( widget->parentWidget() ) {
         }
 
     protected:
-        QWidget *createWidget(QWidget *parent)
-        {
+        QWidget *createWidget( QWidget *parent ) {
             m_report->setParent( parent );
             return m_report;
         }
 
 
-        void deleteWidget(QWidget *widget)
-        {
+        void deleteWidget( QWidget *widget ) {
             if( widget != m_report ) {
                 return;
             }
@@ -56,8 +53,8 @@ class QuickReportAction : public QWidgetAction
 
 
 
-QuickReportPopup::QuickReportPopup(AccountSortFilterProxyModel *proxy, QWidget *parent)
-  : QMenu( parent )
+QuickReportPopup::QuickReportPopup( AccountSortFilterProxyModel *proxy, QWidget *parent )
+    : QMenu( parent )
 {
     QuickReportWidget *widget1 = new QuickReportWidget( proxy, this );
     widget1->setCurrentDate( QDate::currentDate().addMonths( -1 ) );

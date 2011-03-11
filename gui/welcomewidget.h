@@ -30,24 +30,24 @@ class QListWidgetItem;
 
 class WelcomeWidget : public QFrame
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        WelcomeWidget(QWidget *parent = 0);
+        WelcomeWidget( QWidget *parent = 0 );
         ~WelcomeWidget();
 
     signals:
         void createFileClicked();
         void openFileClicked();
-        void openFileClicked(const QString &file);
+        void openFileClicked( const QString &file );
 
     protected:
-        void showEvent(QShowEvent *event);
-        void paintEvent(QPaintEvent *event);
+        void showEvent( QShowEvent *event );
+        void paintEvent( QPaintEvent *event );
 
     private slots:
         void slotUpdateList();
-        void slotRecentFileClicked(QListWidgetItem*);
+        void slotRecentFileClicked( QListWidgetItem * );
 
     private:
         Ui::WelcomeWidget *ui;

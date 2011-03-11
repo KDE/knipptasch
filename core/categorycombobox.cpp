@@ -29,13 +29,13 @@
 
 
 
-CategoryComboBox::CategoryComboBox(const Account *account, QWidget* parent)
-  : KComboBox( parent ),
-    m_view( new QTreeView( this ) ),
-    m_model( new QStandardItemModel( this ) ),
-    m_account( 0 ),
-    m_skipNextHide( false ),
-    m_selectedCategory( -1 )
+CategoryComboBox::CategoryComboBox( const Account *account, QWidget *parent )
+    : KComboBox( parent ),
+      m_view( new QTreeView( this ) ),
+      m_model( new QStandardItemModel( this ) ),
+      m_account( 0 ),
+      m_skipNextHide( false ),
+      m_selectedCategory( -1 )
 {
     m_view->header()->hide();
     m_view->setRootIsDecorated( false );
@@ -53,13 +53,13 @@ CategoryComboBox::CategoryComboBox(const Account *account, QWidget* parent)
 }
 
 
-const Account* CategoryComboBox::account() const
+const Account *CategoryComboBox::account() const
 {
     return m_account;
 }
 
 
-void CategoryComboBox::setAccount(const Account *account)
+void CategoryComboBox::setAccount( const Account *account )
 {
     Q_ASSERT( m_model );
 
@@ -78,7 +78,7 @@ void CategoryComboBox::setAccount(const Account *account)
     QStandardItem *item = new QStandardItem( tr( "None" ) );
     item->setData( -1, Qt::UserRole );
 
-    for(int i = 0; i < m_account->rootCategory()->countCategories(); ++i) {
+    for( int i = 0; i < m_account->rootCategory()->countCategories(); ++i ) {
         addCategory( item, m_account->rootCategory()->category( i ) );
     }
 
@@ -89,11 +89,11 @@ void CategoryComboBox::setAccount(const Account *account)
 }
 
 
-const Category* CategoryComboBox::selectedCategory() const
+const Category *CategoryComboBox::selectedCategory() const
 {
     Object *object = account()->objectByIdentifier( m_selectedCategory );
     if( object ) {
-        Category *category = qobject_cast<Category*>( object );
+        Category *category = qobject_cast<Category *>( object );
         Q_ASSERT( category );
 
         return category;
@@ -103,11 +103,11 @@ const Category* CategoryComboBox::selectedCategory() const
 }
 
 
-Category* CategoryComboBox::selectedCategory()
+Category *CategoryComboBox::selectedCategory()
 {
     Object *object = account()->objectByIdentifier( m_selectedCategory );
     if( object ) {
-        Category *category = qobject_cast<Category*>( object );
+        Category *category = qobject_cast<Category *>( object );
         Q_ASSERT( category );
 
         return category;
@@ -117,17 +117,17 @@ Category* CategoryComboBox::selectedCategory()
 }
 
 
-void CategoryComboBox::setSelectedCategory(const Category *category)
+void CategoryComboBox::setSelectedCategory( const Category *category )
 {
     m_selectedCategory = account()->identifierByObject( category );
 }
 
 
-bool CategoryComboBox::eventFilter(QObject *object, QEvent *event)
+bool CategoryComboBox::eventFilter( QObject *object, QEvent *event )
 {
     if( event->type() == QEvent::MouseButtonPress ) {
         if( object == view()->viewport() ) {
-            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>( event );
 
             QModelIndex index = view()->indexAt( mouseEvent->pos() );
             if( !view()->visualRect( index ).contains( mouseEvent->pos() ) ) {
@@ -144,7 +144,7 @@ void CategoryComboBox::showPopup()
 {
     QModelIndex index;
     if( m_selectedCategory >= 0 ) {
-        foreach(QStandardItem *item, m_items) {
+        foreach( QStandardItem * item, m_items ) {
             bool ok;
             int itemid = item->data( Qt::UserRole ).toInt( &ok );
             Q_ASSERT( ok );
@@ -175,7 +175,7 @@ void CategoryComboBox::hidePopup()
     if( m_view->currentIndex().isValid() ) {
         bool ok;
         int id = m_model->itemFromIndex( m_view->currentIndex() )
-                        ->data( Qt::UserRole ).toInt( &ok );
+                 ->data( Qt::UserRole ).toInt( &ok );
         Q_ASSERT( ok );
 
         m_selectedCategory = id;
@@ -185,7 +185,7 @@ void CategoryComboBox::hidePopup()
 }
 
 
-void CategoryComboBox::addCategory(QStandardItem *parent, const Category *cat)
+void CategoryComboBox::addCategory( QStandardItem *parent, const Category *cat )
 {
     Q_ASSERT( parent );
     Q_ASSERT( cat );
@@ -196,13 +196,13 @@ void CategoryComboBox::addCategory(QStandardItem *parent, const Category *cat)
     parent->appendRow( item );
     m_items.insert( item );
 
-    for(int i = 0; i < cat->countCategories(); ++i) {
+    for( int i = 0; i < cat->countCategories(); ++i ) {
         addCategory( item, cat->category( i ) );
     }
 }
 
 
-QIcon CategoryComboBox::renderCategoryIcon(const Category *category)
+QIcon CategoryComboBox::renderCategoryIcon( const Category *category )
 {
     if( category && category->color().isValid() ) {
         QPixmap pix( 128, 128 );

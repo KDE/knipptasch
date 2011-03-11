@@ -21,30 +21,27 @@
 #include <QDataStream>
 
 
-struct Posting::Private
-{
+struct Posting::Private {
     Private()
-      : modified( false )
-    {
+        : modified( false ) {
     }
 
-    ~Private()
-    {
+    ~Private() {
         while( !postings.isEmpty() ) {
             delete postings.takeFirst();
         }
     }
 
-    QList<SubPosting*> postings;
+    QList<SubPosting *> postings;
     mutable bool modified;
 };
 
 
 
 
-Posting::Posting(QObject *parent)
-  : BasePosting( parent ),
-    d( new Posting::Private )
+Posting::Posting( QObject *parent )
+    : BasePosting( parent ),
+      d( new Posting::Private )
 {
 }
 
@@ -61,7 +58,7 @@ bool Posting::isModified() const
         return true;
     }
 
-    foreach(const SubPosting *p, d->postings) {
+    foreach( const SubPosting * p, d->postings ) {
         if( p && p->isModified() ) {
             d->modified = true;
             return true;
@@ -72,13 +69,12 @@ bool Posting::isModified() const
 }
 
 
-void Posting::setModified(bool state)
+void Posting::setModified( bool state )
 {
     if( state ) {
         d->modified = true;
-    }
-    else {
-        foreach(SubPosting *p, d->postings) {
+    } else {
+        foreach( SubPosting * p, d->postings ) {
             p->setModified( false );
         }
 
@@ -101,7 +97,7 @@ int Posting::countSubPostings() const
 }
 
 
-SubPosting* Posting::subPosting(int index)
+SubPosting *Posting::subPosting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -110,7 +106,7 @@ SubPosting* Posting::subPosting(int index)
 }
 
 
-const SubPosting* Posting::subPosting(int index) const
+const SubPosting *Posting::subPosting( int index ) const
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -119,7 +115,7 @@ const SubPosting* Posting::subPosting(int index) const
 }
 
 
-SubPosting* Posting::takeSubPosting(int index)
+SubPosting *Posting::takeSubPosting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -134,20 +130,20 @@ SubPosting* Posting::takeSubPosting(int index)
 }
 
 
-void Posting::addSubPosting(SubPosting *p)
+void Posting::addSubPosting( SubPosting *p )
 {
     Q_ASSERT( p );
 
     d->postings.append( p );
     connect( p, SIGNAL( valueChanged() ), this, SIGNAL( subPostingChanged() ) );
-    connect( p, SIGNAL( categoryChanged()), this, SIGNAL( subPostingChanged() ) );
+    connect( p, SIGNAL( categoryChanged() ), this, SIGNAL( subPostingChanged() ) );
 
     setModified();
     emit subPostingChanged();
 }
 
 
-void Posting::removeSubPosting(int index)
+void Posting::removeSubPosting( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->postings.size() );
@@ -176,12 +172,12 @@ void Posting::clearSubPostings()
 }
 
 
-QDataStream& Posting::serialize(QDataStream &stream) const
+QDataStream &Posting::serialize( QDataStream &stream ) const
 {
     BasePosting::serialize( stream );
 
     stream << static_cast<quint32>( d->postings.size() );
-    foreach(SubPosting *p, d->postings) {
+    foreach( SubPosting * p, d->postings ) {
         p->serialize( stream );
     }
 
@@ -189,13 +185,13 @@ QDataStream& Posting::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Posting::deserialize(const Account *account, QDataStream &stream)
+QDataStream &Posting::deserialize( const Account *account, QDataStream &stream )
 {
     BasePosting::deserialize( account, stream );
 
     quint32 count;
     stream >> count;
-    for(quint32 i = 0; i < count; ++i) {
+    for( quint32 i = 0; i < count; ++i ) {
         SubPosting *p = new SubPosting;
         p->deserialize( account, stream );
         addSubPosting( p );

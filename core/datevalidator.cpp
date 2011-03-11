@@ -25,26 +25,26 @@
 
 
 
-DateValidator::DateValidator(QWidget *parent)
-  : QValidator( parent ),
-    m_statusTipEnabled( true )
+DateValidator::DateValidator( QWidget *parent )
+    : QValidator( parent ),
+      m_statusTipEnabled( true )
 {
 }
 
 
-DateValidator::DateValidator(const QString &dateFormat, QWidget *parent)
-  : QValidator( parent ),
-    m_dateFormat( dateFormat ),
-    m_statusTipEnabled( true )
+DateValidator::DateValidator( const QString &dateFormat, QWidget *parent )
+    : QValidator( parent ),
+      m_dateFormat( dateFormat ),
+      m_statusTipEnabled( true )
 {
 }
 
 
-DateValidator::DateValidator(const QString &dateFormat, const QStringList &keywords, QWidget *parent)
-  : QValidator( parent ),
-    m_keywords( keywords ),
-    m_dateFormat( dateFormat ),
-    m_statusTipEnabled( true )
+DateValidator::DateValidator( const QString &dateFormat, const QStringList &keywords, QWidget *parent )
+    : QValidator( parent ),
+      m_keywords( keywords ),
+      m_dateFormat( dateFormat ),
+      m_statusTipEnabled( true )
 {
 }
 
@@ -58,7 +58,7 @@ DateValidator::~DateValidator()
 }
 
 
-QValidator::State DateValidator::validate(QString &str, int &value) const
+QValidator::State DateValidator::validate( QString &str, int &value ) const
 {
     Q_UNUSED( value );
 
@@ -99,7 +99,7 @@ QStringList DateValidator::keywordList() const
 }
 
 
-void DateValidator::setKeywordList(const QStringList &list)
+void DateValidator::setKeywordList( const QStringList &list )
 {
     m_keywords = list;
 }
@@ -111,7 +111,7 @@ QString DateValidator::dateFormat() const
 }
 
 
-void DateValidator::setDateFormat(const QString &dateFormat)
+void DateValidator::setDateFormat( const QString &dateFormat )
 {
     m_dateFormat = dateFormat;
 }
@@ -123,7 +123,7 @@ bool DateValidator::statusTipEnabled() const
 }
 
 
-void DateValidator::setStatusTipEnabled(bool enabled)
+void DateValidator::setStatusTipEnabled( bool enabled )
 {
     if( m_statusTipEnabled != enabled ) {
         if( m_statusTipEnabled ) {

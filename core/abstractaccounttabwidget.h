@@ -33,20 +33,20 @@ class QModelIndex;
  */
 class KNIPPTASCH_CORE_EXPORT AbstractAccountTabWidget : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit AbstractAccountTabWidget(const QString &title, QWidget *parent = 0);
-        AbstractAccountTabWidget(const QString &title, const QIcon &icon, QWidget *parent = 0);
+        explicit AbstractAccountTabWidget( const QString &title, QWidget *parent = 0 );
+        AbstractAccountTabWidget( const QString &title, const QIcon &icon, QWidget *parent = 0 );
 
         /**
          * Default Destructor
          */
         virtual ~AbstractAccountTabWidget();
 
-        AccountModel* accountModel();
-        const AccountModel* accountModel() const;
-        void setAccountModel(AccountModel *model);
+        AccountModel *accountModel();
+        const AccountModel *accountModel() const;
+        void setAccountModel( AccountModel *model );
 
         QModelIndex currentSelectedIndex() const;
 
@@ -61,28 +61,28 @@ class KNIPPTASCH_CORE_EXPORT AbstractAccountTabWidget : public QWidget
         QString tabWhatsThis() const;
 
     signals:
-        void updateTabView(AbstractAccountTabWidget *widget);
+        void updateTabView( AbstractAccountTabWidget *widget );
 
     public slots:
-        void setCurrentSelectedIndex(const QModelIndex &index);
+        void setCurrentSelectedIndex( const QModelIndex &index );
 
     protected slots:
-        void setIcon(const QIcon &icon);
-        void setLabel(const QString &str);
-        void setToolTip(const QString &str);
-        void setWhatsThis(const QString &str);
+        void setIcon( const QIcon &icon );
+        void setLabel( const QString &str );
+        void setToolTip( const QString &str );
+        void setWhatsThis( const QString &str );
 
     protected:
         virtual void accountModelAboutToBeChanged();
-        virtual void accountModelChanged(AccountModel *model) = 0;
+        virtual void accountModelChanged( AccountModel *model ) = 0;
         virtual void currentSelectedIndexAboutToBeChanged();
-        virtual void currentSelectedIndexChanged(const QModelIndex &index) = 0;
+        virtual void currentSelectedIndexChanged( const QModelIndex &index ) = 0;
 
-        void changeEvent(QEvent *event);
+        void changeEvent( QEvent *event );
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 

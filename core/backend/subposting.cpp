@@ -17,8 +17,8 @@
 #include "subposting.h"
 
 
-SubPosting::SubPosting(QObject *parent)
-  : BasePosting( parent )
+SubPosting::SubPosting( QObject *parent )
+    : BasePosting( parent )
 {
 }
 
@@ -34,19 +34,19 @@ bool SubPosting::isModified() const
 }
 
 
-void SubPosting::setModified(bool state)
+void SubPosting::setModified( bool state )
 {
     BasePosting::setModified( state );
 }
 
 
-QDataStream& SubPosting::serialize(QDataStream &stream) const
+QDataStream &SubPosting::serialize( QDataStream &stream ) const
 {
     return BasePosting::serialize( stream );
 }
 
 
-QDataStream& SubPosting::deserialize(const Account *account, QDataStream &stream)
+QDataStream &SubPosting::deserialize( const Account *account, QDataStream &stream )
 {
     return BasePosting::deserialize( account, stream );
 }

@@ -30,16 +30,16 @@
 #include <QDebug>
 
 
-CsvImportDialog::CsvImportDialog(QWidget *parent)
-  : QDialog( parent ),
-    ui( new Ui::CsvImportDialog )
+CsvImportDialog::CsvImportDialog( QWidget *parent )
+    : QDialog( parent ),
+      ui( new Ui::CsvImportDialog )
 {
     ui->setupUi( this );
 
     setWindowTitle( tr( "CSV Import - %1" ).arg( QCoreApplication::applicationName() ) );
-    ui->iconLabel->setPixmap( DesktopIcon("text-csv") );
+    ui->iconLabel->setPixmap( DesktopIcon( "text-csv" ) );
 
-    ui->fileButton->setIcon( BarIcon("document-open") );
+    ui->fileButton->setIcon( BarIcon( "document-open" ) );
 
     ui->delimiter->clear();
     ui->delimiter->addItem( "" );
@@ -51,7 +51,7 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     m_delimiter = ui->delimiter->itemData( 3 ).toChar();
 
     ui->encoding->clear();
-    foreach(const QByteArray &name, QTextCodec::availableCodecs() ) {
+    foreach( const QByteArray & name, QTextCodec::availableCodecs() ) {
         ui->encoding->addItem( name, name );
     }
     ui->encoding->setCurrentIndex( ui->encoding->findData( QTextCodec::codecForLocale()->name() ) );
@@ -69,8 +69,8 @@ CsvImportDialog::CsvImportDialog(QWidget *parent)
     ui->endOfLine->setCurrentIndex( 0 );
 #endif
 
-    connect( ui->delimiter, SIGNAL( activated(int) ), this, SLOT( onDelimiterComboBoxIndexChanged(int) ) );
-    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited(QString) ), this, SLOT( onDelimiterComboBoxTextChanged() ) );
+    connect( ui->delimiter, SIGNAL( activated( int ) ), this, SLOT( onDelimiterComboBoxIndexChanged( int ) ) );
+    connect( ui->delimiter->lineEdit(), SIGNAL( textEdited( QString ) ), this, SLOT( onDelimiterComboBoxTextChanged() ) );
 }
 
 
@@ -80,13 +80,13 @@ CsvImportDialog::~CsvImportDialog()
 }
 
 
-Account* CsvImportDialog::account() const
+Account *CsvImportDialog::account() const
 {
     return 0;
 }
 
 
-void CsvImportDialog::onDelimiterComboBoxIndexChanged(int index)
+void CsvImportDialog::onDelimiterComboBoxIndexChanged( int index )
 {
     m_delimiter = ui->delimiter->itemData( index ).toChar();
 }

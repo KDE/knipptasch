@@ -32,10 +32,10 @@ class AccountSortFilterProxyModel;
  */
 class QuickReportPopup : public QMenu
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit QuickReportPopup(AccountSortFilterProxyModel *proxy, QWidget *parent = 0);
+        explicit QuickReportPopup( AccountSortFilterProxyModel *proxy, QWidget *parent = 0 );
 };
 
 

@@ -34,52 +34,51 @@ class Category;
  */
 class KNIPPTASCH_CORE_EXPORT CategoryModel : public QAbstractItemModel
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        enum Column
-        {
+        enum Column {
             CATEGORY_NAME = 0,
             CATEGORY_COLOR,
             CATEGORY_USAGE,
             ENTRYCOUNT
         };
 
-        explicit CategoryModel(QObject *parent = 0);
-        explicit CategoryModel(Account *account, QObject *parent = 0);
+        explicit CategoryModel( QObject *parent = 0 );
+        explicit CategoryModel( Account *account, QObject *parent = 0 );
 
-        Account* account();
-        const Account* account() const;
-        void setAccount(Account *account);
+        Account *account();
+        const Account *account() const;
+        void setAccount( Account *account );
 
-        const Category* category(const QModelIndex &index) const;
-        Category* category(const QModelIndex &index);
+        const Category *category( const QModelIndex &index ) const;
+        Category *category( const QModelIndex &index );
 
-        QModelIndex categoryIndex(const Category *category) const;
+        QModelIndex categoryIndex( const Category *category ) const;
 
-        int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        int columnCount(const QModelIndex &parent = QModelIndex()) const;
+        int rowCount( const QModelIndex &parent = QModelIndex() ) const;
+        int columnCount( const QModelIndex &parent = QModelIndex() ) const;
 
-        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-        QVariant data(const QModelIndex &index, int role) const;
-        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+        QVariant data( const QModelIndex &index, int role ) const;
+        bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
-        bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
-        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+        bool insertRows( int row, int count, const QModelIndex &parent = QModelIndex() );
+        bool removeRows( int row, int count, const QModelIndex &parent = QModelIndex() );
 
-        Qt::ItemFlags flags(const QModelIndex &index) const;
+        Qt::ItemFlags flags( const QModelIndex &index ) const;
         Qt::DropActions supportedDropActions() const;
 
         QStringList mimeTypes() const;
-        QMimeData* mimeData(const QModelIndexList &indexes) const;
-        bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+        QMimeData *mimeData( const QModelIndexList &indexes ) const;
+        bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
-        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-        QModelIndex parent(const QModelIndex &index) const;
+        QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
+        QModelIndex parent( const QModelIndex &index ) const;
 
     private:
-        QModelIndex findCategoryIndex(const QModelIndex &parent, const Category *category) const;
+        QModelIndex findCategoryIndex( const QModelIndex &parent, const Category *category ) const;
 
     private:
         Account *m_account;

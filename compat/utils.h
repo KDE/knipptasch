@@ -29,30 +29,30 @@ class QWidget;
 
 
 
-QString getOpenFileName(QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0);
-QString getSaveFileName(QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0);
+QString getOpenFileName( QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0 );
+QString getSaveFileName( QWidget *parent, const QString &caption = QString(), const QString &dir = QString(), const QString &filterQt = QString(), const QString &filterKDE = QString(), QString *selectedFilter = 0, QFileDialog::Options options = 0 );
 
 
 QStringList findDataDirPaths();
-QString findExistingFilePath(const QString& fileName);
-QString findFilePath(const QString& fileName);
+QString findExistingFilePath( const QString &fileName );
+QString findFilePath( const QString &fileName );
 
-QString formatDateTime(const QDateTime&);
-QString formatShortDate(const QDate& d);
-QString formatLongDate(const QDate& d);
-QString formatTime(const QTime& t);
-QDate readDate(const QString& s, const QString &userDefinedDateFormat = QString(), bool* ok = 0);
-QString formatNumber(qint32 i);
-QString formatNumber(double num, int precision = -1);
+QString formatDateTime( const QDateTime & );
+QString formatShortDate( const QDate &d );
+QString formatLongDate( const QDate &d );
+QString formatTime( const QTime &t );
+QDate readDate( const QString &s, const QString &userDefinedDateFormat = QString(), bool *ok = 0 );
+QString formatNumber( qint32 i );
+QString formatNumber( double num, int precision = -1 );
 
-QString formatMoney(double num, int precision = -1);
+QString formatMoney( double num, int precision = -1 );
 
 Qt::DayOfWeek configuredWeekStartDay();
 QString decimalSymbol();
 
-QDateTime parseDateTimeByPattern(const QString &str, const QString &pattern);
+QDateTime parseDateTimeByPattern( const QString &str, const QString &pattern );
 
-bool copyFile(QWidget* parent, const QString& src, const QString& dest);
+bool copyFile( QWidget *parent, const QString &src, const QString &dest );
 
 
 #endif

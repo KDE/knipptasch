@@ -20,21 +20,21 @@
 #include <QFileInfo>
 
 
-RecentFileMenu::RecentFileMenu(QWidget *parent)
-  : QMenu( parent )
+RecentFileMenu::RecentFileMenu( QWidget *parent )
+    : QMenu( parent )
 {
     m_fileList = Knipptasch::Preferences::self()->recentFilesList();
-    connect(this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuActions( QAction* ) ) );
+    connect( this, SIGNAL( triggered( QAction * ) ), this, SLOT( slotMenuActions( QAction * ) ) );
 
     updateActions();
 }
 
 
-RecentFileMenu::RecentFileMenu(const QString &title, QWidget *parent)
-  : QMenu( title, parent )
+RecentFileMenu::RecentFileMenu( const QString &title, QWidget *parent )
+    : QMenu( title, parent )
 {
     m_fileList = Knipptasch::Preferences::self()->recentFilesList();
-    connect( this, SIGNAL( triggered( QAction* ) ), this, SLOT( slotMenuAction( QAction* ) ) );
+    connect( this, SIGNAL( triggered( QAction * ) ), this, SLOT( slotMenuAction( QAction * ) ) );
 
     updateActions();
 }
@@ -51,7 +51,7 @@ QStringList RecentFileMenu::files() const
 }
 
 
-void RecentFileMenu::addFile(const QString &fileName)
+void RecentFileMenu::addFile( const QString &fileName )
 {
     m_fileList.removeAll( fileName );
     m_fileList.prepend( fileName );
@@ -60,7 +60,7 @@ void RecentFileMenu::addFile(const QString &fileName)
 }
 
 
-void RecentFileMenu::removeFile(const QString &fileName)
+void RecentFileMenu::removeFile( const QString &fileName )
 {
     m_fileList.removeAll( fileName );
 
@@ -68,7 +68,7 @@ void RecentFileMenu::removeFile(const QString &fileName)
 }
 
 
-void RecentFileMenu::slotMenuAction(QAction* action)
+void RecentFileMenu::slotMenuAction( QAction *action )
 {
     if( action->data().isValid() ) {
         emit openFile( action->data().toString() );
@@ -91,10 +91,10 @@ void RecentFileMenu::updateActions()
 
     clear();
 
-    for(int i = 0; i < fileList.size(); ++i) {
+    for( int i = 0; i < fileList.size(); ++i ) {
         const QString f = fileList.at( i );
 
-        QAction* recentFileAct = addAction( tr( "%2 [%3]" ).arg( QFileInfo( f ).fileName() ).arg( f ) );
+        QAction *recentFileAct = addAction( tr( "%2 [%3]" ).arg( QFileInfo( f ).fileName() ).arg( f ) );
         recentFileAct->setData( f );
     }
 

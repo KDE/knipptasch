@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="/icons">
     <file alias="oxygen/16x16/actions/dialog-ok.png">oxygen/16x16/actions/dialog-ok.png</file>
+    <file alias="oxygen/48x48/apps/preferences-plugin.png">oxygen/48x48/apps/preferences-plugin.png</file>
     <file alias="oxygen/48x48/apps/preferences-desktop-cryptography.png">oxygen/48x48/apps/preferences-desktop-cryptography.png</file>
     <file alias="oxygen/48x48/apps/preferences-desktop-theme.png">oxygen/48x48/apps/preferences-desktop-theme.png</file>
     <file alias="oxygen/48x48/status/dialog-error.png">oxygen/48x48/status/dialog-error.png</file>
@@ -10,7 +11,9 @@
     <file alias="oxygen/48x48/actions/view-categories.png">oxygen/48x48/actions/view-categories.png</file>
     <file alias="oxygen/48x48/actions/go-home.png">oxygen/48x48/actions/go-home.png</file>
     <file alias="oxygen/48x48/actions/view-bank-account.png">oxygen/48x48/actions/view-bank-account.png</file>
+    <file alias="oxygen/48x48/actions/view-form-table.png">oxygen/48x48/actions/view-form-table.png</file>
     <file alias="oxygen/48x48/mimetypes/text-csv.png">oxygen/48x48/mimetypes/text-csv.png</file>
+    <file alias="oxygen/22x22/apps/preferences-plugin.png">oxygen/22x22/apps/preferences-plugin.png</file>
     <file alias="oxygen/22x22/status/dialog-error.png">oxygen/22x22/status/dialog-error.png</file>
     <file alias="oxygen/22x22/actions/view-calendar.png">oxygen/22x22/actions/view-calendar.png</file>
     <file alias="oxygen/22x22/actions/arrow-right.png">oxygen/22x22/actions/arrow-right.png</file>

@@ -34,17 +34,17 @@ namespace Ui
  */
 class SplitPostingTabWidget : public AbstractAccountTabWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit SplitPostingTabWidget(QWidget *parent = 0);
+        explicit SplitPostingTabWidget( QWidget *parent = 0 );
 
     protected:
         void accountModelAboutToBeChanged();
-        void accountModelChanged(AccountModel *model);
+        void accountModelChanged( AccountModel *model );
 
         void currentSelectedIndexAboutToBeChanged();
-        void currentSelectedIndexChanged(const QModelIndex &index);
+        void currentSelectedIndexChanged( const QModelIndex &index );
 
     private:
         Ui::SplitPostingTabWidget *ui;

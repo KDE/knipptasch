@@ -38,14 +38,14 @@ namespace Ui
  */
 class AccountPasswordConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountPasswordConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( AccountPasswordConfigPage )
 
     public:
         /**
          * Constructs a new AccountPasswordConfigPage
          */
-        explicit AccountPasswordConfigPage(Account *account, ConfigWidget *parent);
+        explicit AccountPasswordConfigPage( Account *account, ConfigWidget *parent );
 
 
         /**

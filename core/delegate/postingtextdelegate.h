@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,12 +22,6 @@
 #include <QStyledItemDelegate>
 
 
-namespace Knipptasch
-{
-    class Preferences;
-}
-
-
 /**
  * @class PostingTextDelegate
  * @brief
@@ -36,18 +30,15 @@ namespace Knipptasch
  */
 class KNIPPTASCH_CORE_EXPORT PostingTextDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        PostingTextDelegate(Knipptasch::Preferences *preferences, QObject *parent = 0);
+        PostingTextDelegate( QObject *parent = 0 );
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
-        void setEditorData(QWidget *editor, const QModelIndex &index) const;
-        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-        
-    private:
-        Knipptasch::Preferences *m_preferences;
+        void setEditorData( QWidget *editor, const QModelIndex &index ) const;
+        void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011 Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -33,17 +33,16 @@
 
 
 
-CategoryDelegate::CategoryDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+CategoryDelegate::CategoryDelegate( QObject *parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *CategoryDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     const AccountSortFilterProxyModel *model =
-            qobject_cast<const AccountSortFilterProxyModel*>( index.model() );
+        qobject_cast<const AccountSortFilterProxyModel *>( index.model() );
 
     if( !model ) {
         return QStyledItemDelegate::createEditor( parent, option, index );
@@ -51,23 +50,22 @@ QWidget* CategoryDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 
     CategoryComboBox *input = new CategoryComboBox( model->account(), parent );
     input->setFrame( false );
-    input->view()->setMinimumSize( m_preferences->minimumCategoryComboBoxPopupSize() );
+    input->view()->setMinimumSize( Knipptasch::Preferences::self()->minimumCategoryComboBoxPopupSize() );
 
     return input;
 }
 
 
-void CategoryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void CategoryDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    CategoryComboBox *input = qobject_cast<CategoryComboBox*>( editor );
+    CategoryComboBox *input = qobject_cast<CategoryComboBox *>( editor );
 
     const AccountSortFilterProxyModel *model =
-            qobject_cast<const AccountSortFilterProxyModel*>( index.model() );
+        qobject_cast<const AccountSortFilterProxyModel *>( index.model() );
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
-    }
-    else {
+    } else {
         bool ok;
         int id = model->data( index, Qt::EditRole ).toInt( &ok );
 
@@ -76,7 +74,7 @@ void CategoryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
         if( ok ) {
             Object *object = model->account()->objectByIdentifier( id );
             if( object ) {
-                category = qobject_cast<Category*>( object );
+                category = qobject_cast<Category *>( object );
                 Q_ASSERT( category );
             }
         }
@@ -86,21 +84,20 @@ void CategoryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
 }
 
 
-void CategoryDelegate::setModelData(QWidget *editor, QAbstractItemModel *m, const QModelIndex &index) const
+void CategoryDelegate::setModelData( QWidget *editor, QAbstractItemModel *m, const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    CategoryComboBox *input = qobject_cast<CategoryComboBox*>( editor );
+    CategoryComboBox *input = qobject_cast<CategoryComboBox *>( editor );
 
     AccountSortFilterProxyModel *model =
-            qobject_cast<AccountSortFilterProxyModel*>( m );
+        qobject_cast<AccountSortFilterProxyModel *>( m );
 
     if( !input || !model ) {
         QStyledItemDelegate::setModelData( editor, model, index );
-    }
-    else {
+    } else {
         int id = model->account()->identifierByObject( input->selectedCategory() );
         model->setData( index, id, Qt::EditRole );
     }

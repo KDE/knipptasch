@@ -35,14 +35,14 @@ namespace Ui
  */
 class PostingTabWidget : public AbstractAccountTabWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        explicit PostingTabWidget(QWidget *parent = 0);
+        explicit PostingTabWidget( QWidget *parent = 0 );
 
     protected:
-        void accountModelChanged(AccountModel *model);
-        void currentSelectedIndexChanged(const QModelIndex &index);
+        void accountModelChanged( AccountModel *model );
+        void currentSelectedIndexChanged( const QModelIndex &index );
 
     private:
         Ui::PostingTabWidget *ui;

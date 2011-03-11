@@ -39,14 +39,14 @@ namespace Ui
  */
 class AccountGeneralConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(AccountGeneralConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( AccountGeneralConfigPage )
 
     public:
         /**
          * Constructs a new AccountGeneralConfigPage
          */
-        explicit AccountGeneralConfigPage(Account *account, ConfigWidget *parent);
+        explicit AccountGeneralConfigPage( Account *account, ConfigWidget *parent );
 
         /**
          * Destructs the config page.

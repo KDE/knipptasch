@@ -18,12 +18,12 @@
 
 
 
-AbstractConfigPage::AbstractConfigPage(const QString &label, const QString &title, const QIcon &icon, ConfigWidget *parent)
-  : QWidget( parent ),
-    m_configWidget( parent ),
-    m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage ),
-    m_errorMessageTitle( tr( "Error" ) )
+AbstractConfigPage::AbstractConfigPage( const QString &label, const QString &title, const QIcon &icon, ConfigWidget *parent )
+    : QWidget( parent ),
+      m_configWidget( parent ),
+      m_errorMessageEnabled( false ),
+      m_errorMessageType( ErrorMessage ),
+      m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 
@@ -33,12 +33,12 @@ AbstractConfigPage::AbstractConfigPage(const QString &label, const QString &titl
 }
 
 
-AbstractConfigPage::AbstractConfigPage(const QString &label, const QIcon &icon, ConfigWidget *parent)
-  : QWidget( parent ),
-    m_configWidget( parent ),
-    m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage ),
-    m_errorMessageTitle( tr( "Error" ) )
+AbstractConfigPage::AbstractConfigPage( const QString &label, const QIcon &icon, ConfigWidget *parent )
+    : QWidget( parent ),
+      m_configWidget( parent ),
+      m_errorMessageEnabled( false ),
+      m_errorMessageType( ErrorMessage ),
+      m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 
@@ -48,12 +48,12 @@ AbstractConfigPage::AbstractConfigPage(const QString &label, const QIcon &icon, 
 }
 
 
-AbstractConfigPage::AbstractConfigPage(const QString &label, ConfigWidget *parent)
-  : QWidget( parent ),
-    m_configWidget( parent ),
-    m_errorMessageEnabled( false ),
-    m_errorMessageType( ErrorMessage ),
-    m_errorMessageTitle( tr( "Error" ) )
+AbstractConfigPage::AbstractConfigPage( const QString &label, ConfigWidget *parent )
+    : QWidget( parent ),
+      m_configWidget( parent ),
+      m_errorMessageEnabled( false ),
+      m_errorMessageType( ErrorMessage ),
+      m_errorMessageTitle( tr( "Error" ) )
 {
     Q_ASSERT( m_configWidget );
 
@@ -79,7 +79,7 @@ bool AbstractConfigPage::errorMessageEnabled() const
 }
 
 
-void AbstractConfigPage::setErrorMessageEnabled(bool b)
+void AbstractConfigPage::setErrorMessageEnabled( bool b )
 {
     if( m_errorMessageEnabled != b ) {
         m_errorMessageEnabled = b;
@@ -94,7 +94,7 @@ AbstractConfigPage::ErrorMessageType AbstractConfigPage::errorMessageType() cons
 }
 
 
-void AbstractConfigPage::setErrorMessageType(AbstractConfigPage::ErrorMessageType type)
+void AbstractConfigPage::setErrorMessageType( AbstractConfigPage::ErrorMessageType type )
 {
     if( m_errorMessageType != type ) {
         m_errorMessageType = type;
@@ -112,7 +112,7 @@ QString AbstractConfigPage::errorMessageTitle() const
 }
 
 
-void AbstractConfigPage::setErrorMessageTitle(const QString &str)
+void AbstractConfigPage::setErrorMessageTitle( const QString &str )
 {
     if( m_errorMessageTitle != str ) {
         m_errorMessageTitle = str;
@@ -130,7 +130,7 @@ QString AbstractConfigPage::errorMessageDescription() const
 }
 
 
-void AbstractConfigPage::setErrorMessageDescription(const QString &str)
+void AbstractConfigPage::setErrorMessageDescription( const QString &str )
 {
     if( m_errorMessageDescription != str ) {
         m_errorMessageDescription = str;
@@ -142,13 +142,13 @@ void AbstractConfigPage::setErrorMessageDescription(const QString &str)
 }
 
 
-ConfigWidget* AbstractConfigPage::configWidget() const
+ConfigWidget *AbstractConfigPage::configWidget() const
 {
     return m_configWidget;
 }
 
 
-void AbstractConfigPage::setConfigWidget(ConfigWidget *widget)
+void AbstractConfigPage::setConfigWidget( ConfigWidget *widget )
 {
     Q_ASSERT( widget );
     m_configWidget = widget;
@@ -161,7 +161,7 @@ QString AbstractConfigPage::pageLabel() const
 }
 
 
-void AbstractConfigPage::setPageLabel(const QString &str)
+void AbstractConfigPage::setPageLabel( const QString &str )
 {
     m_label = str;
 }
@@ -173,7 +173,7 @@ QString AbstractConfigPage::pageTitle() const
 }
 
 
-void AbstractConfigPage::setPageTitle(const QString &str)
+void AbstractConfigPage::setPageTitle( const QString &str )
 {
     m_title = str;
 }
@@ -185,7 +185,7 @@ QString AbstractConfigPage::pageDescription() const
 }
 
 
-void AbstractConfigPage::setPageDescription(const QString &str)
+void AbstractConfigPage::setPageDescription( const QString &str )
 {
     m_description = str;
 }
@@ -197,7 +197,7 @@ QIcon AbstractConfigPage::pageIcon() const
 }
 
 
-void AbstractConfigPage::setPageIcon(const QIcon &icon)
+void AbstractConfigPage::setPageIcon( const QIcon &icon )
 {
     m_icon = icon;
 }
@@ -209,7 +209,7 @@ QString AbstractConfigPage::pageToolTip() const
 }
 
 
-void AbstractConfigPage::setPageToolTip(const QString &str)
+void AbstractConfigPage::setPageToolTip( const QString &str )
 {
     m_toolTip = str;
 }
@@ -221,7 +221,7 @@ QString AbstractConfigPage::pageWhatsThis() const
 }
 
 
-void AbstractConfigPage::setPageWhatsThis(const QString &str)
+void AbstractConfigPage::setPageWhatsThis( const QString &str )
 {
     m_whatsThis = str;
 }

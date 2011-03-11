@@ -35,14 +35,14 @@ namespace Knipptasch
  */
 class PreferencesConfigWidget : public ConfigWidget
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(PreferencesConfigWidget)
+        Q_OBJECT
+        Q_DISABLE_COPY( PreferencesConfigWidget )
 
     public:
         /**
          * Constructs a new PreferencesConfigWidget
          */
-        explicit PreferencesConfigWidget(Knipptasch::Preferences *pref, QWidget *parent = 0);
+        explicit PreferencesConfigWidget( Knipptasch::Preferences *pref, QWidget *parent = 0 );
 
         /**
          * Destructs the config widget.

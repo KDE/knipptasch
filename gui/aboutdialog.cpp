@@ -26,9 +26,9 @@
 
 
 
-AboutDialog::AboutDialog(QWidget* parent) 
-  : QDialog( parent ),
-    ui( new Ui::AboutDialog )
+AboutDialog::AboutDialog( QWidget *parent )
+    : QDialog( parent ),
+      ui( new Ui::AboutDialog )
 {
     ui->setupUi( this );
 
@@ -40,34 +40,34 @@ AboutDialog::AboutDialog(QWidget* parent)
         windowIcon = qApp->windowIcon();
     }
     ui->appIconLabel->setPixmap( windowIcon.pixmap( 64, 64 ) );
-    ui->appSloganLabel->setText( tr( "<b>Version: %1</b><br>Using Qt Application Framework %2")
-                                .arg( KNIPPTASCH_VERSION ).arg( QT_VERSION_STR ) );
+    ui->appSloganLabel->setText( tr( "<b>Version: %1</b><br>Using Qt Application Framework %2" )
+                                 .arg( KNIPPTASCH_VERSION ).arg( QT_VERSION_STR ) );
 
     const QString aboutText =
         QString( "<br/>%1<br/>" ).arg( tr( "Personal Finance Manager" ) ) +
         QString( "<br/>%1<br/>" ).arg( tr( "(c) 2007-2010 Stefan B&#x00F6;hmann" ) ) +
-        QString( "<br/>%1<br/>" ).arg( QString("<a href=\"%1\">%1</a>").arg("http://www.hilefoks.org") ) +
+        QString( "<br/>%1<br/>" ).arg( QString( "<a href=\"%1\">%1</a>" ).arg( "http://www.hilefoks.org" ) ) +
         QString( "<br/><a href=\"%2\">%1</a><br/>" )
-            .arg( tr( "License: GNU General Public License Version 2") )
-            .arg( "http://www.gnu.org/licenses/gpl-2.0.txt" );
+        .arg( tr( "License: GNU General Public License Version 2" ) )
+        .arg( "http://www.gnu.org/licenses/gpl-2.0.txt" );
 
     ui->aboutLabel->setText( aboutText );
 
-    
+
     QString authors =
         QString( "%1 <p style=\"margin:0px; margin-left:15px\"><a href=\"mailto:%2\">%2</a></p>" )
-            .arg( tr( "Stefan B&#x00F6;hmann" ) )
-            .arg( "kde@hilefoks.org" );
+        .arg( tr( "Stefan B&#x00F6;hmann" ) )
+        .arg( "kde@hilefoks.org" );
 
     ui->authorLabel->setText(
         QString( "%1<br/><br/>" )
-            .arg( tr("Please use <a href=\"%1\">%2</a> to report bugs.")
-            .arg( "http://bugs.kde.org" ).arg( "bugs.kde.org" ) )
+        .arg( tr( "Please use <a href=\"%1\">%2</a> to report bugs." )
+              .arg( "http://bugs.kde.org" ).arg( "bugs.kde.org" ) )
         + authors
     );
-    
-    connect( ui->aboutLabel, SIGNAL( linkActivated(const QString&) ), this, SLOT( slotLinkClicked(const QString&) ) );
-    connect( ui->authorLabel, SIGNAL( linkActivated(const QString&) ), this, SLOT( slotLinkClicked(const QString&) ) );
+
+    connect( ui->aboutLabel, SIGNAL( linkActivated( const QString & ) ), this, SLOT( slotLinkClicked( const QString & ) ) );
+    connect( ui->authorLabel, SIGNAL( linkActivated( const QString & ) ), this, SLOT( slotLinkClicked( const QString & ) ) );
 
     QTimer::singleShot( 250, this, SLOT( slotLoadData() ) );
 }
@@ -79,7 +79,7 @@ AboutDialog::~AboutDialog()
 }
 
 
-void AboutDialog::slotLinkClicked(const QString &url)
+void AboutDialog::slotLinkClicked( const QString &url )
 {
     QDesktopServices::openUrl( QUrl( url ) );
 }
@@ -90,7 +90,7 @@ void AboutDialog::slotLoadData()
     QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) );
 
     QFile file( ":/COPYING" );
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    file.open( QIODevice::ReadOnly | QIODevice::Text );
     QString license;
     while( !file.atEnd() ) {
         license.append( file.readLine() );

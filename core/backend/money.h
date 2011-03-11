@@ -38,143 +38,123 @@ class KNIPPTASCH_CORE_EXPORT Money
          * Constructs a Money initialized with 0.0.
          */
         Money()
-          : m_cents( 0 )
-        {
+            : m_cents( 0 ) {
         }
 
         /**
          * Constructs a Money initialized with the value of @param d
          */
-        Money(double d)
-          : m_cents( qRound64( 100*d ) )
-        {
+        Money( double d )
+            : m_cents( qRound64( 100 * d ) ) {
         }
 
 
         /**
          * Constructs a Money initialized with the value of @param m
          */
-        Money(const Money &m)
-          : m_cents( m.cents() )
-        {
+        Money( const Money &m )
+            : m_cents( m.cents() ) {
         }
 
 
-        Money& operator=(const Money &m)
-        {
+        Money &operator=( const Money &m ) {
             m_cents = m.cents();
             return *this;
         }
 
 
-        Money& operator=(double d)
-        {
+        Money &operator=( double d ) {
             m_cents = qRound64( 100 * d );
             return *this;
         }
 
 
-        operator double() const
-        {
+        operator double() const {
             return m_cents / 100.0;
         }
 
 
-        qint64 cents() const
-        {
+        qint64 cents() const {
             return m_cents;
         }
 
 
-        void setCents(qint64 value)
-        {
+        void setCents( qint64 value ) {
             m_cents = value;
         }
 
 
-        Money abs() const
-        {
+        Money abs() const {
             if( m_cents >= 0.0 ) {
                 return *this;
-            }
-            else {
-                return Money(*this) * -1.0;
+            } else {
+                return Money( *this ) * -1.0;
             }
         }
 
 
-        Money& operator+=(const Money &m)
-        {
+        Money &operator+=( const Money &m ) {
             m_cents += m.cents();
 
             return *this;
         }
 
 
-        Money& operator+=(double d)
-        {
+        Money &operator+=( double d ) {
             m_cents += qRound64( 100 * d );
 
             return *this;
         }
 
 
-        Money& operator-=(const Money &m)
-        {
+        Money &operator-=( const Money &m ) {
             m_cents -= m.cents();
 
             return *this;
         }
 
 
-        Money& operator-=(double d)
-        {
+        Money &operator-=( double d ) {
             m_cents -= qRound64( 100 * d );
 
             return *this;
         }
 
 
-        Money& operator*=(double d)
-        {
+        Money &operator*=( double d ) {
             m_cents = qRound64( m_cents * d );
 
             return *this;
         }
 
 
-        Money& operator*=(int i)
-        {
+        Money &operator*=( int i ) {
             m_cents *= i;
 
             return *this;
         }
 
 
-        Money& operator/=(double d)
-        {
+        Money &operator/=( double d ) {
             m_cents = qRound64( m_cents / d );
 
             return *this;
         }
 
 
-        Money& operator/=(int i)
-        {
-            return operator/=( static_cast<double>(i) );
+        Money &operator/=( int i ) {
+            return operator/=( static_cast<double>( i ) );
         }
 
 
-        Money& operator++()
-        {
+        Money &operator++() {
             m_cents += 100;
 
             return *this;
         }
 
 
-        Money operator++(int)
-        {
+        Money operator++( int ) {
             Money m( *this );
             operator++();
 
@@ -182,24 +162,21 @@ class KNIPPTASCH_CORE_EXPORT Money
         }
 
 
-        Money& operator--()
-        {
+        Money &operator--() {
             m_cents -= 100;
 
             return *this;
         }
 
 
-        Money operator--(int)
-        {
+        Money operator--( int ) {
             Money m( *this );
             operator--();
 
             return m;
         }
 
-        QString toString() const
-        {
+        QString toString() const {
             return QString( "%L1" ).arg( m_cents / 100.0 , 0, 'f', 2 );
         }
 
@@ -208,191 +185,191 @@ class KNIPPTASCH_CORE_EXPORT Money
 };
 
 
-inline Money operator+(const Money &m1, const Money &m2)
+inline Money operator+( const Money &m1, const Money &m2 )
 {
-    return Money(m1) += m2;
+    return Money( m1 ) += m2;
 }
 
 
-inline Money operator+(double d, const Money &m)
+inline Money operator+( double d, const Money &m )
 {
-    return m + Money(d);
+    return m + Money( d );
 }
 
 
-inline Money operator+(const Money &m, double d)
+inline Money operator+( const Money &m, double d )
 {
     return d + m;
 }
 
-inline Money operator-(const Money &m1, const Money &m2)
+inline Money operator-( const Money &m1, const Money &m2 )
 {
-    return Money(m1) -= m2;
+    return Money( m1 ) -= m2;
 }
 
 
-inline Money operator-(double d, const Money &m)
+inline Money operator-( double d, const Money &m )
 {
-    return m - Money(d);
+    return m - Money( d );
 }
 
 
-inline Money operator-(const Money &m, double d)
+inline Money operator-( const Money &m, double d )
 {
     return d - m;
 }
 
 
-inline Money operator*(const Money &m, double d)
+inline Money operator*( const Money &m, double d )
 {
-    return Money(m) *= d;
+    return Money( m ) *= d;
 }
 
 
-inline Money operator*(double d, const Money &m)
+inline Money operator*( double d, const Money &m )
 {
     return m * d;
 }
 
 
-inline Money operator*(const Money &m, int i)
+inline Money operator*( const Money &m, int i )
 {
-    return Money(m) *= i;
+    return Money( m ) *= i;
 }
 
 
-inline Money operator*(int i, const Money &m)
+inline Money operator*( int i, const Money &m )
 {
     return m * i;
 }
 
 
-inline Money operator/(const Money &m, double d)
+inline Money operator/( const Money &m, double d )
 {
-    return Money(m) /= d;
+    return Money( m ) /= d;
 }
 
 
-inline Money operator/(const Money &m, int i)
+inline Money operator/( const Money &m, int i )
 {
-    return Money(m) /= i;
+    return Money( m ) /= i;
 }
 
 
-inline bool operator==(const Money &m1, const Money &m2)
+inline bool operator==( const Money &m1, const Money &m2 )
 {
     return m1.cents() == m2.cents();
 }
 
 
-inline bool operator==(const Money &m, double d)
+inline bool operator==( const Money &m, double d )
 {
-    return m == Money(d);
+    return m == Money( d );
 }
 
 
-inline bool operator==(double d, const Money &m)
+inline bool operator==( double d, const Money &m )
 {
     return m == d;
 }
 
 
-inline bool operator!=(const Money &m1, const Money &m2)
+inline bool operator!=( const Money &m1, const Money &m2 )
 {
-    return !(m1 == m2);
+    return !( m1 == m2 );
 }
 
 
-inline bool operator!=(const Money &m, double d)
+inline bool operator!=( const Money &m, double d )
 {
-    return !(m == d);
+    return !( m == d );
 }
 
 
-inline bool operator!=(double d, const Money &m)
+inline bool operator!=( double d, const Money &m )
 {
-    return !(d == m);
+    return !( d == m );
 }
 
 
-inline bool operator<(const Money &m1, const Money &m2)
+inline bool operator<( const Money &m1, const Money &m2 )
 {
     return m1.cents() < m2.cents();
 }
 
 
-inline bool operator<(const Money &m, double d)
+inline bool operator<( const Money &m, double d )
 {
-    return m < Money(d);
+    return m < Money( d );
 }
 
 
-inline bool operator<(double d, const Money &m)
+inline bool operator<( double d, const Money &m )
 {
     return m < d;
 }
 
 
-inline int operator>(const Money &m1, const Money &m2)
+inline int operator>( const Money &m1, const Money &m2 )
 {
     return m1.cents() > m2.cents();
 }
 
 
-inline int operator>(const Money &m, double d)
+inline int operator>( const Money &m, double d )
 {
-    return m > Money(d);
+    return m > Money( d );
 }
 
 
-inline int operator>(double d, const Money &m)
+inline int operator>( double d, const Money &m )
 {
     return m > d;
 }
 
-inline int operator<=(const Money &m1, const Money &m2)
+inline int operator<=( const Money &m1, const Money &m2 )
 {
     return m1 < m2 || m1 == m2;
 }
 
 
-inline int operator<=(const Money &m, double d)
+inline int operator<=( const Money &m, double d )
 {
     return m < d || m == d;
 }
 
 
-inline int operator<=(double d, const Money &m)
+inline int operator<=( double d, const Money &m )
 {
     return d < m || d == m;
 }
 
 
-inline int operator>=(const Money &m1, const Money &m2)
+inline int operator>=( const Money &m1, const Money &m2 )
 {
     return m1 > m2 || m1 == m2;
 }
 
 
-inline int operator>=(const Money &m, double d)
+inline int operator>=( const Money &m, double d )
 {
     return m > d || m == d;
 }
 
 
-inline int operator>=(double d, const Money &m)
+inline int operator>=( double d, const Money &m )
 {
     return d > m || d == m;
 }
 
 
-inline uint qHash(const Money &m)
+inline uint qHash( const Money &m )
 {
     return qHash( m.cents() );
 }
 
 
-inline QDataStream& operator<<(QDataStream &stream, const Money &m)
+inline QDataStream &operator<<( QDataStream &stream, const Money &m )
 {
     stream << m.cents();
 
@@ -400,11 +377,11 @@ inline QDataStream& operator<<(QDataStream &stream, const Money &m)
 }
 
 
-inline QDataStream& operator>>(QDataStream &stream, Money &m)
+inline QDataStream &operator>>( QDataStream &stream, Money &m )
 {
     qint64 i;
     stream >> i;
-    m.setCents(i);
+    m.setCents( i );
 
     return stream;
 }

@@ -26,19 +26,19 @@
 
 
 
-ConfigDialog::ConfigDialog(QWidget* parent)
-  : QDialog( parent ),
-    m_configWidget( new ConfigWidget( this ) ),
-    m_buttonBox( 0 ),
-    m_layout( 0 )
+ConfigDialog::ConfigDialog( QWidget *parent )
+    : QDialog( parent ),
+      m_configWidget( new ConfigWidget( this ) ),
+      m_buttonBox( 0 ),
+      m_layout( 0 )
 {
     m_buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, Qt::Horizontal, this );
 
     connect( m_buttonBox, SIGNAL( accepted() ), this, SLOT( accept() ) );
     connect( m_buttonBox, SIGNAL( rejected() ), this, SLOT( reject() ) );
-    connect( m_buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked(bool) ), this, SLOT( commit() ) );
+    connect( m_buttonBox->button( QDialogButtonBox::Apply ), SIGNAL( clicked( bool ) ), this, SLOT( commit() ) );
 
-    connect( m_configWidget, SIGNAL( pageModified(AbstractConfigPage*) ), this, SLOT( checkButtonState() ) );
+    connect( m_configWidget, SIGNAL( pageModified( AbstractConfigPage * ) ), this, SLOT( checkButtonState() ) );
     connect( m_configWidget, SIGNAL( committed() ), this, SIGNAL( committed() ) );
     connect( m_configWidget, SIGNAL( reverted() ), this, SIGNAL( reverted() ) );
 
@@ -62,22 +62,21 @@ void ConfigDialog::checkButtonState()
     if( !m_configWidget->isValid() ) {
         m_buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
         m_buttonBox->button( QDialogButtonBox::Apply )->setEnabled( false );
-    }
-    else {
+    } else {
         m_buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
         m_buttonBox->button( QDialogButtonBox::Apply )
-               ->setEnabled( m_configWidget->isModified() );
+        ->setEnabled( m_configWidget->isModified() );
     }
 }
 
 
-QDialogButtonBox* ConfigDialog::dialogButtonBox() const
+QDialogButtonBox *ConfigDialog::dialogButtonBox() const
 {
     return m_buttonBox;
 }
 
 
-void ConfigDialog::setDialogButtonBox(QDialogButtonBox *box)
+void ConfigDialog::setDialogButtonBox( QDialogButtonBox *box )
 {
     if( box == m_buttonBox ) {
         return;
@@ -99,13 +98,13 @@ void ConfigDialog::setDialogButtonBox(QDialogButtonBox *box)
 }
 
 
-ConfigWidget* ConfigDialog::configWidget() const
+ConfigWidget *ConfigDialog::configWidget() const
 {
     return m_configWidget;
 }
 
 
-void ConfigDialog::setConfigWidget(ConfigWidget *cw)
+void ConfigDialog::setConfigWidget( ConfigWidget *cw )
 {
     if( cw == m_configWidget ) {
         return;
@@ -123,7 +122,7 @@ void ConfigDialog::setConfigWidget(ConfigWidget *cw)
     m_configWidget = cw;
 
     if( m_configWidget ) {
-        connect( m_configWidget, SIGNAL( pageModified(AbstractConfigPage*) ), this, SLOT( checkButtonState() ) );
+        connect( m_configWidget, SIGNAL( pageModified( AbstractConfigPage * ) ), this, SLOT( checkButtonState() ) );
         connect( m_configWidget, SIGNAL( committed() ), this, SIGNAL( committed() ) );
         connect( m_configWidget, SIGNAL( reverted() ), this, SIGNAL( reverted() ) );
 

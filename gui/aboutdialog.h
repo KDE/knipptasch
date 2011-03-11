@@ -22,7 +22,8 @@
 class QString;
 
 
-namespace Ui {
+namespace Ui
+{
     class AboutDialog;
 }
 
@@ -35,14 +36,14 @@ namespace Ui {
  */
 class AboutDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        AboutDialog(QWidget* parent = 0);
+        AboutDialog( QWidget *parent = 0 );
         ~AboutDialog();
 
     private slots:
-        void slotLinkClicked(const QString &url);
+        void slotLinkClicked( const QString &url );
         void slotLoadData();
 
     private:

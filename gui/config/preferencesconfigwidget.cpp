@@ -22,8 +22,8 @@
 #include "preferencespluginconfigpage.h"
 
 
-PreferencesConfigWidget::PreferencesConfigWidget(Knipptasch::Preferences *pref, QWidget* parent)
-  : ConfigWidget( parent )
+PreferencesConfigWidget::PreferencesConfigWidget( Knipptasch::Preferences *pref, QWidget *parent )
+    : ConfigWidget( parent )
 {
     addPage( new PreferencesGeneralConfigPage( pref, this ) );
     addPage( new PreferencesAppearanceConfigPage( pref, this ) );

@@ -23,28 +23,28 @@
 #include <Knipptasch/Money>
 
 
-AccountGeneralConfigPage::AccountGeneralConfigPage(Account *account, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon("view-bank-account"), parent ),
-    ui( new Ui::AccountGeneralConfigPage ),
-    m_account( account )
+AccountGeneralConfigPage::AccountGeneralConfigPage( Account *account, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "General" ), tr( "General Options" ), DesktopIcon( "view-bank-account" ), parent ),
+      ui( new Ui::AccountGeneralConfigPage ),
+      m_account( account )
 {
     ui->setupUi( this );
 
     //TODO implement the account and category limit stuff
     ui->accountLimitGroupBox->setVisible( false );
 
-    connect( ui->name, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->institution, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->bic, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->owner, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->accountNumber, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->iban, SIGNAL( textChanged(QString) ), this, SIGNAL( pageModified() ) );
-    connect( ui->openingDate, SIGNAL( dateChanged(QDate) ), this, SIGNAL( pageModified() ) );
-    connect( ui->openingBalance, SIGNAL( valueChanged(double) ), this, SIGNAL( pageModified() ) );
-    connect( ui->useInLimit, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->inLimit, SIGNAL( valueChanged(double) ), this, SIGNAL( pageModified() ) );
-    connect( ui->useOutLimit, SIGNAL( stateChanged(int) ), this, SIGNAL( pageModified() ) );
-    connect( ui->outLimit, SIGNAL( valueChanged(double) ), this, SIGNAL( pageModified() ) );
+    connect( ui->name, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->institution, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->bic, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->owner, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->accountNumber, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->iban, SIGNAL( textChanged( QString ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->openingDate, SIGNAL( dateChanged( QDate ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->openingBalance, SIGNAL( valueChanged( double ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->useInLimit, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->inLimit, SIGNAL( valueChanged( double ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->useOutLimit, SIGNAL( stateChanged( int ) ), this, SIGNAL( pageModified() ) );
+    connect( ui->outLimit, SIGNAL( valueChanged( double ) ), this, SIGNAL( pageModified() ) );
 
     revert();
 }
@@ -139,7 +139,7 @@ void AccountGeneralConfigPage::revert()
 
     bool b = blockSignals( true );
 
-    ui->name->setText( m_account->name()  );
+    ui->name->setText( m_account->name() );
     ui->institution->setText( m_account->institution() );
     ui->bic->setText( m_account->bic() );
     ui->owner->setText( m_account->owner() );

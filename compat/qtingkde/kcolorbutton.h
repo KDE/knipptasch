@@ -35,82 +35,82 @@ class KColorButtonPrivate;
 */
 class KColorButton : public QPushButton
 {
-    Q_OBJECT
-    Q_PROPERTY( QColor color READ color WRITE setColor NOTIFY changed USER true )
-    Q_PROPERTY( QColor defaultColor READ defaultColor WRITE setDefaultColor )
-    Q_PROPERTY( bool alphaChannelEnabled READ isAlphaChannelEnabled WRITE setAlphaChannelEnabled )
+        Q_OBJECT
+        Q_PROPERTY( QColor color READ color WRITE setColor NOTIFY changed USER true )
+        Q_PROPERTY( QColor defaultColor READ defaultColor WRITE setDefaultColor )
+        Q_PROPERTY( bool alphaChannelEnabled READ isAlphaChannelEnabled WRITE setAlphaChannelEnabled )
 
-public:
-    /**
-     * Creates a color button.
-     */
-    explicit KColorButton( QWidget *parent = 0 );
+    public:
+        /**
+         * Creates a color button.
+         */
+        explicit KColorButton( QWidget *parent = 0 );
 
-    /**
-     * Creates a color button with an initial color @p c.
-     */
-    explicit KColorButton( const QColor &c, QWidget *parent = 0 );
+        /**
+         * Creates a color button with an initial color @p c.
+         */
+        explicit KColorButton( const QColor &c, QWidget *parent = 0 );
 
-    /**
-     * Creates a color button with an initial color @p c and default color @p defaultColor.
-     */
-    KColorButton( const QColor &c, const QColor &defaultColor, QWidget *parent = 0 );
+        /**
+         * Creates a color button with an initial color @p c and default color @p defaultColor.
+         */
+        KColorButton( const QColor &c, const QColor &defaultColor, QWidget *parent = 0 );
 
-    virtual ~KColorButton();
+        virtual ~KColorButton();
 
-    /**
-     * Returns the currently chosen color.
-     */
-    QColor color() const;
+        /**
+         * Returns the currently chosen color.
+         */
+        QColor color() const;
 
-    /**
-     * Sets the current color to @p c.
-     */
-     void setColor( const QColor &c );
+        /**
+         * Sets the current color to @p c.
+         */
+        void setColor( const QColor &c );
 
-     /**
-      * When set to true, allow the user to change the alpha component
-      * of the color. The default value is false.
-      * @since 4.5
-      */
-     void setAlphaChannelEnabled( bool alpha );
+        /**
+         * When set to true, allow the user to change the alpha component
+         * of the color. The default value is false.
+         * @since 4.5
+         */
+        void setAlphaChannelEnabled( bool alpha );
 
-     /**
-      * Returns true if the user is allowed to change the alpha component.
-      * @since 4.5
-      */
-     bool isAlphaChannelEnabled() const;
+        /**
+         * Returns true if the user is allowed to change the alpha component.
+         * @since 4.5
+         */
+        bool isAlphaChannelEnabled() const;
 
-    /**
-     * Returns the default color or an invalid color
-     * if no default color is set.
-     */
-    QColor defaultColor() const;
+        /**
+         * Returns the default color or an invalid color
+         * if no default color is set.
+         */
+        QColor defaultColor() const;
 
-    /**
-     * Sets the default color to @p c.
-     */
-    void setDefaultColor( const QColor &c );
+        /**
+         * Sets the default color to @p c.
+         */
+        void setDefaultColor( const QColor &c );
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+        QSize sizeHint() const;
+        QSize minimumSizeHint() const;
 
-Q_SIGNALS:
-    /**
-     * Emitted when the color of the widget
-     * is changed, either with setColor() or via user selection.
-     */
-    void changed( const QColor &newColor );
+    Q_SIGNALS:
+        /**
+         * Emitted when the color of the widget
+         * is changed, either with setColor() or via user selection.
+         */
+        void changed( const QColor &newColor );
 
-private slots:
-    void chooseColor();
+    private slots:
+        void chooseColor();
 
-protected:
-    virtual void paintEvent( QPaintEvent *pe );
+    protected:
+        virtual void paintEvent( QPaintEvent *pe );
 
-private:
-    class KColorButtonPrivate;
-    KColorButtonPrivate * const d;
+    private:
+        class KColorButtonPrivate;
+        KColorButtonPrivate *const d;
 };
 
 #endif

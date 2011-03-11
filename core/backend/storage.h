@@ -33,8 +33,8 @@ class Account;
 class KNIPPTASCH_CORE_EXPORT Storage
 {
     public:
-        static void writeAccount(Account *acc, const QString &filename);
-        static void readAccount(Account *acc, const QString &filename, const QByteArray &password = QByteArray());
+        static void writeAccount( Account *acc, const QString &filename );
+        static void readAccount( Account *acc, const QString &filename, const QByteArray &password = QByteArray() );
 
         static QString filterStringQt();
         static QString filterStringKDE();
@@ -46,29 +46,29 @@ class KNIPPTASCH_CORE_EXPORT Storage
         /**
          * @exception StorageFileException
          */
-        void write(Account *acc, const QString &filename);
+        void write( Account *acc, const QString &filename );
 
         /**
          * @exception StorageFileException
          * @exception StoragePasswordException
          */
-        void read(Account *acc, const QString &filename, const QByteArray &password);
+        void read( Account *acc, const QString &filename, const QByteArray &password );
 
         /**
          *
          */
-        QByteArray metaData(const Account *acc) const;
+        QByteArray metaData( const Account *acc ) const;
 
         /**
          * @exception StorageFileException
          * @exception StoragePasswordException
          */
-        QByteArray encodeData(const Account *acc) const;
+        QByteArray encodeData( const Account *acc ) const;
 
         /**
          * @exception StorageFileException
          */
-        void decodeData(const QByteArray &data, Account *acc, const QByteArray &password) const;
+        void decodeData( const QByteArray &data, Account *acc, const QByteArray &password ) const;
 };
 
 

@@ -35,14 +35,12 @@
 class CategoryColorDelegate : public QStyledItemDelegate
 {
     public:
-        CategoryColorDelegate(QObject *parent = 0)
-          : QStyledItemDelegate( parent )
-        {
+        CategoryColorDelegate( QObject *parent = 0 )
+            : QStyledItemDelegate( parent ) {
         }
 
 
-        QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
+        QWidget *createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const {
             if( qVariantCanConvert<QColor>( index.data( Qt::EditRole ) ) ) {
                 KColorCombo *combo = new KColorCombo( parent );
 
@@ -52,35 +50,30 @@ class CategoryColorDelegate : public QStyledItemDelegate
             return QStyledItemDelegate::createEditor( parent, option, index );
         }
 
-        void setEditorData(QWidget *widget, const QModelIndex &index) const
-        {
+        void setEditorData( QWidget *widget, const QModelIndex &index ) const {
             if( qVariantCanConvert<QColor>( index.data( Qt::EditRole ) ) ) {
-                KColorCombo *editor = qobject_cast<KColorCombo*>( widget );
+                KColorCombo *editor = qobject_cast<KColorCombo *>( widget );
                 Q_ASSERT( editor );
 
                 editor->setColor( qVariantValue<QColor>( index.data( Qt::EditRole ) ) );
-            }
-            else {
+            } else {
                 QStyledItemDelegate::setEditorData( widget, index );
             }
         }
 
-        void setModelData(QWidget *widget, QAbstractItemModel *model, const QModelIndex &index) const
-        {
+        void setModelData( QWidget *widget, QAbstractItemModel *model, const QModelIndex &index ) const {
             if( qVariantCanConvert<QColor>( index.data( Qt::EditRole ) ) ) {
-                KColorCombo *editor = qobject_cast<KColorCombo*>( widget );
+                KColorCombo *editor = qobject_cast<KColorCombo *>( widget );
                 Q_ASSERT( editor );
 
                 model->setData( index, qVariantFromValue( editor->color() ) );
-            }
-            else {
+            } else {
                 QStyledItemDelegate::setModelData( widget, model, index );
             }
         }
 
-        void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
-           QStyledItemDelegate::paint( painter, option, index );
+        void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const {
+            QStyledItemDelegate::paint( painter, option, index );
 
             if( !index.isValid() ) {
                 return;
@@ -104,9 +97,8 @@ class CategoryColorDelegate : public QStyledItemDelegate
             }
         }
 
-        QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-        {
-            Q_UNUSED(index)
+        QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const {
+            Q_UNUSED( index )
 
             return QSize( 4 * option.fontMetrics.height(),
                           option.fontMetrics.height() + 3 );
@@ -116,11 +108,11 @@ class CategoryColorDelegate : public QStyledItemDelegate
 
 
 
-AccountCategoryConfigPage::AccountCategoryConfigPage(Account *account, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Categories" ), DesktopIcon("view-categories"), parent ),
-    ui( new Ui::AccountCategoryConfigPage ),
-    m_account( account ),
-    m_model( new CategoryModel( this ) )
+AccountCategoryConfigPage::AccountCategoryConfigPage( Account *account, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "Categories" ), DesktopIcon( "view-categories" ), parent ),
+      ui( new Ui::AccountCategoryConfigPage ),
+      m_account( account ),
+      m_model( new CategoryModel( this ) )
 {
     ui->setupUi( this );
     new ModelTest( m_model, this );
@@ -145,8 +137,8 @@ AccountCategoryConfigPage::AccountCategoryConfigPage(Account *account, ConfigWid
 
     ui->view->setSelectionBehavior( QAbstractItemView::SelectRows );
     ui->view->setItemDelegateForColumn(
-                     CategoryModel::CATEGORY_COLOR,
-                     new CategoryColorDelegate( this ) );
+        CategoryModel::CATEGORY_COLOR,
+        new CategoryColorDelegate( this ) );
 
     ui->addCategoryButton->setIcon( BarIcon( "list-add" ) );
     ui->addSubCategoryButton->setIcon( BarIcon( "insert-horizontal-rule" ) );
@@ -159,17 +151,17 @@ AccountCategoryConfigPage::AccountCategoryConfigPage(Account *account, ConfigWid
     /* TODO implement category export */
     ui->exportCategoryButton->setVisible( false );
 
-    connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( onValueChanged() ) );
+    connect( ui->view->selectionModel(), SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ), this, SLOT( onValueChanged() ) );
 
-    connect( ui->view->model(), SIGNAL( rowsInserted(const QModelIndex&, int, int) ), this, SLOT( onValueChanged() ) );
-    connect( ui->view->model(), SIGNAL( rowsInserted(const QModelIndex&, int, int) ), this, SLOT( selectNewCategory(const QModelIndex&, int) ) );
-    connect( ui->view->model(), SIGNAL( rowsRemoved(const QModelIndex&, int, int) ), this, SLOT( onValueChanged() ) );
+    connect( ui->view->model(), SIGNAL( rowsInserted( const QModelIndex &, int, int ) ), this, SLOT( onValueChanged() ) );
+    connect( ui->view->model(), SIGNAL( rowsInserted( const QModelIndex &, int, int ) ), this, SLOT( selectNewCategory( const QModelIndex &, int ) ) );
+    connect( ui->view->model(), SIGNAL( rowsRemoved( const QModelIndex &, int, int ) ), this, SLOT( onValueChanged() ) );
 
-    connect( ui->addCategoryButton, SIGNAL( clicked(bool) ), this, SLOT( addCategoryClicked() ) );
-    connect( ui->addSubCategoryButton, SIGNAL( clicked(bool) ), this, SLOT( addSubCategoryClicked() ) );
-    connect( ui->importCategoryButton, SIGNAL( clicked(bool) ), this, SLOT( importCategoryClicked() ) );
-    connect( ui->exportCategoryButton, SIGNAL( clicked(bool) ), this, SLOT( exportCategoryClicked() ) );
-    connect( ui->removeCategoryButton, SIGNAL( clicked(bool) ), this, SLOT( removeCategoryClicked() ) );
+    connect( ui->addCategoryButton, SIGNAL( clicked( bool ) ), this, SLOT( addCategoryClicked() ) );
+    connect( ui->addSubCategoryButton, SIGNAL( clicked( bool ) ), this, SLOT( addSubCategoryClicked() ) );
+    connect( ui->importCategoryButton, SIGNAL( clicked( bool ) ), this, SLOT( importCategoryClicked() ) );
+    connect( ui->exportCategoryButton, SIGNAL( clicked( bool ) ), this, SLOT( exportCategoryClicked() ) );
+    connect( ui->removeCategoryButton, SIGNAL( clicked( bool ) ), this, SLOT( removeCategoryClicked() ) );
 
     revert();
 }
@@ -211,8 +203,7 @@ void AccountCategoryConfigPage::onValueChanged()
     if( index.isValid() ) {
         ui->addSubCategoryButton->setEnabled( true );
         ui->removeCategoryButton->setEnabled( !index.child( 0, 0 ).isValid() );
-    }
-    else {
+    } else {
         ui->addSubCategoryButton->setEnabled( false );
         ui->removeCategoryButton->setEnabled( false );
     }
@@ -252,14 +243,14 @@ void AccountCategoryConfigPage::removeCategoryClicked()
 }
 
 
-void AccountCategoryConfigPage::selectNewCategory(const QModelIndex &parent, int start)
+void AccountCategoryConfigPage::selectNewCategory( const QModelIndex &parent, int start )
 {
     ui->view->setCurrentIndex( ui->view->model()->index( start, 0, parent ) );
     ui->view->scrollTo( ui->view->currentIndex() );
 }
 
 
-void AccountCategoryConfigPage::addCategory(bool belowOfCurrent)
+void AccountCategoryConfigPage::addCategory( bool belowOfCurrent )
 {
     QModelIndex index = ui->view->currentIndex();
     QModelIndex parent = belowOfCurrent ? index : index.parent();

@@ -24,62 +24,62 @@
 #include <QDebug>
 
 
-PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Appearance" ), DesktopIcon("preferences-desktop-theme"), parent ),
-    ui( new Ui::PreferencesAppearanceConfigPage ),
-    m_preferences( pref )
+PreferencesAppearanceConfigPage::PreferencesAppearanceConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "Appearance" ), DesktopIcon( "preferences-desktop-theme" ), parent ),
+      ui( new Ui::PreferencesAppearanceConfigPage ),
+      m_preferences( pref )
 {
     ui->setupUi( this );
 
-    connect( ui->positiveAmountForegroundEnabled, SIGNAL( toggled(bool) ),
-             ui->fgPositiveAmountWidget, SLOT( setEditable(bool) ) );
-    connect( ui->negativeAmountForegroundEnabled, SIGNAL( toggled(bool) ),
-             ui->fgNegativeAmountWidget, SLOT( setEditable(bool) ) );
-    connect( ui->availableWarrantyForegroundEnabled, SIGNAL( toggled(bool) ),
-             ui->fgAvailableWarrantyWidget, SLOT( setEditable(bool) ) );
-    connect( ui->expiredWarrantyForegroundEnabled, SIGNAL( toggled(bool) ),
-             ui->fgExpiredWarrantyWidget, SLOT( setEditable(bool) ) );
-    connect( ui->currentPostingBackgroundEnabled, SIGNAL( toggled(bool) ),
-             ui->bgCurrentPostingWidget, SLOT( setEditable(bool) ) );
-    connect( ui->futurePostingBackgroundEnabled, SIGNAL( toggled(bool) ),
-             ui->bgFuturePostingWidget, SLOT( setEditable(bool) ) );
-    connect( ui->defaultPostingBackgroundEnabled, SIGNAL( toggled(bool) ),
-             ui->bgNormalPostingWidget, SLOT( setEditable(bool) ) );
-    connect( ui->incompletePostingBackgroundEnabled, SIGNAL( toggled(bool) ),
-             ui->bgIncompletePostingWidget, SLOT( setEditable(bool) ) );
+    connect( ui->positiveAmountForegroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->fgPositiveAmountWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->negativeAmountForegroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->fgNegativeAmountWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->availableWarrantyForegroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->fgAvailableWarrantyWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->expiredWarrantyForegroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->fgExpiredWarrantyWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->currentPostingBackgroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->bgCurrentPostingWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->futurePostingBackgroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->bgFuturePostingWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->defaultPostingBackgroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->bgNormalPostingWidget, SLOT( setEditable( bool ) ) );
+    connect( ui->incompletePostingBackgroundEnabled, SIGNAL( toggled( bool ) ),
+             ui->bgIncompletePostingWidget, SLOT( setEditable( bool ) ) );
 
-    connect( ui->positiveAmountForegroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->positiveAmountForegroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->negativeAmountForegroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->negativeAmountForegroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->availableWarrantyForegroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->availableWarrantyForegroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->expiredWarrantyForegroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->expiredWarrantyForegroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->currentPostingBackgroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->currentPostingBackgroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->futurePostingBackgroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->futurePostingBackgroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->defaultPostingBackgroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->defaultPostingBackgroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->incompletePostingBackgroundEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->incompletePostingBackgroundEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->fgPositiveAmountWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->fgPositiveAmountWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->fgNegativeAmountWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->fgNegativeAmountWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->fgAvailableWarrantyWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->fgAvailableWarrantyWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->fgExpiredWarrantyWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->fgExpiredWarrantyWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->bgCurrentPostingWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->bgCurrentPostingWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->bgFuturePostingWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->bgFuturePostingWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->bgNormalPostingWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->bgNormalPostingWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
-    connect( ui->bgIncompletePostingWidget, SIGNAL( colorChanged(QColor) ),
+    connect( ui->bgIncompletePostingWidget, SIGNAL( colorChanged( QColor ) ),
              this, SIGNAL( pageModified() ) );
 
     revert();

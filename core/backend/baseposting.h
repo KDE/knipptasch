@@ -37,52 +37,52 @@ class QDataStream;
  */
 class KNIPPTASCH_CORE_EXPORT BasePosting : public Object
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        BasePosting(QObject *parent = 0);
+        BasePosting( QObject *parent = 0 );
         virtual ~BasePosting();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
         QString postingText() const;
-        void setPostingText(const QString &str);
+        void setPostingText( const QString &str );
 
         Maturity maturity() const;
-        void setMaturity(const Maturity &date);
+        void setMaturity( const Maturity &date );
 
         ValueDate valueDate() const;
-        void setValueDate(const ValueDate &date);
+        void setValueDate( const ValueDate &date );
 
         Money amount() const;
-        void setAmount(const Money &m);
+        void setAmount( const Money &m );
 
         int page() const;
-        void setPage(int p);
+        void setPage( int p );
 
         QString description() const;
-        void setDescription(const QString &str);
+        void setDescription( const QString &str );
 
         QString voucher() const;
-        void setVoucher(const QString &str);
+        void setVoucher( const QString &str );
 
         QDate warranty() const;
-        void setWarranty(const QDate &date);
+        void setWarranty( const QDate &date );
 
         QString methodOfPayment() const;
-        void setMethodOfPayment(const QString &str);
+        void setMethodOfPayment( const QString &str );
 
-        Category* category();
-        const Category* category() const;
-        void setCategory(Category *category);
+        Category *category();
+        const Category *category() const;
+        void setCategory( Category *category );
         void clearCategory();
 
         QString payee() const;
-        void setPayee(const QString &str);
+        void setPayee( const QString &str );
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 
     signals:
         void valueChanged();
@@ -90,7 +90,7 @@ class KNIPPTASCH_CORE_EXPORT BasePosting : public Object
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 

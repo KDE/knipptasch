@@ -34,7 +34,7 @@ class QAbstractItemView;
  */
 namespace Knipptasch
 {
-    
+
     class Preferences;
 
 
@@ -46,30 +46,30 @@ namespace Knipptasch
     */
     class KNIPPTASCH_CORE_EXPORT AccountTableWidget : public QWidget
     {
-        Q_OBJECT
-        
-        public:
-            explicit AccountTableWidget(Knipptasch::Preferences *pref, QWidget *parent = 0);
-            virtual ~AccountTableWidget();
-            
-            QAbstractItemView* view();
-            const QAbstractItemView* view() const;
-            
-            AccountModel* model();
-            const AccountModel* model() const;
-            
-            AccountSortFilterProxyModel* proxy();
-            const AccountSortFilterProxyModel* proxy() const;
+            Q_OBJECT
 
-            Knipptasch::Preferences* preferences();
-            const Knipptasch::Preferences* preferences() const;
+        public:
+            explicit AccountTableWidget( Knipptasch::Preferences *pref, QWidget *parent = 0 );
+            virtual ~AccountTableWidget();
+
+            QAbstractItemView *view();
+            const QAbstractItemView *view() const;
+
+            AccountModel *model();
+            const AccountModel *model() const;
+
+            AccountSortFilterProxyModel *proxy();
+            const AccountSortFilterProxyModel *proxy() const;
+
+            Knipptasch::Preferences *preferences();
+            const Knipptasch::Preferences *preferences() const;
 
         private slots:
             void slotCurrentRowChanged();
-        
+
         private:
             class Private;
-            Private* const d;
+            Private *const d;
     };
 
 } // EndNamspace Knipptasch
@@ -79,4 +79,4 @@ namespace Knipptasch
 // kate: word-wrap off; encoding utf-8; indent-width 4; tab-width 4; line-numbers on; mixed-indent off; remove-trailing-space-save on; replace-tabs-save on; replace-tabs on; space-indent on;
 // vim:set spell et sw=4 ts=4 nowrap cino=l1,cs,U1:
 
- 
+

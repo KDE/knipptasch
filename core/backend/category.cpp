@@ -19,23 +19,20 @@
 #include "money.h"
 
 
-struct Category::Private
-{
+struct Category::Private {
     Private()
-      : enableminlimit( false ),
-        enablemaxlimit( false ),
-        minrule( Monthly ),
-        maxrule( Monthly ),
-        modified( false )
-    {
+        : enableminlimit( false ),
+          enablemaxlimit( false ),
+          minrule( Monthly ),
+          maxrule( Monthly ),
+          modified( false ) {
     }
 
-    ~Private()
-    {
+    ~Private() {
         qDeleteAll( categories );
     }
 
-    QList<Category*> categories;
+    QList<Category *> categories;
 
     QString name;
     QColor color;
@@ -51,16 +48,16 @@ struct Category::Private
 
 
 
-Category::Category(QObject *parent)
-  : Object( parent ),
-    d( new Category::Private )
+Category::Category( QObject *parent )
+    : Object( parent ),
+      d( new Category::Private )
 {
 }
 
 
-Category::Category(const QString &name, QObject *parent)
-  : Object( parent ),
-    d( new Category::Private )
+Category::Category( const QString &name, QObject *parent )
+    : Object( parent ),
+      d( new Category::Private )
 {
     d->name = name;
 }
@@ -78,7 +75,7 @@ bool Category::isModified() const
         return true;
     }
 
-    foreach(const Category *c, d->categories) {
+    foreach( const Category * c, d->categories ) {
         Q_ASSERT( c );
         if( c->isModified() ) {
             d->modified = true;
@@ -90,13 +87,12 @@ bool Category::isModified() const
 }
 
 
-void Category::setModified(bool state)
+void Category::setModified( bool state )
 {
     if( state ) {
         d->modified = true;
-    }
-    else {
-        foreach(Category *c, d->categories) {
+    } else {
+        foreach( Category * c, d->categories ) {
             c->setModified( false );
         }
 
@@ -115,7 +111,7 @@ QString Category::name() const
 }
 
 
-void Category::setName(const QString &name)
+void Category::setName( const QString &name )
 {
     Q_ASSERT( d );
 
@@ -136,7 +132,7 @@ QColor Category::color() const
 }
 
 
-void Category::setColor(const QColor &color)
+void Category::setColor( const QColor &color )
 {
     Q_ASSERT( d );
 
@@ -156,7 +152,7 @@ bool Category::maximumLimitEnabled() const
 }
 
 
-void Category::setMaximumLimitEnabled(bool b)
+void Category::setMaximumLimitEnabled( bool b )
 {
     Q_ASSERT( d );
 
@@ -176,7 +172,7 @@ Money Category::maximumLimit() const
 }
 
 
-void Category::setMaximumLimit(const Money &m)
+void Category::setMaximumLimit( const Money &m )
 {
     Q_ASSERT( d );
 
@@ -196,7 +192,7 @@ Category::ForwardRule Category::maximumUnit() const
 }
 
 
-void Category::setMaximumUnit(Category::ForwardRule rule)
+void Category::setMaximumUnit( Category::ForwardRule rule )
 {
     Q_ASSERT( d );
 
@@ -216,7 +212,7 @@ bool Category::minimumLimitEnabled() const
 }
 
 
-void Category::setMinimumLimitEnabled(bool b)
+void Category::setMinimumLimitEnabled( bool b )
 {
     Q_ASSERT( d );
 
@@ -236,7 +232,7 @@ Money Category::minimumLimit() const
 }
 
 
-void Category::setMinimumLimit(const Money &m)
+void Category::setMinimumLimit( const Money &m )
 {
     Q_ASSERT( d );
 
@@ -256,7 +252,7 @@ Category::ForwardRule Category::minimumUnit() const
 }
 
 
-void Category::setMinimumUnit(Category::ForwardRule rule)
+void Category::setMinimumUnit( Category::ForwardRule rule )
 {
     Q_ASSERT( d );
 
@@ -284,7 +280,7 @@ int Category::countCategories() const
 }
 
 
-const Category* Category::category(int index) const
+const Category *Category::category( int index ) const
 {
     Q_ASSERT( d );
     Q_ASSERT( index >= 0 );
@@ -294,7 +290,7 @@ const Category* Category::category(int index) const
 }
 
 
-Category* Category::category(int index)
+Category *Category::category( int index )
 {
     Q_ASSERT( d );
     Q_ASSERT( index >= 0 );
@@ -304,7 +300,7 @@ Category* Category::category(int index)
 }
 
 
-Category* Category::takeCategory(int index)
+Category *Category::takeCategory( int index )
 {
     Q_ASSERT( d );
     Q_ASSERT( index >= 0 );
@@ -320,7 +316,7 @@ Category* Category::takeCategory(int index)
 }
 
 
-void Category::addCategory(Category* c)
+void Category::addCategory( Category *c )
 {
     Q_ASSERT( d );
     Q_ASSERT( c );
@@ -333,7 +329,7 @@ void Category::addCategory(Category* c)
 }
 
 
-Category* Category::addCategory(const QString &str)
+Category *Category::addCategory( const QString &str )
 {
     Category *c = new Category( str );
     addCategory( c );
@@ -341,7 +337,7 @@ Category* Category::addCategory(const QString &str)
 }
 
 
-void Category::removeCategory(int index)
+void Category::removeCategory( int index )
 {
     Q_ASSERT( index >= 0 );
     Q_ASSERT( index < d->categories.size() );
@@ -370,13 +366,13 @@ void Category::clearCategories()
 }
 
 
-const Category* Category::findCategoryByHash(const QByteArray &h) const
+const Category *Category::findCategoryByHash( const QByteArray &h ) const
 {
     if( hash() == h ) {
         return this;
     }
 
-    foreach(const Category *c, d->categories) {
+    foreach( const Category * c, d->categories ) {
         if( c->hash() == h ) {
             return c;
         }
@@ -386,13 +382,13 @@ const Category* Category::findCategoryByHash(const QByteArray &h) const
 }
 
 
-Category* Category::findCategoryByHash(const QByteArray &h)
+Category *Category::findCategoryByHash( const QByteArray &h )
 {
     if( hash() == h ) {
         return this;
     }
 
-    foreach(Category *c, d->categories) {
+    foreach( Category * c, d->categories ) {
         if( c->hash() == h ) {
             return c;
         }
@@ -402,7 +398,7 @@ Category* Category::findCategoryByHash(const QByteArray &h)
 }
 
 
-QDataStream& Category::serialize(QDataStream &stream) const
+QDataStream &Category::serialize( QDataStream &stream ) const
 {
     Object::serialize( stream );
 
@@ -416,7 +412,7 @@ QDataStream& Category::serialize(QDataStream &stream) const
     stream << static_cast<quint32>( d->maxrule );
 
     stream << static_cast<quint32>( d->categories.size() );
-    foreach(Category *c, d->categories) {
+    foreach( Category * c, d->categories ) {
         c->serialize( stream );
     }
 
@@ -424,7 +420,7 @@ QDataStream& Category::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Category::deserialize(const Account *account, QDataStream &stream)
+QDataStream &Category::deserialize( const Account *account, QDataStream &stream )
 {
     quint32 v;
 
@@ -443,7 +439,7 @@ QDataStream& Category::deserialize(const Account *account, QDataStream &stream)
 
     quint32 count;
     stream >> count;
-    for(quint32 i = 0; i < count; ++i) {
+    for( quint32 i = 0; i < count; ++i ) {
         Category *c = new Category;
         c->deserialize( account, stream );
         addCategory( c );

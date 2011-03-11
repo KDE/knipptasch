@@ -30,33 +30,33 @@ class SubPosting;
  */
 class KNIPPTASCH_CORE_EXPORT Posting : public BasePosting
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        Posting(QObject *parent = 0);
+        Posting( QObject *parent = 0 );
         ~Posting();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
         bool hasSubPostings() const;
         int countSubPostings() const;
-        SubPosting* subPosting(int index);
-        const SubPosting* subPosting(int index) const;
-        SubPosting* takeSubPosting(int index);
-        void addSubPosting(SubPosting *posting);
-        void removeSubPosting(int index);
+        SubPosting *subPosting( int index );
+        const SubPosting *subPosting( int index ) const;
+        SubPosting *takeSubPosting( int index );
+        void addSubPosting( SubPosting *posting );
+        void removeSubPosting( int index );
         void clearSubPostings();
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *account, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *account, QDataStream &stream );
 
     signals:
         void subPostingChanged();
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 

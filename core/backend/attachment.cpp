@@ -19,12 +19,10 @@
 #include <QUrl>
 
 
-struct Attachment::Private
-{
+struct Attachment::Private {
     Private()
-      : modified( false ),
-        inline_data( false )
-    {
+        : modified( false ),
+          inline_data( false ) {
     }
 
     bool modified;
@@ -43,9 +41,9 @@ struct Attachment::Private
 
 
 
-Attachment::Attachment(QObject *parent)
-  : Object( parent ),
-    d( new Attachment::Private )
+Attachment::Attachment( QObject *parent )
+    : Object( parent ),
+      d( new Attachment::Private )
 {
 }
 
@@ -66,7 +64,7 @@ bool Attachment::isModified() const
 }
 
 
-void Attachment::setModified(bool state)
+void Attachment::setModified( bool state )
 {
     d->modified = state;
     Object::setModified( state );
@@ -91,10 +89,10 @@ bool Attachment::isInline() const
 }
 
 
-void Attachment::setInline(bool b)
+void Attachment::setInline( bool b )
 {
     if( b != d->inline_data ) {
-        d->inline_data= b;
+        d->inline_data = b;
         setModified();
     }
 }
@@ -106,7 +104,7 @@ QString Attachment::title() const
 }
 
 
-void Attachment::setTitle(const QString &str)
+void Attachment::setTitle( const QString &str )
 {
     if( d->title != str ) {
         d->title = str;
@@ -121,7 +119,7 @@ QString Attachment::documentType() const
 }
 
 
-void Attachment::setDocumentType(const QString &str)
+void Attachment::setDocumentType( const QString &str )
 {
     if( d->documentTyp != str ) {
         d->documentTyp = str;
@@ -136,7 +134,7 @@ QString Attachment::documentNumber() const
 }
 
 
-void Attachment::setDocumentNumber(const QString &str)
+void Attachment::setDocumentNumber( const QString &str )
 {
     if( d->documentNumber != str ) {
         d->documentNumber = str;
@@ -151,7 +149,7 @@ QString Attachment::description() const
 }
 
 
-void Attachment::setDescription(const QString &str)
+void Attachment::setDescription( const QString &str )
 {
     if( d->description != str ) {
         d->description = str;
@@ -166,7 +164,7 @@ QUrl Attachment::url() const
 }
 
 
-void Attachment::setUrl(const QUrl &url)
+void Attachment::setUrl( const QUrl &url )
 {
     if( d->url != url ) {
         d->url = url;
@@ -181,7 +179,7 @@ QString Attachment::mimeType() const
 }
 
 
-void Attachment::setMimeType(const QString &mime)
+void Attachment::setMimeType( const QString &mime )
 {
     if( d->mimetype != mime ) {
         d->mimetype = mime;
@@ -202,7 +200,7 @@ QByteArray Attachment::data() const
 }
 
 
-void Attachment::setData(const QByteArray &data)
+void Attachment::setData( const QByteArray &data )
 {
     if( d->data != data ) {
         d->data = data;
@@ -222,7 +220,7 @@ void Attachment::clearData()
 }
 
 
-QDataStream& Attachment::serialize(QDataStream &stream) const
+QDataStream &Attachment::serialize( QDataStream &stream ) const
 {
     Object::serialize( stream );
 
@@ -239,7 +237,7 @@ QDataStream& Attachment::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& Attachment::deserialize(const Account *account, QDataStream &stream)
+QDataStream &Attachment::deserialize( const Account *account, QDataStream &stream )
 {
     Object::deserialize( account, stream );
 

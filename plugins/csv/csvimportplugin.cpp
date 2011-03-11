@@ -24,8 +24,8 @@
 
 
 
-CsvImportPlugin::CsvImportPlugin(QObject *parent)
-  : QObject( parent )
+CsvImportPlugin::CsvImportPlugin( QObject *parent )
+    : QObject( parent )
 {
 
 }
@@ -87,11 +87,11 @@ QString CsvImportPlugin::importActionName() const
 
 QPixmap CsvImportPlugin::importActionIcon() const
 {
-    return BarIcon("text-csv");
+    return BarIcon( "text-csv" );
 }
 
 
-Account* CsvImportPlugin::importAccount(QWidget *parent) const
+Account *CsvImportPlugin::importAccount( QWidget *parent ) const
 {
     QPointer<CsvImportDialog> dialog = new CsvImportDialog( parent );
     Account *account = 0;

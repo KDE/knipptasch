@@ -34,32 +34,31 @@
  */
 class KNIPPTASCH_CORE_EXPORT AccountSortFilterProxyModel : public QSortFilterProxyModel
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        enum PostingSortOrder
-        {
+        enum PostingSortOrder {
             Maturity = 0,
             ValueDate
         };
 
-        explicit AccountSortFilterProxyModel(QObject *parent = 0);
+        explicit AccountSortFilterProxyModel( QObject *parent = 0 );
 
-        Account* account();
-        const Account* account() const;
+        Account *account();
+        const Account *account() const;
 
-        QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+        QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
+        bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
     public slots:
-        void updateCache(int firstRow = 0);
+        void updateCache( int firstRow = 0 );
 
     protected:
-        bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+        bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
     private:
-        int lessThanByType(const QModelIndex &left, const QModelIndex &right) const;
-        int lessThanDateBased(const QModelIndex &left, const QModelIndex &right) const;
+        int lessThanByType( const QModelIndex &left, const QModelIndex &right ) const;
+        int lessThanDateBased( const QModelIndex &left, const QModelIndex &right ) const;
 
     private:
         mutable QMap<int, Money> m_cache;

@@ -21,8 +21,8 @@
 
 
 
-AccountConfigDialog::AccountConfigDialog(Account *account, QWidget *parent)
-  : ConfigDialog( parent )
+AccountConfigDialog::AccountConfigDialog( Account *account, QWidget *parent )
+    : ConfigDialog( parent )
 {
     setWindowTitle( tr( "Configure Account - %1" ).arg( QCoreApplication::applicationName() ) );
 

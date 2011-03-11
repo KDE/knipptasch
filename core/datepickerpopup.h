@@ -41,14 +41,13 @@
  */
 class DatePickerPopup: public QMenu
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         /**
          * Describes the available selection modes.
          */
-        enum Mode
-        {
+        enum Mode {
             NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
             DatePicker = 2, ///< A menu-item with a DatePicker.
             Words = 4       ///< A menu-item with list of words that describe a date.
@@ -66,9 +65,9 @@ class DatePickerPopup: public QMenu
          * @param date The initial date of date picker widget.
          * @param parent The parent object.
          */
-        explicit DatePickerPopup(Modes modes = DatePicker,
-                                 const QDate &date = QDate::currentDate(),
-                                 QWidget *parent = 0);
+        explicit DatePickerPopup( Modes modes = DatePicker,
+                                  const QDate &date = QDate::currentDate(),
+                                  QWidget *parent = 0 );
 
         /**
          * Destroys the date picker popup.
@@ -79,7 +78,7 @@ class DatePickerPopup: public QMenu
         /**
          * Sets the current @p date.
          */
-        void setDate(const QDate &date);
+        void setDate( const QDate &date );
 
     Q_SIGNALS:
         /**
@@ -87,10 +86,10 @@ class DatePickerPopup: public QMenu
          *
          * @param date The new date.
          */
-        void dateChanged(const QDate &date);
+        void dateChanged( const QDate &date );
 
     private slots:
-        void slotDateChanged(const QDate &dt);
+        void slotDateChanged( const QDate &dt );
         void slotToday();
         void slotTomorrow();
         void slotNextWeek();
@@ -100,7 +99,7 @@ class DatePickerPopup: public QMenu
     private:
         //@cond PRIVATE
         class Private;
-        Private* const d;
+        Private *const d;
         //@endcond
 };
 

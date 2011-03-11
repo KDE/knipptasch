@@ -49,42 +49,40 @@ class XmlWriter
         XmlWriter();
         ~XmlWriter();
 
-        void write(const Account *acc, const QString &filename);
+        void write( const Account *acc, const QString &filename );
 
-        bool errorOnUnknownElement() const
-        {
+        bool errorOnUnknownElement() const {
             return m_errorOnUnknownElements;
         }
 
-        void setErrorOnUnknownElement(bool enabled = true)
-        {
+        void setErrorOnUnknownElement( bool enabled = true ) {
             m_errorOnUnknownElements = enabled;
         }
 
         bool isPasswordProtected() const;
         QByteArray password() const;
-        void setPassword(const QByteArray &password);
+        void setPassword( const QByteArray &password );
 
     private:
-        void writeAccount(QXmlStreamWriter &stream, const Account *acc);
+        void writeAccount( QXmlStreamWriter &stream, const Account *acc );
 
-        void writeCategory(QXmlStreamWriter &stream, const Category *category);
-        void writePosting(QXmlStreamWriter &stream, const Posting *posting);
-        void writeBasePosting(QXmlStreamWriter &stream, const BasePosting *posting);
-        void writeSubPosting(QXmlStreamWriter &stream, const SubPosting *posting);
+        void writeCategory( QXmlStreamWriter &stream, const Category *category );
+        void writePosting( QXmlStreamWriter &stream, const Posting *posting );
+        void writeBasePosting( QXmlStreamWriter &stream, const BasePosting *posting );
+        void writeSubPosting( QXmlStreamWriter &stream, const SubPosting *posting );
 
-        void writeObjectData(QXmlStreamWriter &stream, const Object *object);
-        void writeAttachment(QXmlStreamWriter &stream, const Attachment *attachment);
+        void writeObjectData( QXmlStreamWriter &stream, const Object *object );
+        void writeAttachment( QXmlStreamWriter &stream, const Attachment *attachment );
 
-        void writeVariant(QXmlStreamWriter &stream, const QVariant &variant);
+        void writeVariant( QXmlStreamWriter &stream, const QVariant &variant );
 
-        void writeColor(QXmlStreamWriter &stream, const QColor &color) const;
+        void writeColor( QXmlStreamWriter &stream, const QColor &color ) const;
 
-        void writeLimit(QXmlStreamWriter &stream, bool minEnabled,
-                        const Money &min, bool maxEnabled, const Money &max) const;
+        void writeLimit( QXmlStreamWriter &stream, bool minEnabled,
+                         const Money &min, bool maxEnabled, const Money &max ) const;
 
-        quint32 categoryIdentifier(const Category *category);
-        quint32 postingIdentifier(const Posting *posting);
+        quint32 categoryIdentifier( const Category *category );
+        quint32 postingIdentifier( const Posting *posting );
 
     private:
         bool m_errorOnUnknownElements;

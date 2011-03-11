@@ -37,7 +37,7 @@
 #include <QShowEvent>
 
 
-bool doSortPostings(const Posting *p1, const Posting *p2)
+bool doSortPostings( const Posting *p1, const Posting *p2 )
 {
     if( !p1->maturity().isValid() ) {
         return true;
@@ -51,11 +51,11 @@ bool doSortPostings(const Posting *p1, const Posting *p2)
 
 
 
-QuickReportWidget::QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget *parent)
-  : QWidget( parent ),
-    ui( new Ui::QuickReportWidget ),
-    m_proxy( proxy ),
-    m_date( QDate::currentDate().year(), QDate::currentDate().month(), 1 )
+QuickReportWidget::QuickReportWidget( AccountSortFilterProxyModel *proxy, QWidget *parent )
+    : QWidget( parent ),
+      ui( new Ui::QuickReportWidget ),
+      m_proxy( proxy ),
+      m_date( QDate::currentDate().year(), QDate::currentDate().month(), 1 )
 {
     Q_ASSERT( m_proxy );
 
@@ -63,15 +63,15 @@ QuickReportWidget::QuickReportWidget(AccountSortFilterProxyModel *proxy, QWidget
 
     ui->closeButton->setVisible( false );
 
-    ui->closeButton->setIcon( BarIcon("dialog-close") );
-    ui->nextButton->setIcon( BarIcon("arrow-right") );
-    ui->previousButton->setIcon( BarIcon("arrow-left") );
+    ui->closeButton->setIcon( BarIcon( "dialog-close" ) );
+    ui->nextButton->setIcon( BarIcon( "arrow-right" ) );
+    ui->previousButton->setIcon( BarIcon( "arrow-left" ) );
 
     installEventFilter( this );
 
-    connect( ui->nextButton, SIGNAL( clicked(bool) ), this, SLOT( slotNextMonth() ) );
-    connect( ui->previousButton, SIGNAL( clicked(bool) ), this, SLOT( slotPreviousMonth() ) );
-    connect( ui->closeButton, SIGNAL( clicked(bool) ), this, SIGNAL( closeRequested() ) );
+    connect( ui->nextButton, SIGNAL( clicked( bool ) ), this, SLOT( slotNextMonth() ) );
+    connect( ui->previousButton, SIGNAL( clicked( bool ) ), this, SLOT( slotPreviousMonth() ) );
+    connect( ui->closeButton, SIGNAL( clicked( bool ) ), this, SIGNAL( closeRequested() ) );
 }
 
 
@@ -85,15 +85,15 @@ QSize QuickReportWidget::sizeHint() const
     const int width = fontMetrics().width( formatMoney( 100000.0 ) );
 
     return QSize(
-            QWidget::sizeHint().width()
-                - ui->incomeValue->sizeHint().width()
-                + width,
-            QWidget::sizeHint().height()
-    );
+               QWidget::sizeHint().width()
+               - ui->incomeValue->sizeHint().width()
+               + width,
+               QWidget::sizeHint().height()
+           );
 }
 
 
-void QuickReportWidget::showEvent(QShowEvent *event)
+void QuickReportWidget::showEvent( QShowEvent *event )
 {
     if( event->type() == QEvent::Show ) {
         updateView();
@@ -101,17 +101,16 @@ void QuickReportWidget::showEvent(QShowEvent *event)
 }
 
 
-bool QuickReportWidget::eventFilter(QObject *obj, QEvent *event)
+bool QuickReportWidget::eventFilter( QObject *obj, QEvent *event )
 {
     if( event->type() == QEvent::Wheel ) {
-        QWheelEvent *we = static_cast<QWheelEvent*>( event );
+        QWheelEvent *we = static_cast<QWheelEvent *>( event );
 
         if( we->delta() > 0 ) {
             slotNextMonth();
 
             return true;
-        }
-        else if( we->delta() < 0 ) {
+        } else if( we->delta() < 0 ) {
             slotPreviousMonth();
 
             return true;
@@ -147,7 +146,7 @@ void QuickReportWidget::slotPreviousMonth()
 void QuickReportWidget::updateView()
 {
     Q_ASSERT( m_proxy );
-    AccountModel *model = qobject_cast<AccountModel*>( m_proxy->sourceModel() );
+    AccountModel *model = qobject_cast<AccountModel *>( m_proxy->sourceModel() );
     Q_ASSERT( model );
 
     if( !model->account() ) {
@@ -159,24 +158,21 @@ void QuickReportWidget::updateView()
     Money income;
     Money expense;
 
-    QList<const Posting*> list = model->account()->postings();
+    QList<const Posting *> list = model->account()->postings();
     qSort( list.begin(), list.end(), doSortPostings );
 
-    foreach(const Posting *p, list) {
+    foreach( const Posting * p, list ) {
         if( p->maturity().year() == m_date.year() ) {
             if( p->maturity().month() == m_date.month() ) {
                 if( p->amount() < 0.0 ) {
                     expense -= p->amount().abs();
-                }
-                else {
+                } else {
                     income += p->amount();
                 }
-            }
-            else if( p->maturity().month() > m_date.month() ) {
+            } else if( p->maturity().month() > m_date.month() ) {
                 break;
             }
-        }
-        else if(  p->maturity().year() > m_date.year() ) {
+        } else if( p->maturity().year() > m_date.year() ) {
             break;
         }
     }
@@ -186,27 +182,25 @@ void QuickReportWidget::updateView()
     ui->diffValue->setText( formatMoney( income - expense.abs() ) );
 
     if( Knipptasch::Preferences::self()->positiveAmountForegroundEnabled()
-        && Knipptasch::Preferences::self()->positiveAmountForegroundColor().isValid() )
-    {
-        QString style = QString::fromLatin1("color: %1;").arg(
-                Knipptasch::Preferences::self()->positiveAmountForegroundColor().name() );
+            && Knipptasch::Preferences::self()->positiveAmountForegroundColor().isValid() ) {
+        QString style = QString::fromLatin1( "color: %1;" ).arg(
+                            Knipptasch::Preferences::self()->positiveAmountForegroundColor().name() );
 
         ui->incomeValue->setStyleSheet( style );
 
-        if( ( income - expense.abs() ) >= 0.0 ) {
+        if(( income - expense.abs() ) >= 0.0 ) {
             ui->diffValue->setStyleSheet( style );
         }
     }
 
     if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled()
-        && Knipptasch::Preferences::self()->negativeAmountForegroundColor().isValid() ) 
-    {
-        QString style = QString::fromLatin1("color: %1;").arg(
-                Knipptasch::Preferences::self()->negativeAmountForegroundColor().name() );
+            && Knipptasch::Preferences::self()->negativeAmountForegroundColor().isValid() ) {
+        QString style = QString::fromLatin1( "color: %1;" ).arg(
+                            Knipptasch::Preferences::self()->negativeAmountForegroundColor().name() );
 
         ui->expenseValue->setStyleSheet( style );
 
-        if( ( income - expense.abs() ) < 0.0 ) {
+        if(( income - expense.abs() ) < 0.0 ) {
             ui->diffValue->setStyleSheet( style );
         }
     }
@@ -222,7 +216,7 @@ QDate QuickReportWidget::currentDate() const
 }
 
 
-void QuickReportWidget::setCurrentDate(const QDate &date)
+void QuickReportWidget::setCurrentDate( const QDate &date )
 {
     m_date = QDate( date.year(), date.month(), 1 );
     updateView();
@@ -235,21 +229,21 @@ bool QuickReportWidget::closeButtonEnabled() const
 }
 
 
-void QuickReportWidget::setCloseButtonEnabled(bool state)
+void QuickReportWidget::setCloseButtonEnabled( bool state )
 {
     ui->closeButton->setVisible( state );
 }
 
 
-QString QuickReportWidget::formatMonth(const QDate &date)
+QString QuickReportWidget::formatMonth( const QDate &date )
 {
     Q_ASSERT( date.isValid() );
 
     const QDate &current = QDate(
-                                QDate::currentDate().year(),
-                                QDate::currentDate().month(),
-                                date.day()
-                            );
+                               QDate::currentDate().year(),
+                               QDate::currentDate().month(),
+                               date.day()
+                           );
 
     if( date == current ) {
         return tr( "current month" );
@@ -265,11 +259,11 @@ QString QuickReportWidget::formatMonth(const QDate &date)
 
     return tr( "%1 %2" )
 #if defined(HAVE_KDE)
-                .arg( KGlobal::locale()->calendar()->monthName( date ) )
-                .arg( KGlobal::locale()->calendar()->yearString( date ) );
+           .arg( KGlobal::locale()->calendar()->monthName( date ) )
+           .arg( KGlobal::locale()->calendar()->yearString( date ) );
 #else
-                .arg( QLocale().monthName( date.month() ) )
-                .arg( QString::number( date.year() ) );
+           .arg( QLocale().monthName( date.month() ) )
+           .arg( QString::number( date.year() ) );
 #endif
 }
 

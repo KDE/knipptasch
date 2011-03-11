@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,14 +25,13 @@
 
 
 
-MoneyDelegate::MoneyDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+MoneyDelegate::MoneyDelegate( QObject *parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* MoneyDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *MoneyDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     const QAbstractItemModel *model = index.model();
     if( !model ) {
@@ -49,39 +48,37 @@ QWidget* MoneyDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
 }
 
 
-void MoneyDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void MoneyDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox*>( editor );
+    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox *>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
-    }
-    else {
+    } else {
         double value = model->data( index, Qt::EditRole ).value<Money>();
         input->setValue( value );
     }
 }
 
 
-void MoneyDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void MoneyDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox*>( editor );
+    QDoubleSpinBox *input = qobject_cast<QDoubleSpinBox *>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
-    }
-    else {
+    } else {
         model->setData( index, input->value(), Qt::EditRole );
     }
 }
 
 
-QSize MoneyDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize MoneyDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     static int minsize = qApp->fontMetrics().width( "-2000,00" );
     const QSize size = QStyledItemDelegate::sizeHint( option, index );

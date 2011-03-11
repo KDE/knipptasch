@@ -22,9 +22,9 @@
 #include "backend/account.h"
 
 
-SplitPostingTabWidget::SplitPostingTabWidget(QWidget *parent)
-  : AbstractAccountTabWidget( tr( "Split Posting" ), BarIcon( "view-calendar-list" ), parent ),
-    ui( new Ui::SplitPostingTabWidget )
+SplitPostingTabWidget::SplitPostingTabWidget( QWidget *parent )
+    : AbstractAccountTabWidget( tr( "Split Posting" ), BarIcon( "view-calendar-list" ), parent ),
+      ui( new Ui::SplitPostingTabWidget )
 {
     ui->setupUi( this );
 }
@@ -36,7 +36,7 @@ void SplitPostingTabWidget::accountModelAboutToBeChanged()
 }
 
 
-void SplitPostingTabWidget::accountModelChanged(AccountModel *model)
+void SplitPostingTabWidget::accountModelChanged( AccountModel *model )
 {
     Q_UNUSED( model )
 }
@@ -48,7 +48,7 @@ void SplitPostingTabWidget::currentSelectedIndexAboutToBeChanged()
 }
 
 
-void SplitPostingTabWidget::currentSelectedIndexChanged(const QModelIndex &index)
+void SplitPostingTabWidget::currentSelectedIndexChanged( const QModelIndex &index )
 {
     Q_UNUSED( index );
 }

@@ -27,12 +27,11 @@
 
 class ActionCollection : public KActionCollection
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        ActionCollection(QObject* parent)
-            : KActionCollection(parent)
-        {
+        ActionCollection( QObject *parent )
+            : KActionCollection( parent ) {
         }
 };
 
@@ -42,22 +41,22 @@ class ActionCollection : public KActionCollection
 
 class ActionCollection : public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-        ActionCollection(QObject* parent);
+        ActionCollection( QObject *parent );
         virtual ~ActionCollection() {}
 
     public:
-        QAction* addAction(const QString& name, const QObject* recv, const char* slot);
-        QAction* addAction(const QString& name, QAction* a);
-        QAction* addAction(const QString& name);
+        QAction *addAction( const QString &name, const QObject *recv, const char *slot );
+        QAction *addAction( const QString &name, QAction *a );
+        QAction *addAction( const QString &name );
 
-        QAction* action(const QString& name);
+        QAction *action( const QString &name );
 
     private:
-        QMap<QString, QAction*> m_ActionsByName;
-        QList<QAction*> m_Actions;
+        QMap<QString, QAction *> m_ActionsByName;
+        QList<QAction *> m_Actions;
 };
 
 #endif

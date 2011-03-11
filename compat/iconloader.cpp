@@ -2,7 +2,7 @@
  * Copyright 2010 by Stefan Böhmann <kde@hilefoks.org>
  * Copyright 2010 by Volker Lanz <vl@fidra.de>
  * Copyright 2005-09 by the Quassel Project
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -32,13 +32,12 @@
 static int groupSize[] = { 48, 22, 22, 16, 32, 22 };  // default sizes taken from Oxygen
 
 
-IconLoader* IconLoader::global()
+IconLoader *IconLoader::global()
 {
-    static IconLoader* instance = NULL;
+    static IconLoader *instance = NULL;
 
-    if (instance == NULL)
-    {
-        instance = new IconLoader(NULL);
+    if( instance == NULL ) {
+        instance = new IconLoader( NULL );
         instance->setTheme( "oxygen" );
     }
 
@@ -46,13 +45,13 @@ IconLoader* IconLoader::global()
 }
 
 
-IconLoader::IconLoader(QObject* parent)
-  : QObject(parent)
+IconLoader::IconLoader( QObject *parent )
+    : QObject( parent )
 {
 }
 
 
-void IconLoader::setTheme(const QString& theme)
+void IconLoader::setTheme( const QString &theme )
 {
     m_Theme = theme;
 
@@ -62,94 +61,95 @@ void IconLoader::setTheme(const QString& theme)
 
     // First, look for a system theme
     // This is supposed to only work on Unix, though other platforms might set $XDG_DATA_DIRS if they please.
-    QStringList iconDirNames = QString(qgetenv("XDG_DATA_DIRS")).split(':', QString::SkipEmptyParts);
+    QStringList iconDirNames = QString( qgetenv( "XDG_DATA_DIRS" ) ).split( ':', QString::SkipEmptyParts );
 
-    if (!iconDirNames.isEmpty())
-        for (int i = 0; i < iconDirNames.count(); i++)
-            iconDirNames[i].append(QString("/icons/"));
+    if( !iconDirNames.isEmpty() )
+        for( int i = 0; i < iconDirNames.count(); i++ ) {
+            iconDirNames[i].append( QString( "/icons/" ) );
+        }
 
 #if defined(Q_OS_UNIX)
-    else
+    else {
         iconDirNames << "/usr/share/icons/";
+    }
 
     // Add our prefix too
     QString appDir = QCoreApplication::applicationDirPath();
-    int binpos = appDir.lastIndexOf("/bin");
+    int binpos = appDir.lastIndexOf( "/bin" );
 
-    if (binpos >= 0)
-    {
-        appDir.replace(binpos, 4, "/share");
-        appDir.append("/icons/");
+    if( binpos >= 0 ) {
+        appDir.replace( binpos, 4, "/share" );
+        appDir.append( "/icons/" );
 
-        if (!iconDirNames.contains(appDir))
-            iconDirNames.append(appDir);
+        if( !iconDirNames.contains( appDir ) ) {
+            iconDirNames.append( appDir );
+        }
     }
 #endif
 
     // Now look for an icons/ subdir in our data paths
-    foreach (const QString& dir, findDataDirPaths())
-        iconDirNames << dir + "icons/";
+    foreach( const QString & dir, findDataDirPaths() )
+    iconDirNames << dir + "icons/";
 
     // Add our resource path too
     iconDirNames << ":/icons/";
 
     // Ready do add theme names
-    foreach (const QString& dir, iconDirNames)
-    {
+    foreach( const QString & dir, iconDirNames ) {
         QString path = dir + theme + '/';
 
-        if (QFile::exists(path))
+        if( QFile::exists( path ) ) {
             m_ThemedIconDirNames << path;
+        }
     }
 }
 
 
-QPixmap IconLoader::loadIcon(const QString& name, IconLoader::Group group, int size)
+QPixmap IconLoader::loadIcon( const QString &name, IconLoader::Group group, int size )
 {
-    if (group < 0 || group >= LastGroup)
-    {
+    if( group < 0 || group >= LastGroup ) {
         qWarning() << "Invalid icon group!";
         return QPixmap();
     }
 
-    if (size == 0)
+    if( size == 0 ) {
         size = groupSize[group];
+    }
 
-    const QString path = findIconPath(name, size);
+    const QString path = findIconPath( name, size );
 
-    if (path.isEmpty())
+    if( path.isEmpty() ) {
         return QPixmap();
+    }
 
-// 		qDebug() << "load icon: " << path;
-    return QPixmap(path);
+//      qDebug() << "load icon: " << path;
+    return QPixmap( path );
 }
 
 
-QString IconLoader::findIconPath(const QString& name, int size) const
+QString IconLoader::findIconPath( const QString &name, int size ) const
 {
-    foreach (const QString& basedir, m_ThemedIconDirNames)
-    {
-        const QDir sizedir(QString("%1/%2x%2").arg(basedir).arg(size));
+    foreach( const QString & basedir, m_ThemedIconDirNames ) {
+        const QDir sizedir( QString( "%1/%2x%2" ).arg( basedir ).arg( size ) );
 
-        if (sizedir.exists())
-        {
+        if( sizedir.exists() ) {
             // ignore context, i.e. scan all subdirs
-            const QStringList contextdirs = sizedir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+            const QStringList contextdirs = sizedir.entryList( QDir::Dirs | QDir::NoDotAndDotDot );
 
-            foreach (const QString& dir, contextdirs)
-            {
-                const QString path = QString("%1/%2/%3.png").arg(sizedir.absolutePath(), dir, name);
-                if (QFile::exists(path))
+            foreach( const QString & dir, contextdirs ) {
+                const QString path = QString( "%1/%2/%3.png" ).arg( sizedir.absolutePath(), dir, name );
+                if( QFile::exists( path ) ) {
                     return path;
+                }
             }
         }
     }
 
-    foreach (const QString& dir, m_PlainIconDirNames)
-    {
-        const QString path = QString("%1/%2").arg(dir, name);
-        if (QFile::exists(path))
+    foreach( const QString & dir, m_PlainIconDirNames ) {
+        const QString path = QString( "%1/%2" ).arg( dir, name );
+        if( QFile::exists( path ) ) {
             return path;
+        }
     }
 
     qWarning() << "Icon not found:" << name << size;
@@ -159,24 +159,24 @@ QString IconLoader::findIconPath(const QString& name, int size) const
 
 
 
-QPixmap DesktopIcon(const QString& name, int force_size)
+QPixmap DesktopIcon( const QString &name, int force_size )
 {
-    return IconLoader::global()->loadIcon(name, IconLoader::Desktop, force_size);
+    return IconLoader::global()->loadIcon( name, IconLoader::Desktop, force_size );
 }
 
-QPixmap BarIcon(const QString& name, int force_size)
+QPixmap BarIcon( const QString &name, int force_size )
 {
-    return IconLoader::global()->loadIcon(name, IconLoader::Toolbar, force_size);
+    return IconLoader::global()->loadIcon( name, IconLoader::Toolbar, force_size );
 }
 
-QPixmap MainBarIcon(const QString& name, int force_size)
+QPixmap MainBarIcon( const QString &name, int force_size )
 {
-    return IconLoader::global()->loadIcon(name, IconLoader::MainToolbar, force_size);
+    return IconLoader::global()->loadIcon( name, IconLoader::MainToolbar, force_size );
 }
 
-QPixmap SmallIcon(const QString& name, int force_size)
+QPixmap SmallIcon( const QString &name, int force_size )
 {
-    return IconLoader::global()->loadIcon(name, IconLoader::Small, force_size);
+    return IconLoader::global()->loadIcon( name, IconLoader::Small, force_size );
 }
 
 #endif

@@ -59,19 +59,19 @@
 #include <QDebug>
 
 
-AccountWidget::AccountWidget(MainWindow *mainWindow)
-  : QWidget( mainWindow ),
-    ui( new Ui::AccountWidget ),
-    m_model( 0 ),
-    m_proxy( 0 ),
-    m_mainWindow( mainWindow )
+AccountWidget::AccountWidget( MainWindow *mainWindow )
+    : QWidget( mainWindow ),
+      ui( new Ui::AccountWidget ),
+      m_model( 0 ),
+      m_proxy( 0 ),
+      m_mainWindow( mainWindow )
 {
     ui->setupUi( this );
 
     ui->searchWidget->setVisible( false );
     ui->searchWidget->installEventFilter( this );
 
-    ui->searchCloseButton->setIcon( BarIcon("window-close") );
+    ui->searchCloseButton->setIcon( BarIcon( "window-close" ) );
     ui->searchCloseButton->setAutoRaise( true );
 
 #if defined(HAVE_KDE)
@@ -103,13 +103,13 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
 
     ui->view->setModel( m_proxy );
 
-    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( Knipptasch::Preferences::self(), this ) );
-    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( Knipptasch::Preferences::self(), this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::MATURITY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::VALUEDATE, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::WARRANTY, new DateDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::POSTINGTEXT, new PostingTextDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::AMOUNT, new MoneyDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::BALANCE, new MoneyDelegate( this ) );
+    ui->view->setItemDelegateForColumn( AccountModel::CATEGORY, new CategoryDelegate( this ) );
 
     ui->view->resizeColumnsToContents();
     ui->view->verticalHeader()->hide();
@@ -119,16 +119,16 @@ AccountWidget::AccountWidget(MainWindow *mainWindow)
     ui->view->horizontalHeader()->installEventFilter( this );
     ui->view->installEventFilter( this );
 
-    connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked(int) ), this, SLOT( onResizeColumnToContents(int) ) );
-    connect( ui->view->horizontalHeader(), SIGNAL( sectionMoved(int,int,int) ), this, SLOT( saveConfig() ) );
-    connect( ui->view->horizontalHeader(), SIGNAL( sectionResized(int,int,int) ), this, SLOT( saveConfig() ) );
+    connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked( int ) ), this, SLOT( onResizeColumnToContents( int ) ) );
+    connect( ui->view->horizontalHeader(), SIGNAL( sectionMoved( int, int, int ) ), this, SLOT( saveConfig() ) );
+    connect( ui->view->horizontalHeader(), SIGNAL( sectionResized( int, int, int ) ), this, SLOT( saveConfig() ) );
 
-    connect( ui->view->selectionModel(), SIGNAL( currentRowChanged(QModelIndex,QModelIndex) ), this, SLOT( slotCurrentRowChanged() ) );
+    connect( ui->view->selectionModel(), SIGNAL( currentRowChanged( QModelIndex, QModelIndex ) ), this, SLOT( slotCurrentRowChanged() ) );
 
-    connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SLOT( slotUpdateAccountInfo() ) );
-    connect( m_model, SIGNAL( dataChanged(QModelIndex,QModelIndex) ), this, SIGNAL( changed() ) );
+    connect( m_model, SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), this, SLOT( slotUpdateAccountInfo() ) );
+    connect( m_model, SIGNAL( dataChanged( QModelIndex, QModelIndex ) ), this, SIGNAL( changed() ) );
 
-    connect( ui->searchLineEdit, SIGNAL( textChanged(QString) ), m_proxy, SLOT( setFilterFixedString(QString) ) );
+    connect( ui->searchLineEdit, SIGNAL( textChanged( QString ) ), m_proxy, SLOT( setFilterFixedString( QString ) ) );
     connect( ui->searchCloseButton, SIGNAL( clicked() ), this, SLOT( closeSearchWidget() ) );
 
     loadConfig();
@@ -159,7 +159,7 @@ QString AccountWidget::fileName() const
 }
 
 
-void AccountWidget::setFileName(const QString &name)
+void AccountWidget::setFileName( const QString &name )
 {
     m_filename = name;
 
@@ -168,19 +168,19 @@ void AccountWidget::setFileName(const QString &name)
 }
 
 
-Account* AccountWidget::account()
+Account *AccountWidget::account()
 {
     return m_model->account();
 }
 
 
-const Account* AccountWidget::account() const
+const Account *AccountWidget::account() const
 {
     return m_model->account();
 }
 
 
-void AccountWidget::setAccount(Account *acc)
+void AccountWidget::setAccount( Account *acc )
 {
     m_model->setAccount( acc );
     slotUpdateAccountInfo();
@@ -214,14 +214,14 @@ void AccountWidget::checkActionState()
 bool AccountWidget::selectionContainsCurrentRow() const
 {
     const QModelIndex index = m_proxy->mapFromSource(
-                m_model->index( m_model->rowCount()-1, AccountModel::MATURITY )
-    );
+                                  m_model->index( m_model->rowCount() - 1, AccountModel::MATURITY )
+                              );
 
     Q_ASSERT( index.isValid() );
 
     QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
 
-    foreach(const QModelIndex &i, idxlist) {
+    foreach( const QModelIndex & i, idxlist ) {
         if( i.row() == index.row() ) {
             return true;
         }
@@ -254,7 +254,7 @@ int AccountWidget::countSelectedRows() const
     QSet<int> rowset;
     QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
 
-    foreach(const QModelIndex &ix, idxlist) {
+    foreach( const QModelIndex & ix, idxlist ) {
         rowset.insert( ix.row() );
     }
 
@@ -262,18 +262,17 @@ int AccountWidget::countSelectedRows() const
 }
 
 
-QList<const Posting*> AccountWidget::selectedPostings() const
+QList<const Posting *> AccountWidget::selectedPostings() const
 {
-    QSet<const Posting*> set;
+    QSet<const Posting *> set;
 
     QModelIndexList idxlist = ui->view->selectionModel()->selectedIndexes();
 
-    foreach(const QModelIndex &ix, idxlist) {
+    foreach( const QModelIndex & ix, idxlist ) {
         const Posting *p = m_model->posting( m_proxy->mapToSource( ix ) );
         if( p ) {
             set.insert( p );
-        }
-        else {
+        } else {
             qDebug() << "no posting for index" << ix;
         }
     }
@@ -298,8 +297,7 @@ void AccountWidget::loadConfig()
 
         ui->view->resizeColumnsToContents();
         saveConfig();
-    }
-    else {
+    } else {
         ui->view->horizontalHeader()->restoreState( arr );
     }
 
@@ -314,7 +312,7 @@ void AccountWidget::loadConfig()
 void AccountWidget::saveConfig()
 {
     Knipptasch::Preferences::self()->setHorizontalHeaderState(
-                        ui->view->horizontalHeader()->saveState().toBase64()
+        ui->view->horizontalHeader()->saveState().toBase64()
     );
 }
 
@@ -322,8 +320,8 @@ void AccountWidget::saveConfig()
 void AccountWidget::selectCurrentPosting()
 {
     const QModelIndex index = m_proxy->mapFromSource(
-                m_model->index( m_model->rowCount()-1, AccountModel::MATURITY )
-    );
+                                  m_model->index( m_model->rowCount() - 1, AccountModel::MATURITY )
+                              );
 
     Q_ASSERT( index.isValid() );
 
@@ -339,7 +337,7 @@ bool AccountWidget::onSaveFile()
 }
 
 
-bool AccountWidget::onSaveAsFile(const QString &str)
+bool AccountWidget::onSaveAsFile( const QString &str )
 {
     Q_UNUSED( str );
 
@@ -356,16 +354,15 @@ bool AccountWidget::onSaveAsFile(const QString &str)
 
     try {
         Storage::writeAccount( account(), filename );
-    }
-    catch(StorageException ex) {
+    } catch( StorageException ex ) {
 #if defined(HAVE_KDE)
         KMessageBox::error( this, ex.errorMessage() );
 #else
         QMessageBox::warning( this, // krazy:exclude=qclasses
                               QObject::tr( "Error - %1" )
-                                .arg( QCoreApplication::applicationName() ),
+                              .arg( QCoreApplication::applicationName() ),
                               ex.errorMessage()
-        );
+                            );
 #endif
 
         return false;
@@ -469,7 +466,7 @@ void AccountWidget::onConfigureAccount()
 }
 
 
-void AccountWidget::onResizeColumnToContents(int index)
+void AccountWidget::onResizeColumnToContents( int index )
 {
     if( Knipptasch::Preferences::self()->doubleClickResizeColumnToCountent() ) {
         ui->view->resizeColumnToContents( index );
@@ -480,7 +477,7 @@ void AccountWidget::onResizeColumnToContents(int index)
 
 void AccountWidget::slotSetIndexToCurrentInput()
 {
-    const QModelIndex index = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::MATURITY ) );
+    const QModelIndex index = m_proxy->mapFromSource( m_model->index( m_model->rowCount() - 1, AccountModel::MATURITY ) );
 
     Q_ASSERT( index.isValid() );
 
@@ -491,23 +488,22 @@ void AccountWidget::slotSetIndexToCurrentInput()
 
 void AccountWidget::slotUpdateAccountInfo()
 {
-    const QString &acname = (!account() || account()->name().isEmpty() )
-                                ? tr( "Unnamed Account" ) : account()->name();
+    const QString &acname = ( !account() || account()->name().isEmpty() )
+                            ? tr( "Unnamed Account" ) : account()->name();
     ui->accountName->setText( acname );
 
     const QModelIndex index = m_proxy->mapFromSource(
-               m_model->index( m_model->rowCount() - 1, AccountModel::BALANCE )
-    );
+                                  m_model->index( m_model->rowCount() - 1, AccountModel::BALANCE )
+                              );
     const Money value = m_proxy->data( index, Qt::EditRole ).value<Money>();
 
     QString stylesheet;
     if( Knipptasch::Preferences::self()->positiveAmountForegroundEnabled() && value >= 0.0 ) {
-        stylesheet = QString::fromLatin1("color: %1;").arg(
-                 Knipptasch::Preferences::self()->positiveAmountForegroundColor().name() );
-    }
-    else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && value < 0.0 ) {
-        stylesheet = QString::fromLatin1("color: %1;").arg(
-                 Knipptasch::Preferences::self()->negativeAmountForegroundColor().name() );
+        stylesheet = QString::fromLatin1( "color: %1;" ).arg(
+                         Knipptasch::Preferences::self()->positiveAmountForegroundColor().name() );
+    } else if( Knipptasch::Preferences::self()->negativeAmountForegroundEnabled() && value < 0.0 ) {
+        stylesheet = QString::fromLatin1( "color: %1;" ).arg(
+                         Knipptasch::Preferences::self()->negativeAmountForegroundColor().name() );
     }
 
     ui->balance->setStyleSheet( stylesheet );
@@ -517,10 +513,10 @@ void AccountWidget::slotUpdateAccountInfo()
 
 void AccountWidget::slotCurrentRowChanged()
 {
-    int row = m_proxy->mapFromSource( m_model->index( m_model->rowCount()-1, AccountModel::MATURITY ) ).row();
+    int row = m_proxy->mapFromSource( m_model->index( m_model->rowCount() - 1, AccountModel::MATURITY ) ).row();
     mainWindowActionCollection()->action( "posting_delete" )->setEnabled( ui->view->currentIndex().isValid() && ui->view->currentIndex().row() != row );
 
-    foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
+    foreach( AbstractAccountTabWidget * w, m_tabwidgets ) {
         w->setCurrentSelectedIndex( m_proxy->mapToSource( ui->view->selectionModel()->currentIndex() ) );
     }
 
@@ -529,7 +525,7 @@ void AccountWidget::slotCurrentRowChanged()
     }
 }
 
-void AccountWidget::slotUpdateAccountTabWidget(AbstractAccountTabWidget *widget)
+void AccountWidget::slotUpdateAccountTabWidget( AbstractAccountTabWidget *widget )
 {
     Q_ASSERT( widget );
 
@@ -551,10 +547,10 @@ void AccountWidget::closeSearchWidget()
 }
 
 
-bool AccountWidget::eventFilter(QObject *obj, QEvent *event)
+bool AccountWidget::eventFilter( QObject *obj, QEvent *event )
 {
     if( event->type() == QEvent::ContextMenu ) {
-        QContextMenuEvent *e = dynamic_cast<QContextMenuEvent*>(event);
+        QContextMenuEvent *e = dynamic_cast<QContextMenuEvent *>( event );
 
         if( e ) {
             if( ui->view->horizontalHeader() && obj == ui->view->horizontalHeader() ) {
@@ -582,9 +578,9 @@ bool AccountWidget::eventFilter(QObject *obj, QEvent *event)
 
 
 #if defined(HAVE_KDE)
-KActionCollection* AccountWidget::mainWindowActionCollection()
+KActionCollection *AccountWidget::mainWindowActionCollection()
 #else
-ActionCollection* AccountWidget::mainWindowActionCollection()
+ActionCollection *AccountWidget::mainWindowActionCollection()
 #endif
 {
     Q_ASSERT( m_mainWindow );
@@ -593,7 +589,7 @@ ActionCollection* AccountWidget::mainWindowActionCollection()
 }
 
 
-void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &index)
+void AccountWidget::showHeaderMenu( QContextMenuEvent *e, const QModelIndex &index )
 {
     QMenu menu( this );
     menu.setTitle( tr( "Columns" ) );
@@ -618,10 +614,10 @@ void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &inde
             }
 
             hide = menu.addAction( tr( "Hide %1" ).arg(
-                    ui->view->model()->headerData(
-                        index.column(), Qt::Horizontal, Qt::DisplayRole ).toString()
-                    )
-                );
+                                       ui->view->model()->headerData(
+                                           index.column(), Qt::Horizontal, Qt::DisplayRole ).toString()
+                                   )
+                                 );
 
             // Only one column is visible, so this can't be hidden any more
             if( ui->view->horizontalHeader()->count() - 1
@@ -635,10 +631,10 @@ void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &inde
     QMenu *showcol = new QMenu( this );
     showcol->setTitle( tr( "Show Column" ) );
 
-    for(int i = 0; i < ui->view->horizontalHeader()->count(); ++i) {
+    for( int i = 0; i < ui->view->horizontalHeader()->count(); ++i ) {
         if( ui->view->horizontalHeader()->isSectionHidden( i ) ) {
             showcolumns->addAction(
-                    showcol->addAction(
+                showcol->addAction(
                     ui->view->model()->headerData(
                         i, Qt::Horizontal, Qt::DisplayRole ).toString()
                 ) )->setData( i );
@@ -660,12 +656,10 @@ void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &inde
         if( hide && action == hide ) {
             ui->view->setColumnHidden( index.column(), true );
             saveConfig();
-        }
-        else if( action == fitToWidth ) {
+        } else if( action == fitToWidth ) {
             ui->view->resizeColumnToContents( index.column() );
             saveConfig();
-        }
-        else if( action->actionGroup() && action->actionGroup() == showcolumns ) {
+        } else if( action->actionGroup() && action->actionGroup() == showcolumns ) {
             bool ok;
             int i = action->data().toInt( &ok );
             if( ok ) {
@@ -677,7 +671,7 @@ void AccountWidget::showHeaderMenu(QContextMenuEvent *e, const QModelIndex &inde
 }
 
 
-void AccountWidget::showTableMenu(QContextMenuEvent *e, const QModelIndex &index)
+void AccountWidget::showTableMenu( QContextMenuEvent *e, const QModelIndex &index )
 {
     Q_UNUSED( e );
     Q_UNUSED( index );
@@ -703,12 +697,12 @@ void AccountWidget::loadAccountTabWidgetPlugins()
     //m_tabwidgets.append( new SplitPostingTabWidget( this ) );
     //m_tabwidgets.append( new DescriptionTabWidget( this ) );
 
-    foreach(AbstractAccountTabWidget *w, m_tabwidgets) {
+    foreach( AbstractAccountTabWidget * w, m_tabwidgets ) {
         w->setAccountModel( m_model );
         ui->tabwidget->addTab( w, w->icon(), w->label() );
 
-        connect( w, SIGNAL( updateTabView(AbstractAccountTabWidget*) ),
-                 this, SLOT( slotUpdateAccountTabWidget(AbstractAccountTabWidget*) ) );
+        connect( w, SIGNAL( updateTabView( AbstractAccountTabWidget * ) ),
+                 this, SLOT( slotUpdateAccountTabWidget( AbstractAccountTabWidget * ) ) );
     }
 }
 

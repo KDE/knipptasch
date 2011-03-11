@@ -25,13 +25,11 @@
 #include <QDebug>
 
 
-struct BasePosting::Private
-{
+struct BasePosting::Private {
     Private()
-      : page( 0 ),
-        category( 0 ),
-        modified( false )
-    {
+        : page( 0 ),
+          category( 0 ),
+          modified( false ) {
     }
 
     Money amount;
@@ -54,9 +52,9 @@ struct BasePosting::Private
 
 
 
-BasePosting::BasePosting(QObject *parent)
-  : Object( parent ),
-    d( new BasePosting::Private )
+BasePosting::BasePosting( QObject *parent )
+    : Object( parent ),
+      d( new BasePosting::Private )
 {
 }
 
@@ -77,7 +75,7 @@ bool BasePosting::isModified() const
 }
 
 
-void BasePosting::setModified(bool state)
+void BasePosting::setModified( bool state )
 {
     d->modified = state;
 
@@ -95,7 +93,7 @@ QString BasePosting::postingText() const
 }
 
 
-void BasePosting::setPostingText(const QString &str)
+void BasePosting::setPostingText( const QString &str )
 {
     if( d->postingtext != str.trimmed() ) {
         d->postingtext = str.trimmed();
@@ -112,7 +110,7 @@ Maturity BasePosting::maturity() const
 }
 
 
-void BasePosting::setMaturity(const Maturity &date)
+void BasePosting::setMaturity( const Maturity &date )
 {
     if( d->maturity != date ) {
         d->maturity = date;
@@ -129,7 +127,7 @@ ValueDate BasePosting::valueDate() const
 }
 
 
-void BasePosting::setValueDate(const ValueDate &date)
+void BasePosting::setValueDate( const ValueDate &date )
 {
     if( d->valuedate != date ) {
         d->valuedate = date;
@@ -146,7 +144,7 @@ Money BasePosting::amount() const
 }
 
 
-void BasePosting::setAmount(const Money &m)
+void BasePosting::setAmount( const Money &m )
 {
     if( d->amount != m ) {
         d->amount = m;
@@ -163,7 +161,7 @@ int BasePosting::page() const
 }
 
 
-void BasePosting::setPage(int p)
+void BasePosting::setPage( int p )
 {
     if( d->page != p ) {
         d->page = p;
@@ -180,7 +178,7 @@ QString BasePosting::description() const
 }
 
 
-void BasePosting::setDescription(const QString &str)
+void BasePosting::setDescription( const QString &str )
 {
     if( d->description != str.trimmed() ) {
         d->description = str.trimmed();
@@ -197,7 +195,7 @@ QString BasePosting::voucher() const
 }
 
 
-void BasePosting::setVoucher(const QString &str)
+void BasePosting::setVoucher( const QString &str )
 {
     if( d->voucher != str.trimmed() ) {
         d->voucher = str.trimmed();
@@ -214,7 +212,7 @@ QDate BasePosting::warranty() const
 }
 
 
-void BasePosting::setWarranty(const QDate &date)
+void BasePosting::setWarranty( const QDate &date )
 {
     if( d->warranty != date ) {
         d->warranty = date;
@@ -231,7 +229,7 @@ QString BasePosting::methodOfPayment() const
 }
 
 
-void BasePosting::setMethodOfPayment(const QString &str)
+void BasePosting::setMethodOfPayment( const QString &str )
 {
     if( d->methodOfPayment != str.trimmed() ) {
         d->methodOfPayment = str.trimmed();
@@ -242,19 +240,19 @@ void BasePosting::setMethodOfPayment(const QString &str)
 }
 
 
-Category* BasePosting::category()
+Category *BasePosting::category()
 {
     return d->category;
 }
 
 
-const Category* BasePosting::category() const
+const Category *BasePosting::category() const
 {
     return d->category;
 }
 
 
-void BasePosting::setCategory(Category *category)
+void BasePosting::setCategory( Category *category )
 {
     if( d->category != category ) {
         if( d->category ) {
@@ -289,7 +287,7 @@ QString BasePosting::payee() const
 }
 
 
-void BasePosting::setPayee(const QString &str)
+void BasePosting::setPayee( const QString &str )
 {
     if( d->payee != str.trimmed() ) {
         d->payee = str.trimmed();
@@ -300,7 +298,7 @@ void BasePosting::setPayee(const QString &str)
 }
 
 
-QDataStream& BasePosting::serialize(QDataStream &stream) const
+QDataStream &BasePosting::serialize( QDataStream &stream ) const
 {
     Object::serialize( stream );
 
@@ -320,7 +318,7 @@ QDataStream& BasePosting::serialize(QDataStream &stream) const
 }
 
 
-QDataStream& BasePosting::deserialize(const Account *account, QDataStream &stream)
+QDataStream &BasePosting::deserialize( const Account *account, QDataStream &stream )
 {
     Object::deserialize( account, stream );
 
@@ -342,9 +340,8 @@ QDataStream& BasePosting::deserialize(const Account *account, QDataStream &strea
         const Category *c = account->rootCategory()->findCategoryByHash( hash );
 
         if( c ) {
-            d->category = const_cast<Category*>( c );
-        }
-        else {
+            d->category = const_cast<Category *>( c );
+        } else {
             qDebug() << "No category for hash" << hash << "found!";
         }
     }

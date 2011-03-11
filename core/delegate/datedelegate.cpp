@@ -1,5 +1,5 @@
 /*
- * Copyright 2010  Stefan Böhmann <kde@hilefoks.org>
+ * Copyright 2010, 2011  Stefan Böhmann <kde@hilefoks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -32,21 +32,20 @@
 #include <QDebug>
 
 
-DateDelegate::DateDelegate(Knipptasch::Preferences *preferences, QObject *parent)
-  : QStyledItemDelegate( parent ),
-    m_preferences( preferences )
+DateDelegate::DateDelegate( QObject *parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
 
-QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *DateDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     const QAbstractItemModel *model = index.model();
     if( !model ) {
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    DateEdit *input = new DateEdit( m_preferences->userDefinedDateFormat(), parent );
+    DateEdit *input = new DateEdit( Knipptasch::Preferences::self()->userDefinedDateFormat(), parent );
 //    input->setCalendarPopup( true );
 //    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );
@@ -55,18 +54,17 @@ QWidget* DateDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem 
 }
 
 
-void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+void DateDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    DateEdit *input = qobject_cast<DateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit *>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
         QStyledItemDelegate::setEditorData( editor, index );
-    }
-    else {
+    } else {
         QDate dt;
         if( index.isValid() ) {
-            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel*>( model );
+            const QSortFilterProxyModel *proxy = qobject_cast<const QSortFilterProxyModel *>( model );
             QModelIndex idx = index;
 
             if( proxy ) {
@@ -80,21 +78,19 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
             if( !dt.isValid() ) {
                 if( idx.column() == AccountModel::MATURITY ) {
                     dt = QDate::currentDate();
-                }
-                else if( idx.column() == AccountModel::VALUEDATE ) {
+                } else if( idx.column() == AccountModel::VALUEDATE ) {
                     dt = model->data(
-                            model->index( idx.row(), AccountModel::MATURITY ),
-                            Qt::EditRole
-                        ).toDate();
-                }
-                else if( idx.column() == AccountModel::WARRANTY ) {
+                             model->index( idx.row(), AccountModel::MATURITY ),
+                             Qt::EditRole
+                         ).toDate();
+                } else if( idx.column() == AccountModel::WARRANTY ) {
                     dt = model->data(
-                            model->index( idx.row(), AccountModel::VALUEDATE ),
-                            Qt::EditRole
-                        ).toDate();
+                             model->index( idx.row(), AccountModel::VALUEDATE ),
+                             Qt::EditRole
+                         ).toDate();
 
                     if( dt.isValid() ) {
-                        dt = dt.addMonths( m_preferences->defaultLengthOfWarrantyInMonth() );
+                        dt = dt.addMonths( Knipptasch::Preferences::self()->defaultLengthOfWarrantyInMonth() );
                     }
                 }
             }
@@ -106,40 +102,39 @@ void DateDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
 }
 
 
-void DateDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void DateDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
 {
     if( !index.isValid() ) {
         return;
     }
 
-    DateEdit *input = qobject_cast<DateEdit*>( editor );
+    DateEdit *input = qobject_cast<DateEdit *>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
-    }
-    else {
+    } else {
         qDebug() << "set model data:" << input->date();
         model->setData( index, input->date(), Qt::EditRole );
     }
 }
 
 
-QSize DateDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize DateDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
     static int fix = 0;
 
     if( fix <= 0 ) {
         fix = qApp->fontMetrics()
-                        .size(
-                                Qt::TextSingleLine,
-                                formatShortDate( QDate::currentDate() )
-                         ).width();
+              .size(
+                  Qt::TextSingleLine,
+                  formatShortDate( QDate::currentDate() )
+              ).width();
 
         fix += 40;
     }
 
     const QSize size = QStyledItemDelegate::sizeHint( option, index )
-                        + QSize( 25, 0 );
+                       + QSize( 25, 0 );
 
     if( size.width() >= fix ) {
         return size;

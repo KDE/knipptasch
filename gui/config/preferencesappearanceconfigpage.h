@@ -42,14 +42,14 @@ namespace Ui
  */
 class PreferencesAppearanceConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(PreferencesAppearanceConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( PreferencesAppearanceConfigPage )
 
     public:
         /**
          * Constructs a new PreferencesAppearanceConfigPage
          */
-        explicit PreferencesAppearanceConfigPage(Knipptasch::Preferences *pref, ConfigWidget *parent);
+        explicit PreferencesAppearanceConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent );
 
 
         /**

@@ -23,11 +23,9 @@
 #include <QCoreApplication>
 
 
-struct AbstractAccountTabWidget::Private
-{
+struct AbstractAccountTabWidget::Private {
     Private()
-      : model( 0 )
-    {
+        : model( 0 ) {
     }
 
     AccountModel *model;
@@ -41,17 +39,17 @@ struct AbstractAccountTabWidget::Private
 
 
 
-AbstractAccountTabWidget::AbstractAccountTabWidget(const QString &title, QWidget *parent)
-  : QWidget( parent ),
-    d( new AbstractAccountTabWidget::Private )
+AbstractAccountTabWidget::AbstractAccountTabWidget( const QString &title, QWidget *parent )
+    : QWidget( parent ),
+      d( new AbstractAccountTabWidget::Private )
 {
     d->label = title;
 }
 
 
-AbstractAccountTabWidget::AbstractAccountTabWidget(const QString &title, const QIcon &icon, QWidget *parent)
-  : QWidget( parent ),
-    d( new AbstractAccountTabWidget::Private )
+AbstractAccountTabWidget::AbstractAccountTabWidget( const QString &title, const QIcon &icon, QWidget *parent )
+    : QWidget( parent ),
+      d( new AbstractAccountTabWidget::Private )
 {
     d->label = title;
     d->icon = icon;
@@ -64,7 +62,7 @@ AbstractAccountTabWidget::~AbstractAccountTabWidget()
 }
 
 
-AccountModel* AbstractAccountTabWidget::accountModel()
+AccountModel *AbstractAccountTabWidget::accountModel()
 {
     Q_ASSERT( d );
 
@@ -72,7 +70,7 @@ AccountModel* AbstractAccountTabWidget::accountModel()
 }
 
 
-const AccountModel* AbstractAccountTabWidget::accountModel() const
+const AccountModel *AbstractAccountTabWidget::accountModel() const
 {
     Q_ASSERT( d );
 
@@ -80,7 +78,7 @@ const AccountModel* AbstractAccountTabWidget::accountModel() const
 }
 
 
-void AbstractAccountTabWidget::setAccountModel(AccountModel *model)
+void AbstractAccountTabWidget::setAccountModel( AccountModel *model )
 {
     if( d->model != model ) {
         setCurrentSelectedIndex( QModelIndex() );
@@ -131,7 +129,7 @@ QString AbstractAccountTabWidget::tabWhatsThis() const
 }
 
 
-void AbstractAccountTabWidget::setCurrentSelectedIndex(const QModelIndex &index)
+void AbstractAccountTabWidget::setCurrentSelectedIndex( const QModelIndex &index )
 {
     Q_ASSERT( d );
 
@@ -143,7 +141,7 @@ void AbstractAccountTabWidget::setCurrentSelectedIndex(const QModelIndex &index)
 }
 
 
-void AbstractAccountTabWidget::setIcon(const QIcon &ico)
+void AbstractAccountTabWidget::setIcon( const QIcon &ico )
 {
     Q_ASSERT( d );
 
@@ -152,7 +150,7 @@ void AbstractAccountTabWidget::setIcon(const QIcon &ico)
 }
 
 
-void AbstractAccountTabWidget::setLabel(const QString &str)
+void AbstractAccountTabWidget::setLabel( const QString &str )
 {
     Q_ASSERT( d );
 
@@ -163,7 +161,7 @@ void AbstractAccountTabWidget::setLabel(const QString &str)
 }
 
 
-void AbstractAccountTabWidget::setToolTip(const QString &str)
+void AbstractAccountTabWidget::setToolTip( const QString &str )
 {
     Q_ASSERT( d );
 
@@ -174,7 +172,7 @@ void AbstractAccountTabWidget::setToolTip(const QString &str)
 }
 
 
-void AbstractAccountTabWidget::setWhatsThis(const QString &str)
+void AbstractAccountTabWidget::setWhatsThis( const QString &str )
 {
     Q_ASSERT( d );
 
@@ -195,7 +193,7 @@ void AbstractAccountTabWidget::currentSelectedIndexAboutToBeChanged()
 }
 
 
-void AbstractAccountTabWidget::changeEvent(QEvent *event)
+void AbstractAccountTabWidget::changeEvent( QEvent *event )
 {
     if( event->type() == QEvent::EnabledChange ) {
         emit updateTabView( this );

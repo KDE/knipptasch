@@ -35,14 +35,14 @@ class ConfigWidget;
  */
 class ConfigDialog : public QDialog
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(ConfigDialog)
+        Q_OBJECT
+        Q_DISABLE_COPY( ConfigDialog )
 
     public:
         /**
          * Constructs a new ConfigDialog
          */
-        explicit ConfigDialog(QWidget *parent = 0);
+        explicit ConfigDialog( QWidget *parent = 0 );
 
 
         /**
@@ -54,27 +54,27 @@ class ConfigDialog : public QDialog
         /**
          * Returns the dialog button box.
          */
-        QDialogButtonBox* dialogButtonBox() const;
+        QDialogButtonBox *dialogButtonBox() const;
 
 
         /**
          * Sets the @param box.
          * The previous dialog button box will be deleted if this dialog is the parent of it.
          */
-        void setDialogButtonBox(QDialogButtonBox *box);
+        void setDialogButtonBox( QDialogButtonBox *box );
 
 
         /**
          * Returns the config widget.
          */
-        ConfigWidget* configWidget() const;
+        ConfigWidget *configWidget() const;
 
 
         /**
          * Sets the @param widget.
          * The previous widget will be deleted if this dialog is the parent of it.
          */
-        void setConfigWidget(ConfigWidget *widget);
+        void setConfigWidget( ConfigWidget *widget );
 
     public slots:
         /**

@@ -35,7 +35,7 @@ class Account;
  */
 namespace Knipptasch
 {
-        
+
     /**
     * @class ExportPlugin
     * @brief Abstract base class that provides an interface for export plugins.
@@ -70,14 +70,14 @@ namespace Knipptasch
 
 
             /**
-             * 
+             *
              */
-            virtual void exportAccount(const Account *account,
-                                    const QList<const Posting*> &selected,
-                                    QWidget *parent = 0) const = 0;
+            virtual void exportAccount( const Account *account,
+                                        const QList<const Posting *> &selected,
+                                        QWidget *parent = 0 ) const = 0;
     };
 
-    
+
 } // EndNamspace Knipptasch
 
 

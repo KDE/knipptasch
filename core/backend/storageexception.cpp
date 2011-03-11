@@ -23,9 +23,9 @@
 
 /**************** StorageException ****************/
 
-StorageException::StorageException(const QString &s)
-  : std::runtime_error( qPrintable( s ) ),
-    m_error( s )
+StorageException::StorageException( const QString &s )
+    : std::runtime_error( qPrintable( s ) ),
+      m_error( s )
 {
 }
 
@@ -45,8 +45,8 @@ QString StorageException::errorMessage() const
 
 /**************** StorageFileException ****************/
 
-StorageFileException::StorageFileException(const QString &s)
-  : StorageException( s )
+StorageFileException::StorageFileException( const QString &s )
+    : StorageException( s )
 {
 }
 
@@ -60,8 +60,8 @@ StorageFileException::~StorageFileException() throw()
 
 /**************** StorageFileVersionException ****************/
 
-StorageFileVersionException::StorageFileVersionException(const QString &s)
-  : StorageFileException( s )
+StorageFileVersionException::StorageFileVersionException( const QString &s )
+    : StorageFileException( s )
 {
 }
 
@@ -75,22 +75,22 @@ StorageFileVersionException::~StorageFileVersionException() throw()
 
 /**************** StorageParserException ****************/
 
-StorageParserException::StorageParserException(const QString &s, const QString element, int line, int column, int characterOffset)
-  : StorageException( s ),
-    m_element( element ),
-    m_line( line ),
-    m_column( column ),
-    m_characterOffset( characterOffset )
+StorageParserException::StorageParserException( const QString &s, const QString element, int line, int column, int characterOffset )
+    : StorageException( s ),
+      m_element( element ),
+      m_line( line ),
+      m_column( column ),
+      m_characterOffset( characterOffset )
 {
 }
 
 
-StorageParserException::StorageParserException(const QString &s, const QXmlStreamReader &xml)
-  : StorageException( s ),
-    m_element( xml.name().toString() ),
-    m_line( xml.lineNumber() ),
-    m_column( xml.columnNumber() ),
-    m_characterOffset( xml.characterOffset() )
+StorageParserException::StorageParserException( const QString &s, const QXmlStreamReader &xml )
+    : StorageException( s ),
+      m_element( xml.name().toString() ),
+      m_line( xml.lineNumber() ),
+      m_column( xml.columnNumber() ),
+      m_characterOffset( xml.characterOffset() )
 {
 }
 
@@ -126,16 +126,16 @@ int StorageParserException::characterOffset() const
 
 /**************** StorageParserAttributeException ****************/
 
-StorageParserAttributeException::StorageParserAttributeException(const QString &s, const QString attribute, const QString element, int line, int column , int characterOffset)
-  : StorageParserException( s, element, line, column, characterOffset ),
-    m_attribute( attribute )
+StorageParserAttributeException::StorageParserAttributeException( const QString &s, const QString attribute, const QString element, int line, int column , int characterOffset )
+    : StorageParserException( s, element, line, column, characterOffset ),
+      m_attribute( attribute )
 {
 }
 
 
-StorageParserAttributeException::StorageParserAttributeException(const QString &s, const QString attribute, const QXmlStreamReader &xml)
-  : StorageParserException( s, xml ),
-    m_attribute( attribute )
+StorageParserAttributeException::StorageParserAttributeException( const QString &s, const QString attribute, const QXmlStreamReader &xml )
+    : StorageParserException( s, xml ),
+      m_attribute( attribute )
 {
 }
 
@@ -155,8 +155,8 @@ QString StorageParserAttributeException::attribute() const
 
 /**************** StoragePasswordException ****************/
 
-StoragePasswordException::StoragePasswordException(const QString &s)
-  : StorageException( s )
+StoragePasswordException::StoragePasswordException( const QString &s )
+    : StorageException( s )
 {
 }
 

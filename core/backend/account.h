@@ -39,7 +39,7 @@ class QDataStream;
  */
 class KNIPPTASCH_CORE_EXPORT Account : public Object
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         enum SecurityLevel {
@@ -48,88 +48,88 @@ class KNIPPTASCH_CORE_EXPORT Account : public Object
             Low
         };
 
-        Account(QObject *parent = 0);
+        Account( QObject *parent = 0 );
         ~Account();
 
         bool isModified() const;
-        void setModified(bool state = true);
+        void setModified( bool state = true );
 
         bool isPasswordEnabled() const;
-        void setPasswordEnabled(bool state = true);
+        void setPasswordEnabled( bool state = true );
 
         QByteArray password() const;
-        void setPassword(const QByteArray &pw);
+        void setPassword( const QByteArray &pw );
 
         SecurityLevel securityLevel() const;
-        void setSecurityLevel(SecurityLevel level);
+        void setSecurityLevel( SecurityLevel level );
 
         QString name() const;
-        void setName(const QString &name);
+        void setName( const QString &name );
 
         QString number() const;
-        void setNumber(const QString &number) ;
+        void setNumber( const QString &number ) ;
 
         QString description() const;
-        void setDescription(const QString &desc);
+        void setDescription( const QString &desc );
 
         QDate openingDate() const;
-        void setOpeningDate(const QDate &date);
+        void setOpeningDate( const QDate &date );
 
         Money openingBalance() const;
-        void setOpeningBalance(Money money);
+        void setOpeningBalance( Money money );
 
         bool minimumBalanceEnabled() const;
-        void setMinimumBalanceEnabled(bool b);
+        void setMinimumBalanceEnabled( bool b );
 
         Money minimumBalance() const;
-        void setMinimumBalance(Money money);
+        void setMinimumBalance( Money money );
 
         bool maximumBalanceEnabled() const;
-        void setMaximumBalanceEnabled(bool b);
+        void setMaximumBalanceEnabled( bool b );
 
         Money maximumBalance() const;
-        void setMaximumBalance(Money money);
+        void setMaximumBalance( Money money );
 
         QString iban() const;
-        void setIban(const QString &iban);
+        void setIban( const QString &iban );
 
         QString owner() const;
-        void setOwner(const QString &owner);
+        void setOwner( const QString &owner );
 
         QString institution() const;
-        void setInstitution(const QString &str);
+        void setInstitution( const QString &str );
 
         QString bic() const;
-        void setBic(const QString &str);
+        void setBic( const QString &str );
 
         int countPostings() const;
-        void addPosting(Posting *ptr);
-        Posting* posting(int index);
-        const Posting* posting(int index) const;
-        QList<const Posting*> postings() const;
-        Posting* takePosting(int index);
-        void removePosting(int index);
-        void deletePosting(int index);
+        void addPosting( Posting *ptr );
+        Posting *posting( int index );
+        const Posting *posting( int index ) const;
+        QList<const Posting *> postings() const;
+        Posting *takePosting( int index );
+        void removePosting( int index );
+        void deletePosting( int index );
 
-        Category* rootCategory();
-        const Category* rootCategory() const;
+        Category *rootCategory();
+        const Category *rootCategory() const;
 
-        Category* findCategoryParent(const Category *child);
-        const Category* findCategoryParent(const Category *child) const;
+        Category *findCategoryParent( const Category *child );
+        const Category *findCategoryParent( const Category *child ) const;
 
-        int identifierByObject(const Object *object) const;
+        int identifierByObject( const Object *object ) const;
 
-        Object* objectByIdentifier(int id) const;
+        Object *objectByIdentifier( int id ) const;
 
     public slots:
         void clearObjectIdentifier();
 
     public:
-        friend QDataStream& operator<<(QDataStream &stream, const Account &acc);
-        friend QDataStream& operator>>(QDataStream &stream, Account &acc);
+        friend QDataStream &operator<<( QDataStream &stream, const Account &acc );
+        friend QDataStream &operator>>( QDataStream &stream, Account &acc );
 
-        virtual QDataStream& serialize(QDataStream &stream) const;
-        virtual QDataStream& deserialize(const Account *accout, QDataStream &stream);
+        virtual QDataStream &serialize( QDataStream &stream ) const;
+        virtual QDataStream &deserialize( const Account *accout, QDataStream &stream );
 
     signals:
         void openingBalanceChanged();
@@ -140,12 +140,12 @@ class KNIPPTASCH_CORE_EXPORT Account : public Object
 
     private:
         class Private;
-        Private * const d;
+        Private *const d;
 };
 
 
-extern QDataStream& operator<<(QDataStream &stream, const Account &acc);
-extern QDataStream& operator>>(QDataStream &stream, Account &acc);
+extern QDataStream &operator<<( QDataStream &stream, const Account &acc );
+extern QDataStream &operator>>( QDataStream &stream, Account &acc );
 
 #endif
 

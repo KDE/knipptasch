@@ -42,14 +42,14 @@ namespace Ui
  */
 class PreferencesGeneralConfigPage : public AbstractConfigPage
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(PreferencesGeneralConfigPage)
+        Q_OBJECT
+        Q_DISABLE_COPY( PreferencesGeneralConfigPage )
 
     public:
         /**
          * Constructs a new PreferencesGeneralConfigPage
          */
-        explicit PreferencesGeneralConfigPage(Knipptasch::Preferences *pref, ConfigWidget *parent);
+        explicit PreferencesGeneralConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent );
 
 
         /**

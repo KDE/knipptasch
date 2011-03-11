@@ -25,10 +25,10 @@
 #include <compat/utils.h>
 
 
-PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Knipptasch::Preferences *pref, ConfigWidget* parent)
-  : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon("table"), parent ),
-    ui( new Ui::PreferencesAccountTableConfigPage ),
-    m_preferences( pref )
+PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage( Knipptasch::Preferences *pref, ConfigWidget *parent )
+    : AbstractConfigPage( tr( "Account Table" ), tr( "Account Table Settings" ), DesktopIcon( "view-form-table" ), parent ),
+      ui( new Ui::PreferencesAccountTableConfigPage ),
+      m_preferences( pref )
 {
     ui->setupUi( this );
 
@@ -36,25 +36,25 @@ PreferencesAccountTableConfigPage::PreferencesAccountTableConfigPage(Knipptasch:
     ui->sortPostingsBy->addItem( tr( "Maturity" ), Knipptasch::Preferences::Maturity );
     ui->sortPostingsBy->addItem( tr( "Value Date" ), Knipptasch::Preferences::ValueDate );
 
-    connect( ui->sortPostingsBy, SIGNAL( currentIndexChanged(int) ),
+    connect( ui->sortPostingsBy, SIGNAL( currentIndexChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->defaultWarrantyPeriod, SIGNAL( valueChanged(int) ),
+    connect( ui->defaultWarrantyPeriod, SIGNAL( valueChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->movableColumns, SIGNAL( stateChanged(int) ),
+    connect( ui->movableColumns, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->cascadingSectionResize, SIGNAL( stateChanged(int) ),
+    connect( ui->cascadingSectionResize, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->doubleClickResizeColumnToContent, SIGNAL( stateChanged(int) ),
+    connect( ui->doubleClickResizeColumnToContent, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->resetCurrentColumnOnRowChanged, SIGNAL( stateChanged(int) ),
+    connect( ui->resetCurrentColumnOnRowChanged, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
-    connect( ui->autoCompletionEnabled, SIGNAL( stateChanged(int) ),
+    connect( ui->autoCompletionEnabled, SIGNAL( stateChanged( int ) ),
              this, SIGNAL( pageModified() ) );
 
     revert();
@@ -104,9 +104,9 @@ bool PreferencesAccountTableConfigPage::isModified() const
 
 bool PreferencesAccountTableConfigPage::commit()
 {
-    m_preferences->setPostingSortOrder( static_cast<Knipptasch::Preferences::PostingSortOrder>( 
-                                                ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt() 
-                                            ) 
+    m_preferences->setPostingSortOrder( static_cast<Knipptasch::Preferences::PostingSortOrder>(
+                                            ui->sortPostingsBy->itemData( ui->sortPostingsBy->currentIndex() ).toInt()
+                                        )
                                       );
     m_preferences->setDefaultLengthOfWarrantyInMonth( ui->defaultWarrantyPeriod->value() );
     m_preferences->setMovableColumns( ui->movableColumns->isChecked() );
