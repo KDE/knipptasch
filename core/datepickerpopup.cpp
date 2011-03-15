@@ -31,6 +31,11 @@
 
 
 
+namespace Knipptasch
+{
+    
+
+
 class DatePickerAction : public QWidgetAction
 {
     public:
@@ -247,6 +252,8 @@ void DatePickerPopup::slotNoDate()
     d->slotNoDate();
 }
 
+
+} // EndNamspace Knipptasch
 
 //#include "datepickerpopup.moc"
 

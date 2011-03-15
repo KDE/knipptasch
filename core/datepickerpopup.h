@@ -25,86 +25,97 @@
 
 
 /**
- * @short This menu helps the user to select a date quickly.
+ * @namespace Knipptasch
+ * @brief Default namespace for Knipptasch
  *
- * This menu helps the user to select a date quickly. It offers various
- * modes of selecting, e.g. with a DatePicker or with words like "Tomorrow".
- *
- * The available modes are:
- *
- * @li NoDate: A menu-item with "No Date". If chosen, the datepicker will emit
- *     a null QDate.
- * @li DatePicker: Shows a DatePicker-widget.
- * @li Words: Shows items like "Today", "Tomorrow" or "Next Week".
- *
- * @author Bram Schoenmakers <bram_s@softhome.net>
+ * @author Stefan Böhmann <kde@hilefoks.org>
  */
-class DatePickerPopup: public QMenu
+namespace Knipptasch
 {
-        Q_OBJECT
 
-    public:
-        /**
-         * Describes the available selection modes.
-         */
-        enum Mode {
-            NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
-            DatePicker = 2, ///< A menu-item with a DatePicker.
-            Words = 4       ///< A menu-item with list of words that describe a date.
-        };
+    /**
+     * @short This menu helps the user to select a date quickly.
+     *
+     * This menu helps the user to select a date quickly. It offers various
+     * modes of selecting, e.g. with a DatePicker or with words like "Tomorrow".
+     *
+     * The available modes are:
+     *
+     * @li NoDate: A menu-item with "No Date". If chosen, the datepicker will emit
+     *     a null QDate.
+     * @li DatePicker: Shows a DatePicker-widget.
+     * @li Words: Shows items like "Today", "Tomorrow" or "Next Week".
+     *
+     * @author Bram Schoenmakers <bram_s@softhome.net>
+     */
+    class DatePickerPopup: public QMenu
+    {
+            Q_OBJECT
 
-        /**
-         * Describes the a set of combined modes.
-         */
-        Q_DECLARE_FLAGS( Modes, Mode )
+        public:
+            /**
+             * Describes the available selection modes.
+             */
+            enum Mode {
+                NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
+                DatePicker = 2, ///< A menu-item with a DatePicker.
+                Words = 4       ///< A menu-item with list of words that describe a date.
+            };
 
-        /**
-         * Creates a new date picker popup.
-         *
-         * @param modes The selection modes that shall be offered
-         * @param date The initial date of date picker widget.
-         * @param parent The parent object.
-         */
-        explicit DatePickerPopup( Modes modes = DatePicker,
-                                  const QDate &date = QDate::currentDate(),
-                                  QWidget *parent = 0 );
+            /**
+             * Describes the a set of combined modes.
+             */
+            Q_DECLARE_FLAGS( Modes, Mode )
 
-        /**
-         * Destroys the date picker popup.
-         */
-        ~DatePickerPopup();
+            /**
+             * Creates a new date picker popup.
+             *
+             * @param modes The selection modes that shall be offered
+             * @param date The initial date of date picker widget.
+             * @param parent The parent object.
+             */
+            explicit DatePickerPopup( Modes modes = DatePicker,
+                                    const QDate &date = QDate::currentDate(),
+                                    QWidget *parent = 0 );
 
-    public Q_SLOTS:
-        /**
-         * Sets the current @p date.
-         */
-        void setDate( const QDate &date );
+            /**
+             * Destroys the date picker popup.
+             */
+            ~DatePickerPopup();
 
-    Q_SIGNALS:
-        /**
-         * This signal is emitted whenever the user has selected a new date.
-         *
-         * @param date The new date.
-         */
-        void dateChanged( const QDate &date );
+        public Q_SLOTS:
+            /**
+             * Sets the current @p date.
+             */
+            void setDate( const QDate &date );
 
-    private slots:
-        void slotDateChanged( const QDate &dt );
-        void slotToday();
-        void slotTomorrow();
-        void slotNextWeek();
-        void slotNextMonth();
-        void slotNoDate();
+        Q_SIGNALS:
+            /**
+             * This signal is emitted whenever the user has selected a new date.
+             *
+             * @param date The new date.
+             */
+            void dateChanged( const QDate &date );
 
-    private:
-        //@cond PRIVATE
-        class Private;
-        Private *const d;
-        //@endcond
-};
+        private slots:
+            void slotDateChanged( const QDate &dt );
+            void slotToday();
+            void slotTomorrow();
+            void slotNextWeek();
+            void slotNextMonth();
+            void slotNoDate();
+
+        private:
+            //@cond PRIVATE
+            class Private;
+            Private *const d;
+            //@endcond
+    };
+
+} // EndNamspace Knipptasch
 
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( DatePickerPopup::Modes )
+Q_DECLARE_OPERATORS_FOR_FLAGS( Knipptasch::DatePickerPopup::Modes )
 
 #endif
 

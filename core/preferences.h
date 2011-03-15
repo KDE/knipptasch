@@ -22,9 +22,6 @@
 #include <QSettings>
 
 
-
-
-
 /**
  * @namespace Knipptasch
  * @brief Default namespace for Knipptasch

@@ -45,7 +45,7 @@ QWidget *DateDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem
         return QStyledItemDelegate::createEditor( parent, option, index );
     }
 
-    DateEdit *input = new DateEdit( Knipptasch::Preferences::self()->userDefinedDateFormat(), parent );
+    Knipptasch::DateEdit *input = new Knipptasch::DateEdit( Knipptasch::Preferences::self()->userDefinedDateFormat(), parent );
 //    input->setCalendarPopup( true );
 //    input->setCorrectionMode( DateEdit::CorrectToNearestValue );
     input->setFrame( false );
@@ -56,7 +56,7 @@ QWidget *DateDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem
 
 void DateDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
 {
-    DateEdit *input = qobject_cast<DateEdit *>( editor );
+    Knipptasch::DateEdit *input = qobject_cast<Knipptasch::DateEdit *>( editor );
     const QAbstractItemModel *model = index.model();
 
     if( !input || !model ) {
@@ -108,7 +108,7 @@ void DateDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, con
         return;
     }
 
-    DateEdit *input = qobject_cast<DateEdit *>( editor );
+    Knipptasch::DateEdit *input = qobject_cast<Knipptasch::DateEdit *>( editor );
 
     if( !input ) {
         QStyledItemDelegate::setModelData( editor, model, index );
