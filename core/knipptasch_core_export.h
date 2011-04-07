@@ -17,6 +17,21 @@
 #ifndef KNIPPTASCH_CORE_EXPORT_H
 #define KNIPPTASCH_CORE_EXPORT_H
 
+/**
+ * @defgroup Core Knipptasch Core Library
+ */
+
+/**
+ * @ingroup Core
+ * @defgroup Plugin Plugin Classes
+ */
+
+/**
+ * @ingroup Core
+ * @defgroup Delegate Delegate Classes
+ */
+
+
 #include <QtCore/QtGlobal>
 
 #ifndef KNIPPTASCH_CORE_EXPORT

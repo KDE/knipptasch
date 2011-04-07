@@ -33,6 +33,8 @@ namespace Knipptasch
 
     /**
      * @class AccountTabPlugin
+     * @ingroup Core
+     * @ingroup Plugin
      * @brief
      *
      * @author Stefan Böhmann <kde@hilefoks.org>

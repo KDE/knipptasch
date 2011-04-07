@@ -33,23 +33,24 @@ namespace Knipptasch
 
     /**
      * @class AbstractDockWidget
+     * @ingroup Core
      * @brief Abstract base class that provides an interface for dock widgets.
      *
      * @author Stefan Böhmann <kde@hilefoks.org>
      */
     class KNIPPTASCH_CORE_EXPORT AbstractDockWidget : public QDockWidget
     {
-        Q_OBJECT
+            Q_OBJECT
 
         public:
-            explicit AbstractDockWidget(const QString &title, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-            explicit AbstractDockWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+            explicit AbstractDockWidget( const QString &title, QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+            explicit AbstractDockWidget( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
             virtual ~AbstractDockWidget();
 
         private:
             class Private;
-            Private * const d;
+            Private *const d;
     };
 
 } // EndNamspace Knipptasch

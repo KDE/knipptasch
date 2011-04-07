@@ -31,8 +31,8 @@
 
 
 
-DescriptionTabPlugin::DescriptionTabPlugin(QObject *parent)
-  : QObject( parent )
+DescriptionTabPlugin::DescriptionTabPlugin( QObject *parent )
+    : QObject( parent )
 {
     qsrand( QTime::currentTime().msec() );
 }
@@ -58,13 +58,13 @@ QString DescriptionTabPlugin::shortName() const
 
 QString DescriptionTabPlugin::name() const
 {
-    return tr( "Description Tab Plugin" );    
+    return tr( "Description Tab Plugin" );
 }
 
 
 QPixmap DescriptionTabPlugin::icon() const
 {
-    return BarIcon("format-text-blockquote");
+    return BarIcon( "format-text-blockquote" );
 }
 
 
@@ -86,7 +86,7 @@ QByteArray DescriptionTabPlugin::version() const
 }
 
 
-AbstractAccountTabWidget* DescriptionTabPlugin::widget()
+AbstractAccountTabWidget *DescriptionTabPlugin::widget()
 {
     return 0;
 }
@@ -94,7 +94,7 @@ AbstractAccountTabWidget* DescriptionTabPlugin::widget()
 
 bool DescriptionTabPlugin::enable()
 {
-    return true;    
+    return true;
 }
 
 

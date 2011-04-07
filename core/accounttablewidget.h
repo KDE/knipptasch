@@ -39,11 +39,12 @@ namespace Knipptasch
 
 
     /**
-    * @class AccountTableWidget
-    * @brief
-    *
-    * @author Stefan Böhmann <kde@hilefoks.org>
-    */
+     * @class AccountTableWidget
+     * @ingroup Core
+     * @brief
+     *
+     * @author Stefan Böhmann <kde@hilefoks.org>
+     */
     class KNIPPTASCH_CORE_EXPORT AccountTableWidget : public QWidget
     {
             Q_OBJECT

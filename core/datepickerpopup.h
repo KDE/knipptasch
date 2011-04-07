@@ -34,7 +34,9 @@ namespace Knipptasch
 {
 
     /**
-     * @short This menu helps the user to select a date quickly.
+     * @class DatePickerPopup
+     * @ingroup Core
+     * @brief This menu helps the user to select a date quickly.
      *
      * This menu helps the user to select a date quickly. It offers various
      * modes of selecting, e.g. with a DatePicker or with words like "Tomorrow".
@@ -75,8 +77,8 @@ namespace Knipptasch
              * @param parent The parent object.
              */
             explicit DatePickerPopup( Modes modes = DatePicker,
-                                    const QDate &date = QDate::currentDate(),
-                                    QWidget *parent = 0 );
+                                      const QDate &date = QDate::currentDate(),
+                                      QWidget *parent = 0 );
 
             /**
              * Destroys the date picker popup.

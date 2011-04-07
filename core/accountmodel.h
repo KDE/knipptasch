@@ -30,6 +30,7 @@ class QColor;
 
 /**
  * @class AccountModel
+ * @ingroup Core
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>

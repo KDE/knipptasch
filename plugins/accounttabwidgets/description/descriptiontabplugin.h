@@ -28,15 +28,15 @@
  */
 class DescriptionTabPlugin : public QObject, public Knipptasch::AccountTabPlugin
 {
-    Q_OBJECT
-    Q_INTERFACES( Knipptasch::Plugin )
-    Q_INTERFACES( Knipptasch::AccountTabPlugin )
-    
+        Q_OBJECT
+        Q_INTERFACES( Knipptasch::Plugin )
+        Q_INTERFACES( Knipptasch::AccountTabPlugin )
+
     public:
-        DescriptionTabPlugin(QObject *parent = 0);
+        DescriptionTabPlugin( QObject *parent = 0 );
 
         bool isEnabledByDefault() const;
-            
+
         QByteArray identifier() const;
         QString shortName() const;
         QString name() const;
@@ -44,12 +44,12 @@ class DescriptionTabPlugin : public QObject, public Knipptasch::AccountTabPlugin
         QString description() const;
         QString author() const;
         QByteArray version() const;
-        
-        AbstractAccountTabWidget* widget();
 
-    protected:            
+        AbstractAccountTabWidget *widget();
+
+    protected:
         bool enable();
-        bool disable();            
+        bool disable();
 };
 
 

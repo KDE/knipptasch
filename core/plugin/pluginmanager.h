@@ -38,6 +38,14 @@ namespace Knipptasch
     class Plugin;
 
 
+    /**
+     * @class PluginManager
+     * @ingroup Core
+     * @ingroup Plugin
+     * @brief
+     *
+     * @author Stefan Böhmann <kde@hilefoks.org>
+     */
     class KNIPPTASCH_CORE_EXPORT PluginManager : public QObject
     {
             Q_OBJECT

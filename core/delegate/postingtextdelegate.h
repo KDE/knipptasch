@@ -24,6 +24,8 @@
 
 /**
  * @class PostingTextDelegate
+ * @ingroup Core
+ * @ingroup Delegate
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>

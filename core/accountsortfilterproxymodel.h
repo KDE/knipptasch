@@ -28,6 +28,7 @@
 
 /**
  * @class AccountSortFilterProxyModel
+ * @ingroup Core
  * @brief
  *
  * @author Stefan Böhmann <kde@hilefoks.org>

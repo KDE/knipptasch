@@ -37,11 +37,13 @@ namespace Knipptasch
 {
 
     /**
-    * @class ExportPlugin
-    * @brief Abstract base class that provides an interface for export plugins.
-    *
-    * @author Stefan Böhmann <kde@hilefoks.org>
-    */
+     * @class ExportPlugin
+     * @ingroup Core
+     * @ingroup Plugin
+     * @brief Abstract base class that provides an interface for export plugins.
+     *
+     * @author Stefan Böhmann <kde@hilefoks.org>
+     */
     class KNIPPTASCH_CORE_EXPORT ExportPlugin : public Knipptasch::Plugin
     {
         public:

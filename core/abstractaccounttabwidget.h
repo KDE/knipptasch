@@ -27,6 +27,7 @@ class QModelIndex;
 
 /**
  * @class AbstractAccountTabWidget
+ * @ingroup Core
  * @brief Abstract base class that provides an interface for account tab widgets.
  *
  * @author Stefan Böhmann <kde@hilefoks.org>

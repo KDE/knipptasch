@@ -35,11 +35,13 @@ namespace Knipptasch
 {
 
     /**
-    * @class ImportPlugin
-    * @brief Abstract base class that provides an interface for import plugins.
-    *
-    * @author Stefan Böhmann <kde@hilefoks.org>
-    */
+     * @class ImportPlugin
+     * @ingroup Core
+     * @ingroup Plugin
+     * @brief Abstract base class that provides an interface for import plugins.
+     *
+     * @author Stefan Böhmann <kde@hilefoks.org>
+     */
     class KNIPPTASCH_CORE_EXPORT ImportPlugin : public Knipptasch::Plugin
     {
         public:

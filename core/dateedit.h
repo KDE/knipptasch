@@ -49,23 +49,25 @@ namespace Knipptasch
 {
 
     /**
-     * @short A date editing widget that consists of an editable combo box.
-     * 
+     * @class DateEdit
+     * @ingroup Core
+     * @brief A date editing widget that consists of an editable combo box.
+     *
      * The combo box contains the date in text form, and clicking the combo
      * box arrow will display a 'popup' style date picker.
-     * 
+     *
      * This widget also supports advanced features like allowing the user
      * to type in the day name to get the date. The following keywords
      * are supported (in the native language): tomorrow, yesterday, today,
      * monday, tuesday, wednesday, thursday, friday, saturday, sunday.
      * The user may also use the up and down arrow on the keyboard to
      * increment and decrement the date.
-     * 
+     *
      * Upper and/or lower limits may be set on the range of dates which the
      * user is allowed to enter.
-     * 
+     *
      * @image html kdateedit.png "This is how it looks"
-     * 
+     *
      * @author Cornelius Schumacher <schumacher@kde.org>
      * @author Mike Pilone <mpilone@slac.com>
      * @author David Jarvie <djarvie@kde.org>
@@ -160,8 +162,8 @@ namespace Knipptasch
              * @see setMinimumDate(), setMaximumDate()
              */
             void setDateRange( const QDate &earliest, const QDate &latest,
-                            const QString &earlyErrorMsg = QString(),
-                            const QString &lateErrorMsg = QString() );
+                               const QString &earlyErrorMsg = QString(),
+                               const QString &lateErrorMsg = QString() );
 
             /**
              * Sets whether the widget is read-only for the user. If read-only, the

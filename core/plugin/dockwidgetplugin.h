@@ -33,6 +33,8 @@ namespace Knipptasch
 
     /**
      * @class DockWidgetPlugin
+     * @ingroup Core
+     * @ingroup Plugin
      * @brief
      *
      * @author Stefan Böhmann <kde@hilefoks.org>
@@ -40,7 +42,7 @@ namespace Knipptasch
     class KNIPPTASCH_CORE_EXPORT DockWidgetPlugin : public Plugin
     {
         public:
-            virtual AbstractDockWidget* widget() = 0;
+            virtual AbstractDockWidget *widget() = 0;
 
         protected:
             virtual ~DockWidgetPlugin();

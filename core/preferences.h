@@ -33,6 +33,7 @@ namespace Knipptasch
 
     /**
      * @class Preferences
+     * @ingroup Core
      * @brief
      *
      * @author Stefan Böhmann <kde@hilefoks.org>

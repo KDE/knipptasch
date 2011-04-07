@@ -37,6 +37,8 @@ namespace Knipptasch
 {
     /**
      * @class Plugin
+     * @ingroup Core
+     * @ingroup Plugin
      * @brief An abstract class for implementing a plugin
      *
      * @author Stefan Böhmann <kde@hilefoks.org>

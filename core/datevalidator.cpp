@@ -26,117 +26,117 @@
 
 namespace Knipptasch
 {
-    
-
-DateValidator::DateValidator( QWidget *parent )
-    : QValidator( parent ),
-      m_statusTipEnabled( true )
-{
-}
 
 
-DateValidator::DateValidator( const QString &dateFormat, QWidget *parent )
-    : QValidator( parent ),
-      m_dateFormat( dateFormat ),
-      m_statusTipEnabled( true )
-{
-}
-
-
-DateValidator::DateValidator( const QString &dateFormat, const QStringList &keywords, QWidget *parent )
-    : QValidator( parent ),
-      m_keywords( keywords ),
-      m_dateFormat( dateFormat ),
-      m_statusTipEnabled( true )
-{
-}
-
-
-DateValidator::~DateValidator()
-{
-    if( m_statusTipEnabled ) {
-        QStatusTipEvent *event = new QStatusTipEvent( "" );
-        qApp->sendEvent( parent(), event );
-    }
-}
-
-
-QValidator::State DateValidator::validate( QString &str, int &value ) const
-{
-    Q_UNUSED( value );
-
-    if( m_statusTipEnabled ) {
-        QStatusTipEvent *event = new QStatusTipEvent( "" );
-        qApp->sendEvent( parent(), event );
+    DateValidator::DateValidator( QWidget *parent )
+        : QValidator( parent ),
+          m_statusTipEnabled( true )
+    {
     }
 
-    // empty string is intermediate so one can clear the
-    // edit line and start from scratch
-    if( str.isEmpty() ) {
-        return Intermediate;
+
+    DateValidator::DateValidator( const QString &dateFormat, QWidget *parent )
+        : QValidator( parent ),
+          m_dateFormat( dateFormat ),
+          m_statusTipEnabled( true )
+    {
     }
 
-    if( m_keywords.contains( str.toLower() ) ) {
-        return Acceptable;
+
+    DateValidator::DateValidator( const QString &dateFormat, const QStringList &keywords, QWidget *parent )
+        : QValidator( parent ),
+          m_keywords( keywords ),
+          m_dateFormat( dateFormat ),
+          m_statusTipEnabled( true )
+    {
     }
 
-    bool ok = false;
-    QDate date = readDate( str, m_dateFormat, &ok );
 
-    if( ok ) {
+    DateValidator::~DateValidator()
+    {
         if( m_statusTipEnabled ) {
-            QStatusTipEvent *event = new QStatusTipEvent( formatLongDate( date ) );
+            QStatusTipEvent *event = new QStatusTipEvent( "" );
             qApp->sendEvent( parent(), event );
         }
-
-        return Acceptable;
     }
 
-    return Intermediate;
-}
 
+    QValidator::State DateValidator::validate( QString &str, int &value ) const
+    {
+        Q_UNUSED( value );
 
-QStringList DateValidator::keywordList() const
-{
-    return m_keywords;
-}
-
-
-void DateValidator::setKeywordList( const QStringList &list )
-{
-    m_keywords = list;
-}
-
-
-QString DateValidator::dateFormat() const
-{
-    return m_dateFormat;
-}
-
-
-void DateValidator::setDateFormat( const QString &dateFormat )
-{
-    m_dateFormat = dateFormat;
-}
-
-
-bool DateValidator::statusTipEnabled() const
-{
-    return m_statusTipEnabled;
-}
-
-
-void DateValidator::setStatusTipEnabled( bool enabled )
-{
-    if( m_statusTipEnabled != enabled ) {
         if( m_statusTipEnabled ) {
             QStatusTipEvent *event = new QStatusTipEvent( "" );
             qApp->sendEvent( parent(), event );
         }
 
-        m_statusTipEnabled = enabled;
+        // empty string is intermediate so one can clear the
+        // edit line and start from scratch
+        if( str.isEmpty() ) {
+            return Intermediate;
+        }
+
+        if( m_keywords.contains( str.toLower() ) ) {
+            return Acceptable;
+        }
+
+        bool ok = false;
+        QDate date = readDate( str, m_dateFormat, &ok );
+
+        if( ok ) {
+            if( m_statusTipEnabled ) {
+                QStatusTipEvent *event = new QStatusTipEvent( formatLongDate( date ) );
+                qApp->sendEvent( parent(), event );
+            }
+
+            return Acceptable;
+        }
+
+        return Intermediate;
     }
-}
+
+
+    QStringList DateValidator::keywordList() const
+    {
+        return m_keywords;
+    }
+
+
+    void DateValidator::setKeywordList( const QStringList &list )
+    {
+        m_keywords = list;
+    }
+
+
+    QString DateValidator::dateFormat() const
+    {
+        return m_dateFormat;
+    }
+
+
+    void DateValidator::setDateFormat( const QString &dateFormat )
+    {
+        m_dateFormat = dateFormat;
+    }
+
+
+    bool DateValidator::statusTipEnabled() const
+    {
+        return m_statusTipEnabled;
+    }
+
+
+    void DateValidator::setStatusTipEnabled( bool enabled )
+    {
+        if( m_statusTipEnabled != enabled ) {
+            if( m_statusTipEnabled ) {
+                QStatusTipEvent *event = new QStatusTipEvent( "" );
+                qApp->sendEvent( parent(), event );
+            }
+
+            m_statusTipEnabled = enabled;
+        }
+    }
 
 
 } // EndNamspace Knipptasch
