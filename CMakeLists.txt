@@ -42,6 +42,7 @@ endif( NOT DISABLE_FORCE_OUT_OF_SOURCE_BUILD )
 
 
 find_package( Qt4 4.6.0 COMPONENTS QtCore QtGui QtXml QtSvg QtTest REQUIRED )
+find_package( Automoc4 REQUIRED )
 
 if( NOT WIN32 )
   set( SHARED_MIME_INFO_MINIMUM_VERSION "0.60" )

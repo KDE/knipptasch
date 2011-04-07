@@ -29,34 +29,6 @@ set(knipptasch_SOURCES
     config/appearancecolorchooserwidget.cpp
  )
 
-set( knipptasch_HEADERS
-    mainwindow.h
-    accountwidget.h
-    welcomewidget.h
-    aboutdialog.h
-    savemodifieddialog.h
-    recentfilemenu.h
-    quickreportpopup.h
-    quickreportwidget.h
-    passworddialog.h
-
-    config/configdialog.h
-    config/configwidget.h
-    config/abstractconfigpage.h
-    config/accountconfigwidget.h
-    config/accountconfigdialog.h
-    config/accountcategoryconfigpage.h
-    config/accountgeneralconfigpage.h
-    config/accountpasswordconfigpage.h
-    config/preferencesconfigdialog.h
-    config/preferencesconfigwidget.h
-    config/preferencesgeneralconfigpage.h
-    config/preferencesappearanceconfigpage.h
-    config/preferencesaccounttableconfigpage.h
-    config/preferencespluginconfigpage.h
-    config/appearancecolorchooserwidget.h
- )
-
 set( knipptasch_FORMS
     accountwidget.ui
     mainwindow.ui
@@ -108,11 +80,6 @@ else( HAVE_KDE )
         ${knipptasch_SOURCES}
     )
 
-    set( knipptasch_HEADERS
-        aboutdialog.h
-        ${knipptasch_HEADERS}
-    )
-
     set( knipptasch_FORMS
         aboutdialog.ui
         ${knipptasch_FORMS}
@@ -122,7 +89,6 @@ else( HAVE_KDE )
     qt4_add_translation( QM_FILES ${TS_FILES} )
 
     qt4_wrap_ui( knipptasch_SOURCES ${knipptasch_FORMS} )
-    qt4_wrap_cpp( knipptasch_SOURCES ${knipptasch_HEADERS} )
     qt4_add_resources( knipptasch_SOURCES ${knipptasch_RESOURCES} )
 
     if( WIN32 AND HAVE_DEPLOY )
@@ -130,7 +96,7 @@ else( HAVE_KDE )
         set( KNIPPTASCH_QT_MAINLIB ${QT_QTMAIN_LIBRARY} )
     endif( WIN32 AND HAVE_DEPLOY )
 
-    add_executable( knipptasch-bin ${WIN32_EXE} ${QM_FILES} ${knipptasch_SOURCES} )
+    automoc4_add_executable( knipptasch-bin ${WIN32_EXE} ${QM_FILES} ${knipptasch_SOURCES} )
     target_link_libraries( knipptasch-bin
           ${QT_LIBRARIES}
           ${QCA2_LIBRARIES}

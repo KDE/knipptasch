@@ -4,12 +4,7 @@ set(modeltest_SOURCES
     tst_modeltest.cpp modeltest.cpp dynamictreemodel.cpp
  )
 
-set( modeltest_HEADERS
-    modeltest.h dynamictreemodel.h
- )
-
-qt4_wrap_cpp( modeltest_SOURCES ${modeltest_HEADERS} )
-add_library( modeltest ${modeltest_SOURCES} )
+automoc4_add_library(modeltest ${modeltest_SOURCES})
 target_link_libraries(modeltest ${QT_LIBRARIES} )
 
 if( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )

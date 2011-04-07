@@ -7,11 +7,6 @@ set(compat_SOURCES
     utils.cpp
  )
 
-set( compat_HEADERS
-    actioncollection.h
- )
-
-
 if( HAVE_KDE )
     include_directories( ${KDE4_INCLUDES} ${KDE4_INCLUDE_DIR} )
     add_definitions( -DHAVE_KDE ${KDE4_DEFINITIONS} )
@@ -31,14 +26,7 @@ else( HAVE_KDE )
         ${compat_SOURCES}
     )
 
-    set( compat_HEADERS
-        qtingkde/kcolorbutton.h
-        qtingkde/kcolorcombo.h
-        ${compat_HEADERS}
-    )
-
-    qt4_wrap_cpp( compat_SOURCES ${compat_HEADERS} )
-    add_library( compat ${compat_SOURCES} )
+    automoc4_add_library(compat ${compat_SOURCES})
     target_link_libraries(compat ${QT_LIBRARIES} )
 endif( HAVE_KDE )
 

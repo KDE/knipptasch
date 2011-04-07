@@ -8,6 +8,8 @@ set( knipptasch_core_VERSION_SUFFIX ${knipptasch_VERSION_SUFFIX} )
 #############################################################################################
 
 find_package( Qt4 4.6.0 COMPONENTS QtCore QtGui REQUIRED )
+find_package( Automoc4 REQUIRED )
+
 include( ${QT_USE_FILE} )
 
 add_definitions( "-DMAKE_KNIPPTASCH_CORE_LIBRARY" )
@@ -50,50 +52,11 @@ set( knipptasch_core_SOURCES
  )
 
 
-set( knipptasch_core_HEADERS
-    abstractaccounttabwidget.h
-
-    accountmodel.h
-    categorymodel.h
-    accountsortfilterproxymodel.h
-
-    dateedit.h
-    datevalidator.h
-    datepickerpopup.h
-    categorycombobox.h
-    accounttablewidget.h
-
-    preferences.h
-
-    plugin/plugin.h
-    plugin/exportplugin.h
-    plugin/importplugin.h
-    plugin/accounttabplugin.h
-    plugin/pluginmanager.h
-
-    backend/object.h
-    backend/category.h
-    backend/account.h
-    backend/attachment.h
-    backend/posting.h
-    backend/baseposting.h
-    backend/subposting.h
-    backend/storage.h
-    backend/storageexception.h
-
-    delegate/datedelegate.h
-    delegate/moneydelegate.h
-    delegate/postingtextdelegate.h
-    delegate/categorydelegate.h
- )
-
-
 if( HAVE_KDE )
   kde4_add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
   target_link_libraries( knipptasch ${QT_LIBRARIES} modeltest compat )
 else( HAVE_KDE )
-  qt4_wrap_cpp( knipptasch_core_SOURCES ${knipptasch_core_HEADERS} )
-  add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
+  automoc4_add_library( knipptasch SHARED ${knipptasch_core_SOURCES} )
   target_link_libraries( knipptasch ${QT_LIBRARIES} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} modeltest compat )
 endif( HAVE_KDE )
 
