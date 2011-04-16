@@ -14,6 +14,10 @@ rq: qt
 rk: kde
 	LD_LIBRARY_PATH="./install/kde/lib" LC_ALL="de_DE.utf8" ./install/kde/bin/knipptasch &
 
+.PHONY: doc
+doc:
+	doxygen
+
 clean:
 	find . -iname *~ -exec rm {} \;
 	rm -rf ~/.config/Hilefoks

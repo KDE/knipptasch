@@ -15,6 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @defgroup Desktop Knipptasch Desktop GUI
+ */
+
 #include "mainwindow.h"
 
 #if defined(HAVE_KDE)
