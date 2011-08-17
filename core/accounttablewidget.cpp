@@ -20,6 +20,8 @@
 #include "accountmodel.h"
 #include "accountsortfilterproxymodel.h"
 
+#include "backend/account.h"
+
 #include "delegate/datedelegate.h"
 #include "delegate/postingtextdelegate.h"
 #include "delegate/moneydelegate.h"
@@ -39,17 +41,14 @@ namespace Knipptasch
 
 
     struct AccountTableWidget::Private {
-        Private( Knipptasch::Preferences *pref, QWidget *parent )
-            : preferences( pref ),
-              model( new AccountModel( parent ) ),
+        Private( QWidget *parent )
+            : model( new AccountModel( parent ) ),
               proxy( new AccountSortFilterProxyModel( parent ) ),
               view( new QTableView( parent ) ) {
             new ModelTest( model, parent );
             new ModelTest( proxy, parent );
         }
 
-
-        Knipptasch::Preferences *preferences;
 
         AccountModel *model;
         AccountSortFilterProxyModel *proxy;
@@ -58,9 +57,9 @@ namespace Knipptasch
 
 
 
-    AccountTableWidget::AccountTableWidget( Knipptasch::Preferences *pref, QWidget *parent )
+    AccountTableWidget::AccountTableWidget( QWidget *parent )
         : QWidget( parent ),
-          d( new AccountTableWidget::Private( pref, this ) )
+          d( new AccountTableWidget::Private( this ) )
     {
         d->proxy->setSourceModel( d->model );
         d->proxy->sort( AccountModel::MATURITY, Qt::AscendingOrder );
@@ -96,6 +95,34 @@ namespace Knipptasch
     AccountTableWidget::~AccountTableWidget()
     {
         delete d;
+    }
+
+
+    bool AccountTableWidget::isModified() const
+    {
+        if( d->model && d->model->account() ) {
+            return d->model->account()->isModified();
+        }
+
+        return false;
+    }
+
+
+    Account *AccountTableWidget::account()
+    {
+        return d->model->account();
+    }
+
+
+    const Account *AccountTableWidget::account() const
+    {
+        return d->model->account();
+    }
+
+
+    void AccountTableWidget::setAccount( Account *acc )
+    {
+        d->model->setAccount( acc );
     }
 
 
@@ -135,25 +162,12 @@ namespace Knipptasch
     }
 
 
-    Knipptasch::Preferences *AccountTableWidget::preferences()
-    {
-        return d->preferences;
-    }
-
-
-    const Knipptasch::Preferences *AccountTableWidget::preferences() const
-    {
-        return d->preferences;
-    }
-
-
     void AccountTableWidget::slotCurrentRowChanged()
     {
-        if( d->preferences->resetCurrentIndexWhenCurrentRowChanged() ) {
+        if( Knipptasch::Preferences::self()->resetCurrentIndexWhenCurrentRowChanged() ) {
             d->view->setCurrentIndex( d->view->model()->index( d->view->currentIndex().row(), 0 ) );
         }
     }
-
 
 
 } // EndNamspace Knipptasch
