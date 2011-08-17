@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>513</width>
+    <height>341</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ActionBox Example</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+MainWindow {
+	background-color: white;
+}
+</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QSint::ActionPanel" name="actionPanel">
+     <layout class="QVBoxLayout" name="verticalLayout_2"/>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QToolButton" name="toolButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cbTheme">
+       <item>
+        <property name="text">
+         <string>Default</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>XP Blue 1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>XP Blue 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Vista</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSint::ActionLabel" name="actionLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Action Text</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../examples/actionpanel/res.qrc">
+         <normaloff>:/res/exportpdf.png</normaloff>:/res/exportpdf.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSint::ActionBox" name="actionBox">
+       <property name="icon" stdset="0">
+        <pixmap resource="../../examples/actionlabel/res.qrc">:/res/fileprint.png</pixmap>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <action name="action1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../examples/actionpanel/res.qrc">
+     <normaloff>:/res/editcopy.png</normaloff>:/res/editcopy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Action1 (Designer)</string>
+   </property>
+  </action>
+  <action name="action2">
+   <property name="icon">
+    <iconset resource="../../examples/actionpanel/res.qrc">
+     <normaloff>:/res/editcut.png</normaloff>:/res/editcut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Action2 (Designer)</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../../examples/actionpanel/res.qrc">
+     <normaloff>:/res/editredo.png</normaloff>:/res/editredo.png</iconset>
+   </property>
+   <property name="text">
+    <string>ActionRedo</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="../../examples/actionpanel/res.qrc">
+     <normaloff>:/res/editundo.png</normaloff>:/res/editundo.png</iconset>
+   </property>
+   <property name="text">
+    <string>ActionUndo</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QSint::ActionLabel</class>
+   <extends>QPushButton</extends>
+   <header>QSint</header>
+  </customwidget>
+  <customwidget>
+   <class>QSint::ActionBox</class>
+   <extends>QFrame</extends>
+   <header>QSint</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QSint::ActionPanel</class>
+   <extends>QFrame</extends>
+   <header>QSint</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../examples/actionlabel/res.qrc"/>
+  <include location="../../examples/actionpanel/res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

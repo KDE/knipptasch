@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/ActionBox.png</file>
+        <file>images/ActionGroup.png</file>
+        <file>images/ActionLabel.png</file>
+        <file>images/ColorButton.png</file>
+        <file>images/ColorGrid.png</file>
+        <file>images/ScrollPanner.png</file>
+        <file>images/ActionPanel.png</file>
+    </qresource>
+</RCC>

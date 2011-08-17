@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>default/Fold.png</file>
+        <file>default/FoldOver.png</file>
+        <file>default/Unfold.png</file>
+        <file>default/UnfoldOver.png</file>
+        <file>xp/Fold_Blue1.png</file>
+        <file>xp/Fold_Blue2.png</file>
+        <file>xp/FoldOver_Blue1.png</file>
+        <file>xp/FoldOver_Blue2.png</file>
+        <file>xp/Unfold_Blue1.png</file>
+        <file>xp/Unfold_Blue2.png</file>
+        <file>xp/UnfoldOver_Blue1.png</file>
+        <file>xp/UnfoldOver_Blue2.png</file>
+        <file>vista/Fold.png</file>
+        <file>vista/FoldOver.png</file>
+        <file>vista/Unfold.png</file>
+        <file>vista/UnfoldOver.png</file>
+    </qresource>
+</RCC>

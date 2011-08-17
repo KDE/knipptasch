@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/bell.png</file>
+        <file>res/camera.png</file>
+        <file>res/cancel.png</file>
+        <file>res/nuke.png</file>
+        <file>res/star.png</file>
+    </qresource>
+</RCC>

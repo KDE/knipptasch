@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>426</width>
+    <height>274</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TabListMenu Example</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QCheckBox" name="cbUseIcons">
+      <property name="text">
+       <string>Use icons in the Tab Menu</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Click to see drop-down Tab Menu</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/res/bell.png</normaloff>:/res/bell.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Try to change tab's order by dragging them and watch how Tab Menu follows this order.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/res/camera.png</normaloff>:/res/camera.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="icon">
+        <iconset resource="res.qrc">
+         <normaloff>:/res/cancel.png</normaloff>:/res/cancel.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Tab 3</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="title">
+        <string>Tab 4</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>426</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionRecent">
+   <property name="text">
+    <string>Open Recent</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionClear_Recent">
+   <property name="text">
+    <string>Clear Recent</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

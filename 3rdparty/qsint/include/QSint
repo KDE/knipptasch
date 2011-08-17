@@ -1,0 +1,18 @@
+#include "../src/colorbutton.h"
+#include "../src/colorgrid.h"
+
+#include "../src/recentfiles.h"
+
+#include "../src/actionlabel.h"
+#include "../src/actionbox.h"
+#include "../src/actionpanel/actiongroup.h"
+#include "../src/actionpanel/actionpanel.h"
+#include "../src/actionpanel/actionpanelscheme.h"
+#include "../src/actionpanel/winxppanelscheme.h"
+#include "../src/actionpanel/winvistapanelscheme.h"
+
+#include "../src/scrollpanner.h"
+
+#include "../src/widgetpopup.h"
+
+#include "../src/tablistmenu.h"
