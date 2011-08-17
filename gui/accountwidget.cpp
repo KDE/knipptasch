@@ -119,6 +119,14 @@ AccountWidget::AccountWidget( MainWindow *mainWindow )
     ui->view->horizontalHeader()->installEventFilter( this );
     ui->view->installEventFilter( this );
 
+    ui->actionPanel->setScheme( QSint::WinXPPanelScheme::defaultScheme() );
+    QSint::ActionGroup *group1 = ui->actionPanel->createGroup(QPixmap(":/res/filesave.png"), "Expandable Group");
+    group1->addWidget(new QPushButton("Just a button", this));
+    //group1->addAction(ui->actionSave);
+    //group1->addAction(ui->actionPrint);
+    ui->actionPanel->addStretch();
+    
+    
     connect( ui->view->horizontalHeader(), SIGNAL( sectionDoubleClicked( int ) ), this, SLOT( onResizeColumnToContents( int ) ) );
     connect( ui->view->horizontalHeader(), SIGNAL( sectionMoved( int, int, int ) ), this, SLOT( saveConfig() ) );
     connect( ui->view->horizontalHeader(), SIGNAL( sectionResized( int, int, int ) ), this, SLOT( saveConfig() ) );

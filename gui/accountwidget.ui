@@ -7,17 +7,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>853</width>
-    <height>374</height>
+    <width>1014</width>
+    <height>523</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QFrame" name="styleframe">
@@ -110,7 +110,7 @@
      </widget>
     </widget>
    </item>
-   <item>
+   <item row="1" column="1">
     <widget class="QWidget" name="searchWidget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="topMargin">
@@ -151,6 +151,9 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="0" rowspan="2">
+    <widget class="QSint::ActionPanel" name="actionPanel" native="true"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -163,6 +166,12 @@
    <class>KTabWidget</class>
    <extends>QTabWidget</extends>
    <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QSint::ActionPanel</class>
+   <extends>QWidget</extends>
+   <header>QSint</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

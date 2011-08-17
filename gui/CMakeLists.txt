@@ -1,5 +1,7 @@
 project( knipptasch )
 
+include_directories( ../3rdparty/qsint/include )
+
 set(knipptasch_SOURCES
     accountwidget.cpp
     welcomewidget.cpp
@@ -68,7 +70,10 @@ if( HAVE_KDE )
         ${KDE4_KDEUI_LIBS}
         ${QT_QTTEST_LIBRARY}
         ${QCA2_LIBRARIES}
-        knipptasch compat modeltest
+        knipptasch
+        compat
+        modeltest
+        qsint
       )
 
     set_target_properties( knipptasch-bin PROPERTIES OUTPUT_NAME knipptasch )
@@ -104,6 +109,7 @@ else( HAVE_KDE )
           knipptasch
           compat
           modeltest
+          qsint
     )
 
     set_target_properties( knipptasch-bin PROPERTIES OUTPUT_NAME knipptasch )
