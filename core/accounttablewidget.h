@@ -26,6 +26,9 @@ class AccountSortFilterProxyModel;
 class AccountModel;
 class QAbstractItemView;
 
+class Account;
+
+
 /**
  * @namespace Knipptasch
  * @brief Default namespace for Knipptasch
@@ -34,9 +37,6 @@ class QAbstractItemView;
  */
 namespace Knipptasch
 {
-
-    class Preferences;
-
 
     /**
      * @class AccountTableWidget
@@ -50,9 +50,15 @@ namespace Knipptasch
             Q_OBJECT
 
         public:
-            explicit AccountTableWidget( Knipptasch::Preferences *pref, QWidget *parent = 0 );
+            explicit AccountTableWidget(QWidget *parent = 0 );
             virtual ~AccountTableWidget();
 
+            virtual bool isModified() const;
+        
+            Account *account();
+            const Account *account() const;
+            virtual void setAccount( Account *acc );
+            
             QAbstractItemView *view();
             const QAbstractItemView *view() const;
 
@@ -61,9 +67,6 @@ namespace Knipptasch
 
             AccountSortFilterProxyModel *proxy();
             const AccountSortFilterProxyModel *proxy() const;
-
-            Knipptasch::Preferences *preferences();
-            const Knipptasch::Preferences *preferences() const;
 
         private slots:
             void slotCurrentRowChanged();
